@@ -1,0 +1,57 @@
+# ROS #
+######################
+build/
+devel/
+bin/
+lib/
+msg_gen/
+srv_gen/
+ROS_NOBUILD
+CATKIN_IGNORE
+bags/
+
+*Action.msg
+*Feedback.msg
+*Goal.msg
+*Result.msg
+
+
+
+# Compiled source #
+###################
+*.com
+*.class
+*.o
+*.so
+*.pyc
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+
+# General #
+.*.swp
+*.log
+core
