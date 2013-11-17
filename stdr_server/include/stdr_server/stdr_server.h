@@ -32,7 +32,7 @@
 
 namespace stdr_server {
 
-typedef boost::shared_ptr<stdr_server::MapServer> MapServerPtr;
+typedef boost::shared_ptr<MapServer> MapServerPtr;
 
 class Server {
 		

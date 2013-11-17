@@ -33,7 +33,7 @@ Server::Server(int argc, char** argv)
 	
 	if (argc == 2) {
 		std::string fname(argv[1]);
-		_mapServer.reset(new stdr_server::MapServer(fname));
+		_mapServer.reset(new MapServer(fname));
 	}
 		
 	_loadMapService = _nh.advertiseService("/stdr_server/load_static_map", &Server::loadMapCallback, this);
@@ -47,7 +47,7 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 		ROS_WARN("Map already loaded!");
 		return false;
 	}
-	_mapServer.reset(new stdr_server::MapServer(req.mapFile));
+	_mapServer.reset(new MapServer(req.mapFile));
 
 	return true;	
 }
