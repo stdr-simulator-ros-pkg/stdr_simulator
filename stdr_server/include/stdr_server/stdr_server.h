@@ -19,8 +19,8 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef STDR_SERVER_H
+#define STDR_SERVER_H
 
 #define USAGE "\nUSAGE: stdr_server <map.yaml>\n" \
               "  map.yaml: map description file\n" 
@@ -39,8 +39,8 @@ class Server {
 	public:
 	
 		Server(int argc, char** argv);
-		bool loadMapCallback(stdr_msgs::LoadMap::Request &req,
-							stdr_msgs::LoadMap::Response &res);
+		bool loadMapCallback(stdr_msgs::LoadMap::Request& req,
+							stdr_msgs::LoadMap::Response& res);
 		
 	private:
 	

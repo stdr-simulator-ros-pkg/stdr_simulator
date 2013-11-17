@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 	
 	ros::init(argc, argv, "stdr_server");
 	
-	stdr_server::Server(argc, argv);
+	stdr_server::Server server(argc, argv);
 	
 	ros::spin();
 	
