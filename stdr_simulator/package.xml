@@ -13,11 +13,12 @@
   <url type="bugtracker">https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues</url>
   <url type="repository">https://github.com/stdr-simulator-ros-pkg/stdr_simulator</url>
 
-  <author>Manos Tsardoulias, Chris Zalidis, Aris Thallas</author>>
+  <author>Manos Tsardoulias, Chris Zalidis, Aris Thallas</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
   <run_depend>nav_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
 
   <export>
     <metapackage/>
