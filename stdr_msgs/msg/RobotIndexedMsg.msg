@@ -1,2 +1,2 @@
-uint16 index
+string name
 stdr_msgs/RobotMsg robot
