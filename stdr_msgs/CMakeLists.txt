@@ -18,7 +18,9 @@ add_message_files(
 	LaserSensorMsg.msg
 	SonarSensorMsg.msg
 	RfidSensorMsg.msg
+	KinematicMsg.msg
 	RobotMsg.msg
+	RobotIndexedMsg.msg
 )
 
 add_service_files( 
