@@ -10,7 +10,9 @@ compiler:
 notifications:
   email:
     recipients:
-      - stdr-simulator@googlegroups.com
+      - etsardou@gmail.com
+      - zalidis@gmail.com
+      - aris.thallas@gmail.com
     on_success: change #[always|never|change] # default: change
     on_failure: change #[always|never|change] # default: always
 before_install: # Use this to prepare the system to install prerequisites or dependencies
@@ -22,7 +24,7 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update -qq
-  - sudo apt-get install -qq -y python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-ros
+  - sudo apt-get install -qq -y python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-ros qt4-dev-tools
   # Setup rosdep
   - sudo rosdep init
   - rosdep update
