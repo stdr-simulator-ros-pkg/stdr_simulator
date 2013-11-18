@@ -6,5 +6,7 @@ float32 minRange
 
 stdr_msgs/Noise noise
 
+float32 frequency
+
 string frame_id
 geometry_msgs/Pose2D pose # sensor pose, relative to robot center
