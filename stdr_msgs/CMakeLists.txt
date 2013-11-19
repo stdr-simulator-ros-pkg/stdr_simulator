@@ -27,12 +27,15 @@ add_message_files(
 add_service_files( 
 	FILES
 	LoadMap.srv
+	RegisterGui.srv
+	MoveRobot.srv
 )
 
 add_action_files(
 	FILES
 	RegisterRobot.action
 	SpawnRobot.action
+	DeleteRobot.action
 )
 
 ## Generate added messages and services with any dependencies listed here
