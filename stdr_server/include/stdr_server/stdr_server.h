@@ -30,7 +30,12 @@
 #include <actionlib/server/simple_action_server.h>
 #include <stdr_server/map_server.h>
 #include <stdr_msgs/LoadMap.h>
+#include <stdr_msgs/RegisterGui.h>
+#include <stdr_msgs/MoveRobot.h>
+#include <stdr_msgs/RegisterRobotAction.h>
 #include <stdr_msgs/SpawnRobotAction.h>
+#include <stdr_msgs/DeleteRobotAction.h>
+#include <stdr_msgs/RobotIndexedMsg.h>
 #include <nodelet/NodeletLoad.h>
 #include <nodelet/NodeletUnload.h>
 
@@ -38,23 +43,49 @@ namespace stdr_server {
 
 typedef boost::shared_ptr<MapServer> MapServerPtr;
 typedef actionlib::SimpleActionServer<stdr_msgs::SpawnRobotAction> SpawnRobotServer;
+typedef actionlib::SimpleActionServer<stdr_msgs::RegisterRobotAction> RegisterRobotServer;
+typedef actionlib::SimpleActionServer<stdr_msgs::DeleteRobotAction> DeleteRobotServer;
+
+typedef std::map<std::string, stdr_msgs::RobotIndexedMsg> RobotMap;
 
 class Server {
 		
 	public:
 	
 		Server(int argc, char** argv);
+		// Services
 		bool loadMapCallback(stdr_msgs::LoadMap::Request& req,
 							stdr_msgs::LoadMap::Response& res);
+		bool moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
+							stdr_msgs::MoveRobot::Response& res);
+		bool registerGuiCallback(stdr_msgs::RegisterGui::Request& req,
+							stdr_msgs::RegisterGui::Response& res);
+		// Actions
 		void spawnRobotCallback();
+		void deleteRobotCallback();
+		
+	private:
+		
+		void addNewRobot(stdr_msgs::RobotMsg description);
 		
 	private:
 	
 		ros::NodeHandle _nh;
 		MapServerPtr _mapServer;
-		ros::ServiceServer _loadMapService;
 		
+		ros::Publisher _robotsPublisher;
+		
+		ros::ServiceClient _spawnRobotClient;
+		ros::ServiceClient _unloadRobotClient;
+		ros::ServiceServer _loadMapService;
+		ros::ServiceServer _moveRobotService;
+		
+		RegisterRobotServer _registerRobotServer;
 		SpawnRobotServer _spawnRobotServer;
+		DeleteRobotServer _deleteRobotServer;
+		
+		RobotMap _robotMap;
+		int _id;
 };	
 	
 }

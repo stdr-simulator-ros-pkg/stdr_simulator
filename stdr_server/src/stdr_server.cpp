@@ -25,6 +25,9 @@ namespace stdr_server {
 	
 Server::Server(int argc, char** argv) 
   : _spawnRobotServer(_nh, "spawn_robot", false)
+  , _registerRobotServer(_nh, "register_robot", false)
+  , _deleteRobotServer(_nh, "delete_robot", false)
+  , _id(0)
 {
 	_spawnRobotServer.registerGoalCallback( boost::bind(&Server::spawnRobotCallback, this) );
 	
@@ -42,6 +45,18 @@ Server::Server(int argc, char** argv)
 		
 	_loadMapService = _nh.advertiseService("/stdr_server/load_static_map", &Server::loadMapCallback, this);
 	
+	while (!ros::service::waitForService("robot_manager/load_nodelet", ros::Duration(.1)) && ros::ok()) {
+		ROS_WARN("Trying to register to robot_manager/load_nodelet...");
+	}
+	_spawnRobotClient = _nh.serviceClient<nodelet::NodeletLoad>("robot_manager/load_nodelet", true);
+	
+	while (!ros::service::waitForService("robot_manager/unload_nodelet", ros::Duration(.1)) && ros::ok()) {
+		ROS_WARN("Trying to register to robot_manager/unload_nodelet...");
+	}
+	_unloadRobotClient = _nh.serviceClient<nodelet::NodeletUnload>("robot_manager/unload_nodelet");
+	
+//~ 	_registerRobotServer.registerGoalCallback( boost::bind(&Server::registerRobotCallback, this) );
+//~ 	_registerRobotServer.start();	
 }
 
 bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
@@ -59,8 +74,34 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 }
 
 void Server::spawnRobotCallback() {
-	_spawnRobotServer.acceptNewGoal();
-	// call service to load nodelet, set succeded
-}
+	stdr_msgs::RobotMsg description = _spawnRobotServer.acceptNewGoal()->description;
 	
+	addNewRobot(description);
+}
+
+
+void Server::addNewRobot(stdr_msgs::RobotMsg description) {
+	
+	stdr_msgs::RobotIndexedMsg namedRobot;
+	
+	namedRobot.robot = description;
+	namedRobot.name = "/robot" + boost::lexical_cast<std::string>(_id++);
+	
+	_robotMap.insert( std::make_pair(namedRobot.name, namedRobot) );
+	
+	nodelet::NodeletLoad srv;
+	srv.request.name = namedRobot.name;
+	srv.request.type = "stdr_robot/Robot";
+	
+	// add contitional variable to wait from register robot
+	
+	if (_spawnRobotClient.call(srv)) {
+		stdr_msgs::SpawnRobotResult result;
+		result.indexedDescription = namedRobot;
+		_spawnRobotServer.setSucceeded(result);
+	}
+	
+	_spawnRobotServer.setAborted();
+}
+
 }
