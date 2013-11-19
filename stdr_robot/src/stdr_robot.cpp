@@ -20,6 +20,7 @@
 ******************************************************************************/
 
 #include <stdr_robot/stdr_robot.h>
+#include <nodelet/NodeletUnload.h>
 #include <pluginlib/class_list_macros.h>
 
 PLUGINLIB_EXPORT_CLASS(stdr_robot::Robot, nodelet::Nodelet) 
@@ -38,9 +39,9 @@ void Robot::onInit() {
 	goal.name = getName();
 	_registerClientPtr->sendGoal(goal);
 	
+	// if no answer, we can't do anything
 	if (_registerClientPtr->waitForResult(ros::Duration(10))) {
-		NODELET_ERROR("Something bad happened, shuting down...");
-		ros::shutdown();
+		NODELET_ERROR("Something really bad happened...");
 	}
 	
 	initializeRobot(_registerClientPtr->getResult()->description);		
