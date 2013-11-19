@@ -9,6 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
 					tf
 					nav_msgs
 					stdr_msgs
+					actionlib
+					nodelet
 					map_server
 )
 
@@ -27,6 +29,8 @@ catkin_package(
         roscpp
         tf
         nav_msgs
+        nodelet
+        actionlib
 )
 
 link_directories(${catkin_LIBRARY_DIRS})

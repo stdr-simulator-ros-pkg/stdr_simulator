@@ -24,7 +24,9 @@
 namespace stdr_server {
 	
 Server::Server(int argc, char** argv) 
+  : _spawnRobotServer(_nh, "spawn_robot", false)
 {
+	_spawnRobotServer.registerGoalCallback( boost::bind(&Server::spawnRobotCallback, this) );
 	
 	if (argc > 2) {
 		ROS_ERROR("%s", USAGE);
@@ -34,6 +36,8 @@ Server::Server(int argc, char** argv)
 	if (argc == 2) {
 		std::string fname(argv[1]);
 		_mapServer.reset(new MapServer(fname));
+		// if we don't have map, no point to spawn robot
+		_spawnRobotServer.start();
 	}
 		
 	_loadMapService = _nh.advertiseService("/stdr_server/load_static_map", &Server::loadMapCallback, this);
@@ -48,8 +52,15 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 		return false;
 	}
 	_mapServer.reset(new MapServer(req.mapFile));
+	// if we don't have map, no point to spawn robot
+	_spawnRobotServer.start();
 
 	return true;	
+}
+
+void Server::spawnRobotCallback() {
+	_spawnRobotServer.acceptNewGoal();
+	// call service to load nodelet, set succeded
 }
 	
 }

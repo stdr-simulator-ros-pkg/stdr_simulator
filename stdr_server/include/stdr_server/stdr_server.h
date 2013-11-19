@@ -27,12 +27,17 @@
 
 
 #include <ros/ros.h>
+#include <actionlib/server/simple_action_server.h>
 #include <stdr_server/map_server.h>
-#include "stdr_msgs/LoadMap.h"
+#include <stdr_msgs/LoadMap.h>
+#include <stdr_msgs/SpawnRobotAction.h>
+#include <nodelet/NodeletLoad.h>
+#include <nodelet/NodeletUnload.h>
 
 namespace stdr_server {
 
 typedef boost::shared_ptr<MapServer> MapServerPtr;
+typedef actionlib::SimpleActionServer<stdr_msgs::SpawnRobotAction> SpawnRobotServer;
 
 class Server {
 		
@@ -41,13 +46,15 @@ class Server {
 		Server(int argc, char** argv);
 		bool loadMapCallback(stdr_msgs::LoadMap::Request& req,
 							stdr_msgs::LoadMap::Response& res);
+		void spawnRobotCallback();
 		
 	private:
 	
 		ros::NodeHandle _nh;
 		MapServerPtr _mapServer;
 		ros::ServiceServer _loadMapService;
-
+		
+		SpawnRobotServer _spawnRobotServer;
 };	
 	
 }
