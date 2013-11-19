@@ -33,21 +33,21 @@ link_directories(${catkin_LIBRARY_DIRS})
 include_directories( include ${catkin_INCLUDE_DIRS})
 
 
-add_library(map_server src/stdr_server/map_server.cpp)
+add_library(map_server src/map_server.cpp)
 target_link_libraries(map_server
     image_loader
     yaml-cpp
     ${catkin_LIBRARIES}
 )
 
-add_library(stdr_server src/stdr_server/stdr_server.cpp)
+add_library(stdr_server src/stdr_server.cpp)
 add_dependencies(stdr_server stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_server
 	map_server
 	${catkin_LIBRARIES}
 )
 
-add_executable(stdr_server_node src/stdr_server/stdr_server_node.cpp)
+add_executable(stdr_server_node src/stdr_server_node.cpp)
 target_link_libraries(stdr_server_node
 	stdr_server
 	${catkin_LIBRARIES}
