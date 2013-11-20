@@ -30,8 +30,6 @@ namespace stdr_robot {
 void Robot::onInit() {
 	ros::NodeHandle n = getMTNodeHandle();
 	
-	NODELET_INFO("Loaded new robot, %s", getName().c_str());
-	
 	_registerClientPtr.reset( new RegisterRobotClient(n, "stdr_server/register_robot", false) );
 	_registerClientPtr->waitForServer();
 	
@@ -39,8 +37,10 @@ void Robot::onInit() {
 	goal.name = getName();
 	_registerClientPtr->sendGoal(goal);
 	
+	NODELET_INFO("Loaded new robot, %s", getName().c_str());
+	
 	// if no answer, we can't do anything
-	if (_registerClientPtr->waitForResult(ros::Duration(10))) {
+	if (!_registerClientPtr->waitForResult(ros::Duration(10))) {
 		NODELET_ERROR("Something really bad happened...");
 	}
 	

@@ -69,7 +69,7 @@ class Server {
 	private:
 		
 		void activateActionServers();
-		bool addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResultPtr result);
+		bool addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResult* result);
 		
 	private:
 	

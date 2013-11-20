@@ -1,9 +1,11 @@
 <launch>
   <node pkg="nodelet" type="nodelet" name="robot_manager"  args="manager" output="screen"/>
 
+<!--
   <node pkg="nodelet" type="nodelet" name="robot1" args="load stdr_robot/Robot robot_manager" output="screen"/>
   
 
   <node pkg="nodelet" type="nodelet" name="robot2" args="load stdr_robot/Robot robot_manager" output="screen"/>
+-->
  
 </launch>

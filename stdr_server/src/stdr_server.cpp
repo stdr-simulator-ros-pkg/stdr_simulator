@@ -75,10 +75,10 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 void Server::spawnRobotCallback() {
 	stdr_msgs::RobotMsg description = _spawnRobotServer.acceptNewGoal()->description;
 	
-	stdr_msgs::SpawnRobotResultPtr result;
+	stdr_msgs::SpawnRobotResult result;
 	
-	if (addNewRobot(description, result)) {
-		_spawnRobotServer.setSucceeded(*result);
+	if (addNewRobot(description, &result)) {
+		_spawnRobotServer.setSucceeded(result);
 		
 		// publish to active_robots topic
 		stdr_msgs::RobotIndexedVectorMsg msg;
@@ -94,6 +94,8 @@ void Server::spawnRobotCallback() {
 
 void Server::registerRobotCallback(const stdr_msgs::RegisterRobotGoalConstPtr& goal) {
 	
+	boost::unique_lock<boost::mutex> lock(_mut);
+	ROS_ERROR("Mpika");
 	stdr_msgs::RegisterRobotResult result;
 	result.description = _robotMap[goal->name].robot;
 	_registerRobotServer.setSucceeded(result);
@@ -107,7 +109,7 @@ void Server::activateActionServers() {
 	_registerRobotServer.start();
 }
 
-bool Server::addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResultPtr result) {
+bool Server::addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResult* result) {
 	
 	stdr_msgs::RobotIndexedMsg namedRobot;
 	
