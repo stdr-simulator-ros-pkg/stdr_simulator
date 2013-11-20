@@ -61,15 +61,42 @@ namespace stdr{
 	
 	bool GuiController::init(void){
 		ros::init(argc,argv,"stdr_gui_node");
+		
 		if ( ! ros::master::check() ) {
 			return false;
 		}
 		ros::start();
-		ros::NodeHandle n;
 
 		guiConnector.loader.show();
 		start();
+		
+		initializeCommunications();
 		return true;
+	}
+	
+	void GuiController::initializeCommunications(void){
+		ros::NodeHandle n;
+		mapSubscriber=n.subscribe("map", 1, &GuiController::receiveMap,this);
+	}
+	
+	void GuiController::receiveMap(const nav_msgs::OccupancyGrid& msg){
+		mapMsg=msg;
+		initialMap=QImage(msg.info.width,msg.info.height,QImage::Format_RGB32);
+		QPainter painter(&initialMap);
+		int d=0;
+		QColor c;
+		for(unsigned int i=0;i<msg.info.width;i++){
+			for(unsigned int j=0;j<msg.info.height;j++){
+				if(msg.data[j*msg.info.width+i]==-1)
+					c=QColor(127,127,127);
+				else{
+					d=(100.0-msg.data[j*msg.info.width+i])/100.0*255.0;
+					c=QColor(d,d,d);
+				}
+				painter.setPen(c);
+				painter.drawPoint(i,j);
+			}
+		}	
 	}
 }
 

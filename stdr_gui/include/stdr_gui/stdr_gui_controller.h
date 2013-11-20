@@ -31,14 +31,22 @@
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 
+#include "nav_msgs/OccupancyGrid.h"
+
 namespace stdr{
 
 	class GuiController : public QThread{
 			
 			int argc;
 			char **argv;
-						
+			
 			std::vector<GuiRobot> registeredRobots;			
+			
+			ros::Subscriber mapSubscriber;
+			
+			nav_msgs::OccupancyGrid mapMsg;
+			QImage initialMap;
+			
 		public:
 			GuiController(int argc,char **argv);
 			
@@ -47,6 +55,10 @@ namespace stdr{
 			GuiConnector guiConnector;
 			InfoConnector infoConnector;
 			MapConnector mapConnector;
+			
+			void initializeCommunications(void);
+			
+			void receiveMap(const nav_msgs::OccupancyGrid& msg);
 			 
 			bool init();	
 	};
