@@ -23,6 +23,11 @@
 
 
 namespace stdr{
+	
+	void spinThreadFunction(void){
+		ros::spin();
+	}
+	
 	GuiController::GuiController(int argc,char **argv):
 			guiConnector(argc,argv),
 			infoConnector(argc,argv),
@@ -30,16 +35,14 @@ namespace stdr{
 	{
 		this->argc=argc;
 		this->argv=argv;
-		
 		setupWidgets();
+		
 	}
 	
 	void GuiController::setupWidgets(void){
-		
 		{
 			guiConnector.loader.gridLayout->addWidget(static_cast<QWidget *>(&infoConnector.loader),0,0,0);	
 		}
-		
 		{
 			initialMap=runningMap=QImage((getRosPackagePath("stdr_gui")+std::string("/resources/images/logo.png")).c_str());
 
@@ -54,26 +57,22 @@ namespace stdr{
 	}
 	
 	bool GuiController::init(void){
-		ros::init(argc,argv,"stdr_gui_node");
-		
 		if ( ! ros::master::check() ) {
 			return false;
 		}
-		ros::start();
-
 		guiConnector.loader.show();
-		start();
-		
+
 		initializeCommunications();
+		boost::thread spinThread(&spinThreadFunction);
 		return true;
 	}
 	
 	void GuiController::initializeCommunications(void){
-		ros::NodeHandle n;
 		mapSubscriber=n.subscribe("map", 1, &GuiController::receiveMap,this);
 	}
 	
 	void GuiController::receiveMap(const nav_msgs::OccupancyGrid& msg){
+		ROS_ERROR("Map got");
 		mapMsg=msg;
 		initialMap=runningMap=QImage(msg.info.width,msg.info.height,QImage::Format_RGB32);
 		QPainter painter(&runningMap);
@@ -91,16 +90,14 @@ namespace stdr{
 				painter.drawPoint(i,j);
 			}
 		}	
-		
+		ROS_ERROR("Map fixed");
 		int originx=msg.info.origin.position.x;
 		int originy=msg.info.origin.position.y;
 		painter.setPen(Qt::blue);
 		painter.drawLine(originx,originy-20,originx,originy+20);
 		painter.drawLine(originx-20,originy,originx+20,originy);
-
+		
 		mapConnector.updateImage(&runningMap);
 	}
-	
-	
 }
 

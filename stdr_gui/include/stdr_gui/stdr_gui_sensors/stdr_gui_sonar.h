@@ -32,7 +32,6 @@ namespace stdr{
 			const stdr_msgs::SonarSensorMsg& _msg;
 			ros::Subscriber _subscriber;
 			QImage _mapImage;
-			ros::NodeHandle _n;
 		public:
 			GuiSonar(stdr_msgs::SonarSensorMsg msg,QImage mapImage);
 			~GuiSonar(void){}

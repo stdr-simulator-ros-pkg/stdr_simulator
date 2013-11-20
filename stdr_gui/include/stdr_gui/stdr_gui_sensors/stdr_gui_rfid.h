@@ -31,7 +31,6 @@ namespace stdr{
 			const stdr_msgs::RfidSensorMsg& _msg;
 			ros::Subscriber _subscriber;
 			QImage _mapImage;
-			ros::NodeHandle _n;
 		public:
 			GuiRfid(stdr_msgs::RfidSensorMsg msg,QImage mapImage);
 			~GuiRfid(void){}
