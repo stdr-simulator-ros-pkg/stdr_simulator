@@ -22,6 +22,7 @@ add_message_files(
 	KinematicMsg.msg
 	RobotMsg.msg
 	RobotIndexedMsg.msg
+	RobotIndexedVectorMsg.msg
 )
 
 add_service_files( 
