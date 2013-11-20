@@ -55,7 +55,7 @@ Server::Server(int argc, char** argv)
 	}
 	_unloadRobotClient = _nh.serviceClient<nodelet::NodeletUnload>("robot_manager/unload_nodelet");
 	
-//~ 	_robotsPublisher = _nh.advertise<stdr_msgs::RobotIndexedVectorMsg>("stdr_server/active_robots", 10, true);
+	_robotsPublisher = _nh.advertise<stdr_msgs::RobotIndexedVectorMsg>("stdr_server/active_robots", 10, true);
 }
 
 bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
@@ -81,7 +81,12 @@ void Server::spawnRobotCallback() {
 		_spawnRobotServer.setSucceeded(*result);
 		
 		// publish to active_robots topic
-//~ 		_robotsPublisher.pub();
+		stdr_msgs::RobotIndexedVectorMsg msg;
+		for (RobotMap::iterator it=_robotMap.begin(); it!=_robotMap.end(); ++it) {
+			msg.robots.push_back( it->second );
+		}
+		
+		_robotsPublisher.publish(msg);
 	}
 	
 	_spawnRobotServer.setAborted();

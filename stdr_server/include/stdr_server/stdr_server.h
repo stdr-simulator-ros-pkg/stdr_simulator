@@ -36,6 +36,7 @@
 #include <stdr_msgs/SpawnRobotAction.h>
 #include <stdr_msgs/DeleteRobotAction.h>
 #include <stdr_msgs/RobotIndexedMsg.h>
+#include <stdr_msgs/RobotIndexedVectorMsg.h>
 #include <nodelet/NodeletLoad.h>
 #include <nodelet/NodeletUnload.h>
 
