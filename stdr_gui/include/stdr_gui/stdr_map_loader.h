@@ -29,8 +29,13 @@ namespace stdr{
 	class MapLoader : public QWidget, public Ui_mapWidget{
 			int argc;
 			char **argv;
+			QImage *internalImg;
+			std::pair<int,int> checkDimensions(int w,int h);
 		public:
 			MapLoader(int argc, char **argv);
+			void resizeEvent(QResizeEvent *e);
+			
+			void updateImage(QImage *img);
 	};	
 }
 

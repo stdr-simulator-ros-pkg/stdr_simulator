@@ -28,4 +28,30 @@ namespace stdr{
 		
 		setupUi(this);
 	}
+	void MapLoader::resizeEvent(QResizeEvent *e){
+		updateImage(internalImg);
+	}
+	
+	std::pair<int,int> MapLoader::checkDimensions(int w,int h){
+		float containerWidth=this->width();
+		float containerHeight=this->height();
+		float aspectRatio=(float)w/(float)h;
+		float finalW,finalH;
+		if(containerHeight*aspectRatio>containerWidth){
+			finalW=containerWidth;
+			finalH=containerWidth/aspectRatio;
+		}
+		else{
+			finalW=containerHeight*aspectRatio;
+			finalH=containerHeight;
+		}
+		return std::pair<int,int>(finalW,finalH);
+	}
+	
+	void MapLoader::updateImage(QImage *img){
+		internalImg=img;
+		std::pair<int,int> newDims=checkDimensions(img->width(),img->height());
+		map->setPixmap(QPixmap().fromImage((*img)).scaled(newDims.first,newDims.second));
+		map->resize(newDims.first,newDims.second);
+	}
 }
