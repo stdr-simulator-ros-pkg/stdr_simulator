@@ -1,0 +1,8 @@
+ <!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+     <file alias="process.png">images/orange-moonlight-icons/png/32x32/process.png</file>
+     <file alias="grid.png">images/orange-moonlight-icons/png/32x32/grid.png</file>
+     <file alias="blank_page.png">images/orange-moonlight-icons/png/32x32/blank_page.png</file>
+     <file alias="target.png">images/orange-moonlight-icons/png/32x32/target.png</file>
+ </qresource>
+ </RCC>
