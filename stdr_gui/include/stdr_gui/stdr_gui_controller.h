@@ -25,6 +25,8 @@
 #include <iostream>
 #include <cstdlib>
 
+#include <boost/thread.hpp>
+
 #include "stdr_gui/stdr_gui_connector.h"
 #include "stdr_gui/stdr_info_connector.h"
 #include "stdr_gui/stdr_map_connector.h"
@@ -43,6 +45,8 @@ namespace stdr{
 			std::vector<GuiRobot> registeredRobots;			
 			
 			ros::Subscriber mapSubscriber;
+			
+			ros::NodeHandle n;
 			
 			nav_msgs::OccupancyGrid mapMsg;
 			QImage initialMap;

@@ -27,6 +27,7 @@ namespace stdr{
 		this->argv=argv;
 		
 		setupUi(this);
+		internalImg=new QImage(100,100,QImage::Format_RGB32);
 	}
 	void MapLoader::resizeEvent(QResizeEvent *e){
 		updateImage(internalImg);

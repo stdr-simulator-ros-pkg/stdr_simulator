@@ -32,6 +32,8 @@ namespace stdr{
 		loader.map->setScaledContents(true);
 		
 		loader.map->installEventFilter(this);
+		
+		QObject::connect(this,SIGNAL(signalUpdateImage(QImage *)),this, SLOT(serveImage(QImage *)));
 	}
 
 	bool MapConnector::eventFilter( QObject* watched, QEvent* event ) {
@@ -52,6 +54,10 @@ namespace stdr{
 	}
 
 	void MapConnector::updateImage(QImage *img){
+		signalUpdateImage(img);
+	}
+	
+	void MapConnector::serveImage(QImage *img){
 		loader.updateImage(img);
 	}
 }

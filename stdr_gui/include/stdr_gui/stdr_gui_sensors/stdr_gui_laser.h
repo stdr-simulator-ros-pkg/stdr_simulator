@@ -32,7 +32,7 @@ namespace stdr{
 			const stdr_msgs::LaserSensorMsg& _msg;
 			ros::Subscriber _subscriber;
 			QImage _mapImage;
-			ros::NodeHandle _n;
+
 		public:
 			GuiLaser(stdr_msgs::LaserSensorMsg msg,QImage mapImage,std::string baseTopic);
 			~GuiLaser(void){}

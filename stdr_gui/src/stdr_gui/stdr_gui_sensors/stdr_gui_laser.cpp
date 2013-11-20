@@ -27,6 +27,7 @@ namespace stdr{
 	{
 		_mapImage=mapImage;
 		_topic=baseTopic+"/lasers/"+_msg.frame_id;
+		ros::NodeHandle _n;
 		_subscriber = _n.subscribe(_topic.c_str(), 1, &GuiLaser::callback,this);
 	}
 	

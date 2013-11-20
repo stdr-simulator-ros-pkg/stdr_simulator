@@ -32,8 +32,6 @@ namespace stdr{
 			std::vector<GuiLaser> _lasers;
 			std::vector<GuiSonar> _sonars;
 			std::vector<GuiRfid> _rfids;
-			
-			ros::NodeHandle _n;
 		public:
 			GuiRobot(void){}
 			~GuiRobot(void){}

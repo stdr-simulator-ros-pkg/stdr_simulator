@@ -41,9 +41,7 @@ namespace stdr{
 		ROS_INFO("Exiting GUI...");
 		exit(0);
 	}
-	
-	
-	
+
 	void GuiConnector::actionPropertiesTriggered(void){
 		QMessageBox msg(static_cast<QMainWindow *>(&this->loader));
 		msg.setWindowTitle(QString("Not finished yet :/"));

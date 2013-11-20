@@ -31,13 +31,18 @@ namespace stdr{
 			char **argv;
 		public:
 			MapLoader loader;
-		
 			MapConnector(int argc, char **argv);
-			void updateImage(QImage *img);
+			
+			void updateImage(QImage *img);	
+			
 			
 		public Q_SLOTS:
 		
-			bool eventFilter( QObject* watched, QEvent* event );
+			bool eventFilter( QObject* watched, QEvent* event);
+			void serveImage(QImage *img);
+		
+		signals:
+			void signalUpdateImage(QImage *img);	
 	};	
 }
 
