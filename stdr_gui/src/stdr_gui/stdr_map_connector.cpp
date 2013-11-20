@@ -28,34 +28,30 @@ namespace stdr{
 	{
 		this->argc=argc;
 		this->argv=argv;
-		loader.map->installEventFilter( this );
-	}
-	
-	bool MapConnector::eventFilter( QObject* watched, QEvent* event ) {
 		
+		loader.map->setScaledContents(true);
+		
+		loader.map->installEventFilter(this);
+	}
+
+	bool MapConnector::eventFilter( QObject* watched, QEvent* event ) {
 		if(watched==loader.map){
 			if(event->type() == QEvent::MouseButtonPress){
-
 				const QMouseEvent* const me = static_cast<const QMouseEvent*>( event );
-
 				if(me->button()==Qt::RightButton){
-
 					//~ QMenu myMenu;
-//~ 
 					//~ QAction *addR=myMenu.addAction("Add robot");
 					//~ QAction *addRfid=myMenu.addAction("Add RFID tag");
-//~ 
 					//~ QAction* selectedItem = myMenu.exec(loader.mapToGlobal(me->pos()));
-
 				}
 				else if(me->button()==Qt::LeftButton){
-
 				}
 			}
 		}
-
-			
-		
 		return false;
+	}
+
+	void MapConnector::updateImage(QImage *img){
+		loader.updateImage(img);
 	}
 }

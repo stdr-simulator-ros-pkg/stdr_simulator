@@ -46,6 +46,7 @@ namespace stdr{
 			
 			nav_msgs::OccupancyGrid mapMsg;
 			QImage initialMap;
+			QImage runningMap;
 			
 		public:
 			GuiController(int argc,char **argv);

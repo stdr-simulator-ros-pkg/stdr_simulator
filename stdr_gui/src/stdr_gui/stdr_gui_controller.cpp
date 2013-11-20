@@ -35,28 +35,22 @@ namespace stdr{
 	}
 	
 	void GuiController::setupWidgets(void){
-
+		
 		{
-			QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-			sizePolicy.setHorizontalStretch(0);
-			sizePolicy.setVerticalStretch(0);
-			infoConnector.loader.setSizePolicy(sizePolicy);
-			infoConnector.loader.setMaximumSize(QSize(300, 8000));
 			guiConnector.loader.gridLayout->addWidget(static_cast<QWidget *>(&infoConnector.loader),0,0,0);	
 		}
 		
 		{
-			QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-			sizePolicy.setHorizontalStretch(0);
-			sizePolicy.setVerticalStretch(0);
-			mapConnector.loader.setSizePolicy(sizePolicy);
-			QImage logo((getRosPackagePath("stdr_gui")+std::string("/resources/images/logo.png")).c_str());
-			QPainter painter(&logo);
-			mapConnector.loader.map->setScaledContents(true);
-			mapConnector.loader.map->setPixmap(QPixmap().fromImage(logo));
+			initialMap=runningMap=QImage((getRosPackagePath("stdr_gui")+std::string("/resources/images/logo.png")).c_str());
+
+			mapMsg.info.width=initialMap.width();
+			mapMsg.info.height=initialMap.height();
+			
+			mapConnector.updateImage(&runningMap);
+			
 			guiConnector.loader.gridLayout->addWidget(static_cast<QWidget *>(&mapConnector.loader),0,1,0);	
+			guiConnector.loader.gridLayout->setColumnStretch(1,1);
 		}
-		
 	}
 	
 	bool GuiController::init(void){
@@ -81,8 +75,8 @@ namespace stdr{
 	
 	void GuiController::receiveMap(const nav_msgs::OccupancyGrid& msg){
 		mapMsg=msg;
-		initialMap=QImage(msg.info.width,msg.info.height,QImage::Format_RGB32);
-		QPainter painter(&initialMap);
+		initialMap=runningMap=QImage(msg.info.width,msg.info.height,QImage::Format_RGB32);
+		QPainter painter(&runningMap);
 		int d=0;
 		QColor c;
 		for(unsigned int i=0;i<msg.info.width;i++){
@@ -97,6 +91,16 @@ namespace stdr{
 				painter.drawPoint(i,j);
 			}
 		}	
+		
+		int originx=msg.info.origin.position.x;
+		int originy=msg.info.origin.position.y;
+		painter.setPen(Qt::blue);
+		painter.drawLine(originx,originy-20,originx,originy+20);
+		painter.drawLine(originx-20,originy,originx+20,originy);
+
+		mapConnector.updateImage(&runningMap);
 	}
+	
+	
 }
 

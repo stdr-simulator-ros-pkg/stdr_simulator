@@ -33,6 +33,7 @@ namespace stdr{
 			MapLoader loader;
 		
 			MapConnector(int argc, char **argv);
+			void updateImage(QImage *img);
 			
 		public Q_SLOTS:
 		

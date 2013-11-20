@@ -31,11 +31,11 @@ namespace stdr{
 		
 			int argc; 
 			char **argv;
-			
 		public:
 			GuiConnector(int argc, char **argv);
 			GuiLoader loader;
 			RobotCreatorConnector robotCreatorConn;
+			
 
 		public Q_SLOTS:
 			void actionPropertiesTriggered(void);

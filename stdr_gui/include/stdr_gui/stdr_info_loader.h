@@ -26,7 +26,7 @@
 #include "stdr_tools.h"
 
 namespace stdr{
-	class InfoLoader : public QWidget, public Ui_stdrInformation{
+	class InfoLoader : public QWidget, public Ui_information{
 		
 			int argc;
 			char **argv;
