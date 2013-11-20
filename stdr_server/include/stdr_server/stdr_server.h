@@ -63,10 +63,12 @@ class Server {
 		// Actions
 		void spawnRobotCallback();
 		void deleteRobotCallback();
+		void registerRobotCallback(const stdr_msgs::RegisterRobotGoalConstPtr& goal);
 		
 	private:
 		
-		void addNewRobot(stdr_msgs::RobotMsg description);
+		void activateActionServers();
+		bool addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResultPtr result);
 		
 	private:
 	
@@ -86,6 +88,9 @@ class Server {
 		
 		RobotMap _robotMap;
 		int _id;
+		
+		boost::mutex _mut;
+		boost::condition_variable cond;
 };	
 	
 }

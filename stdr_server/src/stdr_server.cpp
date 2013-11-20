@@ -24,9 +24,9 @@
 namespace stdr_server {
 	
 Server::Server(int argc, char** argv) 
-  : _spawnRobotServer(_nh, "spawn_robot", false)
-  , _registerRobotServer(_nh, "register_robot", false)
-  , _deleteRobotServer(_nh, "delete_robot", false)
+  : _spawnRobotServer(_nh, "stdr_server/spawn_robot", false)
+  , _registerRobotServer(_nh, "stdr_server/register_robot", boost::bind(&Server::registerRobotCallback, this, _1), false)
+  , _deleteRobotServer(_nh, "stdr_server/delete_robot", false)
   , _id(0)
 {
 	_spawnRobotServer.registerGoalCallback( boost::bind(&Server::spawnRobotCallback, this) );
@@ -39,8 +39,8 @@ Server::Server(int argc, char** argv)
 	if (argc == 2) {
 		std::string fname(argv[1]);
 		_mapServer.reset(new MapServer(fname));
-		// if we don't have map, no point to spawn robot
-		_spawnRobotServer.start();
+		// if we don't have map, no point to start servers
+		activateActionServers();
 	}
 		
 	_loadMapService = _nh.advertiseService("/stdr_server/load_static_map", &Server::loadMapCallback, this);
@@ -55,8 +55,7 @@ Server::Server(int argc, char** argv)
 	}
 	_unloadRobotClient = _nh.serviceClient<nodelet::NodeletUnload>("robot_manager/unload_nodelet");
 	
-//~ 	_registerRobotServer.registerGoalCallback( boost::bind(&Server::registerRobotCallback, this) );
-//~ 	_registerRobotServer.start();	
+//~ 	_robotsPublisher = _nh.advertise<stdr_msgs::RobotIndexedVectorMsg>("stdr_server/active_robots", 10, true);
 }
 
 bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
@@ -67,8 +66,8 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 		return false;
 	}
 	_mapServer.reset(new MapServer(req.mapFile));
-	// if we don't have map, no point to spawn robot
-	_spawnRobotServer.start();
+	// if we don't have map, no point to start servers
+	activateActionServers();
 
 	return true;	
 }
@@ -76,11 +75,34 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 void Server::spawnRobotCallback() {
 	stdr_msgs::RobotMsg description = _spawnRobotServer.acceptNewGoal()->description;
 	
-	addNewRobot(description);
+	stdr_msgs::SpawnRobotResultPtr result;
+	
+	if (addNewRobot(description, result)) {
+		_spawnRobotServer.setSucceeded(*result);
+		
+		// publish to active_robots topic
+//~ 		_robotsPublisher.pub();
+	}
+	
+	_spawnRobotServer.setAborted();
+}
+
+void Server::registerRobotCallback(const stdr_msgs::RegisterRobotGoalConstPtr& goal) {
+	
+	stdr_msgs::RegisterRobotResult result;
+	result.description = _robotMap[goal->name].robot;
+	_registerRobotServer.setSucceeded(result);
+	// notify spawn action, to reply to spawnner
+	cond.notify_one();
 }
 
 
-void Server::addNewRobot(stdr_msgs::RobotMsg description) {
+void Server::activateActionServers() {
+	_spawnRobotServer.start();
+	_registerRobotServer.start();
+}
+
+bool Server::addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResultPtr result) {
 	
 	stdr_msgs::RobotIndexedMsg namedRobot;
 	
@@ -93,15 +115,18 @@ void Server::addNewRobot(stdr_msgs::RobotMsg description) {
 	srv.request.name = namedRobot.name;
 	srv.request.type = "stdr_robot/Robot";
 	
-	// add contitional variable to wait from register robot
-	
+		
 	if (_spawnRobotClient.call(srv)) {
-		stdr_msgs::SpawnRobotResult result;
-		result.indexedDescription = namedRobot;
-		_spawnRobotServer.setSucceeded(result);
+		// wait until robot calls RobotRegisterAction
+		boost::unique_lock<boost::mutex> lock(_mut);
+		cond.wait(lock);
+		
+		result->indexedDescription = namedRobot;
+		
+		return true;
 	}
 	
-	_spawnRobotServer.setAborted();
+	return false;
 }
 
 }
