@@ -24,12 +24,12 @@
 namespace stdr_server {
 	
 Server::Server(int argc, char** argv) 
-  : _spawnRobotServer(_nh, "stdr_server/spawn_robot", false)
+  : _spawnRobotServer(_nh, "stdr_server/spawn_robot", boost::bind(&Server::spawnRobotCallback, this, _1), false)
   , _registerRobotServer(_nh, "stdr_server/register_robot", boost::bind(&Server::registerRobotCallback, this, _1), false)
   , _deleteRobotServer(_nh, "stdr_server/delete_robot", false)
   , _id(0)
 {
-	_spawnRobotServer.registerGoalCallback( boost::bind(&Server::spawnRobotCallback, this) );
+//~ 	_spawnRobotServer.registerGoalCallback( boost::bind(&Server::spawnRobotCallback, this) );
 	
 	if (argc > 2) {
 		ROS_ERROR("%s", USAGE);
@@ -72,12 +72,12 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 	return true;	
 }
 
-void Server::spawnRobotCallback() {
-	stdr_msgs::RobotMsg description = _spawnRobotServer.acceptNewGoal()->description;
+void Server::spawnRobotCallback(const stdr_msgs::SpawnRobotGoalConstPtr& goal) {
+//~ 	stdr_msgs::RobotMsg description = _spawnRobotServer.acceptNewGoal()->description;
 	
 	stdr_msgs::SpawnRobotResult result;
 	
-	if (addNewRobot(description, &result)) {
+	if (addNewRobot(goal->description, &result)) {
 		_spawnRobotServer.setSucceeded(result);
 		
 		// publish to active_robots topic
@@ -87,6 +87,7 @@ void Server::spawnRobotCallback() {
 		}
 		
 		_robotsPublisher.publish(msg);
+		return;
 	}
 	
 	_spawnRobotServer.setAborted();
@@ -95,7 +96,6 @@ void Server::spawnRobotCallback() {
 void Server::registerRobotCallback(const stdr_msgs::RegisterRobotGoalConstPtr& goal) {
 	
 	boost::unique_lock<boost::mutex> lock(_mut);
-	ROS_ERROR("Mpika");
 	stdr_msgs::RegisterRobotResult result;
 	result.description = _robotMap[goal->name].robot;
 	_registerRobotServer.setSucceeded(result);
@@ -122,17 +122,19 @@ bool Server::addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotR
 	srv.request.name = namedRobot.name;
 	srv.request.type = "stdr_robot/Robot";
 	
+	boost::unique_lock<boost::mutex> lock(_mut);
 		
 	if (_spawnRobotClient.call(srv)) {
 		// wait until robot calls RobotRegisterAction
-		boost::unique_lock<boost::mutex> lock(_mut);
 		cond.wait(lock);
 		
 		result->indexedDescription = namedRobot;
 		
+		lock.unlock();
 		return true;
 	}
 	
+	lock.unlock();
 	return false;
 }
 

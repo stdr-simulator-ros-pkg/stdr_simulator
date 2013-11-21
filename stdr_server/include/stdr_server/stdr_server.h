@@ -62,7 +62,7 @@ class Server {
 		bool registerGuiCallback(stdr_msgs::RegisterGui::Request& req,
 							stdr_msgs::RegisterGui::Response& res);
 		// Actions
-		void spawnRobotCallback();
+		void spawnRobotCallback(const stdr_msgs::SpawnRobotGoalConstPtr& goal);
 		void deleteRobotCallback();
 		void registerRobotCallback(const stdr_msgs::RegisterRobotGoalConstPtr& goal);
 		
@@ -70,6 +70,7 @@ class Server {
 		
 		void activateActionServers();
 		bool addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResult* result);
+		void fun(nodelet::NodeletLoad srv, bool* ok);
 		
 	private:
 	

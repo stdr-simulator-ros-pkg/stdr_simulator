@@ -30,29 +30,29 @@ namespace stdr_robot {
 void Robot::onInit() {
 	ros::NodeHandle n = getMTNodeHandle();
 	
-	_registerClientPtr.reset( new RegisterRobotClient(n, "stdr_server/register_robot", false) );
+	_registerClientPtr.reset( new RegisterRobotClient(n, "stdr_server/register_robot", true) );
 	_registerClientPtr->waitForServer();
 	
 	stdr_msgs::RegisterRobotGoal goal;
 	goal.name = getName();
-	_registerClientPtr->sendGoal(goal);
-	
-	NODELET_INFO("Loaded new robot, %s", getName().c_str());
-	
-	// if no answer, we can't do anything
-	if (!_registerClientPtr->waitForResult(ros::Duration(10))) {
-		NODELET_ERROR("Something really bad happened...");
-	}
-	
-	initializeRobot(_registerClientPtr->getResult()->description);		
+	_registerClientPtr->sendGoal(goal, boost::bind(&Robot::initializeRobot, this, _1, _2));	
 
 	_motionControllerPtr.reset( new IdealMotionController(geometry_msgs::Pose2DPtr(&_currentPose), _tfBroadcaster, n) );
 	_mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
 	_collisionTimer = n.createTimer(ros::Duration(0.1), &Robot::checkCollision, this);
 }
 
-void Robot::initializeRobot(stdr_msgs::RobotMsg msg) {
-	// call action to robot and initialize _sensors (const stdr_msgs::RobotMsgConstPtr& msg)
+void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const stdr_msgs::RegisterRobotResultConstPtr result) {
+	
+	if (state == state.ABORTED) {
+		NODELET_ERROR("Something really bad happened...");
+		return;
+	}
+	
+	NODELET_INFO("Loaded new robot, %s", getName().c_str());
+	
+	// use result to initialize sensors
+
 }
 
 void Robot::mapCallback(const nav_msgs::OccupancyGridConstPtr& msg) {

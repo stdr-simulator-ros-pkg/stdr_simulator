@@ -45,7 +45,7 @@ class Robot : public nodelet::Nodelet {
 		
 		Robot() {}
 		void onInit();
-		void initializeRobot(stdr_msgs::RobotMsg msg);
+		void initializeRobot(const actionlib::SimpleClientGoalState& state, const stdr_msgs::RegisterRobotResultConstPtr result);
 		void mapCallback(const nav_msgs::OccupancyGridConstPtr& msg);
 		void checkCollision(const ros::TimerEvent&);
 		~Robot();
