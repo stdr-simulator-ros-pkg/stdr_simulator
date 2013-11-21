@@ -35,6 +35,8 @@ namespace stdr{
 		QObject::connect(loader.actionExit,SIGNAL(triggered(bool)),this,SLOT(actionExitTriggered()));
 		QObject::connect(loader.actionLoadMap,SIGNAL(triggered(bool)),this,SLOT(actionLoadMapTriggered()));
 		QObject::connect(loader.actionNewRobot,SIGNAL(triggered(bool)),this,SLOT(actionNewRobotTriggered()));
+		QObject::connect(loader.actionZoomIn,SIGNAL(triggered(bool)),this,SLOT(actionZoomInTriggered()));
+		QObject::connect(loader.actionZoomOut,SIGNAL(triggered(bool)),this,SLOT(actionZoomOutTriggered()));
 	}
 	
 	void GuiConnector::actionExitTriggered(void){
@@ -61,5 +63,18 @@ namespace stdr{
 	
 	void GuiConnector::actionNewRobotTriggered(void){
 		robotCreatorConn.initialise();
+	}
+	
+	void GuiConnector::setMapLoaded(bool mapLoaded){
+		_mapLoaded=mapLoaded;
+	}
+	
+	void GuiConnector::actionZoomInTriggered(void){
+		//~ if(!_mapLoaded) return;
+		emit setZoomInCursor(loader.actionZoomIn->isChecked());
+	}
+	void GuiConnector::actionZoomOutTriggered(void){
+		//~ if(!_mapLoaded) return;
+		emit setZoomOutCursor(loader.actionZoomOut->isChecked());
 	}
 }

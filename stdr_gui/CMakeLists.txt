@@ -50,6 +50,7 @@ file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} resources/*.qrc)
 QT4_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
 QT4_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
 
+QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_gui_controller.h)
 QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_gui_connector.h)
 QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_info_connector.h)
 QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_map_connector.h)

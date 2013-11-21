@@ -29,6 +29,9 @@ namespace stdr{
 		Q_OBJECT
 			int argc;
 			char **argv;
+			QCursor zoomInCursor;
+			QCursor zoomOutCursor;
+			
 		public:
 			MapLoader loader;
 			MapConnector(int argc, char **argv);
@@ -36,10 +39,12 @@ namespace stdr{
 			void updateImage(QImage *img);	
 			
 			
-		public Q_SLOTS:
+		public slots:
 		
 			bool eventFilter( QObject* watched, QEvent* event);
 			void serveImage(QImage *img);
+			void setCursorZoomIn(bool state);
+			void setCursorZoomOut(bool state);
 		
 		signals:
 			void signalUpdateImage(QImage *img);	
