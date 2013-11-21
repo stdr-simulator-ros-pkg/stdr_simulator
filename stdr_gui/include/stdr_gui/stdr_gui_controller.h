@@ -37,8 +37,15 @@
 
 namespace stdr_gui{
 
+	/**
+	 @class GuiController
+	 @brief The main controller for the STDR GUI. Inherits QThread
+	 **/ 
 	class GuiController : public QThread{
 		Q_OBJECT
+		
+		private: 
+		
 			int argc;
 			char **argv;
 			
