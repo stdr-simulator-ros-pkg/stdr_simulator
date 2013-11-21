@@ -23,15 +23,15 @@
 #define STDR_ROBOT_CREATOR_LOADER
 
 #include "ui_robotCreator.h"
-#include "stdr_kinematic_properties_loader.h"
-#include "stdr_rfid_antenna_properties_loader.h"
-#include "stdr_robot_properties_loader.h"
-#include "stdr_sonar_properties_loader.h"
-#include "stdr_laser_properties_loader.h"
-#include "../stdr_tools.h"
+#include "stdr_gui/stdr_robot_creator/stdr_kinematic_properties_loader.h"
+#include "stdr_gui/stdr_robot_creator/stdr_rfid_antenna_properties_loader.h"
+#include "stdr_gui/stdr_robot_creator/stdr_robot_properties_loader.h"
+#include "stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.h"
+#include "stdr_gui/stdr_robot_creator/stdr_laser_properties_loader.h"
+#include "stdr_gui/stdr_tools.h"
 
 
-namespace stdr{
+namespace stdr_gui{
 	class RobotCreatorLoader : public QWidget, public Ui_RobotCreator{
 			int argc;
 			char **argv;

@@ -26,7 +26,7 @@
 #include "stdr_msgs/LaserSensorMsg.h"
 #include "sensor_msgs/LaserScan.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class GuiLaser{
 			std::string _topic;
 			const stdr_msgs::LaserSensorMsg& _msg;

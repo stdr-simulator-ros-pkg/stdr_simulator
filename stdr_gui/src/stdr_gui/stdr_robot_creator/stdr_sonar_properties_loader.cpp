@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.h"
 
-namespace stdr{
+namespace stdr_gui{
 	SonarPropertiesLoader::SonarPropertiesLoader(int argc, char **argv){
 		this->argc=argc;
 		this->argv=argv;

@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.h"
 
-namespace stdr{
+namespace stdr_gui{
 	unsigned int RobotCreatorConnector::laserNumber=0;
 	unsigned int RobotCreatorConnector::sonarNumber=0;
 	unsigned int RobotCreatorConnector::rfidNumber=0;

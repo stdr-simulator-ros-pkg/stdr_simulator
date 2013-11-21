@@ -23,9 +23,9 @@
 #define STDR_INFO_LOADER
 
 #include "ui_information.h"
-#include "stdr_tools.h"
+#include "stdr_gui/stdr_tools.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class InfoLoader : public QWidget, public Ui_information{
 		
 			int argc;

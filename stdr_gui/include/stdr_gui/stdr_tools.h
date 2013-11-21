@@ -60,7 +60,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QMessageBox>
 
-namespace stdr{
+namespace stdr_gui{
 	std::string getRosPackagePath(std::string package);
 }
 

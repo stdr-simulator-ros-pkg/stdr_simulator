@@ -24,7 +24,7 @@
 
 #include "stdr_gui/stdr_info_loader.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class InfoConnector : public QObject{
 		Q_OBJECT
 			

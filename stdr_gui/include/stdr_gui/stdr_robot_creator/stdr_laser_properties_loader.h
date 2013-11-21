@@ -23,9 +23,9 @@
 #define STDR_LASER_PROPERTIES_LOADER
 
 #include "ui_laserProperties.h"
-#include "../stdr_tools.h"
+#include "stdr_gui/stdr_tools.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class LaserPropertiesLoader : public QWidget, public Ui_LaserProperties{
 			int argc;
 			char **argv;

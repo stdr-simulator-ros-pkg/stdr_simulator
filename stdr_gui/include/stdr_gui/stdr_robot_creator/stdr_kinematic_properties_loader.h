@@ -23,9 +23,9 @@
 #define STDR_KINEMATIC_PROPERTIES_LOADER
 
 #include "ui_kinematicProperties.h"
-#include "../stdr_tools.h"
+#include "stdr_gui/stdr_tools.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class KinematicPropertiesLoader : public QWidget, public Ui_KinematicProperties{
 			int argc;
 			char **argv;

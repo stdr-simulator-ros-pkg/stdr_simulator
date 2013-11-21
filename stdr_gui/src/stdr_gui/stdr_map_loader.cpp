@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_map_loader.h"
 
-namespace stdr{
+namespace stdr_gui{
 	MapLoader::MapLoader(int argc, char **argv){
 		this->argc=argc;
 		this->argv=argv;

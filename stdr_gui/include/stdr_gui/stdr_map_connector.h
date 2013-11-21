@@ -24,7 +24,7 @@
 
 #include "stdr_gui/stdr_map_loader.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class MapConnector : public QObject{
 		Q_OBJECT
 			int argc;

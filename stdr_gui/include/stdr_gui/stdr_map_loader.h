@@ -23,9 +23,9 @@
 #define STDR_MAP_LOADER
 
 #include "ui_map.h"
-#include "stdr_tools.h"
+#include "stdr_gui/stdr_tools.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class MapLoader : public QWidget, public Ui_mapWidget{
 			int argc;
 			char **argv;

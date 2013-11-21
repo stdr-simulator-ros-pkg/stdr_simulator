@@ -24,7 +24,7 @@
 int main(int argc,char **argv){
 	QApplication app(argc, argv);
 	ros::init(argc,argv,"stdr_gui_node");
-	stdr::GuiController con(argc,argv);
+	stdr_gui::GuiController con(argc,argv);
 	con.init();
 	app.exec();
 	return 0;

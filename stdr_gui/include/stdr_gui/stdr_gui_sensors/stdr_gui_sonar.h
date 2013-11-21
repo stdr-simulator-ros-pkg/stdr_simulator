@@ -26,7 +26,7 @@
 #include "stdr_gui/stdr_tools.h"
 #include "stdr_msgs/SonarSensorMsg.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class GuiSonar{
 			std::string _topic;
 			const stdr_msgs::SonarSensorMsg& _msg;

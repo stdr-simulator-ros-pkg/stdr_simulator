@@ -25,7 +25,7 @@
 #include "stdr_gui/stdr_tools.h"
 #include "stdr_msgs/RfidSensorMsg.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class GuiRfid{
 			std::string _topic;
 			const stdr_msgs::RfidSensorMsg& _msg;
