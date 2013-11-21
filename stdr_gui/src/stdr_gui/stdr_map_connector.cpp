@@ -34,6 +34,11 @@ namespace stdr{
 		loader.map->installEventFilter(this);
 		
 		QObject::connect(this,SIGNAL(signalUpdateImage(QImage *)),this, SLOT(serveImage(QImage *)));
+		
+		QPixmap p((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_in.png")).c_str());
+		zoomInCursor=QCursor(p.scaled(20,20));
+		p=QPixmap((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_out.png")).c_str());
+		zoomOutCursor=QCursor(p.scaled(20,20));
 	}
 
 	bool MapConnector::eventFilter( QObject* watched, QEvent* event ) {
@@ -59,5 +64,19 @@ namespace stdr{
 	
 	void MapConnector::serveImage(QImage *img){
 		loader.updateImage(img);
+	}
+	
+	void MapConnector::setCursorZoomIn(bool state){
+		if(state)
+			loader.map->setCursor(zoomInCursor);
+		else
+			loader.map->setCursor(QCursor(Qt::CrossCursor));
+	}
+	
+	void MapConnector::setCursorZoomOut(bool state){
+		if(state)
+			loader.map->setCursor(zoomOutCursor);
+		else
+			loader.map->setCursor(QCursor(Qt::CrossCursor));
 	}
 }

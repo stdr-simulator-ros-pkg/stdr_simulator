@@ -36,7 +36,6 @@ namespace stdr{
 		this->argc=argc;
 		this->argv=argv;
 		setupWidgets();
-		
 	}
 	
 	void GuiController::setupWidgets(void){
@@ -69,6 +68,9 @@ namespace stdr{
 	
 	void GuiController::initializeCommunications(void){
 		mapSubscriber=n.subscribe("map", 1, &GuiController::receiveMap,this);
+		
+		QObject::connect(&guiConnector,SIGNAL(setZoomInCursor(bool)),&mapConnector, SLOT(setCursorZoomIn(bool)));
+		QObject::connect(&guiConnector,SIGNAL(setZoomOutCursor(bool)),&mapConnector, SLOT(setCursorZoomOut(bool)));
 	}
 	
 	void GuiController::receiveMap(const nav_msgs::OccupancyGrid& msg){
@@ -98,6 +100,8 @@ namespace stdr{
 		painter.drawLine(originx-20,originy,originx+20,originy);
 		
 		mapConnector.updateImage(&runningMap);
+		
+		guiConnector.setMapLoaded(true);
 	}
 }
 

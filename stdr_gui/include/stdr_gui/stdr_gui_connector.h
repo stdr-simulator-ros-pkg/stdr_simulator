@@ -31,18 +31,28 @@ namespace stdr{
 		
 			int argc; 
 			char **argv;
+			bool _mapLoaded;
+			
+			
 		public:
 			GuiConnector(int argc, char **argv);
 			GuiLoader loader;
 			RobotCreatorConnector robotCreatorConn;
-			
+			void setMapLoaded(bool mapLoaded);
 
-		public Q_SLOTS:
+		public slots:
 			void actionPropertiesTriggered(void);
 			void actionAboutTriggered(void);
 			void actionExitTriggered(void);
 			void actionLoadMapTriggered(void);
 			void actionNewRobotTriggered(void);
+			
+			void actionZoomInTriggered(void);
+			void actionZoomOutTriggered(void);
+			
+		signals:
+			void setZoomInCursor(bool state);
+			void setZoomOutCursor(bool state);
 	};
 }
 

@@ -83,5 +83,25 @@ namespace stdr{
         iconProperties.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/orange-moonlight-icons/png/32x32/process.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionProperties->setIcon(iconProperties);
         toolBar->addAction(actionProperties);
+        
+        toolBar->addSeparator();
+        
+        actionZoomIn = new QAction(this);
+        actionZoomIn->setObjectName(QString::fromUtf8("actionZoomIn"));
+        actionZoomIn->setCheckable(true);
+        actionZoomIn->setIconText(QString("Zoom in"));
+        QIcon iconZoomIn;
+        iconZoomIn.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_in.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        actionZoomIn->setIcon(iconZoomIn);
+        toolBar->addAction(actionZoomIn);
+        
+        actionZoomOut = new QAction(this);
+        actionZoomOut->setObjectName(QString::fromUtf8("actionZoomIn"));
+        actionZoomOut->setCheckable(true);
+        actionZoomOut->setIconText(QString("Zoom in"));
+        QIcon iconZoomOut;
+        iconZoomOut.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_out.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        actionZoomOut->setIcon(iconZoomOut);
+        toolBar->addAction(actionZoomOut);
 	}
 }

@@ -38,6 +38,8 @@ namespace stdr{
 			QAction *actionNewRobot;
 			QAction *actionNewRfid;
 			QAction *actionLoadMap;
+			QAction *actionZoomIn;
+			QAction *actionZoomOut;
 		
 			GuiLoader(int argc,char **argv);
 			
