@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_tools.h"
 
-namespace stdr{
+namespace stdr_gui{
 	std::string getRosPackagePath(std::string package){
 		return ros::package::getPath(package.c_str());
 	}

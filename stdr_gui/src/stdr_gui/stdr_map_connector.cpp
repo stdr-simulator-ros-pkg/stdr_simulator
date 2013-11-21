@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_map_connector.h"
 
-namespace stdr{
+namespace stdr_gui{
 	MapConnector::MapConnector(int argc, char **argv):
 		QObject(),
 		loader(argc,argv)

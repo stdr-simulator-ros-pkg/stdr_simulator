@@ -35,7 +35,7 @@
 
 #include "nav_msgs/OccupancyGrid.h"
 
-namespace stdr{
+namespace stdr_gui{
 
 	class GuiController : public QThread{
 		Q_OBJECT

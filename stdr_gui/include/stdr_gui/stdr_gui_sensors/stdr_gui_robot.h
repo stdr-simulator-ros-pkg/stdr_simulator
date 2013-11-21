@@ -27,7 +27,7 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_rfid.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sonar.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class GuiRobot{
 			std::vector<GuiLaser> _lasers;
 			std::vector<GuiSonar> _sonars;

@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_laser.h"
 
-namespace stdr{
+namespace stdr_gui{
 	GuiLaser::GuiLaser(stdr_msgs::LaserSensorMsg msg,QImage mapImage,std::string baseTopic):
 		_msg(msg)
 	{

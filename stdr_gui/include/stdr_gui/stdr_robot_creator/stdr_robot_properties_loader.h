@@ -23,9 +23,9 @@
 #define STDR_ROBOT_PROPERTIES_LOADER
 
 #include "ui_robotProperties.h"
-#include "../stdr_tools.h"
+#include "stdr_gui/stdr_tools.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class RobotPropertiesLoader : public QWidget, public Ui_RobotProperties{
 			int argc;
 			char **argv;

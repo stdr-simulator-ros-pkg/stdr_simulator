@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_rfid.h"
 
-namespace stdr{
+namespace stdr_gui{
 	GuiRfid::GuiRfid(stdr_msgs::RfidSensorMsg msg,QImage mapImage):
 		_msg(msg)
 	{

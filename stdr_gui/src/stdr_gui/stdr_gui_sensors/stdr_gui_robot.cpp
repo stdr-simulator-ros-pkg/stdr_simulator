@@ -21,6 +21,6 @@
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 
-namespace stdr{
+namespace stdr_gui{
 	
 }

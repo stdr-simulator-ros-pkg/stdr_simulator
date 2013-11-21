@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_robot_creator/stdr_kinematic_properties_loader.h"
 
-namespace stdr{
+namespace stdr_gui{
 	KinematicPropertiesLoader::KinematicPropertiesLoader(int argc, char **argv){
 		this->argc=argc;
 		this->argv=argv;

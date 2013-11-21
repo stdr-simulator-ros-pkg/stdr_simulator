@@ -22,7 +22,7 @@
 #include "stdr_gui/stdr_gui_controller.h"
 
 
-namespace stdr{
+namespace stdr_gui{
 	
 	void spinThreadFunction(void){
 		ros::spin();

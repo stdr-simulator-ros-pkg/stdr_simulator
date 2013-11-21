@@ -25,7 +25,7 @@
 #include "stdr_gui/stdr_gui_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class GuiConnector:public QObject{
 		Q_OBJECT
 		

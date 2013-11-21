@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_loader.h"
 
-namespace stdr{
+namespace stdr_gui{
 	
 	
 	RobotCreatorLoader::RobotCreatorLoader(int argc, char **argv):

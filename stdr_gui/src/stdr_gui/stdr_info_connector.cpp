@@ -21,7 +21,7 @@
 
 #include "stdr_gui/stdr_info_connector.h"
 
-namespace stdr{
+namespace stdr_gui{
 	InfoConnector::InfoConnector(int argc, char **argv):
 		QObject(),
 		loader(argc,argv)

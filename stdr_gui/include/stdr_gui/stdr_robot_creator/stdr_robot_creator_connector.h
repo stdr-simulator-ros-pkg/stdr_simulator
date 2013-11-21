@@ -25,7 +25,7 @@
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_loader.h"
 #include "stdr_msgs/RobotMsg.h"
 
-namespace stdr{
+namespace stdr_gui{
 	class RobotCreatorConnector:public QObject{
 		Q_OBJECT
 		
