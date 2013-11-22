@@ -98,6 +98,12 @@ void Server::deleteRobotCallback(const stdr_msgs::DeleteRobotGoalConstPtr&  goal
 	
 	if (deleteRobot(goal->name, &result)) {
 		
+		// publish to active_robots topic
+		stdr_msgs::RobotIndexedVectorMsg msg;
+		for (RobotMap::iterator it=_robotMap.begin(); it!=_robotMap.end(); ++it) {
+			msg.robots.push_back( it->second );
+		}
+		_robotsPublisher.publish(msg);
 		_deleteRobotServer.setSucceeded(result);
 		return;
 	}
@@ -162,7 +168,9 @@ bool Server::deleteRobot(std::string name, stdr_msgs::DeleteRobotResult* result)
 		
 		if (_unloadRobotClient.call(srv)) {
 			
-			_robotMap.erase(it);
+			if (srv.response.success) {
+				_robotMap.erase(it);
+			}
 			
 			result->success = srv.response.success;
 			return srv.response.success;

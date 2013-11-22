@@ -37,7 +37,6 @@ void Robot::onInit() {
 	goal.name = getName();
 	_registerClientPtr->sendGoal(goal, boost::bind(&Robot::initializeRobot, this, _1, _2));	
 
-	_motionControllerPtr.reset( new IdealMotionController(geometry_msgs::Pose2DPtr(&_currentPose), _tfBroadcaster, n, getName()) );
 	_mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
 	_collisionTimer = n.createTimer(ros::Duration(0.1), &Robot::checkCollision, this);
 }
@@ -52,6 +51,8 @@ void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const
 	NODELET_INFO("Loaded new robot, %s", getName().c_str());
 	
 	// use result to initialize sensors
+	ros::NodeHandle n = getMTNodeHandle();
+	_motionControllerPtr.reset( new IdealMotionController(boost::make_shared<geometry_msgs::Pose2D>(_currentPose), _tfBroadcaster, n, getName()) );
 
 }
 
