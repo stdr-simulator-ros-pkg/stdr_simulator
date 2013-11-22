@@ -31,7 +31,6 @@
 #include <stdr_server/map_server.h>
 #include <stdr_msgs/LoadMap.h>
 #include <stdr_msgs/RegisterGui.h>
-#include <stdr_msgs/MoveRobot.h>
 #include <stdr_msgs/RegisterRobotAction.h>
 #include <stdr_msgs/SpawnRobotAction.h>
 #include <stdr_msgs/DeleteRobotAction.h>
@@ -57,19 +56,18 @@ class Server {
 		// Services
 		bool loadMapCallback(stdr_msgs::LoadMap::Request& req,
 							stdr_msgs::LoadMap::Response& res);
-		bool moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
-							stdr_msgs::MoveRobot::Response& res);
 		bool registerGuiCallback(stdr_msgs::RegisterGui::Request& req,
 							stdr_msgs::RegisterGui::Response& res);
 		// Actions
 		void spawnRobotCallback(const stdr_msgs::SpawnRobotGoalConstPtr& goal);
-		void deleteRobotCallback();
+		void deleteRobotCallback(const stdr_msgs::DeleteRobotGoalConstPtr&  goal);
 		void registerRobotCallback(const stdr_msgs::RegisterRobotGoalConstPtr& goal);
 		
 	private:
 		
 		void activateActionServers();
 		bool addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResult* result);
+		bool deleteRobot(std::string name, stdr_msgs::DeleteRobotResult* result);
 		
 	private:
 	

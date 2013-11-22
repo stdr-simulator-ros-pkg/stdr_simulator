@@ -19,32 +19,58 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <ros/ros.h>
-#include <actionlib/client/simple_action_client.h>
-#include <stdr_msgs/RobotIndexedMsg.h>
-#include <stdr_msgs/SpawnRobotAction.h>
-#include <stdr_robot/exceptions.h>
+#include <stdr_robot/handle_robot.h>
 
-#ifndef SPAWN_ROBOT_H
-#define SPAWN_ROBOT_H
+#define USAGE "USAGE: robot_handler [add|delete|move]\n" \
+              "  map.yaml: map description file\n" 
 
-namespace stdr_robot {
-
-typedef actionlib::SimpleActionClient<stdr_msgs::SpawnRobotAction> SpawnRobotClient;
-
-class SpawnRobot {
+int main(int argc, char** argv) {
 	
-	public:
-		
-		SpawnRobot();
-		stdr_msgs::RobotIndexedMsg spawnNewRobot(const stdr_msgs::RobotMsg msg);
-		
-	private:
-		
-		SpawnRobotClient _spawnRobotClient;
-		
-};
+	ros::init(argc, argv, "robot_spawner", ros::init_options::AnonymousName);
 	
+	stdr_robot::HandleRobot handler;
+	
+	// add
+	if ((argc == 2) && (std::string(argv[1]) == "add")) {
+		
+		stdr_msgs::RobotMsg msg;
+	
+		stdr_msgs::RobotIndexedMsg namedRobot;
+		
+		try {
+			namedRobot = handler.spawnNewRobot(msg);
+			return 0;
+		}
+		catch (ConnectionException& ex) {
+			ROS_ERROR("%s", ex.what());
+			return -1;
+		}
+		
+	}
+	// delete
+	else if ((argc == 3) && (std::string(argv[1]) == "delete")) {
+		
+		std::string name(argv[2]);
+		
+		try {
+			if (handler.deleteRobot(name)) {
+				ROS_INFO("Robot %s deleted successfully", name.c_str());
+			}
+			else {
+				ROS_ERROR("Could not delete robot %s", name.c_str());
+			}
+			
+			return 0;
+		}
+		catch (ConnectionException& ex) {
+			ROS_ERROR("%s", ex.what());
+			return -1;
+		}
+		
+	}
+	// wrong args
+	else {
+		ROS_ERROR("%s", USAGE);
+		exit(-1);
+	}
 }
-
-#endif

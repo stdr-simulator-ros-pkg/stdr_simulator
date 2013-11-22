@@ -19,36 +19,38 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdr_robot/spawn_robot.h>
+#include <ros/ros.h>
+#include <actionlib/client/simple_action_client.h>
+#include <stdr_msgs/RobotIndexedMsg.h>
+#include <stdr_msgs/SpawnRobotAction.h>
+#include <stdr_msgs/DeleteRobotAction.h>
+#include <stdr_msgs/MoveRobot.h>
+#include <stdr_robot/exceptions.h>
+#include <geometry_msgs/Pose2D.h>
+
+#ifndef HANDLE_ROBOT_H
+#define HANDLE_ROBOT_H
 
 namespace stdr_robot {
+
+typedef actionlib::SimpleActionClient<stdr_msgs::SpawnRobotAction> SpawnRobotClient;
+typedef actionlib::SimpleActionClient<stdr_msgs::DeleteRobotAction> DeleteRobotClient;
+
+class HandleRobot {
 	
-SpawnRobot::SpawnRobot() 
-  : _spawnRobotClient("stdr_server/spawn_robot", true)
-{
+	public:
+		
+		HandleRobot();
+		stdr_msgs::RobotIndexedMsg spawnNewRobot(const stdr_msgs::RobotMsg msg);
+		bool deleteRobot(const std::string& name);
+		bool moveRobot(const std::string& name, const geometry_msgs::Pose2D newPose);
+		
+	private:
+		
+		SpawnRobotClient _spawnRobotClient;
+		DeleteRobotClient _deleteRobotClient;
+};
+	
 }
 
-stdr_msgs::RobotIndexedMsg SpawnRobot::spawnNewRobot(const stdr_msgs::RobotMsg msg) {
-	
-	stdr_msgs::SpawnRobotGoal goal;
-	goal.description = msg;
-		
-	while (!_spawnRobotClient.waitForServer(ros::Duration(1)) && ros::ok()) {
-		ROS_WARN("Could not find stdr_server/spawn_robot action, is it running??");
-	}
-	
-	_spawnRobotClient.sendGoal(goal);
-	
-	bool success = _spawnRobotClient.waitForResult(ros::Duration(10));
-	
-	if (!success) {
-		throw ConnectionException("Could not spawn robot...");
-	}
-	
-	ROS_INFO("New robot spawned successfully, with name %s.", _spawnRobotClient.getResult()->indexedDescription.name.c_str());
-	
-	return _spawnRobotClient.getResult()->indexedDescription;
-	
-}	
-	
-}
+#endif

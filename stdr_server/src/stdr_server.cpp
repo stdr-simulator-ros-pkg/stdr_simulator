@@ -26,7 +26,7 @@ namespace stdr_server {
 Server::Server(int argc, char** argv) 
   : _spawnRobotServer(_nh, "stdr_server/spawn_robot", boost::bind(&Server::spawnRobotCallback, this, _1), false)
   , _registerRobotServer(_nh, "stdr_server/register_robot", boost::bind(&Server::registerRobotCallback, this, _1), false)
-  , _deleteRobotServer(_nh, "stdr_server/delete_robot", false)
+  , _deleteRobotServer(_nh, "stdr_server/delete_robot", boost::bind(&Server::deleteRobotCallback, this, _1), false)
   , _id(0)
 {
 //~ 	_spawnRobotServer.registerGoalCallback( boost::bind(&Server::spawnRobotCallback, this) );
@@ -92,6 +92,19 @@ void Server::spawnRobotCallback(const stdr_msgs::SpawnRobotGoalConstPtr& goal) {
 	_spawnRobotServer.setAborted();
 }
 
+void Server::deleteRobotCallback(const stdr_msgs::DeleteRobotGoalConstPtr&  goal) {
+	
+	stdr_msgs::DeleteRobotResult result;
+	
+	if (deleteRobot(goal->name, &result)) {
+		
+		_deleteRobotServer.setSucceeded(result);
+		return;
+	}
+	
+	_deleteRobotServer.setAborted(result);
+}
+
 void Server::registerRobotCallback(const stdr_msgs::RegisterRobotGoalConstPtr& goal) {
 	
 	boost::unique_lock<boost::mutex> lock(_mut);
@@ -106,6 +119,7 @@ void Server::registerRobotCallback(const stdr_msgs::RegisterRobotGoalConstPtr& g
 void Server::activateActionServers() {
 	_spawnRobotServer.start();
 	_registerRobotServer.start();
+	_deleteRobotServer.start();
 }
 
 bool Server::addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResult* result) {
@@ -137,4 +151,31 @@ bool Server::addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotR
 	return false;
 }
 
+bool Server::deleteRobot(std::string name, stdr_msgs::DeleteRobotResult* result) {
+	
+	RobotMap::iterator it = _robotMap.find(name);
+	
+	if (it != _robotMap.end()) {
+		
+		nodelet::NodeletUnload srv;
+		srv.request.name =  name;
+		
+		if (_unloadRobotClient.call(srv)) {
+			
+			_robotMap.erase(it);
+			
+			result->success = srv.response.success;
+			return srv.response.success;
+		}
+		
+		result->success = false;
+		return false;
+	}
+	
+	ROS_WARN("Requested to delete robot, with name %s does not exist.", name.c_str());
+	
+	result->success = false;
+	return false;	
 }
+
+} // end of namespace stdr_robot
