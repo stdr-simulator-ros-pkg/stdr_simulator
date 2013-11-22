@@ -73,7 +73,6 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 }
 
 void Server::spawnRobotCallback(const stdr_msgs::SpawnRobotGoalConstPtr& goal) {
-//~ 	stdr_msgs::RobotMsg description = _spawnRobotServer.acceptNewGoal()->description;
 	
 	stdr_msgs::SpawnRobotResult result;
 	

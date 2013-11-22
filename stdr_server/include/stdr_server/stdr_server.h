@@ -70,7 +70,6 @@ class Server {
 		
 		void activateActionServers();
 		bool addNewRobot(stdr_msgs::RobotMsg description, stdr_msgs::SpawnRobotResult* result);
-		void fun(nodelet::NodeletLoad srv, bool* ok);
 		
 	private:
 	

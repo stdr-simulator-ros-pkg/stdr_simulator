@@ -37,7 +37,7 @@ void Robot::onInit() {
 	goal.name = getName();
 	_registerClientPtr->sendGoal(goal, boost::bind(&Robot::initializeRobot, this, _1, _2));	
 
-	_motionControllerPtr.reset( new IdealMotionController(geometry_msgs::Pose2DPtr(&_currentPose), _tfBroadcaster, n) );
+	_motionControllerPtr.reset( new IdealMotionController(geometry_msgs::Pose2DPtr(&_currentPose), _tfBroadcaster, n, getName()) );
 	_mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
 	_collisionTimer = n.createTimer(ros::Duration(0.1), &Robot::checkCollision, this);
 }
