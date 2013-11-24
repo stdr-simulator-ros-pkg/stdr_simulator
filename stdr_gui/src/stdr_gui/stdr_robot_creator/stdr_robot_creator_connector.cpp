@@ -38,6 +38,7 @@ namespace stdr_gui{
 		QObject::connect(loader.sonarPropLoader.pushButton,SIGNAL(clicked(bool)),this,SLOT(updateSonar()));
 		QObject::connect(loader.rfidAntennaPropLoader.pushButton,SIGNAL(clicked(bool)),this,SLOT(updateRfid()));
 		QObject::connect(loader.saveRobotButton,SIGNAL(clicked(bool)),this,SLOT(saveRobot()));
+		QObject::connect(loader.loadRobotButton,SIGNAL(clicked(bool)),this,SLOT(loadRobot()));
 		QObject::connect(loader.cancelButton,SIGNAL(clicked(bool)),this,SLOT(closeRobotCreator()));
 
 		climax=-1;
@@ -644,11 +645,16 @@ namespace stdr_gui{
 	}
 
 	void RobotCreatorConnector::saveRobot(void){
-		//~ robotPublisher.publish(newRobotMsg);
+		emit saveRobotPressed(newRobotMsg);
 		loader.hide();
 	}
 	
 	void RobotCreatorConnector::closeRobotCreator(void){
+		loader.hide();
+	}
+	
+	void RobotCreatorConnector::loadRobot(void){
+		emit loadRobotPressed(newRobotMsg);
 		loader.hide();
 	}
 }

@@ -25,12 +25,21 @@
 #include "stdr_gui/stdr_map_loader.h"
 
 namespace stdr_gui{
+	
+	enum StdrMapState{
+		NORMAL,
+		ZOOMIN,
+		ZOOMOUT
+	};
+	
 	class MapConnector : public QObject{
 		Q_OBJECT
 			int argc;
 			char **argv;
 			QCursor zoomInCursor;
 			QCursor zoomOutCursor;
+			
+			StdrMapState mapState;
 			
 		public:
 			MapLoader loader;
@@ -48,6 +57,8 @@ namespace stdr_gui{
 		
 		signals:
 			void signalUpdateImage(QImage *img);	
+			void zoomInPressed(QPoint p);	
+			void zoomOutPressed(QPoint p);	
 	};	
 }
 

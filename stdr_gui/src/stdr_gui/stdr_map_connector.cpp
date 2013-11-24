@@ -29,6 +29,8 @@ namespace stdr_gui{
 		this->argc=argc;
 		this->argv=argv;
 		
+		mapState=NORMAL;
+		
 		loader.map->setScaledContents(true);
 		
 		loader.map->installEventFilter(this);
@@ -52,6 +54,11 @@ namespace stdr_gui{
 					//~ QAction* selectedItem = myMenu.exec(loader.mapToGlobal(me->pos()));
 				}
 				else if(me->button()==Qt::LeftButton){
+					QPoint p=me->pos();
+					if(mapState==ZOOMIN)
+						emit zoomInPressed(p);
+					else if(mapState==ZOOMOUT)
+						emit zoomOutPressed(p);
 				}
 			}
 		}
@@ -67,16 +74,24 @@ namespace stdr_gui{
 	}
 	
 	void MapConnector::setCursorZoomIn(bool state){
-		if(state)
+		if(state){
+			mapState=ZOOMIN;
 			loader.map->setCursor(zoomInCursor);
-		else
+		}
+		else{
+			mapState=NORMAL;
 			loader.map->setCursor(QCursor(Qt::CrossCursor));
+		}
 	}
 	
 	void MapConnector::setCursorZoomOut(bool state){
-		if(state)
+		if(state){
+			mapState=ZOOMOUT;
 			loader.map->setCursor(zoomOutCursor);
-		else
+		}
+		else{
+			mapState=NORMAL;
 			loader.map->setCursor(QCursor(Qt::CrossCursor));
+		}
 	}
 }

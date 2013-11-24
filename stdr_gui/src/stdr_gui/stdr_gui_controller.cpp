@@ -38,6 +38,18 @@ namespace stdr_gui{
 		setupWidgets();
 	}
 	
+	void GuiController::initializeCommunications(void){
+		mapSubscriber=n.subscribe("map", 1, &GuiController::receiveMap,this);
+		
+		QObject::connect(&guiConnector,SIGNAL(setZoomInCursor(bool)),&mapConnector, SLOT(setCursorZoomIn(bool)));
+		QObject::connect(&guiConnector,SIGNAL(setZoomOutCursor(bool)),&mapConnector, SLOT(setCursorZoomOut(bool)));
+		QObject::connect(&mapConnector,SIGNAL(zoomInPressed(QPoint)),this, SLOT(zoomInPressed(QPoint)));
+		QObject::connect(&mapConnector,SIGNAL(zoomOutPressed(QPoint)),this, SLOT(zoomOutPressed(QPoint)));
+		
+		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg)));
+		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(loadRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(loadRobotPressed(stdr_msgs::RobotMsg)));
+	}
+	
 	void GuiController::setupWidgets(void){
 		{
 			guiConnector.loader.gridLayout->addWidget(static_cast<QWidget *>(&infoConnector.loader),0,0,0);	
@@ -65,14 +77,7 @@ namespace stdr_gui{
 		boost::thread spinThread(&spinThreadFunction);
 		return true;
 	}
-	
-	void GuiController::initializeCommunications(void){
-		mapSubscriber=n.subscribe("map", 1, &GuiController::receiveMap,this);
-		
-		QObject::connect(&guiConnector,SIGNAL(setZoomInCursor(bool)),&mapConnector, SLOT(setCursorZoomIn(bool)));
-		QObject::connect(&guiConnector,SIGNAL(setZoomOutCursor(bool)),&mapConnector, SLOT(setCursorZoomOut(bool)));
-	}
-	
+
 	void GuiController::receiveMap(const nav_msgs::OccupancyGrid& msg){
 		ROS_ERROR("Map got");
 		mapMsg=msg;
@@ -102,6 +107,20 @@ namespace stdr_gui{
 		mapConnector.updateImage(&runningMap);
 		
 		guiConnector.setMapLoaded(true);
+	}
+	
+	void GuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
+		ROS_ERROR("Save Signal ok");
+	}
+	void GuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
+		ROS_ERROR("Load Signal ok");
+	}
+	
+	void GuiController::zoomInPressed(QPoint p){
+		ROS_ERROR("zoomInPressed Signal ok");
+	}
+	void GuiController::zoomOutPressed(QPoint p){
+		ROS_ERROR("zoomOutPressed Signal ok");
 	}
 }
 

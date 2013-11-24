@@ -74,6 +74,12 @@ namespace stdr_gui{
 			void receiveMap(const nav_msgs::OccupancyGrid& msg);
 			 
 			bool init();	
+		
+		public slots:
+			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+			void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+			void zoomInPressed(QPoint p);
+			void zoomOutPressed(QPoint p);
 	};
 }
 
