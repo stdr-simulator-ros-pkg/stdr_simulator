@@ -72,5 +72,21 @@ bool HandleRobot::deleteRobot(const std::string& name) {
 	return _deleteRobotClient.getResult()->success;
 	
 }
+
+bool HandleRobot::moveRobot(const std::string& name, const geometry_msgs::Pose2D newPose) {
 	
+	while (!ros::service::waitForService(name + "/replace", ros::Duration(.1)) && ros::ok()) {
+		ROS_WARN("Could not find %s/replace ...", name.c_str());
+	}
+	
+	stdr_msgs::MoveRobot srv;
+	srv.request.newPose = newPose;
+	
+	if (ros::service::call(name + "/replace", srv)) {
+		return true;
+	}
+	
+	return false;
 }
+	
+} // end of namespace stdr_robot

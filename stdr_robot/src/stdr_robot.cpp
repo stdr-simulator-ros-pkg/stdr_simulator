@@ -38,7 +38,9 @@ void Robot::onInit() {
 	_registerClientPtr->sendGoal(goal, boost::bind(&Robot::initializeRobot, this, _1, _2));	
 
 	_mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
+	_moveRobotService = n.advertiseService(getName() + "/replace", &Robot::moveRobotCallback, this);
 	_collisionTimer = n.createTimer(ros::Duration(0.1), &Robot::checkCollision, this);
+	_tfTimer = n.createTimer(ros::Duration(0.1), &Robot::publishRobotTf, this);
 }
 
 void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const stdr_msgs::RegisterRobotResultConstPtr result) {
@@ -60,8 +62,26 @@ void Robot::mapCallback(const nav_msgs::OccupancyGridConstPtr& msg) {
 	_map = *msg;
 }
 
+bool Robot::moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
+							stdr_msgs::MoveRobot::Response& res)
+{
+	_currentPose = req.newPose;
+	return true;
+}
+
 void Robot::checkCollision(const ros::TimerEvent&) {
 	// check if we have a collision and notify MotionController via stop() interface
+}
+
+void Robot::publishRobotTf(const ros::TimerEvent&) {
+	
+	tf::Vector3 translation(_currentPose.x, _currentPose.y, 0);
+	tf::Quaternion rotation;
+	rotation.setRPY(0, 0, _currentPose.theta);
+	
+	tf::Transform transform(rotation, translation);
+	
+	_tfBroadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", getName()));	
 }
 
 Robot::~Robot() {

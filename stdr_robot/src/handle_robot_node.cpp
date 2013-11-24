@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
 	stdr_robot::HandleRobot handler;
 	
 	// add
+	// TODO: read new robot description from yaml
 	if ((argc == 2) && (std::string(argv[1]) == "add")) {
 		
 		stdr_msgs::RobotMsg msg;
@@ -67,6 +68,24 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 		
+	}
+	// replacement
+	else if ((argc == 6) && (std::string(argv[1]) == "replace")) {
+		
+		std::string name(argv[2]);
+		
+		geometry_msgs::Pose2D newPose;
+		newPose.x = atof(argv[3]);
+		newPose.y = atof(argv[4]);
+		newPose.theta = atof(argv[5]);
+		
+		if (handler.moveRobot(name, newPose)) {
+			ROS_INFO("%s moved to new pose with x: %f, y: %f, theta: %f", name.c_str(), newPose.x, newPose.y, newPose.theta);
+			return 0;
+		}
+		
+		ROS_ERROR("Could not move %s", name.c_str());
+		return -1;		
 	}
 	// wrong args
 	else {
