@@ -76,13 +76,18 @@ namespace stdr_gui{
 			static unsigned int sonarNumber;
 			static unsigned int rfidNumber;
 
-		public Q_SLOTS:
+		public slots:
 			void treeItemClicked ( QTreeWidgetItem * item, int column ); 
 			void updateLaser(void);
 			void updateSonar(void);
 			void updateRfid(void);
 			void saveRobot(void);
 			void closeRobotCreator(void);
+			void loadRobot(void);
+			
+		signals:
+			void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
 	};
 }
 
