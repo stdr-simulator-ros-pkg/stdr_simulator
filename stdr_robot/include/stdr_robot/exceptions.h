@@ -19,37 +19,15 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdr_server/stdr_server.h>
+#include <stdexcept>
 
-namespace stdr_server {
-	
-Server::Server(int argc, char** argv) 
+#ifndef EXCEPTIONS_H
+#define EXCEPTIONS_H
+
+class ConnectionException : public std::runtime_error
 {
-	
-	if (argc > 2) {
-		ROS_ERROR("%s", USAGE);
-		exit(-1);
-	}
-	
-	if (argc == 2) {
-		std::string fname(argv[1]);
-		_mapServer.reset(new MapServer(fname));
-	}
-		
-	_loadMapService = _nh.advertiseService("/stdr_server/load_static_map", &Server::loadMapCallback, this);
-	
-}
+	public:
+		ConnectionException(const std::string errorDescription) : std::runtime_error(errorDescription) { ; };
+};
 
-bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
-							stdr_msgs::LoadMap::Response& res) 
-{
-	if (_mapServer) {
-		ROS_WARN("Map already loaded!");
-		return false;
-	}
-	_mapServer.reset(new MapServer(req.mapFile));
-
-	return true;	
-}
-	
-}
+#endif

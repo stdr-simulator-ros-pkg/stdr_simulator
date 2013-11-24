@@ -23,8 +23,10 @@ include_directories(
 
 
 catkin_package(
-#  INCLUDE_DIRS include
-  LIBRARIES stdr_robot
+  INCLUDE_DIRS 
+    include
+  LIBRARIES 
+	handle_robot
   CATKIN_DEPENDS
     roscpp
 	nodelet
@@ -53,6 +55,19 @@ add_dependencies(stdr_robot_nodelet stdr_msgs_gencpp) # wait for stdr_msgs to be
 target_link_libraries(stdr_robot_nodelet ${catkin_LIBRARIES}
 	laser
 	ideal_motion_controller
+)
+
+######################### HandleRobot ##################################
+add_library(handle_robot src/handle_robot.cpp)
+add_dependencies(handle_robot stdr_msgs_gencpp) # wait for stdr_msgs to be build
+target_link_libraries(handle_robot ${catkin_LIBRARIES})
+
+####################### Robot Handler ##################################
+add_executable(robot_handler src/handle_robot_node.cpp)
+add_dependencies(robot_handler stdr_msgs_gencpp) # wait for stdr_msgs to be build
+target_link_libraries(robot_handler 
+	${catkin_LIBRARIES}
+	handle_robot
 )
 
 ## Mark the nodelet library for installations

@@ -26,6 +26,7 @@
 #include <nodelet/nodelet.h>
 #include <tf/transform_broadcaster.h>
 #include <stdr_msgs/RobotMsg.h>
+#include <stdr_msgs/MoveRobot.h>
 #include <stdr_robot/sensors/sensor_base.h>
 #include <stdr_robot/motion/motion_controller_base.h>
 #include <stdr_robot/motion/ideal_motion_controller.h>
@@ -45,16 +46,24 @@ class Robot : public nodelet::Nodelet {
 		
 		Robot() {}
 		void onInit();
-		void initializeRobot(stdr_msgs::RobotMsg msg);
+		void initializeRobot(const actionlib::SimpleClientGoalState& state, const stdr_msgs::RegisterRobotResultConstPtr result);
 		void mapCallback(const nav_msgs::OccupancyGridConstPtr& msg);
-		void checkCollision(const ros::TimerEvent&);
+		bool moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
+							stdr_msgs::MoveRobot::Response& res);
 		~Robot();
+		
+	private:
+		
+		void checkCollision(const ros::TimerEvent&);
+		void publishRobotTf(const ros::TimerEvent&);
 	
 	private:
 	
 		ros::Subscriber _mapSubscriber;
 		ros::Subscriber _descriptionSubscriber;
 		ros::Timer _collisionTimer;
+		ros::Timer _tfTimer;
+		ros::ServiceServer _moveRobotService;
 	
 		SensorPtrVector _sensors;
 		nav_msgs::OccupancyGrid _map;

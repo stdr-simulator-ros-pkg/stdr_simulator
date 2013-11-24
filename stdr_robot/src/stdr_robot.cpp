@@ -20,6 +20,7 @@
 ******************************************************************************/
 
 #include <stdr_robot/stdr_robot.h>
+#include <nodelet/NodeletUnload.h>
 #include <pluginlib/class_list_macros.h>
 
 PLUGINLIB_EXPORT_CLASS(stdr_robot::Robot, nodelet::Nodelet) 
@@ -29,37 +30,58 @@ namespace stdr_robot {
 void Robot::onInit() {
 	ros::NodeHandle n = getMTNodeHandle();
 	
-	NODELET_INFO("Loaded new robot, %s", getName().c_str());
-	
-	_registerClientPtr.reset( new RegisterRobotClient(n, "stdr_server/register_robot", false) );
+	_registerClientPtr.reset( new RegisterRobotClient(n, "stdr_server/register_robot", true) );
 	_registerClientPtr->waitForServer();
 	
 	stdr_msgs::RegisterRobotGoal goal;
 	goal.name = getName();
-	_registerClientPtr->sendGoal(goal);
-	
-	if (_registerClientPtr->waitForResult(ros::Duration(10))) {
-		NODELET_ERROR("Something bad happened, shuting down...");
-		ros::shutdown();
-	}
-	
-	initializeRobot(_registerClientPtr->getResult()->description);		
+	_registerClientPtr->sendGoal(goal, boost::bind(&Robot::initializeRobot, this, _1, _2));	
 
-	_motionControllerPtr.reset( new IdealMotionController(geometry_msgs::Pose2DPtr(&_currentPose), _tfBroadcaster, n) );
 	_mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
+	_moveRobotService = n.advertiseService(getName() + "/replace", &Robot::moveRobotCallback, this);
 	_collisionTimer = n.createTimer(ros::Duration(0.1), &Robot::checkCollision, this);
+	_tfTimer = n.createTimer(ros::Duration(0.1), &Robot::publishRobotTf, this);
 }
 
-void Robot::initializeRobot(stdr_msgs::RobotMsg msg) {
-	// call action to robot and initialize _sensors (const stdr_msgs::RobotMsgConstPtr& msg)
+void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const stdr_msgs::RegisterRobotResultConstPtr result) {
+	
+	if (state == state.ABORTED) {
+		NODELET_ERROR("Something really bad happened...");
+		return;
+	}
+	
+	NODELET_INFO("Loaded new robot, %s", getName().c_str());
+	
+	// use result to initialize sensors
+	ros::NodeHandle n = getMTNodeHandle();
+	_motionControllerPtr.reset( new IdealMotionController(boost::make_shared<geometry_msgs::Pose2D>(_currentPose), _tfBroadcaster, n, getName()) );
+
 }
 
 void Robot::mapCallback(const nav_msgs::OccupancyGridConstPtr& msg) {
 	_map = *msg;
 }
 
+bool Robot::moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
+							stdr_msgs::MoveRobot::Response& res)
+{
+	_currentPose = req.newPose;
+	return true;
+}
+
 void Robot::checkCollision(const ros::TimerEvent&) {
 	// check if we have a collision and notify MotionController via stop() interface
+}
+
+void Robot::publishRobotTf(const ros::TimerEvent&) {
+	
+	tf::Vector3 translation(_currentPose.x, _currentPose.y, 0);
+	tf::Quaternion rotation;
+	rotation.setRPY(0, 0, _currentPose.theta);
+	
+	tf::Transform transform(rotation, translation);
+	
+	_tfBroadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", getName()));	
 }
 
 Robot::~Robot() {

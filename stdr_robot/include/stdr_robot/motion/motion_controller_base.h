@@ -34,18 +34,25 @@ class MotionController {
 	public:
 		
 		virtual void velocityCallback(const geometry_msgs::Twist& msg) = 0;
-		virtual void stop() = 0; 
+		virtual void stop() = 0;
+		virtual void calculateMotion(const ros::TimerEvent& event) = 0;
+		
+		virtual ~MotionController() {}
 	
 	protected:
 		
-		MotionController(geometry_msgs::Pose2DPtr pose, tf::TransformBroadcaster& tf)
-		: _posePtr(pose), _tfBroadcaster(tf) {}
+		MotionController(geometry_msgs::Pose2DPtr pose, tf::TransformBroadcaster& tf, const std::string& name)
+		: _posePtr(pose), _tfBroadcaster(tf), _freq(0.1), _namespace(name) { }
 	
 	protected:
-	
+		
+		std::string _namespace;
+		ros::Subscriber _velocitySubscrider;
+		ros::Duration _freq;
+		ros::Timer _calcTimer;
 		tf::TransformBroadcaster& _tfBroadcaster;
 		geometry_msgs::Pose2DPtr _posePtr;
-
+		geometry_msgs::Twist _currentTwist;
 };
 	
 typedef boost::shared_ptr<MotionController> MotionControllerPtr;

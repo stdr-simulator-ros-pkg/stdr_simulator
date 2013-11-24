@@ -23,11 +23,10 @@
 
 namespace stdr_robot {
 	
-IdealMotionController::IdealMotionController(geometry_msgs::Pose2DPtr pose, tf::TransformBroadcaster& tf, ros::NodeHandle& n)
-  : MotionController(pose, tf)
-  , _freq(0.4)
+IdealMotionController::IdealMotionController(geometry_msgs::Pose2DPtr pose, tf::TransformBroadcaster& tf, ros::NodeHandle& n, const std::string& name)
+  : MotionController(pose, tf, name)
 {
-	_velocitySubscrider = n.subscribe("cmd_vel", 1, &IdealMotionController::velocityCallback, this);
+	_velocitySubscrider = n.subscribe(_namespace + "/cmd_vel", 1, &IdealMotionController::velocityCallback, this);
 	_calcTimer = n.createTimer(_freq, &IdealMotionController::calculateMotion, this);
 }
 

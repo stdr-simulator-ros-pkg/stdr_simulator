@@ -19,28 +19,38 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef IDEAL_MOTION_CONTROLLER_H
-#define IDEAL_MOTION_CONTROLLER_H
+#include <ros/ros.h>
+#include <actionlib/client/simple_action_client.h>
+#include <stdr_msgs/RobotIndexedMsg.h>
+#include <stdr_msgs/SpawnRobotAction.h>
+#include <stdr_msgs/DeleteRobotAction.h>
+#include <stdr_msgs/MoveRobot.h>
+#include <stdr_robot/exceptions.h>
+#include <geometry_msgs/Pose2D.h>
 
-#include <stdr_robot/motion/motion_controller_base.h>
+#ifndef HANDLE_ROBOT_H
+#define HANDLE_ROBOT_H
 
 namespace stdr_robot {
-	
-class IdealMotionController : public MotionController {
+
+typedef actionlib::SimpleActionClient<stdr_msgs::SpawnRobotAction> SpawnRobotClient;
+typedef actionlib::SimpleActionClient<stdr_msgs::DeleteRobotAction> DeleteRobotClient;
+
+class HandleRobot {
 	
 	public:
 		
-		IdealMotionController(geometry_msgs::Pose2DPtr pose, tf::TransformBroadcaster& tf, ros::NodeHandle& n, const std::string& name);
-		void velocityCallback(const geometry_msgs::Twist& msg);
-		void stop();
-		void calculateMotion(const ros::TimerEvent& event);
-		~IdealMotionController() {}
-				
-	
-};	
-	
+		HandleRobot();
+		stdr_msgs::RobotIndexedMsg spawnNewRobot(const stdr_msgs::RobotMsg msg);
+		bool deleteRobot(const std::string& name);
+		bool moveRobot(const std::string& name, const geometry_msgs::Pose2D newPose);
+		
+	private:
+		
+		SpawnRobotClient _spawnRobotClient;
+		DeleteRobotClient _deleteRobotClient;
+};
 	
 }
-
 
 #endif

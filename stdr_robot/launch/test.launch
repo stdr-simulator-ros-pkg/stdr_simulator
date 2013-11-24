@@ -1,9 +1,0 @@
-<launch>
-  <node pkg="nodelet" type="nodelet" name="standalone_nodelet"  args="manager" output="screen"/>
-
-  <node pkg="nodelet" type="nodelet" name="robot1" args="load stdr_robot/Robot standalone_nodelet" output="screen"/>
-  
-
-  <node pkg="nodelet" type="nodelet" name="robot2" args="load stdr_robot/Robot standalone_nodelet" output="screen"/>
- 
-</launch>
