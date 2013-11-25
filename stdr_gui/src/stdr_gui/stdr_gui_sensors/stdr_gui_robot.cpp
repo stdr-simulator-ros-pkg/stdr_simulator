@@ -50,7 +50,7 @@ namespace stdr_gui{
 			listener.lookupTransform("map", frameId_.c_str(),ros::Time(0), transform);
 		}
 		catch (tf::TransformException ex){
-			ROS_ERROR("%s",ex.what());
+			ROS_DEBUG("%s",ex.what());
 		}
 		tfScalar roll,pitch,yaw;
 		currentPose.x=transform.getOrigin().x();

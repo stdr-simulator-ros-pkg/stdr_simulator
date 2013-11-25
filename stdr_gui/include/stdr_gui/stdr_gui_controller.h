@@ -51,6 +51,8 @@ namespace stdr_gui{
 			int argc;
 			char **argv;
 			
+			bool mapLock;
+			
 			std::map<std::string,GuiRobot> registeredRobots;	
 			std::set<std::string> myRobots_;		
 			
