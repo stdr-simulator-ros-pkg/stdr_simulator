@@ -55,6 +55,11 @@ void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const
 	NODELET_INFO("Loaded new robot, %s", getName().c_str());
 	
 	// use result to initialize sensors
+	
+	_currentPosePtr->x = result->description.initialPose.x;
+	_currentPosePtr->y = result->description.initialPose.y;
+	_currentPosePtr->theta = result->description.initialPose.theta;
+	
 	ros::NodeHandle n = getMTNodeHandle();
 	_motionControllerPtr.reset( new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()) );
 
