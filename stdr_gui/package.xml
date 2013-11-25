@@ -14,6 +14,7 @@
   <build_depend>roslib</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>stdr_msgs</build_depend>
+  <build_depend>stdr_robot</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>nav_msgs</build_depend>
   
@@ -21,6 +22,7 @@
   <run_depend>roslib</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>stdr_msgs</run_depend>
+  <run_depend>stdr_robot</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
 

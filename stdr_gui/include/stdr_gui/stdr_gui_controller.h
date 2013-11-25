@@ -35,6 +35,8 @@
 
 #include "nav_msgs/OccupancyGrid.h"
 
+#include <stdr_robot/handle_robot.h>
+
 namespace stdr_gui{
 
 	/**
@@ -49,7 +51,7 @@ namespace stdr_gui{
 			int argc;
 			char **argv;
 			
-			std::vector<GuiRobot> registeredRobots;			
+			std::map<std::string,GuiRobot> registeredRobots;			
 			
 			ros::Subscriber mapSubscriber;
 			
@@ -59,7 +61,7 @@ namespace stdr_gui{
 			QImage initialMap;
 			QImage runningMap;
 			
-			
+			stdr_robot::HandleRobot robotHandler_;
 		public:
 			GuiController(int argc,char **argv);
 			

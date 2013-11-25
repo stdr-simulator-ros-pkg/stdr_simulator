@@ -79,7 +79,6 @@ namespace stdr_gui{
 	}
 
 	void GuiController::receiveMap(const nav_msgs::OccupancyGrid& msg){
-		ROS_ERROR("Map got");
 		mapMsg=msg;
 		initialMap=runningMap=QImage(msg.info.width,msg.info.height,QImage::Format_RGB32);
 		QPainter painter(&runningMap);
@@ -97,7 +96,6 @@ namespace stdr_gui{
 				painter.drawPoint(i,j);
 			}
 		}	
-		ROS_ERROR("Map fixed");
 		int originx=msg.info.origin.position.x;
 		int originy=msg.info.origin.position.y;
 		painter.setPen(Qt::blue);
@@ -113,7 +111,8 @@ namespace stdr_gui{
 		ROS_ERROR("Save Signal ok");
 	}
 	void GuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
-		ROS_ERROR("Load Signal ok");
+		stdr_msgs::RobotIndexedMsg newRobot=robotHandler_.spawnNewRobot(newRobotMsg);
+		ROS_ERROR("%s",newRobot.name.c_str());
 	}
 	
 	void GuiController::zoomInPressed(QPoint p){
