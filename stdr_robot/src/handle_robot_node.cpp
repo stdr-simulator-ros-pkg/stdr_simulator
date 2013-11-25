@@ -21,8 +21,9 @@
 
 #include <stdr_robot/handle_robot.h>
 
-#define USAGE "USAGE: robot_handler [add|delete|move]\n" \
-              "  map.yaml: map description file\n" 
+#define USAGE "USAGE: robot_handler add <description.yaml>\n" \
+              "OR: robot_handler delete <robot_name>\n"\
+              "OR: robot_handler replace <robot_name> <new_x> <new_y> <new_theta>"
 
 int main(int argc, char** argv) {
 	
