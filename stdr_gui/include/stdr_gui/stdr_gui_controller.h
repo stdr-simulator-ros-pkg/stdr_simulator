@@ -51,6 +51,8 @@ namespace stdr_gui{
 			int argc;
 			char **argv;
 			
+			bool mapLock;
+			
 			std::map<std::string,GuiRobot> registeredRobots;	
 			std::set<std::string> myRobots_;		
 			
@@ -83,7 +85,7 @@ namespace stdr_gui{
 			 
 			bool init();	
 		
-		public slots:
+		public Q_SLOTS:
 			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
 			void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
 			void zoomInPressed(QPoint p);
@@ -91,7 +93,7 @@ namespace stdr_gui{
 			void robotPlaceSet(QPoint p);
 			void updateMapInternal(void);
 			
-		signals:
+		Q_SIGNALS:
 			void waitForRobotPose(void);
 			void updateMap(void);
 	};

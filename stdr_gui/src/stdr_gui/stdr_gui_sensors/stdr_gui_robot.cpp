@@ -27,12 +27,36 @@ namespace stdr_gui{
 		currentPose=initialPose;
 		footprint=msg.robot.footprint;
 		radius=msg.robot.radius;
+		frameId_=msg.name;
 		// Setup rest of sensors
 	}
 	
 	GuiRobot::GuiRobot(void){}
 	
+	GuiRobot::GuiRobot(const GuiRobot& other){
+		this->_lasers=other._lasers;
+		this->_sonars=other._sonars;
+		this->_rfids=other._rfids;
+		this->initialPose=other.initialPose;
+		this->currentPose=other.currentPose;
+		this->footprint=other.footprint;
+		this->radius=other.radius;
+		this->frameId_=other.frameId_;
+	}
+	
 	void GuiRobot::draw(QImage *m,float ocgd){
+		tf::StampedTransform transform;
+		try{
+			listener.lookupTransform("map", frameId_.c_str(),ros::Time(0), transform);
+		}
+		catch (tf::TransformException ex){
+			ROS_DEBUG("%s",ex.what());
+		}
+		tfScalar roll,pitch,yaw;
+		currentPose.x=transform.getOrigin().x();
+		currentPose.y=transform.getOrigin().y();
+		transform.getBasis().getRPY(roll,pitch,yaw);
+		currentPose.theta=yaw;
 		drawSelf(m,ocgd);
 		// Call draw for sensors
 	}
@@ -40,8 +64,26 @@ namespace stdr_gui{
 		QPainter painter(m);
 		painter.setPen(Qt::blue);
 		painter.drawEllipse((currentPose.x-radius/2)/ocgd,(currentPose.y-radius/2)/ocgd,radius/ocgd,radius/ocgd);
-		painter.drawLine(currentPose.x/ocgd,currentPose.y/ocgd,currentPose.x/ocgd+radius/ocgd*1.05,currentPose.y/ocgd);
+		painter.drawLine(	currentPose.x/ocgd,
+							currentPose.y/ocgd,
+							currentPose.x/ocgd+radius/ocgd*1.05*cos(currentPose.theta),
+							currentPose.y/ocgd+radius/ocgd*1.05*sin(currentPose.theta));
+							
+		
 	}
 	
 	GuiRobot::~GuiRobot(void){}
+	
+	std::string GuiRobot::getFrameId(void){
+		return frameId_;
+	}
+	
+	void GuiRobot::drawLabel(QImage *m,float ocgd){
+		QPainter painter(m);
+		painter.setPen(Qt::black);
+		painter.drawRect(currentPose.x/ocgd+10,m->height()-(currentPose.y/ocgd)-30,100,20);
+		painter.setPen(Qt::white);
+		painter.fillRect(currentPose.x/ocgd+10,m->height()-(currentPose.y/ocgd)-30,100,20,QBrush(QColor(0,0,0,140)));
+		painter.drawText(currentPose.x/ocgd+12,m->height()-(currentPose.y/ocgd)-15,QString(frameId_.c_str()));
+	}
 }

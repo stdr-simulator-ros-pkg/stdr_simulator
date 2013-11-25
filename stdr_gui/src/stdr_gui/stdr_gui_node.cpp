@@ -20,9 +20,29 @@
 ******************************************************************************/
 
 #include "stdr_gui/stdr_gui_controller.h"
+ #include <QDebug>
+
+class MyQApplication:public QApplication{
+	public:
+	MyQApplication(int &argc,char **argv):
+		QApplication(argc,argv)	
+	{}
+	
+	bool notify(QObject * receiver, QEvent * event){
+		try 
+		{
+			return QApplication::notify(receiver, event);
+		} 
+		catch(std::exception& e) 
+		{
+			qDebug() << "Exception thrown:" << e.what();
+		}
+		return false;
+	}
+};
 
 int main(int argc,char **argv){
-	QApplication app(argc, argv);
+	MyQApplication app(argc, argv);
 	ros::init(argc,argv,"stdr_gui_node");
 	stdr_gui::GuiController con(argc,argv);
 	con.init();

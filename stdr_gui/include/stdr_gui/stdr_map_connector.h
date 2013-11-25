@@ -49,7 +49,7 @@ namespace stdr_gui{
 			void updateImage(QImage *img);	
 			
 			
-		public slots:
+		public Q_SLOTS:
 		
 			bool eventFilter( QObject* watched, QEvent* event);
 			void serveImage(QImage *img);
@@ -57,7 +57,7 @@ namespace stdr_gui{
 			void setCursorZoomOut(bool state);
 			void waitForPlace(void);
 		
-		signals:
+		Q_SIGNALS:
 			void signalUpdateImage(QImage *img);	
 			void zoomInPressed(QPoint p);	
 			void zoomOutPressed(QPoint p);	

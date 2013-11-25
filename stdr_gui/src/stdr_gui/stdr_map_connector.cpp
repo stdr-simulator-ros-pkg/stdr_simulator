@@ -56,13 +56,13 @@ namespace stdr_gui{
 				else if(me->button()==Qt::LeftButton){
 					QPoint p=me->pos();
 					if(mapState==ZOOMIN)
-						emit zoomInPressed(p);
+						Q_EMIT zoomInPressed(p);
 					else if(mapState==ZOOMOUT)
-						emit zoomOutPressed(p);
+						Q_EMIT zoomOutPressed(p);
 					else if(mapState==SETPLACE){
 						mapState=NORMAL;
 						loader.map->setCursor(QCursor(Qt::CrossCursor));
-						emit robotPlaceSet(p);
+						Q_EMIT robotPlaceSet(p);
 					}
 				}
 			}

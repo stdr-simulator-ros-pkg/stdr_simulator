@@ -29,7 +29,7 @@
 namespace stdr_gui{
 	class GuiLaser{
 			std::string _topic;
-			const stdr_msgs::LaserSensorMsg& _msg;
+			stdr_msgs::LaserSensorMsg _msg;
 			ros::Subscriber _subscriber;
 
 		public:

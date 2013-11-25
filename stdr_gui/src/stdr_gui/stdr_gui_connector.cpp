@@ -71,12 +71,12 @@ namespace stdr_gui{
 	
 	void GuiConnector::actionZoomInTriggered(void){
 		//~ if(!_mapLoaded) return;
-		emit setZoomInCursor(loader.actionZoomIn->isChecked());
+		Q_EMIT setZoomInCursor(loader.actionZoomIn->isChecked());
 		loader.actionZoomOut->setChecked(false);
 	}
 	void GuiConnector::actionZoomOutTriggered(void){
 		//~ if(!_mapLoaded) return;
-		emit setZoomOutCursor(loader.actionZoomOut->isChecked());
+		Q_EMIT setZoomOutCursor(loader.actionZoomOut->isChecked());
 		loader.actionZoomIn->setChecked(false);
 	}
 }

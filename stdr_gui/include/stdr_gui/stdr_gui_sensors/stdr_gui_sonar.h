@@ -29,7 +29,7 @@
 namespace stdr_gui{
 	class GuiSonar{
 			std::string _topic;
-			const stdr_msgs::SonarSensorMsg& _msg;
+			stdr_msgs::SonarSensorMsg _msg;
 			ros::Subscriber _subscriber;
 		public:
 			GuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic);

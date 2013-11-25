@@ -36,7 +36,7 @@ namespace stdr_gui{
 			 
 			 InfoConnector(int argc, char **argv);
 		
-		public slots:
+		public Q_SLOTS:
 	};
 }
 

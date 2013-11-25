@@ -52,8 +52,7 @@ namespace stdr_gui{
 							rfidAntennasNode,
 							kinematicNode;
 			QTreeWidgetItem robotInfoShape;
-			QTreeWidgetItem robotInfoWidth;
-			QTreeWidgetItem robotInfoLength;
+			QTreeWidgetItem robotInfoOrientation;
 			
 			QImage robotPreviewImage;
 
