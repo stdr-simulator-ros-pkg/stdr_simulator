@@ -22,5 +22,26 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 
 namespace stdr_gui{
+	GuiRobot::GuiRobot(const stdr_msgs::RobotIndexedMsg& msg){
+		initialPose=msg.robot.initialPose;
+		currentPose=initialPose;
+		footprint=msg.robot.footprint;
+		radius=msg.robot.radius;
+		// Setup rest of sensors
+	}
 	
+	GuiRobot::GuiRobot(void){}
+	
+	void GuiRobot::draw(QImage *m,float ocgd){
+		drawSelf(m,ocgd);
+		// Call draw for sensors
+	}
+	void GuiRobot::drawSelf(QImage *m,float ocgd){
+		QPainter painter(m);
+		painter.setPen(Qt::blue);
+		painter.drawEllipse((currentPose.x-radius/2)/ocgd,(currentPose.y-radius/2)/ocgd,radius/ocgd,radius/ocgd);
+		painter.drawLine(currentPose.x/ocgd,currentPose.y/ocgd,currentPose.x/ocgd+radius/ocgd*1.05,currentPose.y/ocgd);
+	}
+	
+	GuiRobot::~GuiRobot(void){}
 }

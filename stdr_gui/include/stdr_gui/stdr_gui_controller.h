@@ -51,9 +51,11 @@ namespace stdr_gui{
 			int argc;
 			char **argv;
 			
-			std::map<std::string,GuiRobot> registeredRobots;			
+			std::map<std::string,GuiRobot> registeredRobots;	
+			std::set<std::string> myRobots_;		
 			
 			ros::Subscriber mapSubscriber;
+			ros::Subscriber robotSubscriber;
 			
 			ros::NodeHandle n;
 			
@@ -62,6 +64,9 @@ namespace stdr_gui{
 			QImage runningMap;
 			
 			stdr_robot::HandleRobot robotHandler_;
+			
+			QTimer *timer;
+			QPoint pointFromImage(QPoint p);
 		public:
 			GuiController(int argc,char **argv);
 			
@@ -74,6 +79,7 @@ namespace stdr_gui{
 			void initializeCommunications(void);
 			
 			void receiveMap(const nav_msgs::OccupancyGrid& msg);
+			void receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
 			 
 			bool init();	
 		
@@ -82,6 +88,12 @@ namespace stdr_gui{
 			void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
 			void zoomInPressed(QPoint p);
 			void zoomOutPressed(QPoint p);
+			void robotPlaceSet(QPoint p);
+			void updateMapInternal(void);
+			
+		signals:
+			void waitForRobotPose(void);
+			void updateMap(void);
 	};
 }
 

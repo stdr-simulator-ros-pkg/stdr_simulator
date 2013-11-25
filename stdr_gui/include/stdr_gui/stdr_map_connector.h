@@ -29,7 +29,8 @@ namespace stdr_gui{
 	enum StdrMapState{
 		NORMAL,
 		ZOOMIN,
-		ZOOMOUT
+		ZOOMOUT,
+		SETPLACE
 	};
 	
 	class MapConnector : public QObject{
@@ -54,11 +55,13 @@ namespace stdr_gui{
 			void serveImage(QImage *img);
 			void setCursorZoomIn(bool state);
 			void setCursorZoomOut(bool state);
+			void waitForPlace(void);
 		
 		signals:
 			void signalUpdateImage(QImage *img);	
 			void zoomInPressed(QPoint p);	
 			void zoomOutPressed(QPoint p);	
+			void robotPlaceSet(QPoint p);
 	};	
 }
 

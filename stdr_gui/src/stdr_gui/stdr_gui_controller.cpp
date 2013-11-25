@@ -40,6 +40,7 @@ namespace stdr_gui{
 	
 	void GuiController::initializeCommunications(void){
 		mapSubscriber=n.subscribe("map", 1, &GuiController::receiveMap,this);
+		robotSubscriber=n.subscribe("stdr_server/active_robots", 1, &GuiController::receiveRobots,this);
 		
 		QObject::connect(&guiConnector,SIGNAL(setZoomInCursor(bool)),&mapConnector, SLOT(setCursorZoomIn(bool)));
 		QObject::connect(&guiConnector,SIGNAL(setZoomOutCursor(bool)),&mapConnector, SLOT(setCursorZoomOut(bool)));
@@ -48,6 +49,13 @@ namespace stdr_gui{
 		
 		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg)));
 		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(loadRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(loadRobotPressed(stdr_msgs::RobotMsg)));
+		QObject::connect(this,SIGNAL(waitForRobotPose()),&mapConnector, SLOT(waitForPlace()));
+		QObject::connect(&mapConnector,SIGNAL(robotPlaceSet(QPoint)),this, SLOT(robotPlaceSet(QPoint)));
+		QObject::connect(this,SIGNAL(updateMap()),this, SLOT(updateMapInternal()));
+		
+		timer=new QTimer(this);
+		connect(timer, SIGNAL(timeout()), this, SLOT(updateMapInternal()));
+		
 	}
 	
 	void GuiController::setupWidgets(void){
@@ -102,17 +110,20 @@ namespace stdr_gui{
 		painter.drawLine(originx,originy-20,originx,originy+20);
 		painter.drawLine(originx-20,originy,originx+20,originy);
 		
-		mapConnector.updateImage(&runningMap);
-		
+		initialMap=runningMap;
+		emit updateMap();
+
 		guiConnector.setMapLoaded(true);
+		timer->start(200);
 	}
 	
 	void GuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
 		ROS_ERROR("Save Signal ok");
 	}
 	void GuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
-		stdr_msgs::RobotIndexedMsg newRobot=robotHandler_.spawnNewRobot(newRobotMsg);
-		ROS_ERROR("%s",newRobot.name.c_str());
+		emit waitForRobotPose();
+		
+		
 	}
 	
 	void GuiController::zoomInPressed(QPoint p){
@@ -120,6 +131,44 @@ namespace stdr_gui{
 	}
 	void GuiController::zoomOutPressed(QPoint p){
 		ROS_ERROR("zoomOutPressed Signal ok");
+	}
+	
+	void GuiController::receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg){
+		registeredRobots.clear();
+		for(unsigned int i=0;i<msg.robots.size();i++){
+			//if(myRobots_.find(msg.robots[i].name)!=myRobots_.end()){
+				registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(msg.robots[i])));
+			//}
+		}
+		emit updateMap();
+	}
+	
+	void GuiController::robotPlaceSet(QPoint p){
+		QPoint pnew=pointFromImage(p);
+		guiConnector.robotCreatorConn.newRobotMsg.initialPose.x=pnew.x()*mapMsg.info.resolution;
+		guiConnector.robotCreatorConn.newRobotMsg.initialPose.y=pnew.y()*mapMsg.info.resolution;
+		stdr_msgs::RobotIndexedMsg newRobot=robotHandler_.spawnNewRobot(guiConnector.robotCreatorConn.newRobotMsg);
+		myRobots_.insert(newRobot.name);
+	}
+	
+	void GuiController::updateMapInternal(void){
+		runningMap=initialMap;
+		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
+			it->second.draw(&runningMap,mapMsg.info.resolution);
+		}
+		mapConnector.loader.updateImage(&runningMap);
+	}
+	
+	QPoint GuiController::pointFromImage(QPoint p){
+		QPoint newPoint;
+		float x=p.x();
+		float y=p.y();
+		float initialWidth=initialMap.width();
+		float currentWidth=mapConnector.loader.map->width();
+		float climax=initialWidth/currentWidth;
+		newPoint.setX(x*climax);
+		newPoint.setY(y*climax);
+		return newPoint;
 	}
 }
 

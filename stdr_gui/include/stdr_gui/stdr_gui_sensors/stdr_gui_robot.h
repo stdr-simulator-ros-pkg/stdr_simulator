@@ -32,9 +32,18 @@ namespace stdr_gui{
 			std::vector<GuiLaser> _lasers;
 			std::vector<GuiSonar> _sonars;
 			std::vector<GuiRfid> _rfids;
+			
+			geometry_msgs::Pose2D initialPose;
+			geometry_msgs::Pose2D currentPose;
+
+			std::vector<geometry_msgs::Point> footprint;
+			float radius;
+			void drawSelf(QImage *m,float ocgd);
 		public:
-			GuiRobot(void){}
-			~GuiRobot(void){}
+			GuiRobot(void);
+			GuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
+			~GuiRobot(void);
+			void draw(QImage *m,float ocgd);
 	};	
 }
 

@@ -59,6 +59,11 @@ namespace stdr_gui{
 						emit zoomInPressed(p);
 					else if(mapState==ZOOMOUT)
 						emit zoomOutPressed(p);
+					else if(mapState==SETPLACE){
+						mapState=NORMAL;
+						loader.map->setCursor(QCursor(Qt::CrossCursor));
+						emit robotPlaceSet(p);
+					}
 				}
 			}
 		}
@@ -93,5 +98,10 @@ namespace stdr_gui{
 			mapState=NORMAL;
 			loader.map->setCursor(QCursor(Qt::CrossCursor));
 		}
+	}
+	
+	void MapConnector::waitForPlace(void){
+		mapState=SETPLACE;
+		loader.map->setCursor(Qt::PointingHandCursor);
 	}
 }
