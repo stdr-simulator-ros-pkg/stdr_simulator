@@ -46,6 +46,8 @@ namespace stdr_gui{
 			void initialise(void);
 			void deleteTreeNode(QTreeWidgetItem *item);
 			
+			void editRobot(void);
+			
 			void addLaser(void);
 			void eraseLaser(QTreeWidgetItem *item);
 			void editLaser(QTreeWidgetItem *item);
@@ -81,6 +83,7 @@ namespace stdr_gui{
 			void updateLaser(void);
 			void updateSonar(void);
 			void updateRfid(void);
+			void updateRobot(void);
 			void saveRobot(void);
 			void closeRobotCreator(void);
 			void loadRobot(void);

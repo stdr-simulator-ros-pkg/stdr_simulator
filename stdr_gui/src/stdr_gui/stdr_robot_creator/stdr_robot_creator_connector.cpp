@@ -35,6 +35,7 @@ namespace stdr_gui{
 		
 		QObject::connect(loader.robotTreeWidget,SIGNAL(itemClicked(QTreeWidgetItem *, int)),this,SLOT(treeItemClicked(QTreeWidgetItem *, int)));
 		QObject::connect(loader.laserPropLoader.laserUpdateButton,SIGNAL(clicked(bool)),this,SLOT(updateLaser()));
+		QObject::connect(loader.robotPropLoader.updateButton,SIGNAL(clicked(bool)),this,SLOT(updateRobot()));
 		QObject::connect(loader.sonarPropLoader.pushButton,SIGNAL(clicked(bool)),this,SLOT(updateSonar()));
 		QObject::connect(loader.rfidAntennaPropLoader.pushButton,SIGNAL(clicked(bool)),this,SLOT(updateRfid()));
 		QObject::connect(loader.saveRobotButton,SIGNAL(clicked(bool)),this,SLOT(saveRobot()));
@@ -49,12 +50,10 @@ namespace stdr_gui{
 		
 		loader.robotInfoShape.setText(0,"Shape");
 		loader.robotInfoShape.setText(1,"Circle");
-		loader.robotInfoWidth.setText(0,"Width");
-		loader.robotInfoWidth.setText(1,"0.30");
-		loader.robotInfoLength.setText(0,"Length");
-		loader.robotInfoLength.setText(1,"0.30");
+		loader.robotInfoOrientation.setText(0,"Orientation");
+		loader.robotInfoOrientation.setText(1,"0");
 		
-		newRobotMsg.radius=0.30;
+		newRobotMsg.radius=0.15;
 		
 		unsigned int laserCount=loader.lasersNode.childCount();
 		unsigned int sonarCount=loader.sonarsNode.childCount();
@@ -78,7 +77,7 @@ namespace stdr_gui{
 
 	void RobotCreatorConnector::treeItemClicked ( QTreeWidgetItem * item, int column ){
 		if(item==&loader.robotNode && column==2)		// Robot edit clicked
-			loader.robotPropLoader.show();
+			editRobot();
 		if(item==&loader.kinematicNode && column==2)	//	Kinematic edit clicked
 			loader.kinematicPropLoader.show();
 		if(item==&loader.lasersNode && column==2)	//	Add laser clicked
@@ -538,6 +537,24 @@ namespace stdr_gui{
 		}
 
 		loader.rfidAntennaPropLoader.hide();
+		
+		updateRobotPreview();
+	}
+	
+	void RobotCreatorConnector::editRobot(void){
+		loader.robotPropLoader.robotOrientation->setText(QString().setNum(newRobotMsg.initialPose.theta));
+		loader.robotPropLoader.show();
+	}
+	
+	void RobotCreatorConnector::updateRobot(void){
+		for(unsigned int i=0;i<loader.robotNode.childCount();i++){
+			if(loader.robotNode.child(i)->text(0)==QString("Orientation")){
+				loader.robotNode.child(i)->setText(1,loader.robotPropLoader.robotOrientation->text());
+				newRobotMsg.initialPose.theta=loader.robotPropLoader.robotOrientation->text().toFloat();
+			}
+		}
+
+		loader.robotPropLoader.hide();
 		
 		updateRobotPreview();
 	}

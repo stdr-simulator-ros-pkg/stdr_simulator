@@ -72,14 +72,12 @@ namespace stdr_gui{
 		
 		robotInfoShape.setText(0,"Shape");
 		robotInfoShape.setText(1,"Circle");
-		robotInfoWidth.setText(0,"Width");
-		robotInfoWidth.setText(1,"0.30");
-		robotInfoLength.setText(0,"Length");
-		robotInfoLength.setText(1,"0.30");
+		robotInfoOrientation.setText(0,"Orientation");
+		robotInfoOrientation.setText(1,"0");
+
 		
 		robotNode.addChild(&robotInfoShape);
-		robotNode.addChild(&robotInfoWidth);
-		robotNode.addChild(&robotInfoLength);
+		robotNode.addChild(&robotInfoOrientation);
 		
 		robotNode.setExpanded(true);
 		lasersNode.setExpanded(true);

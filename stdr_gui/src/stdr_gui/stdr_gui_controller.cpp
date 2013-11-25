@@ -145,7 +145,14 @@ namespace stdr_gui{
 		QPoint pnew=pointFromImage(p);
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.x=pnew.x()*mapMsg.info.resolution;
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.y=pnew.y()*mapMsg.info.resolution;
-		stdr_msgs::RobotIndexedMsg newRobot=robotHandler_.spawnNewRobot(guiConnector.robotCreatorConn.newRobotMsg);
+		stdr_msgs::RobotIndexedMsg newRobot;
+		try {
+			newRobot=robotHandler_.spawnNewRobot(guiConnector.robotCreatorConn.newRobotMsg);
+		}
+		catch (ConnectionException& ex) {
+			ROS_ERROR("%s", ex.what());
+			return;
+		}
 		myRobots_.insert(newRobot.name);
 	}
 	
