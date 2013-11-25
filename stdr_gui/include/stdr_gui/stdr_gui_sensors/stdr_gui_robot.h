@@ -38,17 +38,21 @@ namespace stdr_gui{
 			
 			geometry_msgs::Pose2D initialPose;
 			geometry_msgs::Pose2D currentPose;
-
+			
 			std::vector<geometry_msgs::Point> footprint;
 			float radius;
 			void drawSelf(QImage *m,float ocgd);
 			tf::TransformListener listener;
 		public:
+			
+		
 			GuiRobot(void);
 			GuiRobot(const GuiRobot& other);
 			GuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
 			~GuiRobot(void);
+			std::string getFrameId(void);
 			void draw(QImage *m,float ocgd);
+			void drawLabel(QImage *m,float ocgd);
 	};	
 }
 

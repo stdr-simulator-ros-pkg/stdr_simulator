@@ -170,7 +170,11 @@ namespace stdr_gui{
 		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
 			it->second.draw(&runningMap,mapMsg.info.resolution);
 		}
-		mapConnector.loader.updateImage(&runningMap);
+		runningMap=runningMap.mirrored(false,true);
+		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
+			it->second.drawLabel(&runningMap,mapMsg.info.resolution);
+		}
+		mapConnector.loader.updateImage(&(runningMap));
 		mapLock=false;
 	}
 	
