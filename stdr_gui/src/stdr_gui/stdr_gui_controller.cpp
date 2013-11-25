@@ -172,7 +172,7 @@ namespace stdr_gui{
 		float currentWidth=mapConnector.loader.map->width();
 		float climax=initialWidth/currentWidth;
 		newPoint.setX(x*climax);
-		newPoint.setY(y*climax);
+		newPoint.setY(initialMap.height()-y*climax);
 		return newPoint;
 	}
 }
