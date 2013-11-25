@@ -21,6 +21,8 @@ find_package(Qt4 REQUIRED COMPONENTS
 	QtUiTools
 )
 
+ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
+
 include(${QT_USE_FILE})
 
 include_directories(

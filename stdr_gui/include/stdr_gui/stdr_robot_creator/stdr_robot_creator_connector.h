@@ -46,6 +46,8 @@ namespace stdr_gui{
 			void initialise(void);
 			void deleteTreeNode(QTreeWidgetItem *item);
 			
+			void editRobot(void);
+			
 			void addLaser(void);
 			void eraseLaser(QTreeWidgetItem *item);
 			void editLaser(QTreeWidgetItem *item);
@@ -76,16 +78,17 @@ namespace stdr_gui{
 			static unsigned int sonarNumber;
 			static unsigned int rfidNumber;
 
-		public slots:
+		public Q_SLOTS:
 			void treeItemClicked ( QTreeWidgetItem * item, int column ); 
 			void updateLaser(void);
 			void updateSonar(void);
 			void updateRfid(void);
+			void updateRobot(void);
 			void saveRobot(void);
 			void closeRobotCreator(void);
 			void loadRobot(void);
 			
-		signals:
+		Q_SIGNALS:
 			void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
 			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
 	};

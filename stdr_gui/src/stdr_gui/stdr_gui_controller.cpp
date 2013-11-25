@@ -36,6 +36,8 @@ namespace stdr_gui{
 		this->argc=argc;
 		this->argv=argv;
 		setupWidgets();
+		
+		mapLock=false;
 	}
 	
 	void GuiController::initializeCommunications(void){
@@ -111,7 +113,7 @@ namespace stdr_gui{
 		painter.drawLine(originx-20,originy,originx+20,originy);
 		
 		initialMap=runningMap;
-		emit updateMap();
+		Q_EMIT updateMap();
 
 		guiConnector.setMapLoaded(true);
 		timer->start(200);
@@ -121,9 +123,7 @@ namespace stdr_gui{
 		ROS_ERROR("Save Signal ok");
 	}
 	void GuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
-		emit waitForRobotPose();
-		
-		
+		Q_EMIT waitForRobotPose();
 	}
 	
 	void GuiController::zoomInPressed(QPoint p){
@@ -134,29 +134,48 @@ namespace stdr_gui{
 	}
 	
 	void GuiController::receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg){
+		while(mapLock)	usleep(100);
+		mapLock=true;
 		registeredRobots.clear();
+		
 		for(unsigned int i=0;i<msg.robots.size();i++){
-			//if(myRobots_.find(msg.robots[i].name)!=myRobots_.end()){
-				registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(msg.robots[i])));
-			//}
+			stdr_msgs::RobotIndexedMsg m=msg.robots[i];
+			registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(m)));
 		}
-		emit updateMap();
+		mapLock=false;
 	}
 	
 	void GuiController::robotPlaceSet(QPoint p){
+		while(mapLock)	usleep(100);
+		mapLock=true;
 		QPoint pnew=pointFromImage(p);
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.x=pnew.x()*mapMsg.info.resolution;
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.y=pnew.y()*mapMsg.info.resolution;
-		stdr_msgs::RobotIndexedMsg newRobot=robotHandler_.spawnNewRobot(guiConnector.robotCreatorConn.newRobotMsg);
+		stdr_msgs::RobotIndexedMsg newRobot;
+		try {
+			newRobot=robotHandler_.spawnNewRobot(guiConnector.robotCreatorConn.newRobotMsg);
+		}
+		catch (ConnectionException& ex) {
+			ROS_ERROR("%s", ex.what());
+			return;
+		}
 		myRobots_.insert(newRobot.name);
+		mapLock=false;
 	}
 	
 	void GuiController::updateMapInternal(void){
+		while(mapLock)	usleep(100);
+		mapLock=true;
 		runningMap=initialMap;
 		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
 			it->second.draw(&runningMap,mapMsg.info.resolution);
 		}
-		mapConnector.loader.updateImage(&runningMap);
+		runningMap=runningMap.mirrored(false,true);
+		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
+			it->second.drawLabel(&runningMap,mapMsg.info.resolution);
+		}
+		mapConnector.loader.updateImage(&(runningMap));
+		mapLock=false;
 	}
 	
 	QPoint GuiController::pointFromImage(QPoint p){
@@ -167,7 +186,7 @@ namespace stdr_gui{
 		float currentWidth=mapConnector.loader.map->width();
 		float climax=initialWidth/currentWidth;
 		newPoint.setX(x*climax);
-		newPoint.setY(y*climax);
+		newPoint.setY(initialMap.height()-y*climax);
 		return newPoint;
 	}
 }
