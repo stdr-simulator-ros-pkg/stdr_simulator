@@ -61,7 +61,10 @@ namespace stdr_gui{
 		QPainter painter(m);
 		painter.setPen(Qt::blue);
 		painter.drawEllipse((currentPose.x-radius/2)/ocgd,(currentPose.y-radius/2)/ocgd,radius/ocgd,radius/ocgd);
-		painter.drawLine(currentPose.x/ocgd,currentPose.y/ocgd,currentPose.x/ocgd+radius/ocgd*1.05,currentPose.y/ocgd);
+		painter.drawLine(	currentPose.x/ocgd,
+							currentPose.y/ocgd,
+							currentPose.x/ocgd+radius/ocgd*1.05*cos(currentPose.theta),
+							currentPose.y/ocgd+radius/ocgd*1.05*sin(currentPose.theta));
 	}
 	
 	GuiRobot::~GuiRobot(void){}
