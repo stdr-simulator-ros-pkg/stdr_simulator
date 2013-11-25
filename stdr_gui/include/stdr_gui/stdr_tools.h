@@ -60,6 +60,12 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QMessageBox>
 
+#include <stdr_msgs/RobotIndexedVectorMsg.h>
+#include <stdr_msgs/RobotIndexedMsg.h>
+#include <stdr_msgs/RobotMsg.h>
+#include <geometry_msgs/Pose2D.h>
+#include <geometry_msgs/Point.h>
+
 namespace stdr_gui{
 	std::string getRosPackagePath(std::string package);
 }

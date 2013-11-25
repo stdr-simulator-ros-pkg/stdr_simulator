@@ -22,10 +22,9 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_laser.h"
 
 namespace stdr_gui{
-	GuiLaser::GuiLaser(stdr_msgs::LaserSensorMsg msg,QImage mapImage,std::string baseTopic):
+	GuiLaser::GuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic):
 		_msg(msg)
 	{
-		_mapImage=mapImage;
 		_topic=baseTopic+"/lasers/"+_msg.frame_id;
 		ros::NodeHandle _n;
 		_subscriber = _n.subscribe(_topic.c_str(), 1, &GuiLaser::callback,this);
@@ -35,9 +34,9 @@ namespace stdr_gui{
 		//	Save values
 	}
 	
-	void GuiLaser::paint(void){
+	void GuiLaser::paint(QImage *m){
 		//stop spinning
-		QPainter painter(&_mapImage);
+		//~ QPainter painter(&_mapImage);
 	}
 }
 

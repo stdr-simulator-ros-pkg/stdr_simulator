@@ -31,10 +31,10 @@ namespace stdr_gui{
 			std::string _topic;
 			const stdr_msgs::SonarSensorMsg& _msg;
 			ros::Subscriber _subscriber;
-			QImage _mapImage;
 		public:
-			GuiSonar(stdr_msgs::SonarSensorMsg msg,QImage mapImage);
+			GuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic);
 			~GuiSonar(void){}
+			void paint(QImage *m);
 	};	
 }
 

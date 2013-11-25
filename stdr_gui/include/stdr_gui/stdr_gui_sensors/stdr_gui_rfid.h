@@ -30,10 +30,10 @@ namespace stdr_gui{
 			std::string _topic;
 			const stdr_msgs::RfidSensorMsg& _msg;
 			ros::Subscriber _subscriber;
-			QImage _mapImage;
 		public:
-			GuiRfid(stdr_msgs::RfidSensorMsg msg,QImage mapImage);
+			GuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);
 			~GuiRfid(void){}
+			void paint(QImage *m);
 	};	
 }
 

@@ -22,7 +22,7 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sonar.h"
 
 namespace stdr_gui{
-	GuiSonar::GuiSonar(stdr_msgs::SonarSensorMsg msg,QImage mapImage):
+	GuiSonar::GuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic):
 		_msg(msg)
 	{
 		
