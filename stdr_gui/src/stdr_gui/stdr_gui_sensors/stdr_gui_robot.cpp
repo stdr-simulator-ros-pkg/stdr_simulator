@@ -27,12 +27,33 @@ namespace stdr_gui{
 		currentPose=initialPose;
 		footprint=msg.robot.footprint;
 		radius=msg.robot.radius;
+		frameId_=msg.name;
 		// Setup rest of sensors
 	}
 	
 	GuiRobot::GuiRobot(void){}
 	
+	GuiRobot::GuiRobot(const GuiRobot& other){
+		this->_lasers=other._lasers;
+		this->_sonars=other._sonars;
+		this->_rfids=other._rfids;
+		this->initialPose=other.initialPose;
+		this->currentPose=other.currentPose;
+		this->footprint=other.footprint;
+		this->radius=other.radius;
+		this->frameId_=other.frameId_;
+	}
+	
 	void GuiRobot::draw(QImage *m,float ocgd){
+		tf::StampedTransform transform;
+		try{
+			listener.lookupTransform("map", frameId_.c_str(),ros::Time(0), transform);
+		}
+		catch (tf::TransformException ex){
+			ROS_ERROR("%s",ex.what());
+		}
+		currentPose.x=transform.getOrigin().x();
+		currentPose.y=transform.getOrigin().y();
 		drawSelf(m,ocgd);
 		// Call draw for sensors
 	}

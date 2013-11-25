@@ -645,7 +645,7 @@ namespace stdr_gui{
 	}
 
 	void RobotCreatorConnector::saveRobot(void){
-		emit saveRobotPressed(newRobotMsg);
+		Q_EMIT saveRobotPressed(newRobotMsg);
 		loader.hide();
 	}
 	
@@ -654,7 +654,7 @@ namespace stdr_gui{
 	}
 	
 	void RobotCreatorConnector::loadRobot(void){
-		emit loadRobotPressed(newRobotMsg);
+		Q_EMIT loadRobotPressed(newRobotMsg);
 		loader.hide();
 	}
 }

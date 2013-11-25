@@ -28,10 +28,13 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sonar.h"
 
 namespace stdr_gui{
+	
 	class GuiRobot{
 			std::vector<GuiLaser> _lasers;
 			std::vector<GuiSonar> _sonars;
 			std::vector<GuiRfid> _rfids;
+			
+			std::string frameId_;
 			
 			geometry_msgs::Pose2D initialPose;
 			geometry_msgs::Pose2D currentPose;
@@ -39,8 +42,10 @@ namespace stdr_gui{
 			std::vector<geometry_msgs::Point> footprint;
 			float radius;
 			void drawSelf(QImage *m,float ocgd);
+			tf::TransformListener listener;
 		public:
 			GuiRobot(void);
+			GuiRobot(const GuiRobot& other);
 			GuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
 			~GuiRobot(void);
 			void draw(QImage *m,float ocgd);

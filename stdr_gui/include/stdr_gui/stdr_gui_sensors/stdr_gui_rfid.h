@@ -28,7 +28,7 @@
 namespace stdr_gui{
 	class GuiRfid{
 			std::string _topic;
-			const stdr_msgs::RfidSensorMsg& _msg;
+			stdr_msgs::RfidSensorMsg _msg;
 			ros::Subscriber _subscriber;
 		public:
 			GuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);

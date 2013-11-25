@@ -111,7 +111,7 @@ namespace stdr_gui{
 		painter.drawLine(originx-20,originy,originx+20,originy);
 		
 		initialMap=runningMap;
-		emit updateMap();
+		Q_EMIT updateMap();
 
 		guiConnector.setMapLoaded(true);
 		timer->start(200);
@@ -121,9 +121,7 @@ namespace stdr_gui{
 		ROS_ERROR("Save Signal ok");
 	}
 	void GuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
-		emit waitForRobotPose();
-		
-		
+		Q_EMIT waitForRobotPose();
 	}
 	
 	void GuiController::zoomInPressed(QPoint p){
@@ -135,12 +133,12 @@ namespace stdr_gui{
 	
 	void GuiController::receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg){
 		registeredRobots.clear();
+		
 		for(unsigned int i=0;i<msg.robots.size();i++){
-			//if(myRobots_.find(msg.robots[i].name)!=myRobots_.end()){
-				registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(msg.robots[i])));
-			//}
+			stdr_msgs::RobotIndexedMsg m=msg.robots[i];
+			registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(m)));
 		}
-		emit updateMap();
+		Q_EMIT updateMap();
 	}
 	
 	void GuiController::robotPlaceSet(QPoint p){

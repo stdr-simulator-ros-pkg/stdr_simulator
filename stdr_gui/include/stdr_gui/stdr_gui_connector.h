@@ -60,7 +60,7 @@ namespace stdr_gui{
 			**/
 			void setMapLoaded(bool mapLoaded);
 
-		public slots:
+		public Q_SLOTS:
 		
 			/**
 			@brief Qt slot that is called when the Properties tool button is pressed
@@ -104,7 +104,7 @@ namespace stdr_gui{
 			**/
 			void actionZoomOutTriggered(void);
 			
-		signals:
+		Q_SIGNALS:
 		
 			/**
 			@brief Qt signal that is emmited in GuiConnector::actionZoomInTriggered and connects to MapLoader::setCursorZoomIn
