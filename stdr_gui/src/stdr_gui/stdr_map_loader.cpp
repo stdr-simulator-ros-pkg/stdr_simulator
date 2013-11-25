@@ -52,7 +52,7 @@ namespace stdr_gui{
 	void MapLoader::updateImage(QImage *img){
 		internalImg=img;
 		std::pair<int,int> newDims=checkDimensions(img->width(),img->height());
-		map->setPixmap(QPixmap().fromImage((*img)).scaled(newDims.first,newDims.second));
+		map->setPixmap(QPixmap().fromImage((*img).mirrored(false,true)).scaled(newDims.first,newDims.second));
 		map->resize(newDims.first,newDims.second);
 	}
 }

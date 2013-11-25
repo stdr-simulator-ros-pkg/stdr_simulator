@@ -52,8 +52,11 @@ namespace stdr_gui{
 		catch (tf::TransformException ex){
 			ROS_ERROR("%s",ex.what());
 		}
+		tfScalar roll,pitch,yaw;
 		currentPose.x=transform.getOrigin().x();
 		currentPose.y=transform.getOrigin().y();
+		transform.getBasis().getRPY(roll,pitch,yaw);
+		currentPose.theta=yaw;
 		drawSelf(m,ocgd);
 		// Call draw for sensors
 	}
