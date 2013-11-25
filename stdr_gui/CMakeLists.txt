@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
 	roslib
 	tf
 	stdr_msgs
+	stdr_robot
 	sensor_msgs
 	nav_msgs
 )
@@ -36,6 +37,7 @@ catkin_package(
 		roslib
 		tf
 		stdr_msgs
+		stdr_robot
 		sensor_msgs
 		nav_msgs
     INCLUDE_DIRS # TODO include
@@ -84,7 +86,7 @@ add_executable(stdr_gui_node
 	src/stdr_gui/stdr_gui_sensors/stdr_gui_rfid.cpp
 	${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
 )
-add_dependencies(stdr_gui_node stdr_msgs_gencpp)	# Wait for std messages to build
+add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)	# Wait for std messages to build
 target_link_libraries(stdr_gui_node 
 	${catkin_LIBRARIES} 
 	${QT_LIBRARIES}
