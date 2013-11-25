@@ -68,7 +68,7 @@ class Robot : public nodelet::Nodelet {
 		SensorPtrVector _sensors;
 		nav_msgs::OccupancyGrid _map;
 		tf::TransformBroadcaster _tfBroadcaster;
-		geometry_msgs::Pose2D _currentPose;
+		geometry_msgs::Pose2DPtr _currentPosePtr;
 		MotionControllerPtr _motionControllerPtr;
 		
 		RegisterRobotClientPtr _registerClientPtr;

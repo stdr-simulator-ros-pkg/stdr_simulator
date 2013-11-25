@@ -30,7 +30,7 @@ class IdealMotionController : public MotionController {
 	
 	public:
 		
-		IdealMotionController(geometry_msgs::Pose2DPtr pose, tf::TransformBroadcaster& tf, ros::NodeHandle& n, const std::string& name);
+		IdealMotionController(const geometry_msgs::Pose2DPtr& pose, tf::TransformBroadcaster& tf, ros::NodeHandle& n, const std::string& name);
 		void velocityCallback(const geometry_msgs::Twist& msg);
 		void stop();
 		void calculateMotion(const ros::TimerEvent& event);

@@ -23,7 +23,7 @@
 
 namespace stdr_robot {
 	
-IdealMotionController::IdealMotionController(geometry_msgs::Pose2DPtr pose, tf::TransformBroadcaster& tf, ros::NodeHandle& n, const std::string& name)
+IdealMotionController::IdealMotionController(const geometry_msgs::Pose2DPtr& pose, tf::TransformBroadcaster& tf, ros::NodeHandle& n, const std::string& name)
   : MotionController(pose, tf, name)
 {
 	_velocitySubscrider = n.subscribe(_namespace + "/cmd_vel", 1, &IdealMotionController::velocityCallback, this);
@@ -41,6 +41,21 @@ void IdealMotionController::stop() {
 
 void IdealMotionController::calculateMotion(const ros::TimerEvent& event) {
 	// update _posePtr based on _currentTwist and time passed (event.last_real)
+	
+	ros::Duration dt = ros::Time::now() - event.last_real;
+	
+	if (_currentTwist.angular.z == 0) {
+		
+		_posePtr->x += _currentTwist.linear.x*dt.toSec()*cosf(_posePtr->theta);
+		_posePtr->y += _currentTwist.linear.x*dt.toSec()*sinf(_posePtr->theta);
+	}
+	else {
+		
+		_posePtr->x += -_currentTwist.linear.x/_currentTwist.angular.z*sinf(_posePtr->theta) + _currentTwist.linear.x/_currentTwist.angular.z*sinf(_posePtr->theta + dt.toSec()*_currentTwist.angular.z);
+		_posePtr->y -= -_currentTwist.linear.x/_currentTwist.angular.z*cosf(_posePtr->theta) + _currentTwist.linear.x/_currentTwist.angular.z*cosf(_posePtr->theta + dt.toSec()*_currentTwist.angular.z);
+	}
+	_posePtr->theta += _currentTwist.angular.z*dt.toSec();
+	
 }
 	
 }

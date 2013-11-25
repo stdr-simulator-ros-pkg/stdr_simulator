@@ -37,6 +37,8 @@ void Robot::onInit() {
 	goal.name = getName();
 	_registerClientPtr->sendGoal(goal, boost::bind(&Robot::initializeRobot, this, _1, _2));	
 
+	_currentPosePtr.reset( new geometry_msgs::Pose2D ); 
+
 	_mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
 	_moveRobotService = n.advertiseService(getName() + "/replace", &Robot::moveRobotCallback, this);
 	_collisionTimer = n.createTimer(ros::Duration(0.1), &Robot::checkCollision, this);
@@ -54,7 +56,7 @@ void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const
 	
 	// use result to initialize sensors
 	ros::NodeHandle n = getMTNodeHandle();
-	_motionControllerPtr.reset( new IdealMotionController(boost::make_shared<geometry_msgs::Pose2D>(_currentPose), _tfBroadcaster, n, getName()) );
+	_motionControllerPtr.reset( new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()) );
 
 }
 
@@ -65,7 +67,9 @@ void Robot::mapCallback(const nav_msgs::OccupancyGridConstPtr& msg) {
 bool Robot::moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
 							stdr_msgs::MoveRobot::Response& res)
 {
-	_currentPose = req.newPose;
+	_currentPosePtr->x = req.newPose.x;
+	_currentPosePtr->y = req.newPose.y;
+	_currentPosePtr->theta = req.newPose.theta;
 	return true;
 }
 
@@ -74,10 +78,10 @@ void Robot::checkCollision(const ros::TimerEvent&) {
 }
 
 void Robot::publishRobotTf(const ros::TimerEvent&) {
-	
-	tf::Vector3 translation(_currentPose.x, _currentPose.y, 0);
+		
+	tf::Vector3 translation(_currentPosePtr->x, _currentPosePtr->y, 0);
 	tf::Quaternion rotation;
-	rotation.setRPY(0, 0, _currentPose.theta);
+	rotation.setRPY(0, 0, _currentPosePtr->theta);
 	
 	tf::Transform transform(rotation, translation);
 	
