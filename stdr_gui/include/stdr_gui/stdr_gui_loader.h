@@ -36,6 +36,7 @@ namespace stdr_gui{
 			QAction *actionProperties;
 			QAction *actionGrid;
 			QAction *actionNewRobot;
+			QAction *actionAddRobot;
 			QAction *actionNewRfid;
 			QAction *actionLoadMap;
 			QAction *actionZoomIn;
