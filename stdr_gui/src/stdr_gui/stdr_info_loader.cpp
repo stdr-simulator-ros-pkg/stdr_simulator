@@ -72,9 +72,68 @@ namespace stdr_gui{
 	
 	void InfoLoader::updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg){
 		for(unsigned int i=0;i<msg.robots.size();i++){
-			QTreeWidgetItem	*rnode;
-			rnode=new QTreeWidgetItem();
+			QTreeWidgetItem	*rnode=new QTreeWidgetItem();
 			rnode->setText(0,QString(msg.robots[i].name.c_str()));
+			
+			QTreeWidgetItem *radius=new QTreeWidgetItem();
+			radius->setText(0,"Radius");
+			radius->setText(1,(QString().setNum(msg.robots[i].robot.radius)+QString("m")));
+			rnode->addChild(radius);
+			
+			QTreeWidgetItem *lasers=new QTreeWidgetItem(),
+							*sonars=new QTreeWidgetItem(),
+							*rfids=new QTreeWidgetItem(),
+							*kinematics=new QTreeWidgetItem();
+
+			lasers->setText(0,"Lasers");
+			sonars->setText(0,"Sonars");
+			rfids->setText(0,"RFID antennas");
+			kinematics->setText(0,"Kinematic");
+			
+			for(unsigned int l=0;l<msg.robots[i].robot.laserSensors.size();l++){
+				QTreeWidgetItem *lname;
+				lname=new QTreeWidgetItem();
+				lname->setText(0,msg.robots[i].robot.laserSensors[l].frame_id.c_str());
+
+				QTreeWidgetItem *lrays=new QTreeWidgetItem();
+				QTreeWidgetItem *lmaxrange=new QTreeWidgetItem();
+				QTreeWidgetItem *lminrange=new QTreeWidgetItem();
+				QTreeWidgetItem *lmaxangle=new QTreeWidgetItem();
+				QTreeWidgetItem *lminangle=new QTreeWidgetItem();
+				QTreeWidgetItem *lnoisemean=new QTreeWidgetItem();
+				QTreeWidgetItem *lnoisestd=new QTreeWidgetItem();
+				QTreeWidgetItem *lfreq=new QTreeWidgetItem();
+				
+				lrays->setText(0,"Rays");
+				//~ lrays->setText(1,QString().setNum(msg.robots[i].robot.laserSensors[l].rays));
+				lmaxrange->setText(0,"Max dist");
+				lmaxrange->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].maxRange)+QString(" m")));
+				lminrange->setText(0,"Min dist");
+				lminrange->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].minRange)+QString(" m")));
+				lmaxangle->setText(0,"Max angle");
+				lmaxangle->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].maxAngle)+QString(" deg")));
+				lminangle->setText(0,"Min angle");
+				lminangle->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].minAngle)+QString(" deg")));
+				lnoisemean->setText(0,"Noise (mean)");
+				lnoisemean->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].noise.noiseMean)+QString(" m")));
+				lnoisestd->setText(0,"Noise (std)");
+				lnoisestd->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].noise.noiseStd)+QString(" m")));
+									
+				lname->addChild(lrays);
+				lname->addChild(lmaxrange);
+				lname->addChild(lminrange);
+				lname->addChild(lmaxangle);
+				lname->addChild(lminangle);
+				lname->addChild(lnoisemean);
+				lname->addChild(lnoisestd);
+				
+				lasers->addChild(lname);
+			}
+			
+			rnode->addChild(lasers);
+			rnode->addChild(sonars);
+			rnode->addChild(rfids);
+			rnode->addChild(kinematics);
 			
 			robotsInfo.addChild(rnode);
 		}
