@@ -55,7 +55,6 @@ namespace stdr_gui{
 			void serveImage(QImage *img);
 			void setCursorZoomIn(bool state);
 			void setCursorZoomOut(bool state);
-			void setCursorRealSize(bool state);
 			void setCursorAdjusted(bool state);
 			void waitForPlace(void);
 		

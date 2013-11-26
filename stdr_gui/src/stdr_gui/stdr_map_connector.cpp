@@ -100,17 +100,6 @@ namespace stdr_gui{
 		}
 	}
 	
-	void MapConnector::setCursorRealSize(bool state){
-		if(state){
-			// Must resize to real size;
-		}
-		else{
-			
-		}
-		mapState=NORMAL;
-		loader.map->setCursor(QCursor(Qt::CrossCursor));
-	}
-	
 	void MapConnector::setCursorAdjusted(bool state){
 		if(state){
 			// Must resize to adjust;

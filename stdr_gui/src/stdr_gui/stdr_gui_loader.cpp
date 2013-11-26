@@ -113,15 +113,6 @@ namespace stdr_gui{
         actionZoomOut->setIcon(iconZoomOut);
         toolBar->addAction(actionZoomOut);
         
-        actionRealSize = new QAction(this);
-        actionRealSize->setObjectName(QString::fromUtf8("actionRealSize"));
-        actionRealSize->setCheckable(true);
-        actionRealSize->setIconText(QString("Real size"));
-        QIcon iconRealSize;
-        iconRealSize.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/real_size.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
-        actionRealSize->setIcon(iconRealSize);
-        toolBar->addAction(actionRealSize);
-        
         actionAdjusted = new QAction(this);
         actionAdjusted->setObjectName(QString::fromUtf8("actionAdjusted"));
         actionAdjusted->setCheckable(true);
