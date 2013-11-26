@@ -101,12 +101,7 @@ namespace stdr_gui{
 	}
 	
 	void MapConnector::setCursorAdjusted(bool state){
-		if(state){
-			// Must resize to adjust;
-		}
-		else{
-
-		}
+		loader.resetZoom();
 		mapState=NORMAL;
 		loader.map->setCursor(QCursor(Qt::CrossCursor));
 	}

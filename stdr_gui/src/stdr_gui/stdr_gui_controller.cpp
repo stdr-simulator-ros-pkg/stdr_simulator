@@ -119,6 +119,7 @@ namespace stdr_gui{
 		infoConnector.updateMapInfo(msg.info.width*msg.info.resolution,
 									msg.info.height*msg.info.resolution,
 									msg.info.resolution);
+		mapConnector.loader.initialImageSize=QSize(initialMap.width(),initialMap.height());
 		timer->start(200);
 	}
 	
@@ -130,10 +131,10 @@ namespace stdr_gui{
 	}
 	
 	void GuiController::zoomInPressed(QPoint p){
-		ROS_ERROR("zoomInPressed Signal ok");
+		mapConnector.loader.updateZoom(p,true);
 	}
 	void GuiController::zoomOutPressed(QPoint p){
-		ROS_ERROR("zoomOutPressed Signal ok");
+		mapConnector.loader.updateZoom(p,false);
 	}
 	
 	void GuiController::receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg){
