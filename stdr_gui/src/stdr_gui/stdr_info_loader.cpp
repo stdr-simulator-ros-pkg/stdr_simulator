@@ -40,7 +40,7 @@ namespace stdr_gui{
 		mapHeight.setText(0,"Map height");
 		mapHeight.setText(1,"-");
 		generalInfo.addChild(&mapHeight);
-		mapOcgd.setText(0,"Meters/pixel");
+		mapOcgd.setText(0,"Resolution");
 		mapOcgd.setText(1,"-");
 		generalInfo.addChild(&mapOcgd);
 		
@@ -49,5 +49,34 @@ namespace stdr_gui{
 		
 		generalInfo.setExpanded(true);
 		robotsInfo.setExpanded(true);
+	}
+	
+	void InfoLoader::deleteTreeNode(QTreeWidgetItem *item){
+		int count=item->childCount();
+		for(int i=count-1;i>=0;i--)
+			deleteTreeNode(item->child(i));
+		delete item;
+	}
+	
+	void InfoLoader::deleteTree(void){
+		for(unsigned int i=0;i<robotsInfo.childCount();i++){
+			deleteTreeNode(robotsInfo.child(i));
+		}
+	}
+	
+	void InfoLoader::updateMapInfo(float width,float height,float ocgd){
+		mapWidth.setText(1,(QString().setNum(width)+QString(" m")));
+		mapHeight.setText(1,(QString().setNum(height)+QString(" m")));
+		mapOcgd.setText(1,(QString().setNum(ocgd)+QString(" m/px")));
+	}
+	
+	void InfoLoader::updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg){
+		for(unsigned int i=0;i<msg.robots.size();i++){
+			QTreeWidgetItem	*rnode;
+			rnode=new QTreeWidgetItem();
+			rnode->setText(0,QString(msg.robots[i].name.c_str()));
+			
+			robotsInfo.addChild(rnode);
+		}
 	}
 }

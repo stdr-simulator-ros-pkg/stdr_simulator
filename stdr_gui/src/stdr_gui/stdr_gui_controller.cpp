@@ -113,9 +113,11 @@ namespace stdr_gui{
 		painter.drawLine(originx-20,originy,originx+20,originy);
 		
 		initialMap=runningMap;
-		Q_EMIT updateMap();
 
 		guiConnector.setMapLoaded(true);
+		infoConnector.updateMapInfo(msg.info.width*msg.info.resolution,
+									msg.info.height*msg.info.resolution,
+									msg.info.resolution);
 		timer->start(200);
 	}
 	
@@ -142,6 +144,7 @@ namespace stdr_gui{
 			stdr_msgs::RobotIndexedMsg m=msg.robots[i];
 			registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(m)));
 		}
+		infoConnector.updateTree(msg);
 		mapLock=false;
 	}
 	
@@ -189,5 +192,6 @@ namespace stdr_gui{
 		newPoint.setY(initialMap.height()-y*climax);
 		return newPoint;
 	}
-}
+}	
+
 
