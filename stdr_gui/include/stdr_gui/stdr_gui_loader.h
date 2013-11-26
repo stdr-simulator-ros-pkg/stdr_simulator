@@ -41,6 +41,8 @@ namespace stdr_gui{
 			QAction *actionLoadMap;
 			QAction *actionZoomIn;
 			QAction *actionZoomOut;
+			QAction *actionRealSize;
+			QAction *actionAdjusted;
 		
 			GuiLoader(int argc,char **argv);
 			

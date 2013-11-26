@@ -46,6 +46,8 @@ namespace stdr_gui{
 		
 		QObject::connect(&guiConnector,SIGNAL(setZoomInCursor(bool)),&mapConnector, SLOT(setCursorZoomIn(bool)));
 		QObject::connect(&guiConnector,SIGNAL(setZoomOutCursor(bool)),&mapConnector, SLOT(setCursorZoomOut(bool)));
+		QObject::connect(&guiConnector,SIGNAL(setRealSizeCursor(bool)),&mapConnector, SLOT(setCursorRealSize(bool)));
+		QObject::connect(&guiConnector,SIGNAL(setAdjustedCursor(bool)),&mapConnector, SLOT(setCursorAdjusted(bool)));
 		QObject::connect(&mapConnector,SIGNAL(zoomInPressed(QPoint)),this, SLOT(zoomInPressed(QPoint)));
 		QObject::connect(&mapConnector,SIGNAL(zoomOutPressed(QPoint)),this, SLOT(zoomOutPressed(QPoint)));
 		

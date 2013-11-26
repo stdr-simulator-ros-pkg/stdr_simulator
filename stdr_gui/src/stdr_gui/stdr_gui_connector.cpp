@@ -37,6 +37,8 @@ namespace stdr_gui{
 		QObject::connect(loader.actionNewRobot,SIGNAL(triggered(bool)),this,SLOT(actionNewRobotTriggered()));
 		QObject::connect(loader.actionZoomIn,SIGNAL(triggered(bool)),this,SLOT(actionZoomInTriggered()));
 		QObject::connect(loader.actionZoomOut,SIGNAL(triggered(bool)),this,SLOT(actionZoomOutTriggered()));
+		QObject::connect(loader.actionRealSize,SIGNAL(triggered(bool)),this,SLOT(actionRealSizeTriggered()));
+		QObject::connect(loader.actionAdjusted,SIGNAL(triggered(bool)),this,SLOT(actionAdjustedTriggered()));
 	}
 	
 	void GuiConnector::actionExitTriggered(void){
@@ -73,10 +75,30 @@ namespace stdr_gui{
 		//~ if(!_mapLoaded) return;
 		Q_EMIT setZoomInCursor(loader.actionZoomIn->isChecked());
 		loader.actionZoomOut->setChecked(false);
+		loader.actionRealSize->setChecked(false);
+		loader.actionAdjusted->setChecked(false);
 	}
 	void GuiConnector::actionZoomOutTriggered(void){
 		//~ if(!_mapLoaded) return;
 		Q_EMIT setZoomOutCursor(loader.actionZoomOut->isChecked());
 		loader.actionZoomIn->setChecked(false);
+		loader.actionRealSize->setChecked(false);
+		loader.actionAdjusted->setChecked(false);
+	}
+	
+	void GuiConnector::actionRealSizeTriggered(void){
+		//~ if(!_mapLoaded) return;
+		Q_EMIT setRealSizeCursor(loader.actionRealSize->isChecked());
+		loader.actionZoomIn->setChecked(false);
+		loader.actionZoomOut->setChecked(false);
+		loader.actionAdjusted->setChecked(false);
+	}
+	
+	void GuiConnector::actionAdjustedTriggered(void){
+		//~ if(!_mapLoaded) return;
+		Q_EMIT setRealSizeCursor(loader.actionRealSize->isChecked());
+		loader.actionZoomIn->setChecked(false);
+		loader.actionZoomOut->setChecked(false);
+		loader.actionRealSize->setChecked(false);
 	}
 }

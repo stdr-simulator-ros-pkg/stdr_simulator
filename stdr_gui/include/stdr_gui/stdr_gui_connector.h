@@ -104,6 +104,9 @@ namespace stdr_gui{
 			**/
 			void actionZoomOutTriggered(void);
 			
+			void actionRealSizeTriggered(void);
+			void actionAdjustedTriggered(void);
+			
 		Q_SIGNALS:
 		
 			/**
@@ -119,6 +122,8 @@ namespace stdr_gui{
 			@return void
 			**/
 			void setZoomOutCursor(bool state);
+			void setRealSizeCursor(bool state);
+			void setAdjustedCursor(bool state);
 	};
 }
 

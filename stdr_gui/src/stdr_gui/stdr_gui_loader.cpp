@@ -100,18 +100,37 @@ namespace stdr_gui{
         actionZoomIn->setCheckable(true);
         actionZoomIn->setIconText(QString("Zoom in"));
         QIcon iconZoomIn;
-        iconZoomIn.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_in.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconZoomIn.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_in_b.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionZoomIn->setIcon(iconZoomIn);
         toolBar->addAction(actionZoomIn);
         
         actionZoomOut = new QAction(this);
-        actionZoomOut->setObjectName(QString::fromUtf8("actionZoomIn"));
+        actionZoomOut->setObjectName(QString::fromUtf8("actionZoomOut"));
         actionZoomOut->setCheckable(true);
-        actionZoomOut->setIconText(QString("Zoom in"));
+        actionZoomOut->setIconText(QString("Zoom out"));
         QIcon iconZoomOut;
-        iconZoomOut.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_out.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconZoomOut.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_out_b.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionZoomOut->setIcon(iconZoomOut);
         toolBar->addAction(actionZoomOut);
+        
+        actionRealSize = new QAction(this);
+        actionRealSize->setObjectName(QString::fromUtf8("actionRealSize"));
+        actionRealSize->setCheckable(true);
+        actionRealSize->setIconText(QString("Real size"));
+        QIcon iconRealSize;
+        iconRealSize.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/real_size.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        actionRealSize->setIcon(iconRealSize);
+        toolBar->addAction(actionRealSize);
+        
+        actionAdjusted = new QAction(this);
+        actionAdjusted->setObjectName(QString::fromUtf8("actionAdjusted"));
+        actionAdjusted->setCheckable(true);
+        actionAdjusted->setChecked(true);
+        actionAdjusted->setIconText(QString("Auto size"));
+        QIcon iconAdjust;
+        iconAdjust.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/adjusted.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        actionAdjusted->setIcon(iconAdjust);
+        toolBar->addAction(actionAdjusted);
         
         toolBar->setIconSize(QSize(30,30));
 	}
