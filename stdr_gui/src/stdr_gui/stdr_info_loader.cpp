@@ -55,11 +55,13 @@ namespace stdr_gui{
 		int count=item->childCount();
 		for(int i=count-1;i>=0;i--)
 			deleteTreeNode(item->child(i));
+		stdrInformationTree->removeItemWidget(item,0);
 		delete item;
 	}
 	
 	void InfoLoader::deleteTree(void){
-		for(unsigned int i=0;i<robotsInfo.childCount();i++){
+		int count=robotsInfo.childCount();
+		for(int i=count-1;i>=0;i--){
 			deleteTreeNode(robotsInfo.child(i));
 		}
 	}
@@ -118,6 +120,8 @@ namespace stdr_gui{
 				lnoisemean->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].noise.noiseMean)+QString(" m")));
 				lnoisestd->setText(0,"Noise (std)");
 				lnoisestd->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].noise.noiseStd)+QString(" m")));
+				lfreq->setText(0,"Frequency");
+				lfreq->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].frequency)+QString(" Hz")));
 									
 				lname->addChild(lrays);
 				lname->addChild(lmaxrange);
@@ -126,8 +130,48 @@ namespace stdr_gui{
 				lname->addChild(lminangle);
 				lname->addChild(lnoisemean);
 				lname->addChild(lnoisestd);
+				lname->addChild(lfreq);
 				
 				lasers->addChild(lname);
+			}
+			
+			for(unsigned int l=0;l<msg.robots[i].robot.sonarSensors.size();l++){
+				QTreeWidgetItem *sname;
+				sname=new QTreeWidgetItem();
+				sname->setText(0,msg.robots[i].robot.sonarSensors[l].frame_id.c_str());
+
+				QTreeWidgetItem *smaxrange=new QTreeWidgetItem();
+				QTreeWidgetItem *sminrange=new QTreeWidgetItem();
+				QTreeWidgetItem *scone=new QTreeWidgetItem();
+				QTreeWidgetItem *sorientation=new QTreeWidgetItem();
+				QTreeWidgetItem *snoisemean=new QTreeWidgetItem();
+				QTreeWidgetItem *snoisestd=new QTreeWidgetItem();
+				QTreeWidgetItem *sfreq=new QTreeWidgetItem();
+				
+				smaxrange->setText(0,"Max dist");
+				smaxrange->setText(1,(QString().setNum(msg.robots[i].robot.sonarSensors[l].maxRange)+QString(" m")));
+				sminrange->setText(0,"Min dist");
+				sminrange->setText(1,(QString().setNum(msg.robots[i].robot.sonarSensors[l].minRange)+QString(" m")));
+				scone->setText(0,"Cone");
+				scone->setText(1,(QString().setNum(msg.robots[i].robot.sonarSensors[l].coneAngle)+QString(" deg")));
+				sorientation->setText(0,"Orientation");
+				sorientation->setText(1,(QString().setNum(msg.robots[i].robot.sonarSensors[l].pose.theta)+QString(" deg")));
+				snoisemean->setText(0,"Noise (mean)");
+				snoisemean->setText(1,(QString().setNum(msg.robots[i].robot.sonarSensors[l].noise.noiseMean)+QString(" m")));
+				snoisestd->setText(0,"Noise (std)");
+				snoisestd->setText(1,(QString().setNum(msg.robots[i].robot.sonarSensors[l].noise.noiseStd)+QString(" m")));
+				sfreq->setText(0,"Frequency");
+				sfreq->setText(1,(QString().setNum(msg.robots[i].robot.sonarSensors[l].frequency)+QString(" Hz")));
+									
+				sname->addChild(smaxrange);
+				sname->addChild(sminrange);
+				sname->addChild(scone);
+				sname->addChild(sorientation);
+				sname->addChild(snoisemean);
+				sname->addChild(snoisestd);
+				sname->addChild(sfreq);
+				
+				sonars->addChild(sname);
 			}
 			
 			rnode->addChild(lasers);
