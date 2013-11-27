@@ -79,7 +79,7 @@ namespace stdr_gui{
 			
 			QTreeWidgetItem *radius=new QTreeWidgetItem();
 			radius->setText(0,"Radius");
-			radius->setText(1,(QString().setNum(msg.robots[i].robot.radius)+QString("m")));
+			radius->setText(1,(QString().setNum(msg.robots[i].robot.footprint.radius)+QString("m")));
 			rnode->addChild(radius);
 			
 			QTreeWidgetItem *lasers=new QTreeWidgetItem(),

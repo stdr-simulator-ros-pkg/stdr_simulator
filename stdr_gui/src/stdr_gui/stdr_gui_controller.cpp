@@ -210,7 +210,7 @@ namespace stdr_gui{
 			msg.sonarSensors[i].coneAngle=msg.sonarSensors[i].coneAngle/180.0*STDR_PI;
 			msg.sonarSensors[i].pose.theta=msg.sonarSensors[i].pose.theta/180.0*STDR_PI;
 		}
-		for(unsigned int i=0;i<msg.sonarSensors.size();i++){
+		for(unsigned int i=0;i<msg.rfidSensors.size();i++){
 			msg.rfidSensors[i].angleSpan=msg.rfidSensors[i].angleSpan/180.0*STDR_PI;
 			msg.rfidSensors[i].pose.theta=msg.rfidSensors[i].pose.theta/180.0*STDR_PI;
 		}

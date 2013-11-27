@@ -53,7 +53,7 @@ namespace stdr_gui{
 		loader.robotInfoOrientation.setText(0,"Orientation");
 		loader.robotInfoOrientation.setText(1,"0");
 		
-		newRobotMsg.radius=0.15;
+		newRobotMsg.footprint.radius=0.15;
 		
 		unsigned int laserCount=loader.lasersNode.childCount();
 		unsigned int sonarCount=loader.sonarsNode.childCount();
@@ -583,8 +583,8 @@ namespace stdr_gui{
 		loader.robotPreviewImage.fill(QColor(220,220,220,1));
 		
 		climax=-1;
-		if(climax<newRobotMsg.radius) 
-			climax=newRobotMsg.radius;
+		if(climax<newRobotMsg.footprint.radius) 
+			climax=newRobotMsg.footprint.radius;
 		for(unsigned int i=0;i<newRobotMsg.laserSensors.size();i++){
 			if(climax<(newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.x)) 
 				climax=newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.x;
@@ -617,7 +617,7 @@ namespace stdr_gui{
 		}
 		
 		climax=230.0/climax;
-		drawRobot(newRobotMsg.radius);
+		drawRobot(newRobotMsg.footprint.radius);
 		drawLasers();
 		drawSonars();
 		drawRfidAntennas();
