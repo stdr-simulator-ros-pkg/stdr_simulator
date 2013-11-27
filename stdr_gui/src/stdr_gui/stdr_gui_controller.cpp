@@ -188,6 +188,26 @@ namespace stdr_gui{
 		mapConnector.loader.updateImage(&(runningMap));
 		guiConnector.loader.statusbar->showMessage(QString("Time elapsed : ")+getLiteralTime(elapsedTime.elapsed()),0);
 		mapLock=false;
+		
+		//Check if all visualisers are active
+		std::vector<QString> toBeErased;
+		for(std::map<QString,LaserVisualisation *>::iterator it=laserVisualizers.begin();it!=laserVisualizers.end();it++){
+			if(!it->second->getActive()){
+				toBeErased.push_back(it->first);
+			}
+		}
+		for(unsigned int i=0;i<toBeErased.size();i++){
+			laserVisualizers.erase(toBeErased[i]);
+		}
+		toBeErased.clear();
+		for(std::map<QString,SonarVisualisation *>::iterator it=sonarVisualizers.begin();it!=sonarVisualizers.end();it++){
+			if(!it->second->getActive()){
+				toBeErased.push_back(it->first);
+			}
+		}
+		for(unsigned int i=0;i<toBeErased.size();i++){
+			sonarVisualizers.erase(toBeErased[i]);
+		}
 	}
 	
 	QPoint GuiController::pointFromImage(QPoint p){
@@ -220,15 +240,21 @@ namespace stdr_gui{
 	}
 	
 	void GuiController::laserVisualizerClicked(QString robotName,QString laserName){
+		QString name=robotName+QString("/")+laserName;
+		if(laserVisualizers.find(name)!=laserVisualizers.end())
+			return;
 		LaserVisualisation *lv;
-		lv=new LaserVisualisation();
-		laserVisualizers.insert(std::pair<QString,LaserVisualisation *>(robotName+QString("\\")+laserName,lv));
+		lv=new LaserVisualisation(name);
+		laserVisualizers.insert(std::pair<QString,LaserVisualisation *>(name,lv));
 		lv->show();
 	}
 	void GuiController::sonarVisualizerClicked(QString robotName,QString sonarName){
+		QString name=robotName+QString("/")+sonarName;
+		if(sonarVisualizers.find(name)!=sonarVisualizers.end())
+			return;
 		SonarVisualisation *sv;
-		sv=new SonarVisualisation();
-		sonarVisualizers.insert(std::pair<QString,SonarVisualisation *>(robotName+QString("\\")+sonarName,sv));
+		sv=new SonarVisualisation(name);
+		sonarVisualizers.insert(std::pair<QString,SonarVisualisation *>(name,sv));
 		sv->show();
 	}
 }	

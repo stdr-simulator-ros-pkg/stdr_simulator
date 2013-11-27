@@ -27,9 +27,14 @@
 
 namespace stdr_gui{
 	class LaserVisualisation : public QWidget, public Ui_laserVisualization{
+		private:
+			QString name;
+			bool active;
 		public:
-			LaserVisualisation(void);
+			bool getActive(void);
+			LaserVisualisation(QString name);
 			void destruct(void);
+			void closeEvent(QCloseEvent *event);
 	};	
 }
 

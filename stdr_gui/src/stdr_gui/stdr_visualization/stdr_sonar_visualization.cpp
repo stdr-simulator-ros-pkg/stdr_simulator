@@ -22,8 +22,11 @@
 #include "stdr_gui/stdr_visualization/stdr_sonar_visualization.h"
 
 namespace stdr_gui{
-	SonarVisualisation::SonarVisualisation(void){
+	SonarVisualisation::SonarVisualisation(QString name){
+		this->name=name;
 		setupUi(this);
+		setWindowTitle(name);
+		active=true;
 	}
 	
 	void SonarVisualisation::destruct(void){
@@ -32,5 +35,14 @@ namespace stdr_gui{
 		delete sonarDist;
 		delete sonarDist_2;
 		delete sonarDist_3;
+	}
+	
+	void SonarVisualisation::closeEvent(QCloseEvent *event){
+		destruct();
+		active=false;
+	}
+	
+	bool SonarVisualisation::getActive(void){
+		return active;
 	}
 }

@@ -22,8 +22,11 @@
 #include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
 
 namespace stdr_gui{
-	LaserVisualisation::LaserVisualisation(void){
+	LaserVisualisation::LaserVisualisation(QString name){
+		this->name=name;
 		setupUi(this);
+		setWindowTitle(name);
+		active=true;
 	}
 	
 	void LaserVisualisation::destruct(void){
@@ -32,5 +35,14 @@ namespace stdr_gui{
 		delete laserMax;
 		delete laserMin;
 		delete laserImage;
+	}
+	
+	void LaserVisualisation::closeEvent(QCloseEvent *event){
+		destruct();
+		active=false;
+	}
+	
+	bool LaserVisualisation::getActive(void){
+		return active;
 	}
 }

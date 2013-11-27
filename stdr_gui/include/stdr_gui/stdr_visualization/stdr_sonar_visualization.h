@@ -27,9 +27,14 @@
 
 namespace stdr_gui{
 	class SonarVisualisation : public QWidget, public Ui_sonarVisualization{
+		private:
+			QString name;
+			bool active;
 		public:
-			SonarVisualisation(void);
+			bool getActive(void);
+			SonarVisualisation(QString name);
 			void destruct(void);
+			void closeEvent(QCloseEvent *event);
 	};	
 }
 
