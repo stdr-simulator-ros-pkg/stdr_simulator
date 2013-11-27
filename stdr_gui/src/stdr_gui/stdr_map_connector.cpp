@@ -100,6 +100,12 @@ namespace stdr_gui{
 		}
 	}
 	
+	void MapConnector::setCursorAdjusted(bool state){
+		loader.resetZoom();
+		mapState=NORMAL;
+		loader.map->setCursor(QCursor(Qt::CrossCursor));
+	}
+	
 	void MapConnector::waitForPlace(void){
 		mapState=SETPLACE;
 		loader.map->setCursor(Qt::PointingHandCursor);

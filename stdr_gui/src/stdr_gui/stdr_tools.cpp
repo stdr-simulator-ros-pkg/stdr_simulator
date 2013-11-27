@@ -25,4 +25,21 @@ namespace stdr_gui{
 	std::string getRosPackagePath(std::string package){
 		return ros::package::getPath(package.c_str());
 	}
+	
+	QString getLiteralTime(int ms){
+		QString str;
+		int h=ms/(1000*60*60);
+		int m=ms/(1000*60)-h*60;
+		int s=ms/1000-h*60*60-m*60;
+		int ms_=ms-h*60*60*1000-m*1000*60-s*1000;
+		if(h)
+			str+=QString().setNum(h)+QString(" h ");
+		if(m || h)
+			str+=QString().setNum(m)+QString(" min ");
+		if(s || h || m)
+			str+=QString().setNum(s)+QString(" sec ");
+		if(ms_ || s || h || m)
+			str+=QString().setNum(ms_)+QString(" ms");
+		return str;
+	}
 }

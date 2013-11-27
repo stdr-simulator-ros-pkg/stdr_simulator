@@ -25,7 +25,7 @@ namespace stdr_gui{
 	GuiLoader::GuiLoader(int argc,char **argv){
 		this->argc=argc;
 		this->argv=argv;
-		
+
 		setupUi(this);
 		
 		addToolbarIcons();
@@ -40,7 +40,7 @@ namespace stdr_gui{
         QIcon iconLoadMap;
         
         
-        iconLoadMap.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/orange-moonlight-icons/png/32x32/image.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconLoadMap.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/load_map.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionLoadMap->setIcon(iconLoadMap);
         toolBar->addAction(actionLoadMap);
 		
@@ -51,16 +51,25 @@ namespace stdr_gui{
         actionGrid->setCheckable(false);
         actionGrid->setIconText(QString("Enable grid"));
         QIcon iconGrid;
-        iconGrid.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/orange-moonlight-icons/png/32x32/grid.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconGrid.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/grid.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionGrid->setIcon(iconGrid);
         toolBar->addAction(actionGrid);
 		
-		actionNewRobot = new QAction(this);
+		actionAddRobot = new QAction(this);
+        actionAddRobot->setObjectName(QString::fromUtf8("actionNewRobot"));
+        actionAddRobot->setCheckable(false);
+        actionAddRobot->setIconText(QString("Add robot"));
+        QIcon iconAddRobot;
+        iconAddRobot.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/add_robot.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        actionAddRobot->setIcon(iconAddRobot);
+        toolBar->addAction(actionAddRobot);
+        
+        actionNewRobot = new QAction(this);
         actionNewRobot->setObjectName(QString::fromUtf8("actionNewRobot"));
         actionNewRobot->setCheckable(false);
         actionNewRobot->setIconText(QString("Add robot"));
         QIcon iconNewRobot;
-        iconNewRobot.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/orange-moonlight-icons/png/32x32/blank_page.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconNewRobot.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/new_robot.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionNewRobot->setIcon(iconNewRobot);
         toolBar->addAction(actionNewRobot);
         
@@ -69,7 +78,7 @@ namespace stdr_gui{
         actionNewRfid->setCheckable(false);
         actionNewRfid->setIconText(QString("Add RFID tag"));
         QIcon iconNewRfid;
-        iconNewRfid.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/orange-moonlight-icons/png/32x32/target.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconNewRfid.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/rfid.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionNewRfid->setIcon(iconNewRfid);
         toolBar->addAction(actionNewRfid);
         
@@ -80,7 +89,7 @@ namespace stdr_gui{
         actionProperties->setCheckable(false);
         actionProperties->setIconText(QString("Properties"));
         QIcon iconProperties;
-        iconProperties.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/orange-moonlight-icons/png/32x32/process.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconProperties.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/properties.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionProperties->setIcon(iconProperties);
         toolBar->addAction(actionProperties);
         
@@ -91,17 +100,33 @@ namespace stdr_gui{
         actionZoomIn->setCheckable(true);
         actionZoomIn->setIconText(QString("Zoom in"));
         QIcon iconZoomIn;
-        iconZoomIn.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_in.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconZoomIn.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_in_b.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionZoomIn->setIcon(iconZoomIn);
         toolBar->addAction(actionZoomIn);
         
         actionZoomOut = new QAction(this);
-        actionZoomOut->setObjectName(QString::fromUtf8("actionZoomIn"));
+        actionZoomOut->setObjectName(QString::fromUtf8("actionZoomOut"));
         actionZoomOut->setCheckable(true);
-        actionZoomOut->setIconText(QString("Zoom in"));
+        actionZoomOut->setIconText(QString("Zoom out"));
         QIcon iconZoomOut;
-        iconZoomOut.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_out.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        iconZoomOut.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_out_b.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
         actionZoomOut->setIcon(iconZoomOut);
         toolBar->addAction(actionZoomOut);
+        
+        actionAdjusted = new QAction(this);
+        actionAdjusted->setObjectName(QString::fromUtf8("actionAdjusted"));
+        actionAdjusted->setCheckable(true);
+        actionAdjusted->setChecked(true);
+        actionAdjusted->setIconText(QString("Auto size"));
+        QIcon iconAdjust;
+        iconAdjust.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/adjusted.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);
+        actionAdjusted->setIcon(iconAdjust);
+        toolBar->addAction(actionAdjusted);
+        
+        toolBar->setIconSize(QSize(30,30));
+	}
+	
+	void GuiLoader::closeEvent(QCloseEvent *event){
+		ros::shutdown();
 	}
 }

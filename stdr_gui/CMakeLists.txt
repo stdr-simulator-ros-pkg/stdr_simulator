@@ -49,9 +49,7 @@ catkin_package(
 
 #----------------------------------------------------------------------------------------------------#
 file(GLOB QT_FORMS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ui/*.ui)
-file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} resources/*.qrc)
 
-QT4_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
 QT4_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
 
 QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_gui_controller.h)
@@ -86,7 +84,7 @@ add_executable(stdr_gui_node
 	src/stdr_gui/stdr_gui_sensors/stdr_gui_laser.cpp
 	src/stdr_gui/stdr_gui_sensors/stdr_gui_sonar.cpp
 	src/stdr_gui/stdr_gui_sensors/stdr_gui_rfid.cpp
-	${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
+	${QT_SOURCES} ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
 )
 add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)	# Wait for std messages to build
 target_link_libraries(stdr_gui_node 

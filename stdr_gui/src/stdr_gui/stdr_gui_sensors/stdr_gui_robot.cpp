@@ -26,7 +26,7 @@ namespace stdr_gui{
 		initialPose=msg.robot.initialPose;
 		currentPose=initialPose;
 		footprint=msg.robot.footprint;
-		radius=msg.robot.radius;
+		radius=msg.robot.footprint.radius;
 		frameId_=msg.name;
 		// Setup rest of sensors
 	}

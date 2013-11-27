@@ -39,7 +39,7 @@ namespace stdr_gui{
 			geometry_msgs::Pose2D initialPose;
 			geometry_msgs::Pose2D currentPose;
 			
-			std::vector<geometry_msgs::Point> footprint;
+			stdr_msgs::FootprintMsg footprint;
 			float radius;
 			void drawSelf(QImage *m,float ocgd);
 			tf::TransformListener listener;

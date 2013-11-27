@@ -42,6 +42,10 @@ namespace stdr_gui{
 			
 		public:
 			InfoLoader(int argc, char **argv);
+			void deleteTree(void);
+			void deleteTreeNode(QTreeWidgetItem *item);
+			void updateMapInfo(float width,float height,float ocgd);
+			void updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
 	};	
 }
 
