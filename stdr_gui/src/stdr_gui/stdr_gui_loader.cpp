@@ -25,7 +25,7 @@ namespace stdr_gui{
 	GuiLoader::GuiLoader(int argc,char **argv){
 		this->argc=argc;
 		this->argv=argv;
-		
+
 		setupUi(this);
 		
 		addToolbarIcons();
@@ -124,5 +124,9 @@ namespace stdr_gui{
         toolBar->addAction(actionAdjusted);
         
         toolBar->setIconSize(QSize(30,30));
+	}
+	
+	void GuiLoader::closeEvent(QCloseEvent *event){
+		ros::shutdown();
 	}
 }

@@ -28,11 +28,10 @@
 namespace stdr_gui{
 	
 	class GuiLoader : public Ui_MainWindow, public QMainWindow{
-			
 			int argc;
 			char **argv;
-
 		public:
+
 			QAction *actionProperties;
 			QAction *actionGrid;
 			QAction *actionNewRobot;
@@ -44,6 +43,8 @@ namespace stdr_gui{
 			QAction *actionAdjusted;
 		
 			GuiLoader(int argc,char **argv);
+			
+			void closeEvent(QCloseEvent *event);
 			
 			void addToolbarIcons(void);
 	};
