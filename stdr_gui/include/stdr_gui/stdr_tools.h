@@ -34,6 +34,7 @@
 #include <QtCore/QString>
 #include <QtCore/QThread>
 #include <QtCore/QTimer>
+#include <QtCore/QTime>
 
 #include <QtGui/QMenu>
 #include <QtGui/QApplication>
@@ -60,6 +61,7 @@
 #include <QtGui/QInputDialog>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QMessageBox>
+#include <QtGui/QTimeEdit>
 
 #include <stdr_msgs/RobotIndexedVectorMsg.h>
 #include <stdr_msgs/RobotIndexedMsg.h>
@@ -69,6 +71,7 @@
 
 namespace stdr_gui{
 	std::string getRosPackagePath(std::string package);
+	QString getLiteralTime(int ms);
 }
 
 #endif

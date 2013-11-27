@@ -69,6 +69,7 @@ namespace stdr_gui{
 			
 			QTimer *timer;
 			QPoint pointFromImage(QPoint p);
+			QTime elapsedTime;
 		public:
 			GuiController(int argc,char **argv);
 			

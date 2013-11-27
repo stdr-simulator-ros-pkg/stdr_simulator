@@ -120,6 +120,8 @@ namespace stdr_gui{
 									msg.info.height*msg.info.resolution,
 									msg.info.resolution);
 		mapConnector.loader.initialImageSize=QSize(initialMap.width(),initialMap.height());
+		elapsedTime.start();
+		
 		timer->start(200);
 	}
 	
@@ -180,6 +182,7 @@ namespace stdr_gui{
 			it->second.drawLabel(&runningMap,mapMsg.info.resolution);
 		}
 		mapConnector.loader.updateImage(&(runningMap));
+		guiConnector.loader.statusbar->showMessage(QString("Time elapsed : ")+getLiteralTime(elapsedTime.elapsed()),0);
 		mapLock=false;
 	}
 	
