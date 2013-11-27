@@ -20,6 +20,7 @@ add_message_files(
 	SonarSensorMsg.msg
 	RfidSensorMsg.msg
 	KinematicMsg.msg
+	FootprintMsg.msg
 	RobotMsg.msg
 	RobotIndexedMsg.msg
 	RobotIndexedVectorMsg.msg
