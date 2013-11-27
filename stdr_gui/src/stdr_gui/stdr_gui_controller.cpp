@@ -46,6 +46,7 @@ namespace stdr_gui{
 		
 		QObject::connect(&guiConnector,SIGNAL(setZoomInCursor(bool)),&mapConnector, SLOT(setCursorZoomIn(bool)));
 		QObject::connect(&guiConnector,SIGNAL(setZoomOutCursor(bool)),&mapConnector, SLOT(setCursorZoomOut(bool)));
+		QObject::connect(&guiConnector,SIGNAL(setAdjustedCursor(bool)),&mapConnector, SLOT(setCursorAdjusted(bool)));
 		QObject::connect(&mapConnector,SIGNAL(zoomInPressed(QPoint)),this, SLOT(zoomInPressed(QPoint)));
 		QObject::connect(&mapConnector,SIGNAL(zoomOutPressed(QPoint)),this, SLOT(zoomOutPressed(QPoint)));
 		
@@ -113,9 +114,14 @@ namespace stdr_gui{
 		painter.drawLine(originx-20,originy,originx+20,originy);
 		
 		initialMap=runningMap;
-		Q_EMIT updateMap();
 
 		guiConnector.setMapLoaded(true);
+		infoConnector.updateMapInfo(msg.info.width*msg.info.resolution,
+									msg.info.height*msg.info.resolution,
+									msg.info.resolution);
+		mapConnector.loader.initialImageSize=QSize(initialMap.width(),initialMap.height());
+		elapsedTime.start();
+		
 		timer->start(200);
 	}
 	
@@ -127,10 +133,10 @@ namespace stdr_gui{
 	}
 	
 	void GuiController::zoomInPressed(QPoint p){
-		ROS_ERROR("zoomInPressed Signal ok");
+		mapConnector.loader.updateZoom(p,true);
 	}
 	void GuiController::zoomOutPressed(QPoint p){
-		ROS_ERROR("zoomOutPressed Signal ok");
+		mapConnector.loader.updateZoom(p,false);
 	}
 	
 	void GuiController::receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg){
@@ -142,6 +148,7 @@ namespace stdr_gui{
 			stdr_msgs::RobotIndexedMsg m=msg.robots[i];
 			registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(m)));
 		}
+		infoConnector.updateTree(msg);
 		mapLock=false;
 	}
 	
@@ -152,6 +159,7 @@ namespace stdr_gui{
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.x=pnew.x()*mapMsg.info.resolution;
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.y=pnew.y()*mapMsg.info.resolution;
 		stdr_msgs::RobotIndexedMsg newRobot;
+		fixRobotMsgAngles(guiConnector.robotCreatorConn.newRobotMsg);
 		try {
 			newRobot=robotHandler_.spawnNewRobot(guiConnector.robotCreatorConn.newRobotMsg);
 		}
@@ -175,6 +183,7 @@ namespace stdr_gui{
 			it->second.drawLabel(&runningMap,mapMsg.info.resolution);
 		}
 		mapConnector.loader.updateImage(&(runningMap));
+		guiConnector.loader.statusbar->showMessage(QString("Time elapsed : ")+getLiteralTime(elapsedTime.elapsed()),0);
 		mapLock=false;
 	}
 	
@@ -189,5 +198,23 @@ namespace stdr_gui{
 		newPoint.setY(initialMap.height()-y*climax);
 		return newPoint;
 	}
-}
+	
+	void GuiController::fixRobotMsgAngles(stdr_msgs::RobotMsg& msg){
+		msg.initialPose.theta=msg.initialPose.theta/180.0*STDR_PI;
+		for(unsigned int i=0;i<msg.laserSensors.size();i++){
+			msg.laserSensors[i].maxAngle=msg.laserSensors[i].maxAngle/180.0*STDR_PI;
+			msg.laserSensors[i].minAngle=msg.laserSensors[i].minAngle/180.0*STDR_PI;
+			msg.laserSensors[i].pose.theta=msg.laserSensors[i].pose.theta/180.0*STDR_PI;
+		}
+		for(unsigned int i=0;i<msg.sonarSensors.size();i++){
+			msg.sonarSensors[i].coneAngle=msg.sonarSensors[i].coneAngle/180.0*STDR_PI;
+			msg.sonarSensors[i].pose.theta=msg.sonarSensors[i].pose.theta/180.0*STDR_PI;
+		}
+		for(unsigned int i=0;i<msg.rfidSensors.size();i++){
+			msg.rfidSensors[i].angleSpan=msg.rfidSensors[i].angleSpan/180.0*STDR_PI;
+			msg.rfidSensors[i].pose.theta=msg.rfidSensors[i].pose.theta/180.0*STDR_PI;
+		}
+	}
+}	
+
 

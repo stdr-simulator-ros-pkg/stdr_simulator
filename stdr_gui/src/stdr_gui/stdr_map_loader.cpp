@@ -28,7 +28,10 @@ namespace stdr_gui{
 		
 		setupUi(this);
 		internalImg=new QImage(100,100,QImage::Format_RGB32);
+		mapMin=QPoint(0,0);
+		zoom=0;
 	}
+	
 	void MapLoader::resizeEvent(QResizeEvent *e){
 		updateImage(internalImg);
 	}
@@ -52,7 +55,78 @@ namespace stdr_gui{
 	void MapLoader::updateImage(QImage *img){
 		internalImg=img;
 		std::pair<int,int> newDims=checkDimensions(img->width(),img->height());
-		map->setPixmap(QPixmap().fromImage((*img)).scaled(newDims.first,newDims.second,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+		
+		map->setPixmap(
+			QPixmap().fromImage(
+				(*img).
+					copy(	mapMin.x(),
+							mapMin.y(),
+							mapMax.x()-mapMin.x(),
+							mapMax.y()-mapMin.y()).
+					scaled(	newDims.first,newDims.second,
+							Qt::IgnoreAspectRatio,
+							Qt::SmoothTransformation)));
+					
 		map->resize(newDims.first,newDims.second);
+	}
+	
+	void MapLoader::updateZoom(QPoint p,bool zoomIn){
+		QPoint np=pointFromImage(p);
+		int prevZoom=zoom;
+		if(zoomIn)	zoom++;
+		else zoom--;
+		if(zoom<0){
+			zoom=0;
+			return;
+		}
+		float intW=internalImg->width();
+		float intH=internalImg->height();
+		float newWidth=internalImg->width()/pow(2,zoom);
+		float newHeight=internalImg->height()/pow(2,zoom);
+		float xev=np.x()/pow(2,prevZoom)+mapMin.x();
+		float yev=(internalImg->height()-np.y())/pow(2,prevZoom)+mapMin.y();
+		QPoint evOriginal=QPoint(xev,yev);
+		
+		float xmin,xmax,ymin,ymax;
+		xmin=evOriginal.x()-newWidth/2;
+		xmax=evOriginal.x()+newWidth/2;
+		ymin=evOriginal.y()-newHeight/2;
+		ymax=evOriginal.y()+newHeight/2;
+		if(xmin<0){
+			xmax+=-xmin;
+			xmin=0;
+		}
+		else if(xmax>internalImg->width()-1){
+			xmin-=xmax-internalImg->width()+1;
+			xmax=internalImg->width()-1;
+		}
+		if(ymin<0){
+			ymax+=-ymin;
+			ymin=0;
+		}
+		else if(ymax>internalImg->height()-1){
+			ymin-=ymax-internalImg->height()+1;
+			ymax=internalImg->height()-1;
+		}
+		mapMin=QPoint(xmin,ymin);
+		mapMax=QPoint(xmax,ymax);
+	}
+	
+	QPoint MapLoader::pointFromImage(QPoint p){
+		QPoint newPoint;
+		float x=p.x();
+		float y=p.y();
+		float initialWidth=internalImg->width();
+		float currentWidth=map->width();
+		float climax=initialWidth/currentWidth;
+		newPoint.setX(x*climax);
+		newPoint.setY(internalImg->height()-y*climax);
+		return newPoint;
+	}
+	
+	void MapLoader::resetZoom(void){
+		zoom=0;
+		mapMin=QPoint(0,0);
+		mapMax=QPoint(internalImg->width(),internalImg->height());
 	}
 }

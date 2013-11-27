@@ -30,12 +30,14 @@ namespace stdr_gui{
 			
 			int argc;
 			char **argv;
-		
+	
 		public:
-			 InfoLoader loader;
+			InfoLoader loader;
 			 
-			 InfoConnector(int argc, char **argv);
-		
+			InfoConnector(int argc, char **argv);
+			void updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg);
+			void updateMapInfo(float width,float height,float ocgd);
+
 		public Q_SLOTS:
 	};
 }

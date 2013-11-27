@@ -29,4 +29,13 @@ namespace stdr_gui{
 		this->argc=argc;
 		this->argv=argv;
 	}
+
+	void InfoConnector::updateMapInfo(float width,float height,float ocgd){
+		loader.updateMapInfo(width,height,ocgd);
+	}
+	
+	void InfoConnector::updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg){
+		loader.deleteTree();
+		loader.updateRobots(msg);
+	}
 }
