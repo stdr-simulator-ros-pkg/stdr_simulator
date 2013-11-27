@@ -323,6 +323,8 @@ namespace stdr_gui{
 		loader.laserPropLoader.laserOrientation->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].pose.theta));
 		loader.laserPropLoader.laserNoiseMean->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].noise.noiseMean));
 		loader.laserPropLoader.laserNoiseStd->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].noise.noiseStd));
+		loader.laserPropLoader.laserTranslationX->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].pose.x));
+		loader.laserPropLoader.laserTranslationY->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].pose.y));
 		
 		loader.laserPropLoader.setWindowTitle(QApplication::translate("LaserProperties", item->text(0).toStdString().c_str(), 0, QApplication::UnicodeUTF8));
 		
@@ -583,15 +585,36 @@ namespace stdr_gui{
 		climax=-1;
 		if(climax<newRobotMsg.radius) 
 			climax=newRobotMsg.radius;
-		for(unsigned int i=0;i<newRobotMsg.laserSensors.size();i++)
-			if(climax<newRobotMsg.laserSensors[i].maxRange) 
-				climax=newRobotMsg.laserSensors[i].maxRange;
-		for(unsigned int i=0;i<newRobotMsg.sonarSensors.size();i++)
-			if(climax<newRobotMsg.sonarSensors[i].maxRange) 
-				climax=newRobotMsg.sonarSensors[i].maxRange;
-		for(unsigned int i=0;i<newRobotMsg.rfidSensors.size();i++)
-			if(climax<newRobotMsg.rfidSensors[i].maxRange) 
-				climax=newRobotMsg.rfidSensors[i].maxRange;
+		for(unsigned int i=0;i<newRobotMsg.laserSensors.size();i++){
+			if(climax<(newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.x)) 
+				climax=newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.x;
+			if(climax<(newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.y) )
+				climax=newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.y;	
+			if(climax<(newRobotMsg.laserSensors[i].maxRange-newRobotMsg.laserSensors[i].pose.x) )
+				climax=newRobotMsg.laserSensors[i].maxRange-newRobotMsg.laserSensors[i].pose.x;
+			if(climax<(newRobotMsg.laserSensors[i].maxRange-newRobotMsg.laserSensors[i].pose.y) )
+				climax=newRobotMsg.laserSensors[i].maxRange-newRobotMsg.laserSensors[i].pose.y;	
+		}
+		for(unsigned int i=0;i<newRobotMsg.sonarSensors.size();i++){
+			if(climax<(newRobotMsg.sonarSensors[i].maxRange+newRobotMsg.sonarSensors[i].pose.x) )
+				climax=newRobotMsg.sonarSensors[i].maxRange+newRobotMsg.sonarSensors[i].pose.x;
+			if(climax<(newRobotMsg.sonarSensors[i].maxRange+newRobotMsg.sonarSensors[i].pose.y) )
+				climax=newRobotMsg.sonarSensors[i].maxRange+newRobotMsg.sonarSensors[i].pose.y;	
+			if(climax<(newRobotMsg.sonarSensors[i].maxRange-newRobotMsg.sonarSensors[i].pose.x) )
+				climax=newRobotMsg.sonarSensors[i].maxRange-newRobotMsg.sonarSensors[i].pose.x;
+			if(climax<(newRobotMsg.sonarSensors[i].maxRange-newRobotMsg.sonarSensors[i].pose.y) )
+				climax=newRobotMsg.sonarSensors[i].maxRange-newRobotMsg.sonarSensors[i].pose.y;	
+		}
+		for(unsigned int i=0;i<newRobotMsg.rfidSensors.size();i++){
+			if(climax<(newRobotMsg.rfidSensors[i].maxRange+newRobotMsg.rfidSensors[i].pose.x) )
+				climax=newRobotMsg.rfidSensors[i].maxRange+newRobotMsg.rfidSensors[i].pose.x;
+			if(climax<(newRobotMsg.rfidSensors[i].maxRange+newRobotMsg.rfidSensors[i].pose.y) )
+				climax=newRobotMsg.rfidSensors[i].maxRange+newRobotMsg.rfidSensors[i].pose.y;	
+			if(climax<(newRobotMsg.rfidSensors[i].maxRange-newRobotMsg.rfidSensors[i].pose.x) )
+				climax=newRobotMsg.rfidSensors[i].maxRange-newRobotMsg.rfidSensors[i].pose.x;
+			if(climax<(newRobotMsg.rfidSensors[i].maxRange-newRobotMsg.rfidSensors[i].pose.y) )
+				climax=newRobotMsg.rfidSensors[i].maxRange-newRobotMsg.rfidSensors[i].pose.y;	
+		}
 		
 		climax=230.0/climax;
 		drawRobot(newRobotMsg.radius);
@@ -626,13 +649,20 @@ namespace stdr_gui{
 		QPainter painter(&loader.robotPreviewImage);
 		QBrush brush(QColor(0,200,0,50));
 		painter.setBrush(brush);
+		float robotOrientation=newRobotMsg.initialPose.theta/180.0*STDR_PI;
 		for(unsigned int i=0;i<newRobotMsg.laserSensors.size();i++){
-			painter.drawPie(	250-newRobotMsg.laserSensors[i].maxRange*climax,
-								250-newRobotMsg.laserSensors[i].maxRange*climax,
-								newRobotMsg.laserSensors[i].maxRange*climax*2,
-								newRobotMsg.laserSensors[i].maxRange*climax*2,
-								(newRobotMsg.laserSensors[i].minAngle+newRobotMsg.initialPose.theta)*16,
-								newRobotMsg.laserSensors[i].maxAngle*16-newRobotMsg.laserSensors[i].minAngle*16);
+			
+			float laserx=newRobotMsg.laserSensors[i].pose.x;
+			float lasery=newRobotMsg.laserSensors[i].pose.y;
+			float newx=laserx*cos(robotOrientation)-lasery*sin(robotOrientation);
+			float newy=laserx*sin(robotOrientation)+lasery*cos(robotOrientation);
+			
+			painter.drawPie(250-newRobotMsg.laserSensors[i].maxRange*climax+newx*climax,
+							250-newRobotMsg.laserSensors[i].maxRange*climax-newy*climax,
+							newRobotMsg.laserSensors[i].maxRange*climax*2,
+							newRobotMsg.laserSensors[i].maxRange*climax*2,
+							(newRobotMsg.laserSensors[i].minAngle+newRobotMsg.initialPose.theta)*16,
+							newRobotMsg.laserSensors[i].maxAngle*16-newRobotMsg.laserSensors[i].minAngle*16);
 		}
 		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
 	}
@@ -641,9 +671,16 @@ namespace stdr_gui{
 		QPainter painter(&loader.robotPreviewImage);
 		QBrush brush(QColor(200,0,0,50));
 		painter.setBrush(brush);
+		float robotOrientation=newRobotMsg.initialPose.theta/180.0*STDR_PI;
 		for(unsigned int i=0;i<newRobotMsg.sonarSensors.size();i++){
-			painter.drawPie(	250-newRobotMsg.sonarSensors[i].maxRange*climax,
-								250-newRobotMsg.sonarSensors[i].maxRange*climax,
+			
+			float sonarx=newRobotMsg.sonarSensors[i].pose.x;
+			float sonary=newRobotMsg.sonarSensors[i].pose.y;
+			float newx=sonarx*cos(robotOrientation)-sonary*sin(robotOrientation);
+			float newy=sonarx*sin(robotOrientation)+sonary*cos(robotOrientation);
+			
+			painter.drawPie(	250-newRobotMsg.sonarSensors[i].maxRange*climax+newx*climax,
+								250-newRobotMsg.sonarSensors[i].maxRange*climax-newy*climax,
 								newRobotMsg.sonarSensors[i].maxRange*climax*2,
 								newRobotMsg.sonarSensors[i].maxRange*climax*2,
 								(newRobotMsg.sonarSensors[i].pose.theta-newRobotMsg.sonarSensors[i].coneAngle/2.0+newRobotMsg.initialPose.theta)*16,
@@ -656,9 +693,16 @@ namespace stdr_gui{
 		QPainter painter(&loader.robotPreviewImage);
 		QBrush brush(QColor(0,0,200,20));
 		painter.setBrush(brush);
+		float robotOrientation=newRobotMsg.initialPose.theta/180.0*STDR_PI;
 		for(unsigned int i=0;i<newRobotMsg.rfidSensors.size();i++){
-			painter.drawPie(	250-newRobotMsg.rfidSensors[i].maxRange*climax,
-								250-newRobotMsg.rfidSensors[i].maxRange*climax,
+			
+			float rfidx=newRobotMsg.rfidSensors[i].pose.x;
+			float rfidy=newRobotMsg.rfidSensors[i].pose.y;
+			float newx=rfidx*cos(robotOrientation)-rfidy*sin(robotOrientation);
+			float newy=rfidx*sin(robotOrientation)+rfidy*cos(robotOrientation);
+			
+			painter.drawPie(	250-newRobotMsg.rfidSensors[i].maxRange*climax+newx*climax,
+								250-newRobotMsg.rfidSensors[i].maxRange*climax-newy*climax,
 								newRobotMsg.rfidSensors[i].maxRange*climax*2,
 								newRobotMsg.rfidSensors[i].maxRange*climax*2,
 								(newRobotMsg.rfidSensors[i].pose.theta-newRobotMsg.rfidSensors[i].angleSpan/2.0+newRobotMsg.initialPose.theta)*16,
