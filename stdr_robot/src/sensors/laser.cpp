@@ -23,8 +23,12 @@
 
 namespace stdr_robot {
 	
-Laser::Laser(const nav_msgs::OccupancyGridConstPtr& map, tf::TransformBroadcaster& tf, const stdr_msgs::LaserSensorMsg& msg, ros::NodeHandle& n)
-  : Sensor(map, tf)
+Laser::Laser(const nav_msgs::OccupancyGridConstPtr& map, 
+	tf::TransformBroadcaster& tf, 
+	const stdr_msgs::LaserSensorMsg& msg, 
+	const std::string& name,
+	ros::NodeHandle& n)
+  : Sensor(map, tf, name)
 {
 	_description = msg;
 	_timer = n.createTimer(ros::Duration(1/msg.frequency), &Laser::callback, this);	

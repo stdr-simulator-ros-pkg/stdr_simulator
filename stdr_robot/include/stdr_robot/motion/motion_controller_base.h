@@ -46,7 +46,7 @@ class MotionController {
 	
 	protected:
 		
-		std::string _namespace;
+		const std::string& _namespace;
 		ros::Subscriber _velocitySubscrider;
 		ros::Duration _freq;
 		ros::Timer _calcTimer;

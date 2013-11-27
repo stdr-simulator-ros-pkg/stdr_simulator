@@ -32,7 +32,11 @@ class Laser : public Sensor {
 	
 	public:
 	
-		Laser(const nav_msgs::OccupancyGridConstPtr& map, tf::TransformBroadcaster& tf, const stdr_msgs::LaserSensorMsg& msg, ros::NodeHandle& n);
+		Laser(const nav_msgs::OccupancyGridConstPtr& map, 
+				tf::TransformBroadcaster& tf,
+				const stdr_msgs::LaserSensorMsg& msg, 
+				const std::string& name, 
+				ros::NodeHandle& n);
 		void callback(const ros::TimerEvent&);
 		void tfCallback(const ros::TimerEvent&);
 		

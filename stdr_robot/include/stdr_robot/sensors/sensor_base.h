@@ -38,11 +38,14 @@ class Sensor {
 	
 	protected:
 		
-		Sensor(const nav_msgs::OccupancyGridConstPtr& map, tf::TransformBroadcaster& tf) 
-		: _map(map), _broadcaster(tf) {}
+		Sensor(const nav_msgs::OccupancyGridConstPtr& map, 
+				tf::TransformBroadcaster& tf, 
+				const std::string& name) 
+		: _map(map), _broadcaster(tf), _namespace(name) {}
 		
 	protected:
 	
+		const std::string& _namespace;
 		const nav_msgs::OccupancyGridConstPtr& _map;
 		ros::Timer _timer;
 		ros::Timer _tfTimer;
