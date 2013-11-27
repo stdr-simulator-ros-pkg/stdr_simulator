@@ -49,6 +49,8 @@ namespace stdr_gui{
 		QObject::connect(&guiConnector,SIGNAL(setAdjustedCursor(bool)),&mapConnector, SLOT(setCursorAdjusted(bool)));
 		QObject::connect(&mapConnector,SIGNAL(zoomInPressed(QPoint)),this, SLOT(zoomInPressed(QPoint)));
 		QObject::connect(&mapConnector,SIGNAL(zoomOutPressed(QPoint)),this, SLOT(zoomOutPressed(QPoint)));
+		QObject::connect(&infoConnector,SIGNAL(laserVisualizerClicked(QString,QString)),this, SLOT(laserVisualizerClicked(QString,QString)));
+		QObject::connect(&infoConnector,SIGNAL(sonarVisualizerClicked(QString,QString)),this, SLOT(sonarVisualizerClicked(QString,QString)));
 		
 		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg)));
 		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(loadRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(loadRobotPressed(stdr_msgs::RobotMsg)));
@@ -74,7 +76,8 @@ namespace stdr_gui{
 			mapConnector.updateImage(&runningMap);
 			
 			guiConnector.loader.gridLayout->addWidget(static_cast<QWidget *>(&mapConnector.loader),0,1,0);	
-			guiConnector.loader.gridLayout->setColumnStretch(1,1);
+			guiConnector.loader.gridLayout->setColumnStretch(1,5);
+			guiConnector.loader.gridLayout->setColumnStretch(0,2);
 		}
 	}
 	
@@ -214,6 +217,19 @@ namespace stdr_gui{
 			msg.rfidSensors[i].angleSpan=msg.rfidSensors[i].angleSpan/180.0*STDR_PI;
 			msg.rfidSensors[i].pose.theta=msg.rfidSensors[i].pose.theta/180.0*STDR_PI;
 		}
+	}
+	
+	void GuiController::laserVisualizerClicked(QString robotName,QString laserName){
+		LaserVisualisation *lv;
+		lv=new LaserVisualisation();
+		laserVisualizers.insert(std::pair<QString,LaserVisualisation *>(robotName+QString("\\")+laserName,lv));
+		lv->show();
+	}
+	void GuiController::sonarVisualizerClicked(QString robotName,QString sonarName){
+		SonarVisualisation *sv;
+		sv=new SonarVisualisation();
+		sonarVisualizers.insert(std::pair<QString,SonarVisualisation *>(robotName+QString("\\")+sonarName,sv));
+		sv->show();
 	}
 }	
 

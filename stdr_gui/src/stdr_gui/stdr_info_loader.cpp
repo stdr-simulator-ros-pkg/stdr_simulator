@@ -28,8 +28,11 @@ namespace stdr_gui{
 		
 		setupUi(this);
 		
-		stdrInformationTree->setColumnCount(2);
+		stdrInformationTree->setColumnCount(4);
 		stdrInformationTree->setColumnWidth(0,200);
+		stdrInformationTree->setColumnWidth(1,100);
+		stdrInformationTree->setColumnWidth(2,20);
+		stdrInformationTree->setColumnWidth(3,20);
 		
 		generalInfo.setText(0,"Simulation information");
 		robotsInfo.setText(0,"Robots");
@@ -49,6 +52,8 @@ namespace stdr_gui{
 		
 		generalInfo.setExpanded(true);
 		robotsInfo.setExpanded(true);
+		
+		visibleIcon.addFile(QString((getRosPackagePath("stdr_gui")+std::string("/resources/images/visible.png")).c_str()));
 	}
 	
 	void InfoLoader::deleteTreeNode(QTreeWidgetItem *item){
@@ -96,6 +101,7 @@ namespace stdr_gui{
 				QTreeWidgetItem *lname;
 				lname=new QTreeWidgetItem();
 				lname->setText(0,msg.robots[i].robot.laserSensors[l].frame_id.c_str());
+				lname->setIcon(3,visibleIcon);
 
 				QTreeWidgetItem *lrays=new QTreeWidgetItem();
 				QTreeWidgetItem *lmaxrange=new QTreeWidgetItem();
@@ -139,6 +145,7 @@ namespace stdr_gui{
 				QTreeWidgetItem *sname;
 				sname=new QTreeWidgetItem();
 				sname->setText(0,msg.robots[i].robot.sonarSensors[l].frame_id.c_str());
+				sname->setIcon(3,visibleIcon);
 
 				QTreeWidgetItem *smaxrange=new QTreeWidgetItem();
 				QTreeWidgetItem *sminrange=new QTreeWidgetItem();
