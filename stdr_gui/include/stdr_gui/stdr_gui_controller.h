@@ -70,6 +70,8 @@ namespace stdr_gui{
 			QTimer *timer;
 			QPoint pointFromImage(QPoint p);
 			QTime elapsedTime;
+			
+			void fixRobotMsgAngles(stdr_msgs::RobotMsg& msg);
 		public:
 			GuiController(int argc,char **argv);
 			

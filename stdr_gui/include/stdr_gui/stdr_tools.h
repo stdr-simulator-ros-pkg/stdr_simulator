@@ -69,6 +69,8 @@
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/Point.h>
 
+#define STDR_PI 3.14159
+
 namespace stdr_gui{
 	std::string getRosPackagePath(std::string package);
 	QString getLiteralTime(int ms);

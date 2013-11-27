@@ -159,6 +159,7 @@ namespace stdr_gui{
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.x=pnew.x()*mapMsg.info.resolution;
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.y=pnew.y()*mapMsg.info.resolution;
 		stdr_msgs::RobotIndexedMsg newRobot;
+		fixRobotMsgAngles(guiConnector.robotCreatorConn.newRobotMsg);
 		try {
 			newRobot=robotHandler_.spawnNewRobot(guiConnector.robotCreatorConn.newRobotMsg);
 		}
@@ -196,6 +197,23 @@ namespace stdr_gui{
 		newPoint.setX(x*climax);
 		newPoint.setY(initialMap.height()-y*climax);
 		return newPoint;
+	}
+	
+	void GuiController::fixRobotMsgAngles(stdr_msgs::RobotMsg& msg){
+		msg.initialPose.theta=msg.initialPose.theta/180.0*STDR_PI;
+		for(unsigned int i=0;i<msg.laserSensors.size();i++){
+			msg.laserSensors[i].maxAngle=msg.laserSensors[i].maxAngle/180.0*STDR_PI;
+			msg.laserSensors[i].minAngle=msg.laserSensors[i].minAngle/180.0*STDR_PI;
+			msg.laserSensors[i].pose.theta=msg.laserSensors[i].pose.theta/180.0*STDR_PI;
+		}
+		for(unsigned int i=0;i<msg.sonarSensors.size();i++){
+			msg.sonarSensors[i].coneAngle=msg.sonarSensors[i].coneAngle/180.0*STDR_PI;
+			msg.sonarSensors[i].pose.theta=msg.sonarSensors[i].pose.theta/180.0*STDR_PI;
+		}
+		for(unsigned int i=0;i<msg.sonarSensors.size();i++){
+			msg.rfidSensors[i].angleSpan=msg.rfidSensors[i].angleSpan/180.0*STDR_PI;
+			msg.rfidSensors[i].pose.theta=msg.rfidSensors[i].pose.theta/180.0*STDR_PI;
+		}
 	}
 }	
 

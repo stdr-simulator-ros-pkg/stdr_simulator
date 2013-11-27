@@ -603,8 +603,14 @@ namespace stdr_gui{
 	void RobotCreatorConnector::drawRobot(float radius){
 		QPainter painter(&loader.robotPreviewImage);
 		painter.setPen(Qt::blue);
-		painter.drawEllipse(250-radius*climax,250-radius*climax,radius*climax*2,radius*climax*2);
-		painter.drawLine(250,250,250+radius*climax*1.05,250);
+		painter.drawEllipse(250-radius*climax,
+							250-radius*climax,
+							radius*climax*2,
+							radius*climax*2);
+		painter.drawLine(	250,
+							250,
+							250+radius*climax*1.05*cos(newRobotMsg.initialPose.theta/180.0*STDR_PI),
+							250-radius*climax*1.05*sin(newRobotMsg.initialPose.theta/180.0*STDR_PI));
 		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
 	}
 	
@@ -625,7 +631,7 @@ namespace stdr_gui{
 								250-newRobotMsg.laserSensors[i].maxRange*climax,
 								newRobotMsg.laserSensors[i].maxRange*climax*2,
 								newRobotMsg.laserSensors[i].maxRange*climax*2,
-								newRobotMsg.laserSensors[i].minAngle*16,
+								(newRobotMsg.laserSensors[i].minAngle+newRobotMsg.initialPose.theta)*16,
 								newRobotMsg.laserSensors[i].maxAngle*16-newRobotMsg.laserSensors[i].minAngle*16);
 		}
 		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
@@ -640,7 +646,7 @@ namespace stdr_gui{
 								250-newRobotMsg.sonarSensors[i].maxRange*climax,
 								newRobotMsg.sonarSensors[i].maxRange*climax*2,
 								newRobotMsg.sonarSensors[i].maxRange*climax*2,
-								(newRobotMsg.sonarSensors[i].pose.theta-newRobotMsg.sonarSensors[i].coneAngle/2.0)*16,
+								(newRobotMsg.sonarSensors[i].pose.theta-newRobotMsg.sonarSensors[i].coneAngle/2.0+newRobotMsg.initialPose.theta)*16,
 								(newRobotMsg.sonarSensors[i].coneAngle)*16);
 		}
 		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
@@ -655,7 +661,7 @@ namespace stdr_gui{
 								250-newRobotMsg.rfidSensors[i].maxRange*climax,
 								newRobotMsg.rfidSensors[i].maxRange*climax*2,
 								newRobotMsg.rfidSensors[i].maxRange*climax*2,
-								(newRobotMsg.rfidSensors[i].pose.theta-newRobotMsg.rfidSensors[i].angleSpan/2.0)*16,
+								(newRobotMsg.rfidSensors[i].pose.theta-newRobotMsg.rfidSensors[i].angleSpan/2.0+newRobotMsg.initialPose.theta)*16,
 								(newRobotMsg.rfidSensors[i].angleSpan)*16);
 		}
 		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
