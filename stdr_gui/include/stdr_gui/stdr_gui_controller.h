@@ -71,7 +71,6 @@ namespace stdr_gui{
 			stdr_robot::HandleRobot robotHandler_;
 			
 			QTimer *timer;
-			QPoint pointFromImage(QPoint p);
 			QTime elapsedTime;
 			
 			void fixRobotMsgAngles(stdr_msgs::RobotMsg& msg);
@@ -104,6 +103,7 @@ namespace stdr_gui{
 			void updateMapInternal(void);
 			void laserVisualizerClicked(QString robotName,QString laserName);
 			void sonarVisualizerClicked(QString robotName,QString sonarName);
+			void itemClicked(QPoint p);
 			
 		Q_SIGNALS:
 			void waitForRobotPose(void);

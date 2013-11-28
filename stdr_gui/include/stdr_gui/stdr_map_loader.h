@@ -42,6 +42,7 @@ namespace stdr_gui{
 			void drawGrid(QImage *img,float resolution);
 			void updateZoom(QPoint p,bool zoomIn);
 			void resetZoom(void);
+			QPoint getGlobalPoint(QPoint);
 	};	
 }
 

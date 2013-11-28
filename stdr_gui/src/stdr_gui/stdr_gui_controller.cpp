@@ -49,6 +49,7 @@ namespace stdr_gui{
 		QObject::connect(&guiConnector,SIGNAL(setAdjustedCursor(bool)),&mapConnector, SLOT(setCursorAdjusted(bool)));
 		QObject::connect(&mapConnector,SIGNAL(zoomInPressed(QPoint)),this, SLOT(zoomInPressed(QPoint)));
 		QObject::connect(&mapConnector,SIGNAL(zoomOutPressed(QPoint)),this, SLOT(zoomOutPressed(QPoint)));
+		QObject::connect(&mapConnector,SIGNAL(itemClicked(QPoint)),this, SLOT(itemClicked(QPoint)));
 		QObject::connect(&infoConnector,SIGNAL(laserVisualizerClicked(QString,QString)),this, SLOT(laserVisualizerClicked(QString,QString)));
 		QObject::connect(&infoConnector,SIGNAL(sonarVisualizerClicked(QString,QString)),this, SLOT(sonarVisualizerClicked(QString,QString)));
 		
@@ -158,7 +159,7 @@ namespace stdr_gui{
 	void GuiController::robotPlaceSet(QPoint p){
 		while(mapLock)	usleep(100);
 		mapLock=true;
-		QPoint pnew=pointFromImage(p);
+		QPoint pnew=mapConnector.loader.getGlobalPoint(p);
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.x=pnew.x()*mapMsg.info.resolution;
 		guiConnector.robotCreatorConn.newRobotMsg.initialPose.y=pnew.y()*mapMsg.info.resolution;
 		stdr_msgs::RobotIndexedMsg newRobot;
@@ -216,18 +217,6 @@ namespace stdr_gui{
 		}
 	}
 	
-	QPoint GuiController::pointFromImage(QPoint p){
-		QPoint newPoint;
-		float x=p.x();
-		float y=p.y();
-		float initialWidth=initialMap.width();
-		float currentWidth=mapConnector.loader.map->width();
-		float climax=initialWidth/currentWidth;
-		newPoint.setX(x*climax);
-		newPoint.setY(initialMap.height()-y*climax);
-		return newPoint;
-	}
-	
 	void GuiController::fixRobotMsgAngles(stdr_msgs::RobotMsg& msg){
 		msg.initialPose.theta=msg.initialPose.theta/180.0*STDR_PI;
 		for(unsigned int i=0;i<msg.laserSensors.size();i++){
@@ -278,6 +267,10 @@ namespace stdr_gui{
 						sv->setSonar(allRobots.robots[i].robot.sonarSensors[j]);
 						
 		sv->show();
+	}
+	
+	void GuiController::itemClicked(QPoint p){
+		QPoint pointClicked=mapConnector.loader.getGlobalPoint(p);
 	}
 }	
 

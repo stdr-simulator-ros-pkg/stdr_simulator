@@ -60,7 +60,7 @@ namespace stdr_gui{
 			QPixmap().fromImage(
 				(*img).
 					copy(	mapMin.x(),
-							mapMin.y(),
+							img->height()-mapMax.y(),
 							mapMax.x()-mapMin.x(),
 							mapMax.y()-mapMin.y()).
 					scaled(	newDims.first,newDims.second,
@@ -106,8 +106,8 @@ namespace stdr_gui{
 		float xmin,xmax,ymin,ymax;
 		xmin=evOriginal.x()-newWidth/2;
 		xmax=evOriginal.x()+newWidth/2;
-		ymin=evOriginal.y()-newHeight/2;
-		ymax=evOriginal.y()+newHeight/2;
+		ymin=internalImg->height()-evOriginal.y()-newHeight/2;
+		ymax=internalImg->height()-evOriginal.y()+newHeight/2;
 		if(xmin<0){
 			xmax+=-xmin;
 			xmin=0;
@@ -126,12 +126,18 @@ namespace stdr_gui{
 		}
 		mapMin=QPoint(xmin,ymin);
 		mapMax=QPoint(xmax,ymax);
+		ROS_ERROR("------------------");
+		ROS_ERROR("Zoom min : %d %d",mapMin.x(),mapMin.y());
+		ROS_ERROR("Zoom max : %d %d",mapMax.x(),mapMax.y());
+		ROS_ERROR("------------------");
 	}
 	
 	QPoint MapLoader::pointFromImage(QPoint p){
+		ROS_ERROR("Event : %d %d",p.x(),p.y());
 		QPoint newPoint;
 		float x=p.x();
 		float y=p.y();
+		ROS_ERROR("Original size : %d %d",internalImg->width(),internalImg->height());
 		float initialWidth=internalImg->width();
 		float currentWidth=map->width();
 		float climax=initialWidth/currentWidth;
@@ -144,5 +150,16 @@ namespace stdr_gui{
 		zoom=0;
 		mapMin=QPoint(0,0);
 		mapMax=QPoint(internalImg->width(),internalImg->height());
+	}
+	
+	QPoint MapLoader::getGlobalPoint(QPoint p){
+		QPoint np=pointFromImage(p);
+		ROS_ERROR("In QImage : %d %d",np.x(),np.y());
+		ROS_ERROR("Origin : %d %d",mapMin.x(),mapMin.y());
+		int xev=np.x()/pow(2,zoom)+mapMin.x();
+		int yev=np.y()/pow(2,zoom)+mapMin.y();
+		ROS_ERROR("In Map : %d %d",xev,yev);
+		ROS_ERROR("");
+		return QPoint(xev,yev);
 	}
 }

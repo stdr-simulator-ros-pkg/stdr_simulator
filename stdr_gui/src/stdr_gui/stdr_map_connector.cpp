@@ -64,6 +64,9 @@ namespace stdr_gui{
 						loader.map->setCursor(QCursor(Qt::CrossCursor));
 						Q_EMIT robotPlaceSet(p);
 					}
+					else if(mapState==NORMAL){
+						Q_EMIT itemClicked(p);
+					}
 				}
 			}
 		}
