@@ -114,6 +114,7 @@ namespace stdr_gui{
 		lmsg.pose.theta=0;
 		lmsg.noise.noiseMean=0;
 		lmsg.noise.noiseStd=0;
+		lmsg.frequency=10.0;
 		
 		newRobotMsg.laserSensors.push_back(lmsg);
 		
@@ -123,7 +124,7 @@ namespace stdr_gui{
 		lnode->setIcon(1,loader.editIcon);
 		lnode->setIcon(2,loader.removeIcon);
 
-		QTreeWidgetItem *angleSpan,*orientation,*maxRange,*minRange,*noiseMean,*noiseStd,*poseX,*poseY;
+		QTreeWidgetItem *angleSpan,*orientation,*maxRange,*minRange,*noiseMean,*noiseStd,*poseX,*poseY,*frequency;
 		angleSpan=new QTreeWidgetItem();
 		orientation=new QTreeWidgetItem();
 		maxRange=new QTreeWidgetItem();
@@ -132,6 +133,7 @@ namespace stdr_gui{
 		noiseStd=new QTreeWidgetItem();
 		poseX=new QTreeWidgetItem();
 		poseY=new QTreeWidgetItem();
+		frequency=new QTreeWidgetItem();
 		angleSpan->setText(0,QString("Angle span"));
 		orientation->setText(0,QString("Orientation"));
 		maxRange->setText(0,QString("Max range"));
@@ -140,6 +142,7 @@ namespace stdr_gui{
 		noiseStd->setText(0,QString("Noise std"));
 		poseX->setText(0,QString("Pose - x"));
 		poseY->setText(0,QString("Pose - y"));
+		frequency->setText(0,QString("Frequency"));
 		angleSpan->setText(1,QString().setNum(lmsg.maxAngle-lmsg.minAngle));
 		orientation->setText(1,QString().setNum(lmsg.maxAngle+lmsg.minAngle));
 		maxRange->setText(1,QString().setNum(lmsg.maxRange));
@@ -148,6 +151,7 @@ namespace stdr_gui{
 		noiseStd->setText(1,QString().setNum(lmsg.noise.noiseStd));
 		poseX->setText(1,QString().setNum(lmsg.pose.x));
 		poseY->setText(1,QString().setNum(lmsg.pose.y));
+		frequency->setText(1,QString().setNum(lmsg.frequency));
 		
 		lnode->addChild(angleSpan);
 		lnode->addChild(orientation);
@@ -157,6 +161,7 @@ namespace stdr_gui{
 		lnode->addChild(noiseStd);
 		lnode->addChild(poseX);
 		lnode->addChild(poseY);
+		lnode->addChild(frequency);
 		
 		loader.lasersNode.addChild(lnode);
 		
@@ -178,6 +183,7 @@ namespace stdr_gui{
 		smsg.pose.theta=0;
 		smsg.noise.noiseMean=0;
 		smsg.noise.noiseStd=0;
+		smsg.frequency=0;
 		
 		newRobotMsg.sonarSensors.push_back(smsg);
 		
@@ -187,7 +193,7 @@ namespace stdr_gui{
 		snode->setIcon(1,loader.editIcon);
 		snode->setIcon(2,loader.removeIcon);
 
-		QTreeWidgetItem *coneAngle,*orientation,*maxRange,*minRange,*noiseMean,*noiseStd,*poseX,*poseY;
+		QTreeWidgetItem *coneAngle,*orientation,*maxRange,*minRange,*noiseMean,*noiseStd,*poseX,*poseY,*frequency;
 		coneAngle=new QTreeWidgetItem();
 		orientation=new QTreeWidgetItem();
 		maxRange=new QTreeWidgetItem();
@@ -196,6 +202,7 @@ namespace stdr_gui{
 		noiseStd=new QTreeWidgetItem();
 		poseX=new QTreeWidgetItem();
 		poseY=new QTreeWidgetItem();
+		frequency=new QTreeWidgetItem();
 		coneAngle->setText(0,QString("Cone span"));
 		orientation->setText(0,QString("Orientation"));
 		maxRange->setText(0,QString("Max range"));
@@ -204,6 +211,7 @@ namespace stdr_gui{
 		noiseStd->setText(0,QString("Noise std"));
 		poseX->setText(0,QString("Pose - x"));
 		poseY->setText(0,QString("Pose - y"));
+		frequency->setText(0,QString("Frequency"));
 		coneAngle->setText(1,QString().setNum(smsg.coneAngle));
 		orientation->setText(1,QString().setNum(smsg.pose.theta));
 		maxRange->setText(1,QString().setNum(smsg.maxRange));
@@ -212,6 +220,7 @@ namespace stdr_gui{
 		noiseStd->setText(1,QString().setNum(smsg.noise.noiseStd));
 		poseX->setText(1,QString().setNum(smsg.pose.x));
 		poseY->setText(1,QString().setNum(smsg.pose.y));
+		frequency->setText(1,QString().setNum(smsg.frequency));
 		
 		snode->addChild(coneAngle);
 		snode->addChild(orientation);
@@ -221,6 +230,7 @@ namespace stdr_gui{
 		snode->addChild(noiseStd);
 		snode->addChild(poseX);
 		snode->addChild(poseY);
+		snode->addChild(frequency);
 		
 		loader.sonarsNode.addChild(snode);
 		
@@ -240,6 +250,7 @@ namespace stdr_gui{
 		smsg.pose.y=0;
 		smsg.pose.theta=0;
 		smsg.signalCutoff=0;
+		smsg.frequency=0;
 		
 		newRobotMsg.rfidSensors.push_back(smsg);
 		
@@ -249,13 +260,14 @@ namespace stdr_gui{
 		snode->setIcon(1,loader.editIcon);
 		snode->setIcon(2,loader.removeIcon);
 
-		QTreeWidgetItem *angleSpan,*orientation,*maxRange,*poseX,*poseY,*signalCutoff;
+		QTreeWidgetItem *angleSpan,*orientation,*maxRange,*poseX,*poseY,*signalCutoff,*frequency;
 		angleSpan=new QTreeWidgetItem();
 		orientation=new QTreeWidgetItem();
 		maxRange=new QTreeWidgetItem();
 		poseX=new QTreeWidgetItem();
 		poseY=new QTreeWidgetItem();
 		signalCutoff=new QTreeWidgetItem();
+		frequency=new QTreeWidgetItem();
 		
 		angleSpan->setText(0,QString("Angle span"));
 		orientation->setText(0,QString("Orientation"));
@@ -263,6 +275,7 @@ namespace stdr_gui{
 		poseX->setText(0,QString("Pose - x"));
 		poseY->setText(0,QString("Pose - y"));
 		signalCutoff->setText(0,QString("Signal cutoff"));
+		frequency->setText(0,QString("Frequency"));
 		
 		angleSpan->setText(1,QString().setNum(smsg.angleSpan));
 		orientation->setText(1,QString().setNum(smsg.pose.theta));
@@ -270,6 +283,7 @@ namespace stdr_gui{
 		poseX->setText(1,QString().setNum(smsg.pose.x));
 		poseY->setText(1,QString().setNum(smsg.pose.y));
 		signalCutoff->setText(1,QString().setNum(smsg.signalCutoff));
+		frequency->setText(1,QString().setNum(smsg.frequency));
 		
 		snode->addChild(angleSpan);
 		snode->addChild(orientation);
@@ -277,6 +291,7 @@ namespace stdr_gui{
 		snode->addChild(poseX);
 		snode->addChild(poseY);
 		snode->addChild(signalCutoff);
+		snode->addChild(frequency);
 		
 		loader.rfidAntennasNode.addChild(snode);
 		
@@ -325,6 +340,7 @@ namespace stdr_gui{
 		loader.laserPropLoader.laserNoiseStd->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].noise.noiseStd));
 		loader.laserPropLoader.laserTranslationX->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].pose.x));
 		loader.laserPropLoader.laserTranslationY->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].pose.y));
+		loader.laserPropLoader.laserFrequency->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].frequency));
 		
 		loader.laserPropLoader.setWindowTitle(QApplication::translate("LaserProperties", item->text(0).toStdString().c_str(), 0, QApplication::UnicodeUTF8));
 		
@@ -346,6 +362,7 @@ namespace stdr_gui{
 		loader.sonarPropLoader.sonarNoiseMean->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].noise.noiseMean));
 		loader.sonarPropLoader.sonarNoiseStd->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].noise.noiseStd));
 		loader.sonarPropLoader.sonarOrientation->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].pose.theta));
+		loader.sonarPropLoader.sonarFrequency->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].frequency));
 		
 		loader.sonarPropLoader.setWindowTitle(QApplication::translate("SonarProperties", item->text(0).toStdString().c_str(), 0, QApplication::UnicodeUTF8));
 		
@@ -365,6 +382,7 @@ namespace stdr_gui{
 		loader.rfidAntennaPropLoader.rfidAngleSpan->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].angleSpan));
 		loader.rfidAntennaPropLoader.rfidOrientation->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].pose.theta));
 		loader.rfidAntennaPropLoader.rfidSignalCutoff->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].signalCutoff));
+		loader.rfidAntennaPropLoader.rfidFrequency->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].frequency));
 		
 		loader.rfidAntennaPropLoader.setWindowTitle(QApplication::translate("RfidAntennaProperties", item->text(0).toStdString().c_str(), 0, QApplication::UnicodeUTF8));
 		
@@ -442,6 +460,11 @@ namespace stdr_gui{
 				currentLaser->child(i)->setText(1,QString().setNum(dy));
 				newRobotMsg.laserSensors[laserFrameId].pose.y=dy;
 			}
+			else if(currentLaser->child(i)->text(0)==QString("Frequency")){
+				float dy=loader.laserPropLoader.laserFrequency->text().toFloat();
+				currentLaser->child(i)->setText(1,QString().setNum(dy));
+				newRobotMsg.laserSensors[laserFrameId].frequency=dy;
+			}
 		}
 		
 		//printLaserMsg(newRobotMsg.laserSensors[laserFrameId]);
@@ -495,6 +518,11 @@ namespace stdr_gui{
 				currentSonar->child(i)->setText(1,QString().setNum(dy));
 				newRobotMsg.sonarSensors[frameId].pose.y=dy;
 			}
+			else if(currentSonar->child(i)->text(0)==QString("Frequency")){
+				float dy=loader.sonarPropLoader.sonarFrequency->text().toFloat();
+				currentSonar->child(i)->setText(1,QString().setNum(dy));
+				newRobotMsg.sonarSensors[frameId].frequency=dy;
+			}
 		}
 
 		loader.sonarPropLoader.hide();
@@ -536,6 +564,11 @@ namespace stdr_gui{
 				currentRfid->child(i)->setText(1,QString().setNum(signal));
 				newRobotMsg.rfidSensors[frameId].signalCutoff=signal;
 			}
+			else if(currentRfid->child(i)->text(0)==QString("Frequency")){
+				float signal=loader.rfidAntennaPropLoader.rfidFrequency->text().toFloat();
+				currentRfid->child(i)->setText(1,QString().setNum(signal));
+				newRobotMsg.rfidSensors[frameId].frequency=signal;
+			}
 		}
 
 		loader.rfidAntennaPropLoader.hide();
@@ -561,16 +594,6 @@ namespace stdr_gui{
 		updateRobotPreview();
 	}
 
-	void RobotCreatorConnector::printLaserMsg(stdr_msgs::LaserSensorMsg msg){
-		ROS_ERROR("Laser : %s",msg.frame_id.c_str());
-		ROS_ERROR("\tMax angle : %f",msg.maxAngle);
-		ROS_ERROR("\tMin angle : %f",msg.minAngle);
-		ROS_ERROR("\tMax range : %f",msg.maxRange);
-		ROS_ERROR("\tMin range : %f",msg.minRange);
-		ROS_ERROR("\tRelative pose : %f %f %f",msg.pose.x,msg.pose.y,msg.pose.theta);
-		ROS_ERROR("\tNoise : %f %f",msg.noise.noiseMean,msg.noise.noiseStd);
-	}
-	
 	void RobotCreatorConnector::deleteTreeNode(QTreeWidgetItem *item){
 		int count=item->childCount();
 		for(int i=count-1;i>=0;i--)
