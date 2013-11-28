@@ -43,6 +43,7 @@ namespace stdr_gui{
 			void updateZoom(QPoint p,bool zoomIn);
 			void resetZoom(void);
 			QPoint getGlobalPoint(QPoint);
+			void wheelEvent ( QWheelEvent * event );
 	};	
 }
 

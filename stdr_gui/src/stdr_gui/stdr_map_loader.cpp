@@ -152,4 +152,19 @@ namespace stdr_gui{
 		int yev=np.y()/pow(2,zoom)+mapMin.y();
 		return QPoint(xev,yev);
 	}
+	
+	void MapLoader::wheelEvent ( QWheelEvent * event ){
+		if(event->delta()>0){
+			if(mapMax.y()+30<internalImg->height()){
+				mapMax.setY(mapMax.y()+30);
+				mapMin.setY(mapMin.y()+30);
+			}
+		}
+		if(event->delta()<0){
+			if(mapMin.y()-30>=0){
+				mapMax.setY(mapMax.y()-30);
+				mapMin.setY(mapMin.y()-30);
+			}
+		}
+	}
 }
