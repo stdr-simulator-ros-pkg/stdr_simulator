@@ -40,7 +40,7 @@ class Sensor {
 	protected:
 		
 		Sensor(const nav_msgs::OccupancyGrid& map,
-				const geometry_msgs::Pose2DConstPtr& robotPosePtr,
+				const geometry_msgs::Pose2DPtr& robotPosePtr,
 				tf::TransformBroadcaster& tf, 
 				const std::string& name) 
 		: _map(map), _broadcaster(tf), _namespace(name), _robotPosePtr(robotPosePtr) {}
@@ -49,7 +49,7 @@ class Sensor {
 	
 		const std::string& _namespace;
 		const nav_msgs::OccupancyGrid& _map;
-		const geometry_msgs::Pose2DConstPtr& _robotPosePtr;
+		const geometry_msgs::Pose2DPtr& _robotPosePtr;
 		ros::Timer _timer;
 		ros::Timer _tfTimer;
 		tf::TransformBroadcaster& _broadcaster;
