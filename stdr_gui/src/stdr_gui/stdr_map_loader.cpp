@@ -60,7 +60,7 @@ namespace stdr_gui{
 			QPixmap().fromImage(
 				(*img).
 					copy(	mapMin.x(),
-							img->height()-mapMax.y(),
+							mapMin.y(),
 							mapMax.x()-mapMin.x(),
 							mapMax.y()-mapMin.y()).
 					scaled(	newDims.first,newDims.second,
@@ -87,7 +87,10 @@ namespace stdr_gui{
 	}
 	
 	void MapLoader::updateZoom(QPoint p,bool zoomIn){
-		QPoint np=pointFromImage(p);
+		ROS_ERROR("Update zoom - point : %d %d",p.x(),p.y());
+		QPoint np=getGlobalPoint(p);
+		np.setY(internalImg->height()-np.y());	// I have the global point from UP-LEFT
+		ROS_ERROR("Update zoom - global point : %d %d",np.x(),np.y());
 		int prevZoom=zoom;
 		if(zoomIn)	zoom++;
 		else zoom--;
@@ -99,15 +102,13 @@ namespace stdr_gui{
 		float intH=internalImg->height();
 		float newWidth=internalImg->width()/pow(2,zoom);
 		float newHeight=internalImg->height()/pow(2,zoom);
-		float xev=np.x()/pow(2,prevZoom)+mapMin.x();
-		float yev=(internalImg->height()-np.y())/pow(2,prevZoom)+mapMin.y();
-		QPoint evOriginal=QPoint(xev,yev);
+		QPoint evOriginal=np;
 		
 		float xmin,xmax,ymin,ymax;
 		xmin=evOriginal.x()-newWidth/2;
 		xmax=evOriginal.x()+newWidth/2;
-		ymin=internalImg->height()-evOriginal.y()-newHeight/2;
-		ymax=internalImg->height()-evOriginal.y()+newHeight/2;
+		ymin=evOriginal.y()-newHeight/2;
+		ymax=evOriginal.y()+newHeight/2;
 		if(xmin<0){
 			xmax+=-xmin;
 			xmin=0;
@@ -126,9 +127,12 @@ namespace stdr_gui{
 		}
 		mapMin=QPoint(xmin,ymin);
 		mapMax=QPoint(xmax,ymax);
+		
+		ROS_ERROR("Update zoom - mapMin : %d %d",mapMin.x(),mapMin.y());
+		ROS_ERROR("Update zoom - mapMax : %d %d",mapMax.x(),mapMax.y());
 	}
 	
-	QPoint MapLoader::pointFromImage(QPoint p){
+	QPoint MapLoader::pointUnscaled(QPoint p){	//	Returns the point unscaled from UP-LEFT (in zoomed img)
 		QPoint newPoint;
 		float x=p.x();
 		float y=p.y();
@@ -136,21 +140,21 @@ namespace stdr_gui{
 		float currentWidth=map->width();
 		float climax=initialWidth/currentWidth;
 		newPoint.setX(x*climax);
-		newPoint.setY(internalImg->height()-y*climax);
+		newPoint.setY(y*climax);
 		return newPoint;
 	}
 	
 	void MapLoader::resetZoom(void){
 		zoom=0;
 		mapMin=QPoint(0,0);
-		mapMax=QPoint(internalImg->width(),internalImg->height());
+		mapMax=QPoint(internalImg->width()-1,internalImg->height()-1);
 	}
 	
-	QPoint MapLoader::getGlobalPoint(QPoint p){
-		QPoint np=pointFromImage(p);
+	QPoint MapLoader::getGlobalPoint(QPoint p){	//	Returns the point unscaled from DOWN-LEFT (in original img)
+		QPoint np=pointUnscaled(p);
 		int xev=np.x()/pow(2,zoom)+mapMin.x();
 		int yev=np.y()/pow(2,zoom)+mapMin.y();
-		return QPoint(xev,yev);
+		return QPoint(xev,internalImg->height()-yev);
 	}
 	
 	void MapLoader::wheelEvent ( QWheelEvent * event ){

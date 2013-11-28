@@ -33,7 +33,7 @@ namespace stdr_gui{
 			std::pair<int,int> checkDimensions(int w,int h);
 			QPoint mapMin,mapMax;
 			int zoom;
-			QPoint pointFromImage(QPoint p);
+			QPoint pointUnscaled(QPoint p);
 		public:
 			QSize initialImageSize;
 			MapLoader(int argc, char **argv);
