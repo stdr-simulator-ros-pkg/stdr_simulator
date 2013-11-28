@@ -33,14 +33,17 @@ namespace stdr_gui{
 			std::pair<int,int> checkDimensions(int w,int h);
 			QPoint mapMin,mapMax;
 			int zoom;
-			QPoint pointFromImage(QPoint p);
+			QPoint pointUnscaled(QPoint p);
 		public:
 			QSize initialImageSize;
 			MapLoader(int argc, char **argv);
 			void resizeEvent(QResizeEvent *e);
 			void updateImage(QImage *img);
+			void drawGrid(QImage *img,float resolution);
 			void updateZoom(QPoint p,bool zoomIn);
 			void resetZoom(void);
+			QPoint getGlobalPoint(QPoint);
+			void wheelEvent ( QWheelEvent * event );
 	};	
 }
 

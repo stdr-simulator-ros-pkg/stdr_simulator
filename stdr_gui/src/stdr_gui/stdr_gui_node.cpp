@@ -43,6 +43,7 @@ class MyQApplication:public QApplication{
 
 int main(int argc,char **argv){
 	MyQApplication app(argc, argv);
+	app.setAttribute(Qt::AA_DontShowIconsInMenus, false);
 	ros::init(argc,argv,"stdr_gui_node");
 	stdr_gui::GuiController con(argc,argv);
 	con.init();

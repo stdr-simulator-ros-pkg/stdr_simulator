@@ -16,16 +16,6 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="7" column="1">
-      <widget class="QLineEdit" name="laserTranslationX">
-       <property name="text">
-        <string>0.1</string>
-       </property>
-       <property name="readOnly">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
@@ -56,6 +46,16 @@
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Orientation</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLineEdit" name="laserTranslationX">
+       <property name="text">
+        <string>0.1</string>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -156,6 +156,16 @@
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="laserMinDistance"/>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Frequency (Hz)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLineEdit" name="laserFrequency"/>
      </item>
     </layout>
    </item>

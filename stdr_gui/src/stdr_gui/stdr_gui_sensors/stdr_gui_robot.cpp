@@ -28,6 +28,8 @@ namespace stdr_gui{
 		footprint=msg.robot.footprint;
 		radius=msg.robot.footprint.radius;
 		frameId_=msg.name;
+		showLabel=true;
+		showCircles=false;
 		// Setup rest of sensors
 	}
 	
@@ -42,9 +44,12 @@ namespace stdr_gui{
 		this->footprint=other.footprint;
 		this->radius=other.radius;
 		this->frameId_=other.frameId_;
+		showLabel=true;
+		showCircles=false;
 	}
 	
 	void GuiRobot::draw(QImage *m,float ocgd){
+		resolution=ocgd;
 		tf::StampedTransform transform;
 		try{
 			listener.lookupTransform("map", frameId_.c_str(),ros::Time(0), transform);
@@ -57,19 +62,34 @@ namespace stdr_gui{
 		currentPose.y=transform.getOrigin().y();
 		transform.getBasis().getRPY(roll,pitch,yaw);
 		currentPose.theta=yaw;
-		drawSelf(m,ocgd);
+		drawSelf(m);
 		// Call draw for sensors
 	}
-	void GuiRobot::drawSelf(QImage *m,float ocgd){
+	void GuiRobot::drawSelf(QImage *m){
 		QPainter painter(m);
 		painter.setPen(Qt::blue);
-		painter.drawEllipse((currentPose.x-radius/2)/ocgd,(currentPose.y-radius/2)/ocgd,radius/ocgd,radius/ocgd);
-		painter.drawLine(	currentPose.x/ocgd,
-							currentPose.y/ocgd,
-							currentPose.x/ocgd+radius/ocgd*1.05*cos(currentPose.theta),
-							currentPose.y/ocgd+radius/ocgd*1.05*sin(currentPose.theta));
-							
+		painter.drawEllipse((currentPose.x-radius/2)/resolution,(currentPose.y-radius/2)/resolution,radius/resolution,radius/resolution);
+		painter.drawLine(	currentPose.x/resolution,
+							currentPose.y/resolution,
+							currentPose.x/resolution+radius/resolution*1.05*cos(currentPose.theta),
+							currentPose.y/resolution+radius/resolution*1.05*sin(currentPose.theta));
 		
+		if(showCircles){
+			painter.setPen(QColor(255,0,0,150));
+			painter.drawEllipse((currentPose.x-1.0/2)/resolution,(currentPose.y-1.0/2)/resolution,1.0/resolution,1.0/resolution);
+			painter.drawEllipse((currentPose.x-2.0/2)/resolution,(currentPose.y-2.0/2)/resolution,2.0/resolution,2.0/resolution);
+			painter.drawEllipse((currentPose.x-3.0/2)/resolution,(currentPose.y-3.0/2)/resolution,3.0/resolution,3.0/resolution);
+			painter.drawEllipse((currentPose.x-4.0/2)/resolution,(currentPose.y-4.0/2)/resolution,4.0/resolution,4.0/resolution);
+			painter.drawEllipse((currentPose.x-5.0/2)/resolution,(currentPose.y-5.0/2)/resolution,5.0/resolution,5.0/resolution);
+		}
+		
+	}
+	
+	bool GuiRobot::checkEventProximity(QPoint p){
+		float dx=p.x()*resolution-currentPose.x;
+		float dy=p.y()*resolution-currentPose.y;
+		float dist=sqrt(pow(dx,2)+pow(dy,2));
+		return dist<=radius;
 	}
 	
 	GuiRobot::~GuiRobot(void){}
@@ -85,5 +105,21 @@ namespace stdr_gui{
 		painter.setPen(Qt::white);
 		painter.fillRect(currentPose.x/ocgd+10,m->height()-(currentPose.y/ocgd)-30,100,20,QBrush(QColor(0,0,0,140)));
 		painter.drawText(currentPose.x/ocgd+12,m->height()-(currentPose.y/ocgd)-15,QString(frameId_.c_str()));
+	}
+	
+	void GuiRobot::setShowLabel(bool b){
+		showLabel=b;
+	}
+	
+	bool GuiRobot::getShowLabel(void){
+		return showLabel;
+	}
+	
+	void GuiRobot::toggleShowLabel(void){
+		showLabel=!showLabel;
+	}
+	
+	void GuiRobot::toggleShowCircles(void){
+		showCircles=!showCircles;
 	}
 }
