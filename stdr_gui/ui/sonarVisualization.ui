@@ -60,7 +60,7 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="sonarDist_2">
+  <widget class="QLabel" name="sonarMaxDist">
    <property name="geometry">
     <rect>
      <x>260</x>
@@ -85,7 +85,7 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="sonarDist_3">
+  <widget class="QLabel" name="sonarMinDist">
    <property name="geometry">
     <rect>
      <x>0</x>

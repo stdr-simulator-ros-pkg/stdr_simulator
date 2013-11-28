@@ -70,6 +70,22 @@ namespace stdr_gui{
 		map->resize(newDims.first,newDims.second);
 	}
 	
+	void MapLoader::drawGrid(QImage *img,float resolution){
+		QPainter painter(img);
+		painter.setPen(QColor(100,100,100,150));
+		int pix=1.0/resolution;
+		for(unsigned int i=1;i<=img->width()/pix+1;i++)
+			painter.drawLine(	0,
+								i*pix,
+								img->width()-1,
+								i*pix);
+		for(unsigned int i=1;i<=img->height()/pix+1;i++)
+			painter.drawLine(	i*pix,
+								0,
+								i*pix,
+								img->height()-1);
+	}
+	
 	void MapLoader::updateZoom(QPoint p,bool zoomIn){
 		QPoint np=pointFromImage(p);
 		int prevZoom=zoom;

@@ -30,8 +30,10 @@ namespace stdr_gui{
 		private:
 			QString name;
 			bool active;
+			stdr_msgs::SonarSensorMsg _msg;
 		public:
 			bool getActive(void);
+			void setSonar(stdr_msgs::SonarSensorMsg& msg);
 			SonarVisualisation(QString name);
 			void destruct(void);
 			void closeEvent(QCloseEvent *event);

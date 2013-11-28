@@ -146,7 +146,7 @@ namespace stdr_gui{
 		while(mapLock)	usleep(100);
 		mapLock=true;
 		registeredRobots.clear();
-		
+		allRobots=msg;
 		for(unsigned int i=0;i<msg.robots.size();i++){
 			stdr_msgs::RobotIndexedMsg m=msg.robots[i];
 			registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(m)));
@@ -178,6 +178,10 @@ namespace stdr_gui{
 		while(mapLock)	usleep(100);
 		mapLock=true;
 		runningMap=initialMap;
+		
+		if(guiConnector.isGridEnabled())
+			mapConnector.loader.drawGrid(&(runningMap),mapMsg.info.resolution);
+		
 		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
 			it->second.draw(&runningMap,mapMsg.info.resolution);
 		}
@@ -185,7 +189,9 @@ namespace stdr_gui{
 		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
 			it->second.drawLabel(&runningMap,mapMsg.info.resolution);
 		}
+
 		mapConnector.loader.updateImage(&(runningMap));
+		
 		guiConnector.loader.statusbar->showMessage(QString("Time elapsed : ")+getLiteralTime(elapsedTime.elapsed()),0);
 		mapLock=false;
 		
@@ -246,6 +252,14 @@ namespace stdr_gui{
 		LaserVisualisation *lv;
 		lv=new LaserVisualisation(name);
 		laserVisualizers.insert(std::pair<QString,LaserVisualisation *>(name,lv));
+		lv->setWindowFlags(Qt::WindowStaysOnTopHint);
+		
+		for(unsigned int i=0;i<allRobots.robots.size();i++)
+			if(allRobots.robots[i].name==robotName.toStdString())
+				for(unsigned int j=0;j<allRobots.robots[i].robot.laserSensors.size();j++)
+					if(allRobots.robots[i].robot.laserSensors[j].frame_id==laserName.toStdString())
+						lv->setLaser(allRobots.robots[i].robot.laserSensors[j]);
+		
 		lv->show();
 	}
 	void GuiController::sonarVisualizerClicked(QString robotName,QString sonarName){
@@ -255,6 +269,14 @@ namespace stdr_gui{
 		SonarVisualisation *sv;
 		sv=new SonarVisualisation(name);
 		sonarVisualizers.insert(std::pair<QString,SonarVisualisation *>(name,sv));
+		sv->setWindowFlags(Qt::WindowStaysOnTopHint);
+		
+		for(unsigned int i=0;i<allRobots.robots.size();i++)
+			if(allRobots.robots[i].name==robotName.toStdString())
+				for(unsigned int j=0;j<allRobots.robots[i].robot.sonarSensors.size();j++)
+					if(allRobots.robots[i].robot.sonarSensors[j].frame_id==sonarName.toStdString())
+						sv->setSonar(allRobots.robots[i].robot.sonarSensors[j]);
+						
 		sv->show();
 	}
 }	

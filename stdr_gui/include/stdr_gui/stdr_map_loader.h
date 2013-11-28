@@ -39,6 +39,7 @@ namespace stdr_gui{
 			MapLoader(int argc, char **argv);
 			void resizeEvent(QResizeEvent *e);
 			void updateImage(QImage *img);
+			void drawGrid(QImage *img,float resolution);
 			void updateZoom(QPoint p,bool zoomIn);
 			void resetZoom(void);
 	};	

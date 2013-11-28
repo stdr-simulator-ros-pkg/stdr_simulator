@@ -56,7 +56,8 @@ namespace stdr_gui{
 			bool mapLock;
 			
 			std::map<std::string,GuiRobot> registeredRobots;	
-			std::set<std::string> myRobots_;		
+			std::set<std::string> myRobots_;	
+			stdr_msgs::RobotIndexedVectorMsg allRobots;	
 			
 			ros::Subscriber mapSubscriber;
 			ros::Subscriber robotSubscriber;

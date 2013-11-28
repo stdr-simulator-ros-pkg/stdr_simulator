@@ -30,8 +30,10 @@ namespace stdr_gui{
 		private:
 			QString name;
 			bool active;
+			stdr_msgs::LaserSensorMsg _msg;
 		public:
 			bool getActive(void);
+			void setLaser(stdr_msgs::LaserSensorMsg& msg);
 			LaserVisualisation(QString name);
 			void destruct(void);
 			void closeEvent(QCloseEvent *event);

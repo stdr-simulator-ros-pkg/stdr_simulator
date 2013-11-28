@@ -48,7 +48,8 @@ namespace stdr_gui{
         
         actionGrid = new QAction(this);
         actionGrid->setObjectName(QString::fromUtf8("actionGrid"));
-        actionGrid->setCheckable(false);
+        actionGrid->setCheckable(true);
+        actionGrid->setChecked(true);
         actionGrid->setIconText(QString("Enable grid"));
         QIcon iconGrid;
         iconGrid.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/grid.png")).c_str()), QSize(), QIcon::Normal, QIcon::Off);

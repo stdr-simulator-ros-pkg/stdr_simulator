@@ -33,8 +33,8 @@ namespace stdr_gui{
 		hide();
 		delete sonarDistBar;
 		delete sonarDist;
-		delete sonarDist_2;
-		delete sonarDist_3;
+		delete sonarMaxDist;
+		delete sonarMinDist;
 	}
 	
 	void SonarVisualisation::closeEvent(QCloseEvent *event){
@@ -44,5 +44,11 @@ namespace stdr_gui{
 	
 	bool SonarVisualisation::getActive(void){
 		return active;
+	}
+	
+	void SonarVisualisation::setSonar(stdr_msgs::SonarSensorMsg& msg){
+		_msg=msg;
+		sonarMaxDist->setText(QString().setNum(msg.maxRange)+QString(" m"));
+		sonarMinDist->setText(QString().setNum(msg.minRange)+QString(" m"));
 	}
 }

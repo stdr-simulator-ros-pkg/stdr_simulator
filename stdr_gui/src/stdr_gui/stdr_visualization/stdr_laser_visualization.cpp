@@ -45,4 +45,10 @@ namespace stdr_gui{
 	bool LaserVisualisation::getActive(void){
 		return active;
 	}
+	
+	void LaserVisualisation::setLaser(stdr_msgs::LaserSensorMsg& msg){
+		_msg=msg;
+		laserMax->setText(QString().setNum(msg.maxRange)+QString(" m"));
+		laserMin->setText(QString().setNum(msg.minRange)+QString(" m"));
+	}
 }
