@@ -31,6 +31,9 @@
 #include "stdr_gui/stdr_info_connector.h"
 #include "stdr_gui/stdr_map_connector.h"
 
+#include "stdr_gui/stdr_visualization/stdr_sonar_visualization.h"
+#include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
+
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 
 #include "nav_msgs/OccupancyGrid.h"
@@ -47,14 +50,14 @@ namespace stdr_gui{
 		Q_OBJECT
 		
 		private: 
-		
 			int argc;
 			char **argv;
 			
 			bool mapLock;
 			
 			std::map<std::string,GuiRobot> registeredRobots;	
-			std::set<std::string> myRobots_;		
+			std::set<std::string> myRobots_;	
+			stdr_msgs::RobotIndexedVectorMsg allRobots;	
 			
 			ros::Subscriber mapSubscriber;
 			ros::Subscriber robotSubscriber;
@@ -68,10 +71,13 @@ namespace stdr_gui{
 			stdr_robot::HandleRobot robotHandler_;
 			
 			QTimer *timer;
-			QPoint pointFromImage(QPoint p);
 			QTime elapsedTime;
 			
 			void fixRobotMsgAngles(stdr_msgs::RobotMsg& msg);
+			
+			std::map<QString,LaserVisualisation *> laserVisualizers;
+			std::map<QString,SonarVisualisation *> sonarVisualizers;
+			
 		public:
 			GuiController(int argc,char **argv);
 			
@@ -95,6 +101,9 @@ namespace stdr_gui{
 			void zoomOutPressed(QPoint p);
 			void robotPlaceSet(QPoint p);
 			void updateMapInternal(void);
+			void laserVisualizerClicked(QString robotName,QString laserName);
+			void sonarVisualizerClicked(QString robotName,QString sonarName);
+			void itemClicked(QPoint p,Qt::MouseButton b);
 			
 		Q_SIGNALS:
 			void waitForRobotPose(void);
