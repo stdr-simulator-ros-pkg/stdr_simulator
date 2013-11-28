@@ -32,19 +32,21 @@ class Laser : public Sensor {
 	
 	public:
 	
-		Laser(const nav_msgs::OccupancyGridConstPtr& map, 
+		Laser(const nav_msgs::OccupancyGrid& map,
+				const geometry_msgs::Pose2DConstPtr& robotPosePtr,
 				tf::TransformBroadcaster& tf,
 				const stdr_msgs::LaserSensorMsg& msg, 
 				const std::string& name, 
 				ros::NodeHandle& n);
-		void callback(const ros::TimerEvent&);
-		void tfCallback(const ros::TimerEvent&);
+		virtual void updateSensorCallback(const ros::TimerEvent&);
+		virtual void tfCallback(const ros::TimerEvent&);
 		
 		~Laser() {}
 		
 	private:
 		
 		stdr_msgs::LaserSensorMsg _description;
+		sensor_msgs::LaserScan _laserScan;
 	
 };
 	

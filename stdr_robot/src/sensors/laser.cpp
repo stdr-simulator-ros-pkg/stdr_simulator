@@ -23,18 +23,29 @@
 
 namespace stdr_robot {
 	
-Laser::Laser(const nav_msgs::OccupancyGridConstPtr& map, 
+Laser::Laser(const nav_msgs::OccupancyGrid& map,
+	const geometry_msgs::Pose2DConstPtr& robotPosePtr,
 	tf::TransformBroadcaster& tf, 
 	const stdr_msgs::LaserSensorMsg& msg, 
 	const std::string& name,
 	ros::NodeHandle& n)
-  : Sensor(map, tf, name)
+  : Sensor(map, robotPosePtr, tf, name)
 {
 	_description = msg;
-	_timer = n.createTimer(ros::Duration(1/msg.frequency), &Laser::callback, this);	
+	
+	_laserScan.angle_min = msg.minAngle;
+	_laserScan.angle_max = msg.maxAngle;
+	_laserScan.range_max = msg.maxRange;
+	_laserScan.range_max = msg.maxRange;
+	_laserScan.angle_increment = ( msg.maxAngle - msg.minAngle ) / msg.numRays;
+
+	//~ _timer = n.createTimer(ros::Duration(1/msg.frequency), &Laser::updateSensorCallback, this);	
+	_timer = n.createTimer(ros::Duration(1), &Laser::updateSensorCallback, this);	
 }
 
-void Laser::callback(const ros::TimerEvent&) {
+void Laser::updateSensorCallback(const ros::TimerEvent&) {
+	
+	
 	// calculate laser
 }
 

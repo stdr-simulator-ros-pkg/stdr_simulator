@@ -25,6 +25,7 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/OccupancyGrid.h>
+#include <geometry_msgs/Pose2D.h>
 
 namespace stdr_robot {
 
@@ -32,21 +33,23 @@ class Sensor {
 	
 	public:
 		
-		virtual void callback(const ros::TimerEvent&) = 0;
+		virtual void updateSensorCallback(const ros::TimerEvent&) = 0;
 		virtual void tfCallback(const ros::TimerEvent&) = 0;
 		virtual ~Sensor() {}
 	
 	protected:
 		
-		Sensor(const nav_msgs::OccupancyGridConstPtr& map, 
+		Sensor(const nav_msgs::OccupancyGrid& map,
+				const geometry_msgs::Pose2DConstPtr& robotPosePtr,
 				tf::TransformBroadcaster& tf, 
 				const std::string& name) 
-		: _map(map), _broadcaster(tf), _namespace(name) {}
+		: _map(map), _broadcaster(tf), _namespace(name), _robotPosePtr(robotPosePtr) {}
 		
 	protected:
 	
 		const std::string& _namespace;
-		const nav_msgs::OccupancyGridConstPtr& _map;
+		const nav_msgs::OccupancyGrid& _map;
+		const geometry_msgs::Pose2DConstPtr& _robotPosePtr;
 		ros::Timer _timer;
 		ros::Timer _tfTimer;
 		tf::TransformBroadcaster& _broadcaster;
