@@ -53,14 +53,22 @@ void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const
 	}
 	
 	NODELET_INFO("Loaded new robot, %s", getName().c_str());
-	
+	ros::NodeHandle n = getMTNodeHandle();
 	// use result to initialize sensors
 	
 	_currentPosePtr->x = result->description.initialPose.x;
 	_currentPosePtr->y = result->description.initialPose.y;
 	_currentPosePtr->theta = result->description.initialPose.theta;
 	
-	ros::NodeHandle n = getMTNodeHandle();
+	
+	for ( unsigned int laserIter = 0; laserIter < result->description.laserSensors.size(); laserIter++ ){
+		
+		_sensors.push_back( SensorPtr( new Laser( _map, _currentPosePtr, _tfBroadcaster, result->description.laserSensors[laserIter], getName(), n ) ) );
+		
+	}
+	
+	
+	
 	_motionControllerPtr.reset( new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()) );
 
 }
