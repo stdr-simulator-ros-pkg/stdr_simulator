@@ -38,14 +38,13 @@ namespace stdr_gui{
 			
 			geometry_msgs::Pose2D initialPose;
 			geometry_msgs::Pose2D currentPose;
-			
+			float resolution;
 			stdr_msgs::FootprintMsg footprint;
 			float radius;
-			void drawSelf(QImage *m,float ocgd);
+			void drawSelf(QImage *m);
 			tf::TransformListener listener;
+			bool showLabel;
 		public:
-			
-		
 			GuiRobot(void);
 			GuiRobot(const GuiRobot& other);
 			GuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
@@ -53,6 +52,10 @@ namespace stdr_gui{
 			std::string getFrameId(void);
 			void draw(QImage *m,float ocgd);
 			void drawLabel(QImage *m,float ocgd);
+			bool checkEventProximity(QPoint p);
+			void setShowLabel(bool b);
+			void toggleShowLabel(void);
+			bool getShowLabel(void);
 	};	
 }
 

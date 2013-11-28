@@ -47,14 +47,13 @@ namespace stdr_gui{
 		if(watched==loader.map){
 			if(event->type() == QEvent::MouseButtonPress){
 				const QMouseEvent* const me = static_cast<const QMouseEvent*>( event );
+				QPoint p=me->pos();
 				if(me->button()==Qt::RightButton){
-					//~ QMenu myMenu;
-					//~ QAction *addR=myMenu.addAction("Add robot");
-					//~ QAction *addRfid=myMenu.addAction("Add RFID tag");
-					//~ QAction* selectedItem = myMenu.exec(loader.mapToGlobal(me->pos()));
+					if(mapState==NORMAL){
+						Q_EMIT itemClicked(p,Qt::RightButton);
+					}
 				}
 				else if(me->button()==Qt::LeftButton){
-					QPoint p=me->pos();
 					if(mapState==ZOOMIN)
 						Q_EMIT zoomInPressed(p);
 					else if(mapState==ZOOMOUT)
@@ -65,7 +64,7 @@ namespace stdr_gui{
 						Q_EMIT robotPlaceSet(p);
 					}
 					else if(mapState==NORMAL){
-						Q_EMIT itemClicked(p);
+						Q_EMIT itemClicked(p,Qt::LeftButton);
 					}
 				}
 			}

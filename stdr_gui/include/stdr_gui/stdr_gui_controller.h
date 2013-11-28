@@ -103,7 +103,7 @@ namespace stdr_gui{
 			void updateMapInternal(void);
 			void laserVisualizerClicked(QString robotName,QString laserName);
 			void sonarVisualizerClicked(QString robotName,QString sonarName);
-			void itemClicked(QPoint p);
+			void itemClicked(QPoint p,Qt::MouseButton b);
 			
 		Q_SIGNALS:
 			void waitForRobotPose(void);

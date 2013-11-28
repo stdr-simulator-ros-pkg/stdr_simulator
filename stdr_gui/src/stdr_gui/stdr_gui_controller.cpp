@@ -44,24 +44,36 @@ namespace stdr_gui{
 		mapSubscriber=n.subscribe("map", 1, &GuiController::receiveMap,this);
 		robotSubscriber=n.subscribe("stdr_server/active_robots", 1, &GuiController::receiveRobots,this);
 		
+		//----------------------------------Connections--------------------------------------------//
 		QObject::connect(&guiConnector,SIGNAL(setZoomInCursor(bool)),&mapConnector, SLOT(setCursorZoomIn(bool)));
+		
 		QObject::connect(&guiConnector,SIGNAL(setZoomOutCursor(bool)),&mapConnector, SLOT(setCursorZoomOut(bool)));
+		
 		QObject::connect(&guiConnector,SIGNAL(setAdjustedCursor(bool)),&mapConnector, SLOT(setCursorAdjusted(bool)));
+		
 		QObject::connect(&mapConnector,SIGNAL(zoomInPressed(QPoint)),this, SLOT(zoomInPressed(QPoint)));
+		
 		QObject::connect(&mapConnector,SIGNAL(zoomOutPressed(QPoint)),this, SLOT(zoomOutPressed(QPoint)));
-		QObject::connect(&mapConnector,SIGNAL(itemClicked(QPoint)),this, SLOT(itemClicked(QPoint)));
+		
+		QObject::connect(&mapConnector,SIGNAL(itemClicked(QPoint,Qt::MouseButton)),this, SLOT(itemClicked(QPoint,Qt::MouseButton)));
+		
 		QObject::connect(&infoConnector,SIGNAL(laserVisualizerClicked(QString,QString)),this, SLOT(laserVisualizerClicked(QString,QString)));
+		
 		QObject::connect(&infoConnector,SIGNAL(sonarVisualizerClicked(QString,QString)),this, SLOT(sonarVisualizerClicked(QString,QString)));
 		
 		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg)));
+		
 		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(loadRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(loadRobotPressed(stdr_msgs::RobotMsg)));
+		
 		QObject::connect(this,SIGNAL(waitForRobotPose()),&mapConnector, SLOT(waitForPlace()));
+		
 		QObject::connect(&mapConnector,SIGNAL(robotPlaceSet(QPoint)),this, SLOT(robotPlaceSet(QPoint)));
+		
 		QObject::connect(this,SIGNAL(updateMap()),this, SLOT(updateMapInternal()));
 		
 		timer=new QTimer(this);
 		connect(timer, SIGNAL(timeout()), this, SLOT(updateMapInternal()));
-		
+		//----------------------------------Connections end----------------------------------------//
 	}
 	
 	void GuiController::setupWidgets(void){
@@ -188,7 +200,8 @@ namespace stdr_gui{
 		}
 		runningMap=runningMap.mirrored(false,true);
 		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
-			it->second.drawLabel(&runningMap,mapMsg.info.resolution);
+			if(it->second.getShowLabel())
+				it->second.drawLabel(&runningMap,mapMsg.info.resolution);
 		}
 
 		mapConnector.loader.updateImage(&(runningMap));
@@ -269,8 +282,22 @@ namespace stdr_gui{
 		sv->show();
 	}
 	
-	void GuiController::itemClicked(QPoint p){
+	void GuiController::itemClicked(QPoint p,Qt::MouseButton b){
 		QPoint pointClicked=mapConnector.loader.getGlobalPoint(p);
+		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
+			if(it->second.checkEventProximity(pointClicked)){
+				ROS_ERROR("Robot %s clicked",it->first.c_str());
+				if(b==Qt::RightButton){
+					QMenu myMenu;
+					QAction *addR=myMenu.addAction("Mpiftekia");
+					QAction *addRfid=myMenu.addAction("Loukanika");
+					QAction* selectedItem = myMenu.exec(mapConnector.loader.mapToGlobal(p));
+				}
+				else if(b==Qt::LeftButton){
+					it->second.toggleShowLabel();
+				}
+			}
+		}
 	}
 }	
 

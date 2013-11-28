@@ -63,7 +63,7 @@ namespace stdr_gui{
 			void zoomInPressed(QPoint p);	
 			void zoomOutPressed(QPoint p);	
 			void robotPlaceSet(QPoint p);
-			void itemClicked(QPoint p);
+			void itemClicked(QPoint p,Qt::MouseButton b);
 	};	
 }
 
