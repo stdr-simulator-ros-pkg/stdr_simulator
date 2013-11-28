@@ -29,6 +29,7 @@ namespace stdr_gui{
 		radius=msg.robot.footprint.radius;
 		frameId_=msg.name;
 		showLabel=true;
+		showCircles=false;
 		// Setup rest of sensors
 	}
 	
@@ -44,6 +45,7 @@ namespace stdr_gui{
 		this->radius=other.radius;
 		this->frameId_=other.frameId_;
 		showLabel=true;
+		showCircles=false;
 	}
 	
 	void GuiRobot::draw(QImage *m,float ocgd){
@@ -71,7 +73,15 @@ namespace stdr_gui{
 							currentPose.y/resolution,
 							currentPose.x/resolution+radius/resolution*1.05*cos(currentPose.theta),
 							currentPose.y/resolution+radius/resolution*1.05*sin(currentPose.theta));
-							
+		
+		if(showCircles){
+			painter.setPen(QColor(255,0,0,150));
+			painter.drawEllipse((currentPose.x-1.0/2)/resolution,(currentPose.y-1.0/2)/resolution,1.0/resolution,1.0/resolution);
+			painter.drawEllipse((currentPose.x-2.0/2)/resolution,(currentPose.y-2.0/2)/resolution,2.0/resolution,2.0/resolution);
+			painter.drawEllipse((currentPose.x-3.0/2)/resolution,(currentPose.y-3.0/2)/resolution,3.0/resolution,3.0/resolution);
+			painter.drawEllipse((currentPose.x-4.0/2)/resolution,(currentPose.y-4.0/2)/resolution,4.0/resolution,4.0/resolution);
+			painter.drawEllipse((currentPose.x-5.0/2)/resolution,(currentPose.y-5.0/2)/resolution,5.0/resolution,5.0/resolution);
+		}
 		
 	}
 	
@@ -107,5 +117,9 @@ namespace stdr_gui{
 	
 	void GuiRobot::toggleShowLabel(void){
 		showLabel=!showLabel;
+	}
+	
+	void GuiRobot::toggleShowCircles(void){
+		showCircles=!showCircles;
 	}
 }

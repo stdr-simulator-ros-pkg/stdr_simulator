@@ -44,6 +44,7 @@ namespace stdr_gui{
 			void drawSelf(QImage *m);
 			tf::TransformListener listener;
 			bool showLabel;
+			bool showCircles;
 		public:
 			GuiRobot(void);
 			GuiRobot(const GuiRobot& other);
@@ -56,6 +57,7 @@ namespace stdr_gui{
 			void setShowLabel(bool b);
 			void toggleShowLabel(void);
 			bool getShowLabel(void);
+			void toggleShowCircles(void);
 	};	
 }
 

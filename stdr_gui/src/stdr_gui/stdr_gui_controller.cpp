@@ -38,6 +38,10 @@ namespace stdr_gui{
 		setupWidgets();
 		
 		mapLock=false;
+		
+        iconMove.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/arrow_move.png")).c_str()), QSize(20,20), QIcon::Normal, QIcon::Off);
+        
+        iconDelete.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/remove_icon.png")).c_str()), QSize(20,20), QIcon::Normal, QIcon::Off);
 	}
 	
 	void GuiController::initializeCommunications(void){
@@ -286,12 +290,16 @@ namespace stdr_gui{
 		QPoint pointClicked=mapConnector.loader.getGlobalPoint(p);
 		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
 			if(it->second.checkEventProximity(pointClicked)){
-				ROS_ERROR("Robot %s clicked",it->first.c_str());
 				if(b==Qt::RightButton){
 					QMenu myMenu;
-					QAction *addR=myMenu.addAction("Mpiftekia");
-					QAction *addRfid=myMenu.addAction("Loukanika");
+					QAction *deleteRobot=myMenu.addAction(iconDelete,"Delete robot");
+					QAction *moveRobot=myMenu.addAction(iconMove,"Move robot");
+					myMenu.addSeparator();
+					QAction *showCircle=myMenu.addAction("Show proximity circles");
 					QAction* selectedItem = myMenu.exec(mapConnector.loader.mapToGlobal(p));
+					if(selectedItem==showCircle){
+						it->second.toggleShowCircles();
+					}
 				}
 				else if(b==Qt::LeftButton){
 					it->second.toggleShowLabel();

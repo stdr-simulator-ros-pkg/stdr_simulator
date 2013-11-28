@@ -78,6 +78,9 @@ namespace stdr_gui{
 			std::map<QString,LaserVisualisation *> laserVisualizers;
 			std::map<QString,SonarVisualisation *> sonarVisualizers;
 			
+			QIcon iconMove;
+			QIcon iconDelete;
+			
 		public:
 			GuiController(int argc,char **argv);
 			
