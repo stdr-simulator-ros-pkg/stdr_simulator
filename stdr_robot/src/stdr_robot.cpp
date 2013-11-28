@@ -29,6 +29,7 @@ namespace stdr_robot {
 	
 void Robot::onInit() {
 	ros::NodeHandle n = getMTNodeHandle();
+	_currentPosePtr.reset( new geometry_msgs::Pose2D );
 	
 	_registerClientPtr.reset( new RegisterRobotClient(n, "stdr_server/register_robot", true) );
 	_registerClientPtr->waitForServer();
@@ -36,9 +37,7 @@ void Robot::onInit() {
 	stdr_msgs::RegisterRobotGoal goal;
 	goal.name = getName();
 	_registerClientPtr->sendGoal(goal, boost::bind(&Robot::initializeRobot, this, _1, _2));	
-
-	_currentPosePtr.reset( new geometry_msgs::Pose2D ); 
-
+	
 	_mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
 	_moveRobotService = n.advertiseService(getName() + "/replace", &Robot::moveRobotCallback, this);
 	_collisionTimer = n.createTimer(ros::Duration(0.1), &Robot::checkCollision, this);
@@ -54,23 +53,16 @@ void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const
 	
 	NODELET_INFO("Loaded new robot, %s", getName().c_str());
 	ros::NodeHandle n = getMTNodeHandle();
-	// use result to initialize sensors
 	
 	_currentPosePtr->x = result->description.initialPose.x;
 	_currentPosePtr->y = result->description.initialPose.y;
 	_currentPosePtr->theta = result->description.initialPose.theta;
 	
-	
 	for ( unsigned int laserIter = 0; laserIter < result->description.laserSensors.size(); laserIter++ ){
-		
 		_sensors.push_back( SensorPtr( new Laser( _map, _currentPosePtr, _tfBroadcaster, result->description.laserSensors[laserIter], getName(), n ) ) );
-		
 	}
 	
-	
-	
 	_motionControllerPtr.reset( new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()) );
-
 }
 
 void Robot::mapCallback(const nav_msgs::OccupancyGridConstPtr& msg) {

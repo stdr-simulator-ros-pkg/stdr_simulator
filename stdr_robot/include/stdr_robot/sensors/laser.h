@@ -33,7 +33,7 @@ class Laser : public Sensor {
 	public:
 	
 		Laser(const nav_msgs::OccupancyGrid& map,
-				const geometry_msgs::Pose2DConstPtr& robotPosePtr,
+				const geometry_msgs::Pose2DPtr& robotPosePtr,
 				tf::TransformBroadcaster& tf,
 				const stdr_msgs::LaserSensorMsg& msg, 
 				const std::string& name, 
@@ -46,8 +46,6 @@ class Laser : public Sensor {
 	private:
 		
 		stdr_msgs::LaserSensorMsg _description;
-		sensor_msgs::LaserScan _laserScan;
-	
 };
 	
 }
