@@ -105,6 +105,7 @@ namespace stdr_gui{
 		
 		stdr_msgs::LaserSensorMsg lmsg;
 		lmsg.frame_id=laserFrameId.toStdString();
+		lmsg.numRays=270;
 		lmsg.maxAngle=135;
 		lmsg.minAngle=-135;
 		lmsg.maxRange=4.0;
@@ -124,7 +125,8 @@ namespace stdr_gui{
 		lnode->setIcon(1,loader.editIcon);
 		lnode->setIcon(2,loader.removeIcon);
 
-		QTreeWidgetItem *angleSpan,*orientation,*maxRange,*minRange,*noiseMean,*noiseStd,*poseX,*poseY,*frequency;
+		QTreeWidgetItem *angleSpan,*orientation,*maxRange,*minRange,*noiseMean,*noiseStd,*poseX,*poseY,*frequency,*rays;
+		rays=new QTreeWidgetItem();
 		angleSpan=new QTreeWidgetItem();
 		orientation=new QTreeWidgetItem();
 		maxRange=new QTreeWidgetItem();
@@ -134,6 +136,7 @@ namespace stdr_gui{
 		poseX=new QTreeWidgetItem();
 		poseY=new QTreeWidgetItem();
 		frequency=new QTreeWidgetItem();
+		rays->setText(0,QString("Number of rays"));
 		angleSpan->setText(0,QString("Angle span"));
 		orientation->setText(0,QString("Orientation"));
 		maxRange->setText(0,QString("Max range"));
@@ -143,6 +146,7 @@ namespace stdr_gui{
 		poseX->setText(0,QString("Pose - x"));
 		poseY->setText(0,QString("Pose - y"));
 		frequency->setText(0,QString("Frequency"));
+		rays->setText(1,QString().setNum(lmsg.numRays));
 		angleSpan->setText(1,QString().setNum(lmsg.maxAngle-lmsg.minAngle));
 		orientation->setText(1,QString().setNum(lmsg.maxAngle+lmsg.minAngle));
 		maxRange->setText(1,QString().setNum(lmsg.maxRange));
@@ -153,6 +157,7 @@ namespace stdr_gui{
 		poseY->setText(1,QString().setNum(lmsg.pose.y));
 		frequency->setText(1,QString().setNum(lmsg.frequency));
 		
+		lnode->addChild(rays);
 		lnode->addChild(angleSpan);
 		lnode->addChild(orientation);
 		lnode->addChild(maxRange);
@@ -332,6 +337,7 @@ namespace stdr_gui{
 		if(laserFrameId==-1) 
 			return;
 			
+		loader.laserPropLoader.laserRays->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].numRays));
 		loader.laserPropLoader.laserMaxDistance->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].maxRange));
 		loader.laserPropLoader.laserMinDistance->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].minRange));
 		loader.laserPropLoader.laserAngleSpan->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].maxAngle-newRobotMsg.laserSensors[laserFrameId].minAngle));
@@ -434,6 +440,11 @@ namespace stdr_gui{
 				float maxRange=loader.laserPropLoader.laserMaxDistance->text().toFloat();
 				currentLaser->child(i)->setText(1,QString().setNum(maxRange));
 				newRobotMsg.laserSensors[laserFrameId].maxRange=maxRange;
+			}
+			else if(currentLaser->child(i)->text(0)==QString("Number of rays")){
+				int rays=loader.laserPropLoader.laserRays->text().toFloat();
+				currentLaser->child(i)->setText(1,QString().setNum(rays));
+				newRobotMsg.laserSensors[laserFrameId].numRays=rays;
 			}
 			else if(currentLaser->child(i)->text(0)==QString("Min range")){
 				float minRange=loader.laserPropLoader.laserMinDistance->text().toFloat();

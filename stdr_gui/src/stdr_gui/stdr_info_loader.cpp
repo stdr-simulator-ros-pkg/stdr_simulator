@@ -113,7 +113,7 @@ namespace stdr_gui{
 				QTreeWidgetItem *lfreq=new QTreeWidgetItem();
 				
 				lrays->setText(0,"Rays");
-				//~ lrays->setText(1,QString().setNum(msg.robots[i].robot.laserSensors[l].rays));
+				lrays->setText(1,QString().setNum(msg.robots[i].robot.laserSensors[l].numRays));
 				lmaxrange->setText(0,"Max dist");
 				lmaxrange->setText(1,(QString().setNum(msg.robots[i].robot.laserSensors[l].maxRange)+QString(" m")));
 				lminrange->setText(0,"Min dist");
