@@ -22,7 +22,9 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 
 namespace stdr_gui{
+
 	GuiRobot::GuiRobot(const stdr_msgs::RobotIndexedMsg& msg){
+		robotInitialized=false;
 		initialPose=msg.robot.initialPose;
 		currentPose=initialPose;
 		footprint=msg.robot.footprint;
@@ -30,29 +32,20 @@ namespace stdr_gui{
 		frameId_=msg.name;
 		showLabel=true;
 		showCircles=false;
-		// Setup rest of sensors
+		for(unsigned int i=0;i<msg.robot.laserSensors.size();i++){
+			GuiLaser *l=new GuiLaser(msg.robot.laserSensors[i],frameId_);
+			_lasers.push_back(l);
+		}
+		robotInitialized=true;
 	}
-	
-	GuiRobot::GuiRobot(void){}
-	
-	GuiRobot::GuiRobot(const GuiRobot& other){
-		this->_lasers=other._lasers;
-		this->_sonars=other._sonars;
-		this->_rfids=other._rfids;
-		this->initialPose=other.initialPose;
-		this->currentPose=other.currentPose;
-		this->footprint=other.footprint;
-		this->radius=other.radius;
-		this->frameId_=other.frameId_;
-		showLabel=true;
-		showCircles=false;
-	}
-	
-	void GuiRobot::draw(QImage *m,float ocgd){
+
+	void GuiRobot::draw(QImage *m,float ocgd,tf::TransformListener *_listener){
+		if(!robotInitialized) return;
 		resolution=ocgd;
 		tf::StampedTransform transform;
+		
 		try{
-			listener.lookupTransform("map", frameId_.c_str(),ros::Time(0), transform);
+			_listener->lookupTransform("map", frameId_.c_str(),ros::Time(0), transform);
 		}
 		catch (tf::TransformException ex){
 			ROS_DEBUG("%s",ex.what());
@@ -63,7 +56,9 @@ namespace stdr_gui{
 		transform.getBasis().getRPY(roll,pitch,yaw);
 		currentPose.theta=yaw;
 		drawSelf(m);
-		// Call draw for sensors
+		for(unsigned int i=0;i<_lasers.size();i++){
+			_lasers[i]->paint(m,ocgd,currentPose);
+		}
 	}
 	void GuiRobot::drawSelf(QImage *m){
 		QPainter painter(m);

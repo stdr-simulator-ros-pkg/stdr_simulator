@@ -25,18 +25,32 @@ namespace stdr_gui{
 	GuiLaser::GuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic):
 		_msg(msg)
 	{
-		_topic=baseTopic+"/lasers/"+_msg.frame_id;
+		_topic=baseTopic+"/"+_msg.frame_id;
 		ros::NodeHandle _n;
+		_lock=false;
 		_subscriber = _n.subscribe(_topic.c_str(), 1, &GuiLaser::callback,this);
 	}
 	
 	void GuiLaser::callback(const sensor_msgs::LaserScan& msg){
-		//	Save values
+		if(_lock){
+			return;
+		}
+		_scan=msg;
 	}
 	
-	void GuiLaser::paint(QImage *m){
-		//stop spinning
-		//~ QPainter painter(&_mapImage);
+	void GuiLaser::paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose){	//block spinning?
+		_lock=true;
+		QPainter painter(m);
+		painter.setPen(QColor(255,0,0,100));
+		for(unsigned int i=0;i<_scan.ranges.size();i++){
+			painter.drawLine(
+				robotPose.x/ocgd+_msg.pose.x/ocgd,
+				robotPose.y/ocgd+_msg.pose.y/ocgd,
+				robotPose.x/ocgd+_msg.pose.x/ocgd+_scan.ranges[i]*cos(robotPose.theta+_scan.angle_min+i*_scan.angle_increment)/ocgd,
+				robotPose.y/ocgd+_msg.pose.y/ocgd+_scan.ranges[i]*sin(robotPose.theta+_scan.angle_min+i*_scan.angle_increment)/ocgd
+			);				
+		}
+		_lock=false;
 	}
 }
 

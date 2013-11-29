@@ -87,10 +87,10 @@ namespace stdr_gui{
 	}
 	
 	void MapLoader::updateZoom(QPoint p,bool zoomIn){
-		ROS_ERROR("Update zoom - point : %d %d",p.x(),p.y());
+		//~ ROS_ERROR("Update zoom - point : %d %d",p.x(),p.y());
 		QPoint np=getGlobalPoint(p);
 		np.setY(internalImg->height()-np.y());	// I have the global point from UP-LEFT
-		ROS_ERROR("Update zoom - global point : %d %d",np.x(),np.y());
+		//~ ROS_ERROR("Update zoom - global point : %d %d",np.x(),np.y());
 		int prevZoom=zoom;
 		if(zoomIn)	zoom++;
 		else zoom--;
@@ -128,8 +128,8 @@ namespace stdr_gui{
 		mapMin=QPoint(xmin,ymin);
 		mapMax=QPoint(xmax,ymax);
 		
-		ROS_ERROR("Update zoom - mapMin : %d %d",mapMin.x(),mapMin.y());
-		ROS_ERROR("Update zoom - mapMax : %d %d",mapMax.x(),mapMax.y());
+		//~ ROS_ERROR("Update zoom - mapMin : %d %d",mapMin.x(),mapMin.y());
+		//~ ROS_ERROR("Update zoom - mapMax : %d %d",mapMax.x(),mapMax.y());
 	}
 	
 	QPoint MapLoader::pointUnscaled(QPoint p){	//	Returns the point unscaled from UP-LEFT (in zoomed img)

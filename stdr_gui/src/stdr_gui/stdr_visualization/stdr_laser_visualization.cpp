@@ -27,6 +27,8 @@ namespace stdr_gui{
 		setupUi(this);
 		setWindowTitle(name);
 		active=true;
+		ros::NodeHandle _n;
+		_subscriber = _n.subscribe(name.toStdString().c_str(), 1, &LaserVisualisation::callback,this);
 	}
 	
 	void LaserVisualisation::destruct(void){
@@ -50,5 +52,21 @@ namespace stdr_gui{
 		_msg=msg;
 		laserMax->setText(QString().setNum(msg.maxRange)+QString(" m"));
 		laserMin->setText(QString().setNum(msg.minRange)+QString(" m"));
+	}
+	
+	void LaserVisualisation::callback(const sensor_msgs::LaserScan& msg){
+		ROS_ERROR("Got laser");
+		QPainter painter(laserImage);
+		painter.setPen(QColor(255,0,0,100));
+		for(unsigned int i=0;i<msg.ranges.size();i++){
+			painter.drawLine(
+				laserImage->width()/2,
+				laserImage->height()/2,
+				//~ laserImage->width()/2+_scan.ranges[i]*cos(robotPose.theta+_scan.angle_min+i*_scan.angle_increment)/ocgd,
+				//~ robotPose.y/ocgd+_msg.pose.y/ocgd+_scan.ranges[i]*sin(robotPose.theta+_scan.angle_min+i*_scan.angle_increment)/ocgd
+				laserImage->width()/2+10,
+				laserImage->height()/2+10
+			);				
+		}
 	}
 }

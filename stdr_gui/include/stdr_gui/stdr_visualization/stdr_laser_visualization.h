@@ -30,6 +30,7 @@ namespace stdr_gui{
 		private:
 			QString name;
 			bool active;
+			ros::Subscriber _subscriber;
 			stdr_msgs::LaserSensorMsg _msg;
 		public:
 			bool getActive(void);
@@ -37,6 +38,7 @@ namespace stdr_gui{
 			LaserVisualisation(QString name);
 			void destruct(void);
 			void closeEvent(QCloseEvent *event);
+			void callback(const sensor_msgs::LaserScan& msg); 
 	};	
 }
 
