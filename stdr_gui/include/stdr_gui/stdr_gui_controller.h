@@ -55,7 +55,7 @@ namespace stdr_gui{
 			
 			bool mapLock;
 			
-			std::map<std::string,GuiRobot> registeredRobots;	
+			std::vector<GuiRobot> registeredRobots;	
 			std::set<std::string> myRobots_;	
 			stdr_msgs::RobotIndexedVectorMsg allRobots;	
 			
@@ -69,6 +69,8 @@ namespace stdr_gui{
 			QImage runningMap;
 			
 			stdr_robot::HandleRobot robotHandler_;
+			
+			tf::TransformListener _listener;
 			
 			QTimer *timer;
 			QTime elapsedTime;

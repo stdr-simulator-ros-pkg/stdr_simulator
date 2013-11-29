@@ -31,12 +31,12 @@ namespace stdr_gui{
 			std::string _topic;
 			stdr_msgs::LaserSensorMsg _msg;
 			ros::Subscriber _subscriber;
-
+			sensor_msgs::LaserScan _scan;
+			bool _lock;
 		public:
 			GuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic);
-			~GuiLaser(void){}
 			void callback(const sensor_msgs::LaserScan& msg); 
-			void paint(QImage *m);
+			void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
 	};	
 }
 
