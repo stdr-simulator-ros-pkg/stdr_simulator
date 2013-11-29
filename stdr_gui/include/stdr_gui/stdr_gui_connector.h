@@ -40,6 +40,8 @@ namespace stdr_gui{
 			char **argv;		//!< Input arguments
 			bool _mapLoaded;	//!< True if any map is loaded from server
 			
+			bool gridEnabled;
+			
 		public:
 		
 			GuiLoader loader;							//!< The loader of main GUI QWidget 
@@ -59,6 +61,8 @@ namespace stdr_gui{
 			@return void
 			**/
 			void setMapLoaded(bool mapLoaded);
+			
+			bool isGridEnabled(void);
 
 		public Q_SLOTS:
 		
@@ -105,6 +109,7 @@ namespace stdr_gui{
 			void actionZoomOutTriggered(void);
 			
 			void actionAdjustedTriggered(void);
+			void actionGridTriggered(void);
 			
 		Q_SIGNALS:
 		

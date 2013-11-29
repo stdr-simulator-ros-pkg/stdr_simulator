@@ -19,35 +19,36 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_gui/stdr_info_connector.h"
+#include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
 
 namespace stdr_gui{
-	InfoConnector::InfoConnector(int argc, char **argv):
-		QObject(),
-		loader(argc,argv)
-	{
-		this->argc=argc;
-		this->argv=argv;
-		
-		QObject::connect(loader.stdrInformationTree,SIGNAL(itemClicked(QTreeWidgetItem *, int)),this,SLOT(treeItemClicked(QTreeWidgetItem *, int)));
-	}
-
-	void InfoConnector::updateMapInfo(float width,float height,float ocgd){
-		loader.updateMapInfo(width,height,ocgd);
+	LaserVisualisation::LaserVisualisation(QString name){
+		this->name=name;
+		setupUi(this);
+		setWindowTitle(name);
+		active=true;
 	}
 	
-	void InfoConnector::updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg){
-		loader.deleteTree();
-		loader.updateRobots(msg);
+	void LaserVisualisation::destruct(void){
+		hide();
+		delete laserMean;
+		delete laserMax;
+		delete laserMin;
+		delete laserImage;
 	}
 	
-	void InfoConnector::treeItemClicked ( QTreeWidgetItem * item, int column ){
-		if(item==&loader.robotsInfo || item==&loader.robotsInfo)
-			return;
-		else if(item->parent()->text(0)==QString("Lasers") && column==3){
-			Q_EMIT laserVisualizerClicked(item->parent()->parent()->text(0),item->text(0));
-		}
-		else if(item->parent()->text(0)==QString("Sonars") && column==3)
-			Q_EMIT sonarVisualizerClicked(item->parent()->parent()->text(0),item->text(0));
+	void LaserVisualisation::closeEvent(QCloseEvent *event){
+		destruct();
+		active=false;
+	}
+	
+	bool LaserVisualisation::getActive(void){
+		return active;
+	}
+	
+	void LaserVisualisation::setLaser(stdr_msgs::LaserSensorMsg& msg){
+		_msg=msg;
+		laserMax->setText(QString().setNum(msg.maxRange)+QString(" m"));
+		laserMin->setText(QString().setNum(msg.minRange)+QString(" m"));
 	}
 }

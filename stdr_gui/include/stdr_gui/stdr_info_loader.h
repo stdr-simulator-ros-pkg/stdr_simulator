@@ -30,17 +30,17 @@ namespace stdr_gui{
 		
 			int argc;
 			char **argv;
+		
+			std::vector<QTreeWidgetItem> robotNodes;
+			QIcon visibleIcon;
 			
+		public:
 			QTreeWidgetItem	generalInfo,
 							robotsInfo,
 							mapHeight,
 							mapWidth,
 							mapOcgd;
-							
-			std::vector<QTreeWidgetItem> robotNodes;
-							
-			
-		public:
+		
 			InfoLoader(int argc, char **argv);
 			void deleteTree(void);
 			void deleteTreeNode(QTreeWidgetItem *item);

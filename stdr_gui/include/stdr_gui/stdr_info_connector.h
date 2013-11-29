@@ -39,6 +39,10 @@ namespace stdr_gui{
 			void updateMapInfo(float width,float height,float ocgd);
 
 		public Q_SLOTS:
+			void treeItemClicked ( QTreeWidgetItem * item, int column ); 
+		Q_SIGNALS:
+			void laserVisualizerClicked(QString robotName,QString laserName);
+			void sonarVisualizerClicked(QString robotName,QString sonarName);
 	};
 }
 

@@ -38,6 +38,9 @@ namespace stdr_gui{
 		QObject::connect(loader.actionZoomIn,SIGNAL(triggered(bool)),this,SLOT(actionZoomInTriggered()));
 		QObject::connect(loader.actionZoomOut,SIGNAL(triggered(bool)),this,SLOT(actionZoomOutTriggered()));
 		QObject::connect(loader.actionAdjusted,SIGNAL(triggered(bool)),this,SLOT(actionAdjustedTriggered()));
+		QObject::connect(loader.actionGrid,SIGNAL(triggered(bool)),this,SLOT(actionGridTriggered()));
+		
+		gridEnabled=true;
 	}
 	
 	void GuiConnector::actionExitTriggered(void){
@@ -88,5 +91,13 @@ namespace stdr_gui{
 		Q_EMIT setAdjustedCursor(loader.actionAdjusted->isChecked());
 		loader.actionZoomIn->setChecked(false);
 		loader.actionZoomOut->setChecked(false);
+	}
+	
+	void GuiConnector::actionGridTriggered(void){
+		gridEnabled=!gridEnabled;
+	}
+	
+	bool GuiConnector::isGridEnabled(void){
+		return gridEnabled;
 	}
 }

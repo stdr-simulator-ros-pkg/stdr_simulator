@@ -84,6 +84,8 @@ add_executable(stdr_gui_node
 	src/stdr_gui/stdr_gui_sensors/stdr_gui_laser.cpp
 	src/stdr_gui/stdr_gui_sensors/stdr_gui_sonar.cpp
 	src/stdr_gui/stdr_gui_sensors/stdr_gui_rfid.cpp
+	src/stdr_gui/stdr_visualization/stdr_laser_visualization.cpp
+	src/stdr_gui/stdr_visualization/stdr_sonar_visualization.cpp
 	${QT_SOURCES} ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
 )
 add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)	# Wait for std messages to build
