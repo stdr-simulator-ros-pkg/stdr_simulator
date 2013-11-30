@@ -30,7 +30,7 @@
 namespace stdr_gui{
 	
 	class GuiRobot{
-			std::vector<GuiLaser> _lasers;
+			std::vector<GuiLaser *> _lasers;
 			std::vector<GuiSonar> _sonars;
 			std::vector<GuiRfid> _rfids;
 			
@@ -42,16 +42,15 @@ namespace stdr_gui{
 			stdr_msgs::FootprintMsg footprint;
 			float radius;
 			void drawSelf(QImage *m);
-			tf::TransformListener listener;
+			
 			bool showLabel;
 			bool showCircles;
+			bool robotInitialized;
 		public:
-			GuiRobot(void);
-			GuiRobot(const GuiRobot& other);
 			GuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
 			~GuiRobot(void);
 			std::string getFrameId(void);
-			void draw(QImage *m,float ocgd);
+			void draw(QImage *m,float ocgd,tf::TransformListener *_listener);
 			void drawLabel(QImage *m,float ocgd);
 			bool checkEventProximity(QPoint p);
 			void setShowLabel(bool b);

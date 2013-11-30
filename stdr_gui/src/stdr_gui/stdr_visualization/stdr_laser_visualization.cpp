@@ -22,11 +22,16 @@
 #include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
 
 namespace stdr_gui{
-	LaserVisualisation::LaserVisualisation(QString name){
+	LaserVisualisation::LaserVisualisation(QString name,float resolution){
 		this->name=name;
 		setupUi(this);
 		setWindowTitle(name);
 		active=true;
+		_resolution=resolution;
+		ros::NodeHandle _n;
+		_subscriber = _n.subscribe(name.toStdString().c_str(), 1, &LaserVisualisation::callback,this);
+		voidImage=QImage(laserImage->width(),laserImage->height(),QImage::Format_RGB32);
+		voidImage.fill(QColor(255,255,255,255));
 	}
 	
 	void LaserVisualisation::destruct(void){
@@ -40,6 +45,7 @@ namespace stdr_gui{
 	void LaserVisualisation::closeEvent(QCloseEvent *event){
 		destruct();
 		active=false;
+		_subscriber.shutdown();
 	}
 	
 	bool LaserVisualisation::getActive(void){
@@ -50,5 +56,29 @@ namespace stdr_gui{
 		_msg=msg;
 		laserMax->setText(QString().setNum(msg.maxRange)+QString(" m"));
 		laserMin->setText(QString().setNum(msg.minRange)+QString(" m"));
+	}
+	
+	void LaserVisualisation::callback(const sensor_msgs::LaserScan& msg){
+		scan=msg;
+	}
+	
+	void LaserVisualisation::paint(void){
+		internalImage=voidImage;
+		QPainter painter(&internalImage);
+		painter.setPen(QColor(255,0,0,255));
+		float mean=0;
+		for(unsigned int i=0;i<scan.ranges.size();i++){
+			mean+=scan.ranges[i];
+			painter.drawLine(
+				internalImage.width()/2,
+				internalImage.height()/2,
+				internalImage.width()/2+
+					scan.ranges[i]/_msg.maxRange*cos(scan.angle_min+((float)i)*scan.angle_increment)*internalImage.width()/2,
+				internalImage.height()/2+
+					scan.ranges[i]/_msg.maxRange*sin(scan.angle_min+((float)i)*scan.angle_increment)*internalImage.width()/2
+			);				
+		}
+		laserMean->setText(QString().setNum(mean/scan.ranges.size())+QString(" m"));
+		laserImage->setPixmap(QPixmap().fromImage(internalImage.mirrored(false,true)));
 	}
 }

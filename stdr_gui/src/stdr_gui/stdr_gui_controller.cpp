@@ -165,8 +165,7 @@ namespace stdr_gui{
 		registeredRobots.clear();
 		allRobots=msg;
 		for(unsigned int i=0;i<msg.robots.size();i++){
-			stdr_msgs::RobotIndexedMsg m=msg.robots[i];
-			registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(m)));
+			registeredRobots.push_back(GuiRobot(msg.robots[i]));
 		}
 		infoConnector.updateTree(msg);
 		mapLock=false;
@@ -199,13 +198,13 @@ namespace stdr_gui{
 		if(guiConnector.isGridEnabled())
 			mapConnector.loader.drawGrid(&(runningMap),mapMsg.info.resolution);
 		
-		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
-			it->second.draw(&runningMap,mapMsg.info.resolution);
+		for(unsigned int i=0;i<registeredRobots.size();i++){
+			registeredRobots[i].draw(&runningMap,mapMsg.info.resolution,&_listener);
 		}
 		runningMap=runningMap.mirrored(false,true);
-		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
-			if(it->second.getShowLabel())
-				it->second.drawLabel(&runningMap,mapMsg.info.resolution);
+		for(unsigned int i=0;i<registeredRobots.size();i++){
+			if(registeredRobots[i].getShowLabel())
+				registeredRobots[i].drawLabel(&runningMap,mapMsg.info.resolution);
 		}
 
 		mapConnector.loader.updateImage(&(runningMap));
@@ -218,6 +217,9 @@ namespace stdr_gui{
 		for(std::map<QString,LaserVisualisation *>::iterator it=laserVisualizers.begin();it!=laserVisualizers.end();it++){
 			if(!it->second->getActive()){
 				toBeErased.push_back(it->first);
+			}
+			else{
+				it->second->paint();
 			}
 		}
 		for(unsigned int i=0;i<toBeErased.size();i++){
@@ -256,7 +258,7 @@ namespace stdr_gui{
 		if(laserVisualizers.find(name)!=laserVisualizers.end())
 			return;
 		LaserVisualisation *lv;
-		lv=new LaserVisualisation(name);
+		lv=new LaserVisualisation(name,mapMsg.info.resolution);
 		laserVisualizers.insert(std::pair<QString,LaserVisualisation *>(name,lv));
 		lv->setWindowFlags(Qt::WindowStaysOnTopHint);
 		
@@ -288,8 +290,8 @@ namespace stdr_gui{
 	
 	void GuiController::itemClicked(QPoint p,Qt::MouseButton b){
 		QPoint pointClicked=mapConnector.loader.getGlobalPoint(p);
-		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
-			if(it->second.checkEventProximity(pointClicked)){
+		for(unsigned int i=0;i<registeredRobots.size();i++){
+			if(registeredRobots[i].checkEventProximity(pointClicked)){
 				if(b==Qt::RightButton){
 					QMenu myMenu;
 					QAction *deleteRobot=myMenu.addAction(iconDelete,"Delete robot");
@@ -298,11 +300,11 @@ namespace stdr_gui{
 					QAction *showCircle=myMenu.addAction("Show proximity circles");
 					QAction* selectedItem = myMenu.exec(mapConnector.loader.mapToGlobal(p));
 					if(selectedItem==showCircle){
-						it->second.toggleShowCircles();
+						registeredRobots[i].toggleShowCircles();
 					}
 				}
 				else if(b==Qt::LeftButton){
-					it->second.toggleShowLabel();
+					registeredRobots[i].toggleShowLabel();
 				}
 			}
 		}

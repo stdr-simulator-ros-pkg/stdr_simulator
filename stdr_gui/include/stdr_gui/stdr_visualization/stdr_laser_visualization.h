@@ -30,13 +30,20 @@ namespace stdr_gui{
 		private:
 			QString name;
 			bool active;
+			ros::Subscriber _subscriber;
 			stdr_msgs::LaserSensorMsg _msg;
+			sensor_msgs::LaserScan scan;
+			QImage internalImage;
+			QImage voidImage;
+			float _resolution;
 		public:
 			bool getActive(void);
 			void setLaser(stdr_msgs::LaserSensorMsg& msg);
-			LaserVisualisation(QString name);
+			LaserVisualisation(QString name,float resolution);
 			void destruct(void);
 			void closeEvent(QCloseEvent *event);
+			void callback(const sensor_msgs::LaserScan& msg); 
+			void paint(void);
 	};	
 }
 
