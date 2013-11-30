@@ -218,6 +218,9 @@ namespace stdr_gui{
 			if(!it->second->getActive()){
 				toBeErased.push_back(it->first);
 			}
+			else{
+				it->second->paint();
+			}
 		}
 		for(unsigned int i=0;i<toBeErased.size();i++){
 			laserVisualizers.erase(toBeErased[i]);
@@ -255,7 +258,7 @@ namespace stdr_gui{
 		if(laserVisualizers.find(name)!=laserVisualizers.end())
 			return;
 		LaserVisualisation *lv;
-		lv=new LaserVisualisation(name);
+		lv=new LaserVisualisation(name,mapMsg.info.resolution);
 		laserVisualizers.insert(std::pair<QString,LaserVisualisation *>(name,lv));
 		lv->setWindowFlags(Qt::WindowStaysOnTopHint);
 		
