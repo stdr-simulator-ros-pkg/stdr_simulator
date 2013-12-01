@@ -26,22 +26,31 @@
 #include "stdr_msgs/RobotMsg.h"
 
 namespace stdr_gui{
-	class RobotCreatorConnector:public QObject{
+	class CRobotCreatorConnector:
+		public QObject
+	{
 		Q_OBJECT
 		
-			int argc; 
-			char **argv;
+		private:
+			int 	argc_; 
+			char**	argv_;
+			float climax_;
+			
+			CRobotCreatorLoader loader_;
+			
+			stdr_msgs::RobotMsg new_robot_msg_;
+			
+			QTreeWidgetItem* 	current_laser_;
+			QTreeWidgetItem*	current_sonar_;
+			QTreeWidgetItem*	current_rfid_;
 			
 		public:
-			RobotCreatorConnector(int argc, char **argv);
-			RobotCreatorLoader loader;
-
-			stdr_msgs::RobotMsg newRobotMsg;
-			
-			QTreeWidgetItem *currentLaser;
-			QTreeWidgetItem *currentSonar;
-			QTreeWidgetItem *currentRfid;
-			float climax;
+			static unsigned int laser_number;
+			static unsigned int sonar_number;
+			static unsigned int rfid_number;
+		
+			CRobotCreatorConnector(int argc, char **argv);
+			~CRobotCreatorConnector(void);
 			
 			void initialise(void);
 			void deleteTreeNode(QTreeWidgetItem *item);
@@ -72,12 +81,11 @@ namespace stdr_gui{
 
 			void updateRobotPreview(void);
 			
-			void printLaserMsg(stdr_msgs::LaserSensorMsg msg);
+			void setInitialPose(QPoint p);
+			void fixRobotMsgAngles(void);
 			
-			static unsigned int laserNumber;
-			static unsigned int sonarNumber;
-			static unsigned int rfidNumber;
-
+			stdr_msgs::RobotMsg getNewRobot(void);
+			
 		public Q_SLOTS:
 			void treeItemClicked ( QTreeWidgetItem * item, int column ); 
 			void updateLaser(void);

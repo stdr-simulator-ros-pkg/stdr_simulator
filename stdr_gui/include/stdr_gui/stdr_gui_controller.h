@@ -60,7 +60,7 @@ namespace stdr_gui{
 			
 			bool 	map_lock_;
 			
-			std::vector<GuiRobot> 	registered_robots_;	
+			std::vector<CGuiRobot> 	registered_robots_;	
 			std::set<std::string> 	my_robots_;	
 			
 			std::map<QString,CLaserVisualisation *> laser_visualizers_;
@@ -86,9 +86,7 @@ namespace stdr_gui{
 			GuiConnector 	gui_connector_;
 			InfoConnector 	info_connector_;
 			MapConnector 	map_connector_;
-			
-			void fixRobotMsgAngles(stdr_msgs::RobotMsg& msg);
-			
+
 			stdr_msgs::LaserSensorMsg getLaserDescription(
 				QString robotName,
 				QString laserName); 

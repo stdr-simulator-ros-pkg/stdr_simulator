@@ -20,29 +20,10 @@
 ******************************************************************************/
 
 #include "stdr_gui/stdr_gui_controller.h"
- #include <QDebug>
-
-class MyQApplication:public QApplication{
-	public:
-	MyQApplication(int &argc,char **argv):
-		QApplication(argc,argv)	
-	{}
-	
-	bool notify(QObject * receiver, QEvent * event){
-		try 
-		{
-			return QApplication::notify(receiver, event);
-		} 
-		catch(std::exception& e) 
-		{
-			qDebug() << "Exception thrown:" << e.what();
-		}
-		return false;
-	}
-};
+#include "stdr_gui/stdr_gui_application.h"
 
 int main(int argc,char **argv){
-	MyQApplication app(argc, argv);
+	stdr_gui::CStdrApplication app(argc, argv);
 	app.setAttribute(Qt::AA_DontShowIconsInMenus, false);
 	ros::init(argc,argv,"stdr_gui_node");
 	stdr_gui::CGuiController con(argc,argv);

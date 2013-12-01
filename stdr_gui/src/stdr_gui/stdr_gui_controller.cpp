@@ -233,7 +233,7 @@ namespace stdr_gui{
 		registered_robots_.clear();
 		all_robots_=msg;
 		for(unsigned int i=0;i<msg.robots.size();i++){
-			registered_robots_.push_back(GuiRobot(msg.robots[i]));
+			registered_robots_.push_back(CGuiRobot(msg.robots[i]));
 		}
 		info_connector_.updateTree(msg);
 		map_lock_=false;
@@ -245,15 +245,16 @@ namespace stdr_gui{
 			usleep(100);
 		map_lock_=true;
 		QPoint pnew=map_connector_.getGlobalPoint(p);
-		gui_connector_.robotCreatorConn.newRobotMsg.initialPose.x=
-			pnew.x()*map_msg_.info.resolution;
-		gui_connector_.robotCreatorConn.newRobotMsg.initialPose.y=
-			pnew.y()*map_msg_.info.resolution;
+		
+		gui_connector_.robotCreatorConn.setInitialPose(QPoint(
+			pnew.x()*map_msg_.info.resolution,
+			pnew.y()*map_msg_.info.resolution));
+			
 		stdr_msgs::RobotIndexedMsg newRobot;
-		fixRobotMsgAngles(gui_connector_.robotCreatorConn.newRobotMsg);
+		gui_connector_.robotCreatorConn.fixRobotMsgAngles();
 		try {
 			newRobot=robot_handler_.spawnNewRobot(
-				gui_connector_.robotCreatorConn.newRobotMsg);
+				gui_connector_.robotCreatorConn.getNewRobot());
 		}
 		catch (ConnectionException& ex) {
 			ROS_ERROR("%s", ex.what());
@@ -321,34 +322,9 @@ namespace stdr_gui{
 		}
 	}
 	
-	void CGuiController::fixRobotMsgAngles(stdr_msgs::RobotMsg& msg)
-	{
-		msg.initialPose.theta=msg.initialPose.theta/180.0*STDR_PI;
-		for(unsigned int i=0;i<msg.laserSensors.size();i++){
-			msg.laserSensors[i].maxAngle=
-				msg.laserSensors[i].maxAngle/180.0*STDR_PI;
-			msg.laserSensors[i].minAngle=
-				msg.laserSensors[i].minAngle/180.0*STDR_PI;
-			msg.laserSensors[i].pose.theta=
-				msg.laserSensors[i].pose.theta/180.0*STDR_PI;
-		}
-		for(unsigned int i=0;i<msg.sonarSensors.size();i++){
-			msg.sonarSensors[i].coneAngle=
-				msg.sonarSensors[i].coneAngle/180.0*STDR_PI;
-			msg.sonarSensors[i].pose.theta=
-				msg.sonarSensors[i].pose.theta/180.0*STDR_PI;
-		}
-		for(unsigned int i=0;i<msg.rfidSensors.size();i++){
-			msg.rfidSensors[i].angleSpan=
-				msg.rfidSensors[i].angleSpan/180.0*STDR_PI;
-			msg.rfidSensors[i].pose.theta=
-				msg.rfidSensors[i].pose.theta/180.0*STDR_PI;
-		}
-	}
-	
 	stdr_msgs::LaserSensorMsg CGuiController::getLaserDescription(
-				QString robotName,
-				QString laserName)
+		QString robotName,
+		QString laserName)
 	{
 		for(unsigned int i=0;i<all_robots_.robots.size();i++){					
 			if(all_robots_.robots[i].name==robotName.toStdString()){
@@ -367,8 +343,8 @@ namespace stdr_gui{
 	}
 				
 	stdr_msgs::SonarSensorMsg CGuiController::getSonarDescription(
-				QString robotName,
-				QString sonarName)
+		QString robotName,
+		QString sonarName)
 	{
 		for(unsigned int i=0;i<all_robots_.robots.size();i++){					
 			if(all_robots_.robots[i].name==robotName.toStdString()){

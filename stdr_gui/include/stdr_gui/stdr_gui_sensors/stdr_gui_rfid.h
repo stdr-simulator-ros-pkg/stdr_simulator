@@ -26,13 +26,17 @@
 #include "stdr_msgs/RfidSensorMsg.h"
 
 namespace stdr_gui{
-	class GuiRfid{
-			std::string _topic;
-			stdr_msgs::RfidSensorMsg _msg;
-			ros::Subscriber _subscriber;
+	class CGuiRfid
+	{
+		private:
+			std::string topic_;
+			stdr_msgs::RfidSensorMsg msg_;
+			ros::Subscriber subscriber_;
+			
 		public:
-			GuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);
-			~GuiRfid(void){}
+			CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);
+			~CGuiRfid(void);
+			
 			void paint(QImage *m);
 	};	
 }

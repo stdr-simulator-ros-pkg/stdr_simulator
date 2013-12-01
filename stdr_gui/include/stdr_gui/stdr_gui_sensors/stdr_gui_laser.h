@@ -27,14 +27,22 @@
 #include "sensor_msgs/LaserScan.h"
 
 namespace stdr_gui{
-	class GuiLaser{
-			std::string _topic;
-			stdr_msgs::LaserSensorMsg _msg;
-			ros::Subscriber _subscriber;
-			sensor_msgs::LaserScan _scan;
-			bool _lock;
+	class CGuiLaser
+	{
+		private:
+			bool lock_;
+			
+			std::string topic_;
+			
+			stdr_msgs::LaserSensorMsg msg_;
+			
+			ros::Subscriber subscriber_;
+			sensor_msgs::LaserScan scan_;
+		
 		public:
-			GuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic);
+			CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic);
+			~CGuiLaser(void);
+			
 			void callback(const sensor_msgs::LaserScan& msg); 
 			void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
 	};	

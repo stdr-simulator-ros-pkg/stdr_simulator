@@ -22,35 +22,51 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_laser.h"
 
 namespace stdr_gui{
-	GuiLaser::GuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic):
-		_msg(msg)
+	CGuiLaser::CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic):
+		msg_(msg)
 	{
-		_topic=baseTopic+"/"+_msg.frame_id;
-		ros::NodeHandle _n;
-		_lock=false;
-		_subscriber = _n.subscribe(_topic.c_str(), 1, &GuiLaser::callback,this);
+		topic_=baseTopic+"/"+msg_.frame_id;
+		ros::NodeHandle n;
+		lock_=false;
+		subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiLaser::callback,this);
 	}
 	
-	void GuiLaser::callback(const sensor_msgs::LaserScan& msg){
-		if(_lock){
+	CGuiLaser::~CGuiLaser(void)
+	{
+		
+	}
+	
+	void CGuiLaser::callback(const sensor_msgs::LaserScan& msg)
+	{
+		if(lock_){
 			return;
 		}
-		_scan=msg;
+		scan_=msg;
 	}
 	
-	void GuiLaser::paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose){	//block spinning?
-		_lock=true;
+	void CGuiLaser::paint(
+		QImage *m,
+		float ocgd,
+		geometry_msgs::Pose2D robotPose)
+	{
+		lock_=true;
 		QPainter painter(m);
 		painter.setPen(QColor(255,0,0,100));
-		for(unsigned int i=0;i<_scan.ranges.size();i++){
+		for(unsigned int i=0;i<scan_.ranges.size();i++){
 			painter.drawLine(
-				robotPose.x/ocgd+_msg.pose.x/ocgd,
-				robotPose.y/ocgd+_msg.pose.y/ocgd,
-				robotPose.x/ocgd+_msg.pose.x/ocgd+_scan.ranges[i]*cos(robotPose.theta+_scan.angle_min+i*_scan.angle_increment)/ocgd,
-				robotPose.y/ocgd+_msg.pose.y/ocgd+_scan.ranges[i]*sin(robotPose.theta+_scan.angle_min+i*_scan.angle_increment)/ocgd
+				robotPose.x/ocgd+msg_.pose.x/ocgd,
+				robotPose.y/ocgd+msg_.pose.y/ocgd,
+				robotPose.x/ocgd+msg_.pose.x/ocgd+
+					scan_.ranges[i]*
+					cos(robotPose.theta+scan_.angle_min+i*scan_.angle_increment)
+					/ocgd,
+				robotPose.y/ocgd+msg_.pose.y/ocgd+
+					scan_.ranges[i]*
+					sin(robotPose.theta+scan_.angle_min+i*scan_.angle_increment)
+					/ocgd
 			);				
 		}
-		_lock=false;
+		lock_=false;
 	}
 }
 

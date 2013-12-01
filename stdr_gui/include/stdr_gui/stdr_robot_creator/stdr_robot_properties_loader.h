@@ -26,11 +26,14 @@
 #include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui{
-	class RobotPropertiesLoader : public QWidget, public Ui_RobotProperties{
-			int argc;
-			char **argv;
+	class CRobotPropertiesLoader : 
+		public QWidget, 
+		public Ui_RobotProperties
+	{
+			int 	argc_;
+			char**	argv_;
 		public:
-			RobotPropertiesLoader(int argc, char **argv);
+			CRobotPropertiesLoader(int argc, char **argv);
 	};	
 }
 

@@ -65,6 +65,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(stdr_gui_node
 	src/stdr_gui/stdr_gui_node.cpp
+	src/stdr_gui/stdr_gui_application.cpp
 	src/stdr_gui/stdr_gui_connector.cpp
 	src/stdr_gui/stdr_gui_loader.cpp
 	src/stdr_gui/stdr_gui_controller.cpp

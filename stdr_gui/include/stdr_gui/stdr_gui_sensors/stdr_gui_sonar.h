@@ -27,13 +27,17 @@
 #include "stdr_msgs/SonarSensorMsg.h"
 
 namespace stdr_gui{
-	class GuiSonar{
-			std::string _topic;
-			stdr_msgs::SonarSensorMsg _msg;
-			ros::Subscriber _subscriber;
+	class CGuiSonar
+	{
+		private:
+			std::string topic_;
+			stdr_msgs::SonarSensorMsg msg_;
+			ros::Subscriber subscriber_;
+		
 		public:
-			GuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic);
-			~GuiSonar(void){}
+			CGuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic);
+			~CGuiSonar(void);
+		
 			void paint(QImage *m);
 	};	
 }

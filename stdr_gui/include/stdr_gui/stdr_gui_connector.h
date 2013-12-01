@@ -45,7 +45,7 @@ namespace stdr_gui{
 		public:
 		
 			GuiLoader loader;							//!< The loader of main GUI QWidget 
-			RobotCreatorConnector robotCreatorConn;		//!< Serves the Qt events of the RobotCreator Widget
+			CRobotCreatorConnector robotCreatorConn;		//!< Serves the Qt events of the RobotCreator Widget
 			
 			/**
 			@brief Deafault contructor
