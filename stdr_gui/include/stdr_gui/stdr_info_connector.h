@@ -25,18 +25,21 @@
 #include "stdr_gui/stdr_info_loader.h"
 
 namespace stdr_gui{
-	class InfoConnector : public QObject{
+	class CInfoConnector : 
+		public QObject
+	{
 		Q_OBJECT
 			
-			int argc;
-			char **argv;
+			int 	argc_;
+			char**	argv_;
 	
 		public:
-			InfoLoader loader;
+			CInfoLoader loader;
 			 
-			InfoConnector(int argc, char **argv);
+			CInfoConnector(int argc, char **argv);
 			void updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg);
 			void updateMapInfo(float width,float height,float ocgd);
+			QWidget* getLoader(void);
 
 		public Q_SLOTS:
 			void treeItemClicked ( QTreeWidgetItem * item, int column ); 

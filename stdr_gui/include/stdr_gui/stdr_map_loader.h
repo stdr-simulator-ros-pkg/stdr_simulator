@@ -26,17 +26,28 @@
 #include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui{
-	class MapLoader : public QWidget, public Ui_mapWidget{
-			int argc;
-			char **argv;
-			QImage *internalImg;
-			std::pair<int,int> checkDimensions(int w,int h);
-			QPoint mapMin,mapMax;
-			int zoom;
+	class CMapLoader : 
+		public QWidget, 
+		public Ui_mapWidget
+	{
+		private:
+			int 	argc_;
+			char**	argv_;
+			int 	zoom_;
+			
+			QImage*	internal_img_;
+			QPoint map_min_;
+			QPoint map_max_;
+			QSize initial_image_size_;
+			
 			QPoint pointUnscaled(QPoint p);
+			std::pair<int,int> checkDimensions(int w,int h);
+			
 		public:
-			QSize initialImageSize;
-			MapLoader(int argc, char **argv);
+			
+			CMapLoader(int argc, char **argv);
+			
+			void setInitialImageSize(QSize s);
 			void resizeEvent(QResizeEvent *e);
 			void updateImage(QImage *img);
 			void drawGrid(QImage *img,float resolution);

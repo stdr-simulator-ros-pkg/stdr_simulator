@@ -83,9 +83,9 @@ namespace stdr_gui{
 			QImage 		initial_map_;
 			QImage 		running_map_;
 
-			GuiConnector 	gui_connector_;
-			InfoConnector 	info_connector_;
-			MapConnector 	map_connector_;
+			CGuiConnector 	gui_connector_;
+			CInfoConnector 	info_connector_;
+			CMapConnector 	map_connector_;
 
 			stdr_msgs::LaserSensorMsg getLaserDescription(
 				QString robotName,

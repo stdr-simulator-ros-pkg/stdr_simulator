@@ -133,8 +133,7 @@ namespace stdr_gui{
 	void CGuiController::setupWidgets(void)
 	{
 		{
-			gui_connector_.loader.gridLayout->addWidget(
-				static_cast<QWidget *>(&info_connector_.loader),0,0,0);	
+			gui_connector_.addToGrid(info_connector_.getLoader(),0,0);
 		}
 		{
 			initial_map_=running_map_=QImage((
@@ -146,11 +145,10 @@ namespace stdr_gui{
 			
 			map_connector_.updateImage(&running_map_);
 			
-			map_connector_.setupLoaderToGrid(
-				gui_connector_.loader.gridLayout,0,1);
+			gui_connector_.addToGrid(map_connector_.getLoader(),0,1);
 
-			gui_connector_.loader.gridLayout->setColumnStretch(1,5);
-			gui_connector_.loader.gridLayout->setColumnStretch(0,2);
+			gui_connector_.setGridColumnStretch(1,5);
+			gui_connector_.setGridColumnStretch(0,2);
 		}
 	}
 	
@@ -159,7 +157,7 @@ namespace stdr_gui{
 		if ( ! ros::master::check() ) {
 			return false;
 		}
-		gui_connector_.loader.show();
+		gui_connector_.show();
 
 		initializeCommunications();
 		boost::thread spinThread(&spinThreadFunction);
@@ -287,9 +285,9 @@ namespace stdr_gui{
 
 		map_connector_.updateImage(&(running_map_));
 		
-		gui_connector_.loader.statusbar->showMessage(
+		gui_connector_.setStatusBarMessage(
 			QString("Time elapsed : ")+
-			getLiteralTime(elapsed_time_.elapsed()),0);
+			getLiteralTime(elapsed_time_.elapsed()));
 		map_lock_=false;
 		
 		//Check if all visualisers are active
@@ -339,7 +337,8 @@ namespace stdr_gui{
 					}
 				}
 			}
-		}			
+		}
+		return stdr_msgs::LaserSensorMsg();			
 	}
 				
 	stdr_msgs::SonarSensorMsg CGuiController::getSonarDescription(
@@ -359,7 +358,8 @@ namespace stdr_gui{
 					}
 				}
 			}
-		}				
+		}	
+		return stdr_msgs::SonarSensorMsg();						
 	}
 	
 	void CGuiController::laserVisualizerClicked(

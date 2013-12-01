@@ -31,20 +31,24 @@ namespace stdr_gui{
 	 @class GuiConnector
 	 @brief Serves the Qt events of the main GUI window. Inherits from QObject
 	 **/ 
-	class GuiConnector:public QObject{
+	class CGuiConnector:
+		public QObject
+	{
 		Q_OBJECT
 		
 		private:
 		
-			int argc; 			//!< Number of input arguments
-			char **argv;		//!< Input arguments
-			bool _mapLoaded;	//!< True if any map is loaded from server
+			int 	argc_; 			//!< Number of input arguments
+			char**	argv_;			//!< Input arguments
+			bool 	map_loaded_;	//!< True if any map is loaded from server
 			
-			bool gridEnabled;
+			bool 	grid_enabled_;
+			
+			CGuiLoader loader_;		//!< The loader of main GUI QWidget 
 			
 		public:
 		
-			GuiLoader loader;							//!< The loader of main GUI QWidget 
+									
 			CRobotCreatorConnector robotCreatorConn;		//!< Serves the Qt events of the RobotCreator Widget
 			
 			/**
@@ -53,7 +57,7 @@ namespace stdr_gui{
 			@param argv [char **] Input arguments
 			@return void
 			**/
-			GuiConnector(int argc, char **argv);
+			CGuiConnector(int argc, char **argv);
 			
 			/**
 			@brief Setter of _mapLoaded variable
@@ -63,6 +67,14 @@ namespace stdr_gui{
 			void setMapLoaded(bool mapLoaded);
 			
 			bool isGridEnabled(void);
+			
+			void addToGrid(QWidget *w,int row,int column);
+			
+			void setGridColumnStretch(int cell,int stretch);
+			
+			void show(void);
+			
+			void setStatusBarMessage(QString s);
 
 		public Q_SLOTS:
 		

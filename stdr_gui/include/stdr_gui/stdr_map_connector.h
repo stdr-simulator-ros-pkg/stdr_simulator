@@ -26,32 +26,37 @@
 
 namespace stdr_gui{
 	
-	enum StdrMapState{
+	enum EStdrMapState
+	{
 		NORMAL,
 		ZOOMIN,
 		ZOOMOUT,
 		SETPLACE
 	};
 	
-	class MapConnector : public QObject{
+	class CMapConnector : 
+		public QObject
+	{
 		Q_OBJECT
-			int 		_argc;
-			char** 		_argv;
-			QCursor 	_zoomInCursor;
-			QCursor 	_zoomOutCursor;
+			int 		argc_;
+			char** 		argv_;
+			QCursor 	zoom_in_cursor_;
+			QCursor 	zoom_out_cursor_;
 			
-			StdrMapState 	_mapState;
-			MapLoader 		_loader;
+			EStdrMapState 	map_state_;
+			CMapLoader 		loader_;
 		
 		public:
-			MapConnector(int argc, char **argv);
+			CMapConnector(int argc, char **argv);
+			~CMapConnector(void);
+			
 			void updateImage(QImage *img);	
-			void setupLoaderToGrid(QGridLayout *layout,int row,int column);
 			void setInitialImageSize(QSize s);
 			void updateZoom(QPoint p,bool z);
 			QPoint getGlobalPoint(QPoint p);
 			void drawGrid(QImage *img,float resolution);
 			QPoint mapToGlobal(QPoint p);
+			QWidget* getLoader(void);
 			
 		public Q_SLOTS:
 			bool eventFilter( QObject* watched, QEvent* event);
