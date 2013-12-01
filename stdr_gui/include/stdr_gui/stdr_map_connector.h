@@ -35,22 +35,25 @@ namespace stdr_gui{
 	
 	class MapConnector : public QObject{
 		Q_OBJECT
-			int argc;
-			char **argv;
-			QCursor zoomInCursor;
-			QCursor zoomOutCursor;
+			int 		_argc;
+			char** 		_argv;
+			QCursor 	_zoomInCursor;
+			QCursor 	_zoomOutCursor;
 			
-			StdrMapState mapState;
-			
+			StdrMapState 	_mapState;
+			MapLoader 		_loader;
+		
 		public:
-			MapLoader loader;
 			MapConnector(int argc, char **argv);
-			
 			void updateImage(QImage *img);	
-			
+			void setupLoaderToGrid(QGridLayout *layout,int row,int column);
+			void setInitialImageSize(QSize s);
+			void updateZoom(QPoint p,bool z);
+			QPoint getGlobalPoint(QPoint p);
+			void drawGrid(QImage *img,float resolution);
+			QPoint mapToGlobal(QPoint p);
 			
 		public Q_SLOTS:
-		
 			bool eventFilter( QObject* watched, QEvent* event);
 			void serveImage(QImage *img);
 			void setCursorZoomIn(bool state);

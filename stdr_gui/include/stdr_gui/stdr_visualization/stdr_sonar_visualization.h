@@ -22,19 +22,28 @@
 #ifndef STDR_SONAR_VISUALIZATION
 #define STDR_SONAR_VISUALIZATION
 
-#include "ui_sonarVisualization.h"
 #include "stdr_gui/stdr_tools.h"
+#include "ui_sonarVisualization.h"
 
 namespace stdr_gui{
-	class SonarVisualisation : public QWidget, public Ui_sonarVisualization{
+	class CSonarVisualisation : 
+		public QWidget, 
+		public Ui_sonarVisualization
+	{
 		private:
-			QString name;
-			bool active;
-			stdr_msgs::SonarSensorMsg _msg;
+			bool active_;
+
+			QString name_;
+
+			stdr_msgs::SonarSensorMsg msg_;
+		
 		public:
+			CSonarVisualisation(QString name);
+			~CSonarVisualisation(void);
+			
 			bool getActive(void);
-			void setSonar(stdr_msgs::SonarSensorMsg& msg);
-			SonarVisualisation(QString name);
+			void setSonar(stdr_msgs::SonarSensorMsg msg);
+			
 			void destruct(void);
 			void closeEvent(QCloseEvent *event);
 	};	

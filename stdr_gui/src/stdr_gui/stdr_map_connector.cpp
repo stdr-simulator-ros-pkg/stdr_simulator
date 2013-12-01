@@ -24,46 +24,66 @@
 namespace stdr_gui{
 	MapConnector::MapConnector(int argc, char **argv):
 		QObject(),
-		loader(argc,argv)
+		_loader(argc,argv)
 	{
-		this->argc=argc;
-		this->argv=argv;
+		_argc=argc;
+		_argv=argv;
 		
-		mapState=NORMAL;
+		_mapState=NORMAL;
 		
-		loader.map->setScaledContents(true);
+		_loader.map->setScaledContents(true);
 		
-		loader.map->installEventFilter(this);
+		_loader.map->installEventFilter(this);
 		
 		QObject::connect(this,SIGNAL(signalUpdateImage(QImage *)),this, SLOT(serveImage(QImage *)));
 		
 		QPixmap p((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_in.png")).c_str());
-		zoomInCursor=QCursor(p.scaled(20,20));
+		_zoomInCursor=QCursor(p.scaled(20,20));
 		p=QPixmap((getRosPackagePath("stdr_gui")+std::string("/resources/images/zoom_out.png")).c_str());
-		zoomOutCursor=QCursor(p.scaled(20,20));
+		_zoomOutCursor=QCursor(p.scaled(20,20));
+	}
+	
+	void MapConnector::setupLoaderToGrid(QGridLayout *layout,int row,int column){
+		layout->addWidget(static_cast<QWidget *>(&_loader),row,column,0);	
+	}
+	
+	void MapConnector::setInitialImageSize(QSize s){
+		_loader.initialImageSize=s;
+	}
+	
+	void MapConnector::updateZoom(QPoint p,bool z){
+		_loader.updateZoom(p,z);
+	}
+	
+	QPoint MapConnector::getGlobalPoint(QPoint p){
+		return _loader.getGlobalPoint(p);
+	}
+	
+	void MapConnector::drawGrid(QImage *img,float resolution){
+		_loader.drawGrid(img,resolution);
 	}
 
 	bool MapConnector::eventFilter( QObject* watched, QEvent* event ) {
-		if(watched==loader.map){
+		if(watched==_loader.map){
 			if(event->type() == QEvent::MouseButtonPress){
 				const QMouseEvent* const me = static_cast<const QMouseEvent*>( event );
 				QPoint p=me->pos();
 				if(me->button()==Qt::RightButton){
-					if(mapState==NORMAL){
+					if(_mapState==NORMAL){
 						Q_EMIT itemClicked(p,Qt::RightButton);
 					}
 				}
 				else if(me->button()==Qt::LeftButton){
-					if(mapState==ZOOMIN)
+					if(_mapState==ZOOMIN)
 						Q_EMIT zoomInPressed(p);
-					else if(mapState==ZOOMOUT)
+					else if(_mapState==ZOOMOUT)
 						Q_EMIT zoomOutPressed(p);
-					else if(mapState==SETPLACE){
-						mapState=NORMAL;
-						loader.map->setCursor(QCursor(Qt::CrossCursor));
+					else if(_mapState==SETPLACE){
+						_mapState=NORMAL;
+						_loader.map->setCursor(QCursor(Qt::CrossCursor));
 						Q_EMIT robotPlaceSet(p);
 					}
-					else if(mapState==NORMAL){
+					else if(_mapState==NORMAL){
 						Q_EMIT itemClicked(p,Qt::LeftButton);
 					}
 				}
@@ -73,43 +93,47 @@ namespace stdr_gui{
 	}
 
 	void MapConnector::updateImage(QImage *img){
-		signalUpdateImage(img);
+		Q_EMIT signalUpdateImage(img);
 	}
 	
 	void MapConnector::serveImage(QImage *img){
-		loader.updateImage(img);
+		_loader.updateImage(img);
+	}
+	
+	QPoint MapConnector::mapToGlobal(QPoint p){
+		return _loader.mapToGlobal(p);
 	}
 	
 	void MapConnector::setCursorZoomIn(bool state){
 		if(state){
-			mapState=ZOOMIN;
-			loader.map->setCursor(zoomInCursor);
+			_mapState=ZOOMIN;
+			_loader.map->setCursor(_zoomInCursor);
 		}
 		else{
-			mapState=NORMAL;
-			loader.map->setCursor(QCursor(Qt::CrossCursor));
+			_mapState=NORMAL;
+			_loader.map->setCursor(QCursor(Qt::CrossCursor));
 		}
 	}
 	
 	void MapConnector::setCursorZoomOut(bool state){
 		if(state){
-			mapState=ZOOMOUT;
-			loader.map->setCursor(zoomOutCursor);
+			_mapState=ZOOMOUT;
+			_loader.map->setCursor(_zoomOutCursor);
 		}
 		else{
-			mapState=NORMAL;
-			loader.map->setCursor(QCursor(Qt::CrossCursor));
+			_mapState=NORMAL;
+			_loader.map->setCursor(QCursor(Qt::CrossCursor));
 		}
 	}
 	
 	void MapConnector::setCursorAdjusted(bool state){
-		loader.resetZoom();
-		mapState=NORMAL;
-		loader.map->setCursor(QCursor(Qt::CrossCursor));
+		_loader.resetZoom();
+		_mapState=NORMAL;
+		_loader.map->setCursor(QCursor(Qt::CrossCursor));
 	}
 	
 	void MapConnector::waitForPlace(void){
-		mapState=SETPLACE;
-		loader.map->setCursor(Qt::PointingHandCursor);
+		_mapState=SETPLACE;
+		_loader.map->setCursor(Qt::PointingHandCursor);
 	}
 }

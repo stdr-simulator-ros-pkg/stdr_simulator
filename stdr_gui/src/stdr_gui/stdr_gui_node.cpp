@@ -45,7 +45,7 @@ int main(int argc,char **argv){
 	MyQApplication app(argc, argv);
 	app.setAttribute(Qt::AA_DontShowIconsInMenus, false);
 	ros::init(argc,argv,"stdr_gui_node");
-	stdr_gui::GuiController con(argc,argv);
+	stdr_gui::CGuiController con(argc,argv);
 	con.init();
 	app.exec();
 	return 0;
