@@ -29,29 +29,35 @@
 
 namespace stdr_gui{
 	
-	class GuiRobot{
-			std::vector<GuiLaser> _lasers;
-			std::vector<GuiSonar> _sonars;
-			std::vector<GuiRfid> _rfids;
+	class CGuiRobot
+	{
+		private:
+			bool show_label_;
+			bool show_circles_;
+			bool robot_initialized_;
 			
-			std::string frameId_;
+			float radius_;
+			float resolution_;
 			
-			geometry_msgs::Pose2D initialPose;
-			geometry_msgs::Pose2D currentPose;
-			float resolution;
-			stdr_msgs::FootprintMsg footprint;
-			float radius;
+			std::vector<CGuiLaser*> 	lasers_;
+			std::vector<CGuiSonar*> 	sonars_;
+			std::vector<CGuiRfid*> 		rfids_;
+			
+			std::string frame_id_;
+			
+			geometry_msgs::Pose2D initial_pose_;
+			geometry_msgs::Pose2D current_pose_;
+			
+			stdr_msgs::FootprintMsg footprint_;
+			
 			void drawSelf(QImage *m);
-			tf::TransformListener listener;
-			bool showLabel;
-			bool showCircles;
+			
 		public:
-			GuiRobot(void);
-			GuiRobot(const GuiRobot& other);
-			GuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
-			~GuiRobot(void);
+			CGuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
+			~CGuiRobot(void);
+			
 			std::string getFrameId(void);
-			void draw(QImage *m,float ocgd);
+			void draw(QImage *m,float ocgd,tf::TransformListener *_listener);
 			void drawLabel(QImage *m,float ocgd);
 			bool checkEventProximity(QPoint p);
 			void setShowLabel(bool b);

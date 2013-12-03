@@ -22,10 +22,10 @@
 #include "stdr_gui/stdr_robot_creator/stdr_robot_properties_loader.h"
 
 namespace stdr_gui{
-	RobotPropertiesLoader::RobotPropertiesLoader(int argc, char **argv){
-		this->argc=argc;
-		this->argv=argv;
-		
+	CRobotPropertiesLoader::CRobotPropertiesLoader(int argc, char **argv):
+		argc_(argc),
+		argv_(argv)
+	{
 		setupUi(this);
 	}
 }

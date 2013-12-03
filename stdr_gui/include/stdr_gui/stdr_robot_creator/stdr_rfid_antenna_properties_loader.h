@@ -26,11 +26,16 @@
 #include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui{
-	class RfidAntennaPropertiesLoader : public QWidget, public Ui_RfidAntennaProperties{
-			int argc;
-			char **argv;
+	class CRfidAntennaPropertiesLoader : 
+		public QWidget, 
+		public Ui_RfidAntennaProperties
+	{
+		private:
+			int 	argc_;
+			char**	argv_;
 		public:
-			RfidAntennaPropertiesLoader(int argc, char **argv);
+			CRfidAntennaPropertiesLoader(int argc, char **argv);
+			~CRfidAntennaPropertiesLoader(void);
 	};	
 }
 

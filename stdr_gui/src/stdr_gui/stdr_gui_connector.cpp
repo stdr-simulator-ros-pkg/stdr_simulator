@@ -22,82 +22,148 @@
 #include "stdr_gui/stdr_gui_connector.h"
 
 namespace stdr_gui{
-	GuiConnector::GuiConnector(int argc, char **argv):
+	CGuiConnector::CGuiConnector(int argc, char **argv):
 		QObject(),
-		loader(argc,argv),
-		robotCreatorConn(argc,argv)
+		loader_(argc,argv),
+		robotCreatorConn(argc,argv),
+		argc_(argc),
+		argv_(argv)
 	{
-		this->argc=argc;
-		this->argv=argv;
+		QObject::connect(
+			loader_.actionProperties,SIGNAL(triggered(bool)),
+			this,SLOT(actionPropertiesTriggered()));
 		
-		QObject::connect(loader.actionProperties,SIGNAL(triggered(bool)),this,SLOT(actionPropertiesTriggered()));
-		QObject::connect(loader.actionAbout_STDR_Simulator,SIGNAL(triggered(bool)),this,SLOT(actionAboutTriggered()));
-		QObject::connect(loader.actionExit,SIGNAL(triggered(bool)),this,SLOT(actionExitTriggered()));
-		QObject::connect(loader.actionLoadMap,SIGNAL(triggered(bool)),this,SLOT(actionLoadMapTriggered()));
-		QObject::connect(loader.actionNewRobot,SIGNAL(triggered(bool)),this,SLOT(actionNewRobotTriggered()));
-		QObject::connect(loader.actionZoomIn,SIGNAL(triggered(bool)),this,SLOT(actionZoomInTriggered()));
-		QObject::connect(loader.actionZoomOut,SIGNAL(triggered(bool)),this,SLOT(actionZoomOutTriggered()));
-		QObject::connect(loader.actionAdjusted,SIGNAL(triggered(bool)),this,SLOT(actionAdjustedTriggered()));
-		QObject::connect(loader.actionGrid,SIGNAL(triggered(bool)),this,SLOT(actionGridTriggered()));
+		QObject::connect(
+			loader_.actionAbout_STDR_Simulator,SIGNAL(triggered(bool)),
+			this,SLOT(actionAboutTriggered()));
 		
-		gridEnabled=true;
+		QObject::connect(
+			loader_.actionExit,SIGNAL(triggered(bool)),
+			this,SLOT(actionExitTriggered()));
+			
+		QObject::connect(
+			loader_.actionLoadMap,SIGNAL(triggered(bool)),
+			this,SLOT(actionLoadMapTriggered()));
+		
+		QObject::connect(
+			loader_.actionNewRobot,SIGNAL(triggered(bool)),
+			this,SLOT(actionNewRobotTriggered()));
+			
+		QObject::connect(
+			loader_.actionZoomIn,SIGNAL(triggered(bool)),
+			this,SLOT(actionZoomInTriggered()));
+		
+		QObject::connect(
+			loader_.actionZoomOut,SIGNAL(triggered(bool)),
+			this,SLOT(actionZoomOutTriggered()));
+		
+		QObject::connect(
+			loader_.actionAdjusted,SIGNAL(triggered(bool)),
+			this,SLOT(actionAdjustedTriggered()));
+		
+		QObject::connect(
+			loader_.actionGrid,SIGNAL(triggered(bool)),
+			this,SLOT(actionGridTriggered()));
+		
+		grid_enabled_=true;
 	}
 	
-	void GuiConnector::actionExitTriggered(void){
+	void CGuiConnector::actionExitTriggered(void)
+	{
 		ROS_INFO("Exiting GUI...");
 		exit(0);
 	}
 
-	void GuiConnector::actionPropertiesTriggered(void){
-		QMessageBox msg(static_cast<QMainWindow *>(&this->loader));
+	void CGuiConnector::actionPropertiesTriggered(void)
+	{
+		QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
 		msg.setWindowTitle(QString("Not finished yet :/"));
 		msg.exec();
 	}
 	
-	void GuiConnector::actionLoadMapTriggered(void){
-		QString fileName = QFileDialog::getOpenFileName(&loader,tr("Load map"), QString().fromStdString(getRosPackagePath("stdr_gui")), tr("Yaml Files (*.yaml)"));
+	void CGuiConnector::actionLoadMapTriggered(void)
+	{
+		QString fileName = QFileDialog::getOpenFileName(
+			&loader_,
+			tr("Load map"), 
+			QString().fromStdString(getRosPackagePath("stdr_gui")), 
+			tr("Yaml Files (*.yaml)"));
 	}
 	
-	void GuiConnector::actionAboutTriggered(void){
-		QMessageBox msg(static_cast<QMainWindow *>(&this->loader));
+	void CGuiConnector::actionAboutTriggered(void)
+	{
+		QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
 		msg.setWindowTitle(QString("STDR Simulator - About"));
-		msg.setText(QString("Simple Two Dimentional Robot Simulator (STDR Simulator) is a multi-robot simulator created in QT4. Its goals are : \n1) to simulate easily a single robot or a swarm in a 2D environment, \n2) to be totally parameterizable \n3) to be ROS compliant.\n\nDevelopers:\nManos Tsardoulias, etsardou@gmail.com\nAris Thallas, aris.thallas@gmail.com\nChris Zalidis, zalidis@gmail.com"));
+		msg.setText(QString("Simple Two Dimentional Robot Simulator \
+		(STDR Simulator) is a multi-robot simulator created in QT4. Its goals \
+		are : \n1) to simulate easily a single robot or a swarm in a 2D \
+		environment, \n2) to be totally parameterizable \n3) to be ROS \
+		compliant.\n\nDevelopers:\nManos Tsardoulias, etsardou@gmail.com\
+		\nAris Thallas, aris.thallas@gmail.com\nChris Zalidis, \
+		zalidis@gmail.com"));
 		msg.exec();
 	}
 	
-	void GuiConnector::actionNewRobotTriggered(void){
+	void CGuiConnector::actionNewRobotTriggered(void)
+	{
 		robotCreatorConn.initialise();
 	}
 	
-	void GuiConnector::setMapLoaded(bool mapLoaded){
-		_mapLoaded=mapLoaded;
+	void CGuiConnector::setMapLoaded(bool mapLoaded)
+	{
+		map_loaded_=mapLoaded;
 	}
 	
-	void GuiConnector::actionZoomInTriggered(void){
+	void CGuiConnector::actionZoomInTriggered(void)
+	{
 		//~ if(!_mapLoaded) return;
-		Q_EMIT setZoomInCursor(loader.actionZoomIn->isChecked());
-		loader.actionZoomOut->setChecked(false);
-		loader.actionAdjusted->setChecked(false);
+		Q_EMIT setZoomInCursor(loader_.actionZoomIn->isChecked());
+		loader_.actionZoomOut->setChecked(false);
+		loader_.actionAdjusted->setChecked(false);
 	}
-	void GuiConnector::actionZoomOutTriggered(void){
+	void CGuiConnector::actionZoomOutTriggered(void)
+	{
 		//~ if(!_mapLoaded) return;
-		Q_EMIT setZoomOutCursor(loader.actionZoomOut->isChecked());
-		loader.actionZoomIn->setChecked(false);
-		loader.actionAdjusted->setChecked(false);
+		Q_EMIT setZoomOutCursor(loader_.actionZoomOut->isChecked());
+		loader_.actionZoomIn->setChecked(false);
+		loader_.actionAdjusted->setChecked(false);
 	}
 	
-	void GuiConnector::actionAdjustedTriggered(void){
+	void CGuiConnector::actionAdjustedTriggered(void)
+	{
 		//~ if(!_mapLoaded) return;
-		Q_EMIT setAdjustedCursor(loader.actionAdjusted->isChecked());
-		loader.actionZoomIn->setChecked(false);
-		loader.actionZoomOut->setChecked(false);
+		Q_EMIT setAdjustedCursor(loader_.actionAdjusted->isChecked());
+		loader_.actionZoomIn->setChecked(false);
+		loader_.actionZoomOut->setChecked(false);
 	}
 	
-	void GuiConnector::actionGridTriggered(void){
-		gridEnabled=!gridEnabled;
+	void CGuiConnector::actionGridTriggered(void)
+	{
+		grid_enabled_=!grid_enabled_;
 	}
 	
-	bool GuiConnector::isGridEnabled(void){
-		return gridEnabled;
+	bool CGuiConnector::isGridEnabled(void)
+	{
+		return grid_enabled_;
+	}
+	
+	void CGuiConnector::addToGrid(QWidget *w,int row,int column)
+	{
+		loader_.gridLayout->addWidget(w,row,column,0);	
+	}
+	
+	void CGuiConnector::setGridColumnStretch(int cell,int stretch)
+	{
+		loader_.gridLayout->setColumnStretch(cell,stretch);
+	}
+	
+	void CGuiConnector::show(void)
+	{
+		loader_.show();
+	}
+	
+	void CGuiConnector::setStatusBarMessage(QString s)
+	{
+		loader_.statusbar->showMessage(s,0);
 	}
 }

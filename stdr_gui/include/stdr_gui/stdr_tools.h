@@ -68,19 +68,11 @@
 #include <stdr_msgs/RobotMsg.h>
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/Point.h>
+#include <sensor_msgs/LaserScan.h>
 
 #define STDR_PI 3.14159
 
 namespace stdr_gui{
-	
-	enum STDR_ITEM{
-		NOTHING,
-		ROBOT,
-		RFIDTAG,
-		HEAT,
-		CO2
-	};
-	
 	std::string getRosPackagePath(std::string package);
 	QString getLiteralTime(int ms);
 }

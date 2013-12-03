@@ -24,16 +24,15 @@
 namespace stdr_gui{
 	
 	
-	RobotCreatorLoader::RobotCreatorLoader(int argc, char **argv):
+	CRobotCreatorLoader::CRobotCreatorLoader(int argc, char **argv):
 		robotPropLoader(argc,argv),
 		laserPropLoader(argc,argv),
 		sonarPropLoader(argc,argv),
 		kinematicPropLoader(argc,argv),
-		rfidAntennaPropLoader(argc,argv)
+		rfidAntennaPropLoader(argc,argv),
+		argc_(argc),
+		argv_(argv)
 	{
-		this->argc=argc;
-		this->argv=argv;
-		
 		setupUi(this);
 		
 		setupInitialTree();
@@ -43,10 +42,17 @@ namespace stdr_gui{
 		robotPreviewImage.fill(QColor(220,220,220,1));
 	}
 	
-	void RobotCreatorLoader::setupInitialTree(void){
-		addIcon=QIcon(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/add_icon.png")).c_str()));
-		editIcon=QIcon(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/edit_icon.png")).c_str()));
-		removeIcon=QIcon(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/remove_icon.png")).c_str()));
+	void CRobotCreatorLoader::setupInitialTree(void)
+	{
+		addIcon=QIcon(QString::fromUtf8((
+			getRosPackagePath("stdr_gui")+
+			std::string("/resources/images/add_icon.png")).c_str()));
+		editIcon=QIcon(QString::fromUtf8((
+			getRosPackagePath("stdr_gui")+
+			std::string("/resources/images/edit_icon.png")).c_str()));
+		removeIcon=QIcon(QString::fromUtf8((
+			getRosPackagePath("stdr_gui")+
+			std::string("/resources/images/remove_icon.png")).c_str()));
 		
 		robotTreeWidget->setColumnWidth(0,150);
 		robotTreeWidget->setColumnWidth(1,60);
@@ -85,5 +91,4 @@ namespace stdr_gui{
 		rfidAntennasNode.setExpanded(true);
 		kinematicNode.setExpanded(true);
 	}
-
 }

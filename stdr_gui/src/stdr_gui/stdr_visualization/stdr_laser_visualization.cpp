@@ -22,14 +22,35 @@
 #include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
 
 namespace stdr_gui{
-	LaserVisualisation::LaserVisualisation(QString name){
-		this->name=name;
+	CLaserVisualisation::CLaserVisualisation(QString name,float resolution):
+		name_(name),
+		resolution_(resolution)
+	{
 		setupUi(this);
-		setWindowTitle(name);
-		active=true;
+		setWindowTitle(name_);
+		active_=true;
+		
+		ros::NodeHandle n;
+		
+		subscriber_ = n.subscribe(
+			name_.toStdString().c_str(), 
+			1, 
+			&CLaserVisualisation::callback,
+			this);
+		
+		void_image_=QImage(
+			laserImage->width(),
+			laserImage->height(),
+			QImage::Format_RGB32);
+			
+		void_image_.fill(QColor(255,255,255,255));
 	}
 	
-	void LaserVisualisation::destruct(void){
+	CLaserVisualisation::~CLaserVisualisation(void){
+		
+	}
+	
+	void CLaserVisualisation::destruct(void){
 		hide();
 		delete laserMean;
 		delete laserMax;
@@ -37,18 +58,50 @@ namespace stdr_gui{
 		delete laserImage;
 	}
 	
-	void LaserVisualisation::closeEvent(QCloseEvent *event){
+	void CLaserVisualisation::closeEvent(QCloseEvent *event){
 		destruct();
-		active=false;
+		active_=false;
+		subscriber_.shutdown();
 	}
 	
-	bool LaserVisualisation::getActive(void){
-		return active;
+	bool CLaserVisualisation::getActive(void){
+		return active_;
 	}
 	
-	void LaserVisualisation::setLaser(stdr_msgs::LaserSensorMsg& msg){
-		_msg=msg;
+	void CLaserVisualisation::setLaser(stdr_msgs::LaserSensorMsg msg){
+		msg_=msg;
 		laserMax->setText(QString().setNum(msg.maxRange)+QString(" m"));
 		laserMin->setText(QString().setNum(msg.minRange)+QString(" m"));
+	}
+	
+	void CLaserVisualisation::callback(const sensor_msgs::LaserScan& msg){
+		scan_=msg;
+	}
+	
+	void CLaserVisualisation::paint(void){
+		internal_image_=void_image_;
+		QPainter painter(&internal_image_);
+		painter.setPen(QColor(255,0,0,255));
+		float mean=0;
+		for(unsigned int i=0;i<scan_.ranges.size();i++){
+			mean+=scan_.ranges[i];
+			painter.drawLine(
+				internal_image_.width()/2,
+				internal_image_.height()/2,
+				internal_image_.width()/2+
+					scan_.ranges[i]/msg_.maxRange*
+						cos(scan_.angle_min+((float)i)*scan_.angle_increment)*
+						internal_image_.width()/2,
+				internal_image_.height()/2+
+					scan_.ranges[i]/msg_.maxRange*
+						sin(scan_.angle_min+((float)i)*scan_.angle_increment)*
+						internal_image_.width()/2
+			);				
+		}
+		laserMean->setText(
+			QString().setNum(mean/scan_.ranges.size())+
+			QString(" m"));
+		laserImage->setPixmap(
+			QPixmap().fromImage(internal_image_.mirrored(false,true)));
 	}
 }

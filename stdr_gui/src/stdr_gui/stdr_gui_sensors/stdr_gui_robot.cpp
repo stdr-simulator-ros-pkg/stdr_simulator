@@ -22,104 +22,137 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 
 namespace stdr_gui{
-	GuiRobot::GuiRobot(const stdr_msgs::RobotIndexedMsg& msg){
-		initialPose=msg.robot.initialPose;
-		currentPose=initialPose;
-		footprint=msg.robot.footprint;
-		radius=msg.robot.footprint.radius;
-		frameId_=msg.name;
-		showLabel=true;
-		showCircles=false;
-		// Setup rest of sensors
+
+	CGuiRobot::CGuiRobot(const stdr_msgs::RobotIndexedMsg& msg)
+	{
+		robot_initialized_=false;
+		initial_pose_=msg.robot.initialPose;
+		current_pose_=initial_pose_;
+		footprint_=msg.robot.footprint;
+		radius_=msg.robot.footprint.radius;
+		frame_id_=msg.name;
+		show_label_=true;
+		show_circles_=false;
+		for(unsigned int i=0;i<msg.robot.laserSensors.size();i++){
+			CGuiLaser *l=new CGuiLaser(msg.robot.laserSensors[i],frame_id_);
+			lasers_.push_back(l);
+		}
+		robot_initialized_=true;
 	}
-	
-	GuiRobot::GuiRobot(void){}
-	
-	GuiRobot::GuiRobot(const GuiRobot& other){
-		this->_lasers=other._lasers;
-		this->_sonars=other._sonars;
-		this->_rfids=other._rfids;
-		this->initialPose=other.initialPose;
-		this->currentPose=other.currentPose;
-		this->footprint=other.footprint;
-		this->radius=other.radius;
-		this->frameId_=other.frameId_;
-		showLabel=true;
-		showCircles=false;
-	}
-	
-	void GuiRobot::draw(QImage *m,float ocgd){
-		resolution=ocgd;
+
+	void CGuiRobot::draw(QImage *m,float ocgd,tf::TransformListener *listener)
+	{
+		if(!robot_initialized_) 
+			return;
+		resolution_=ocgd;
 		tf::StampedTransform transform;
+		
 		try{
-			listener.lookupTransform("map", frameId_.c_str(),ros::Time(0), transform);
+			listener->lookupTransform("map", 
+				frame_id_.c_str(),ros::Time(0), transform);
 		}
 		catch (tf::TransformException ex){
 			ROS_DEBUG("%s",ex.what());
 		}
 		tfScalar roll,pitch,yaw;
-		currentPose.x=transform.getOrigin().x();
-		currentPose.y=transform.getOrigin().y();
+		current_pose_.x=transform.getOrigin().x();
+		current_pose_.y=transform.getOrigin().y();
 		transform.getBasis().getRPY(roll,pitch,yaw);
-		currentPose.theta=yaw;
+		current_pose_.theta=yaw;
 		drawSelf(m);
-		// Call draw for sensors
+		for(unsigned int i=0;i<lasers_.size();i++){
+			lasers_[i]->paint(m,resolution_,current_pose_);
+		}
 	}
-	void GuiRobot::drawSelf(QImage *m){
+	
+	void CGuiRobot::drawSelf(QImage *m)
+	{
 		QPainter painter(m);
 		painter.setPen(Qt::blue);
-		painter.drawEllipse((currentPose.x-radius/2)/resolution,(currentPose.y-radius/2)/resolution,radius/resolution,radius/resolution);
-		painter.drawLine(	currentPose.x/resolution,
-							currentPose.y/resolution,
-							currentPose.x/resolution+radius/resolution*1.05*cos(currentPose.theta),
-							currentPose.y/resolution+radius/resolution*1.05*sin(currentPose.theta));
 		
-		if(showCircles){
+		painter.drawEllipse(
+			(current_pose_.x-radius_/2)/resolution_,
+			(current_pose_.y-radius_/2)/resolution_,
+			radius_/resolution_,
+			radius_/resolution_);
+			
+		painter.drawLine(	
+			current_pose_.x/resolution_,
+			current_pose_.y/resolution_,
+			current_pose_.x/resolution_+
+				radius_/resolution_*1.05*cos(current_pose_.theta),
+			current_pose_.y/resolution_+
+				radius_/resolution_*1.05*sin(current_pose_.theta));
+		
+		if(show_circles_){
 			painter.setPen(QColor(255,0,0,150));
-			painter.drawEllipse((currentPose.x-1.0/2)/resolution,(currentPose.y-1.0/2)/resolution,1.0/resolution,1.0/resolution);
-			painter.drawEllipse((currentPose.x-2.0/2)/resolution,(currentPose.y-2.0/2)/resolution,2.0/resolution,2.0/resolution);
-			painter.drawEllipse((currentPose.x-3.0/2)/resolution,(currentPose.y-3.0/2)/resolution,3.0/resolution,3.0/resolution);
-			painter.drawEllipse((currentPose.x-4.0/2)/resolution,(currentPose.y-4.0/2)/resolution,4.0/resolution,4.0/resolution);
-			painter.drawEllipse((currentPose.x-5.0/2)/resolution,(currentPose.y-5.0/2)/resolution,5.0/resolution,5.0/resolution);
+			for(unsigned int i=0;i<5;i++){
+				painter.drawEllipse(
+					(current_pose_.x-(i+1.0)/2.0)/resolution_,
+					(current_pose_.y-(i+1.0)/2.0)/resolution_,
+					(i+1.0)/resolution_,
+					(i+1.0)/resolution_);
+			}
 		}
+	}
+	
+	bool CGuiRobot::checkEventProximity(QPoint p)
+	{
+		float dx=p.x()*resolution_-current_pose_.x;
+		float dy=p.y()*resolution_-current_pose_.y;
+		float dist=sqrt(pow(dx,2)+pow(dy,2));
+		return dist<=radius_;
+	}
+	
+	CGuiRobot::~CGuiRobot(void)
+	{
 		
 	}
 	
-	bool GuiRobot::checkEventProximity(QPoint p){
-		float dx=p.x()*resolution-currentPose.x;
-		float dy=p.y()*resolution-currentPose.y;
-		float dist=sqrt(pow(dx,2)+pow(dy,2));
-		return dist<=radius;
+	std::string CGuiRobot::getFrameId(void){
+		return frame_id_;
 	}
 	
-	GuiRobot::~GuiRobot(void){}
-	
-	std::string GuiRobot::getFrameId(void){
-		return frameId_;
-	}
-	
-	void GuiRobot::drawLabel(QImage *m,float ocgd){
+	void CGuiRobot::drawLabel(QImage *m,float ocgd){
 		QPainter painter(m);
+		
 		painter.setPen(Qt::black);
-		painter.drawRect(currentPose.x/ocgd+10,m->height()-(currentPose.y/ocgd)-30,100,20);
+		
+		painter.drawRect(
+			current_pose_.x/ocgd+10,
+			m->height()-(current_pose_.y/ocgd)-30,
+			100,
+			20);
+			
 		painter.setPen(Qt::white);
-		painter.fillRect(currentPose.x/ocgd+10,m->height()-(currentPose.y/ocgd)-30,100,20,QBrush(QColor(0,0,0,140)));
-		painter.drawText(currentPose.x/ocgd+12,m->height()-(currentPose.y/ocgd)-15,QString(frameId_.c_str()));
+		
+		painter.fillRect(
+			current_pose_.x/ocgd+10,
+			m->height()-(current_pose_.y/ocgd)-30,
+			100,
+			20,
+			QBrush(QColor(0,0,0,140)));
+		
+		painter.drawText(
+			current_pose_.x/ocgd+12,
+			m->height()-(current_pose_.y/ocgd)-15,
+			QString(frame_id_.c_str()));
 	}
 	
-	void GuiRobot::setShowLabel(bool b){
-		showLabel=b;
+	void CGuiRobot::setShowLabel(bool b)
+	{
+		show_label_=b;
 	}
 	
-	bool GuiRobot::getShowLabel(void){
-		return showLabel;
+	bool CGuiRobot::getShowLabel(void){
+		return show_label_;
 	}
 	
-	void GuiRobot::toggleShowLabel(void){
-		showLabel=!showLabel;
+	void CGuiRobot::toggleShowLabel(void){
+		show_label_=!show_label_;
 	}
 	
-	void GuiRobot::toggleShowCircles(void){
-		showCircles=!showCircles;
+	void CGuiRobot::toggleShowCircles(void){
+		show_circles_=!show_circles_;
 	}
 }
