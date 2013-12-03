@@ -26,11 +26,17 @@
 #include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui{
-	class KinematicPropertiesLoader : public QWidget, public Ui_KinematicProperties{
-			int argc;
-			char **argv;
+	class CKinematicPropertiesLoader : 
+		public QWidget, 
+		public Ui_KinematicProperties
+	{
+		private:
+			int 	argc_;
+			char** 	argv_;
+		
 		public:
-			KinematicPropertiesLoader(int argc, char **argv);
+			CKinematicPropertiesLoader(int argc, char **argv);
+			~CKinematicPropertiesLoader(void);
 	};	
 }
 

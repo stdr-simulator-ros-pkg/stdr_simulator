@@ -26,13 +26,17 @@
 #include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui{
-	class InfoLoader : public QWidget, public Ui_information{
+	class CInfoLoader : 
+		public QWidget, 
+		public Ui_information
+	{
+		private:
+			int 	argc_;
+			char **	argv_;
 		
-			int argc;
-			char **argv;
-		
-			std::vector<QTreeWidgetItem> robotNodes;
-			QIcon visibleIcon;
+			std::vector<QTreeWidgetItem> robot_nodes_;
+			
+			QIcon visible_icon_;
 			
 		public:
 			QTreeWidgetItem	generalInfo,
@@ -41,7 +45,9 @@ namespace stdr_gui{
 							mapWidth,
 							mapOcgd;
 		
-			InfoLoader(int argc, char **argv);
+			CInfoLoader(int argc, char **argv);
+			~CInfoLoader(void);
+			
 			void deleteTree(void);
 			void deleteTreeNode(QTreeWidgetItem *item);
 			void updateMapInfo(float width,float height,float ocgd);

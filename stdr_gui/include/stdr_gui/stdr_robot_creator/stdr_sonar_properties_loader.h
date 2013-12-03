@@ -26,11 +26,14 @@
 #include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui{
-	class SonarPropertiesLoader : public QWidget, public Ui_SonarProperties{
-			int argc;
-			char **argv;
+	class CSonarPropertiesLoader : 
+		public QWidget, 
+		public Ui_SonarProperties
+	{
+			int 	argc_;
+			char**	argv_;
 		public:
-			SonarPropertiesLoader(int argc, char **argv);
+			CSonarPropertiesLoader(int argc, char **argv);
 	};	
 }
 

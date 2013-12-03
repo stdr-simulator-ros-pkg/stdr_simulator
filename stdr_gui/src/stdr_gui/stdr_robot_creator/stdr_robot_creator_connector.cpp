@@ -22,86 +22,141 @@
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.h"
 
 namespace stdr_gui{
-	unsigned int RobotCreatorConnector::laserNumber=0;
-	unsigned int RobotCreatorConnector::sonarNumber=0;
-	unsigned int RobotCreatorConnector::rfidNumber=0;
 	
-	RobotCreatorConnector::RobotCreatorConnector(int argc, char **argv):
+	unsigned int CRobotCreatorConnector::laser_number=0;
+	unsigned int CRobotCreatorConnector::sonar_number=0;
+	unsigned int CRobotCreatorConnector::rfid_number=0;
+	
+	CRobotCreatorConnector::CRobotCreatorConnector(int argc, char **argv):
 		QObject(),
-		loader(argc,argv)
+		loader_(argc,argv),
+		argc_(argc),
+		argv_(argv)
 	{
-		this->argc=argc;
-		this->argv=argv;
+		QObject::connect(
+			loader_.robotTreeWidget,SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+			this,SLOT(treeItemClicked(QTreeWidgetItem *, int)));
+			
+		QObject::connect(
+			loader_.laserPropLoader.laserUpdateButton,SIGNAL(clicked(bool)),
+			this,SLOT(updateLaser()));
 		
-		QObject::connect(loader.robotTreeWidget,SIGNAL(itemClicked(QTreeWidgetItem *, int)),this,SLOT(treeItemClicked(QTreeWidgetItem *, int)));
-		QObject::connect(loader.laserPropLoader.laserUpdateButton,SIGNAL(clicked(bool)),this,SLOT(updateLaser()));
-		QObject::connect(loader.robotPropLoader.updateButton,SIGNAL(clicked(bool)),this,SLOT(updateRobot()));
-		QObject::connect(loader.sonarPropLoader.pushButton,SIGNAL(clicked(bool)),this,SLOT(updateSonar()));
-		QObject::connect(loader.rfidAntennaPropLoader.pushButton,SIGNAL(clicked(bool)),this,SLOT(updateRfid()));
-		QObject::connect(loader.saveRobotButton,SIGNAL(clicked(bool)),this,SLOT(saveRobot()));
-		QObject::connect(loader.loadRobotButton,SIGNAL(clicked(bool)),this,SLOT(loadRobot()));
-		QObject::connect(loader.cancelButton,SIGNAL(clicked(bool)),this,SLOT(closeRobotCreator()));
+		QObject::connect(
+			loader_.robotPropLoader.updateButton,SIGNAL(clicked(bool)),
+			this,SLOT(updateRobot()));
+		
+		QObject::connect(
+			loader_.sonarPropLoader.pushButton,SIGNAL(clicked(bool)),
+			this,SLOT(updateSonar()));
+		
+		QObject::connect(
+			loader_.rfidAntennaPropLoader.pushButton,SIGNAL(clicked(bool)),
+			this,SLOT(updateRfid()));
+		
+		QObject::connect(
+			loader_.saveRobotButton,SIGNAL(clicked(bool)),
+			this,SLOT(saveRobot()));
+		
+		QObject::connect(
+			loader_.loadRobotButton,SIGNAL(clicked(bool)),
+			this,SLOT(loadRobot()));
+		
+		QObject::connect(
+			loader_.cancelButton,SIGNAL(clicked(bool)),
+			this,SLOT(closeRobotCreator()));
 
-		climax=-1;
+		climax_=-1;
 	}
 	
-	void RobotCreatorConnector::initialise(void){
-		newRobotMsg=stdr_msgs::RobotMsg();
+	CRobotCreatorConnector::~CRobotCreatorConnector(void)
+	{
 		
-		loader.robotInfoShape.setText(0,"Shape");
-		loader.robotInfoShape.setText(1,"Circle");
-		loader.robotInfoOrientation.setText(0,"Orientation");
-		loader.robotInfoOrientation.setText(1,"0");
+	}
+	
+	void CRobotCreatorConnector::initialise(void)
+	{
+		new_robot_msg_=stdr_msgs::RobotMsg();
 		
-		newRobotMsg.footprint.radius=0.15;
+		loader_.robotInfoShape.setText(0,"Shape");
+		loader_.robotInfoShape.setText(1,"Circle");
+		loader_.robotInfoOrientation.setText(0,"Orientation");
+		loader_.robotInfoOrientation.setText(1,"0");
 		
-		unsigned int laserCount=loader.lasersNode.childCount();
-		unsigned int sonarCount=loader.sonarsNode.childCount();
-		unsigned int rfidCount=loader.rfidAntennasNode.childCount();
+		new_robot_msg_.footprint.radius=0.15;
+		
+		unsigned int laserCount=loader_.lasersNode.childCount();
+		unsigned int sonarCount=loader_.sonarsNode.childCount();
+		unsigned int rfidCount=loader_.rfidAntennasNode.childCount();
 		
 		for(int i=laserCount-1;i>=0;i--)
-			deleteTreeNode(loader.lasersNode.child(i));
+			deleteTreeNode(loader_.lasersNode.child(i));
 		for(int i=sonarCount-1;i>=0;i--)
-			deleteTreeNode(loader.sonarsNode.child(i));
+			deleteTreeNode(loader_.sonarsNode.child(i));
 		for(int i=rfidCount-1;i>=0;i--)
-			deleteTreeNode(loader.rfidAntennasNode.child(i));
+			deleteTreeNode(loader_.rfidAntennasNode.child(i));
 		
-		RobotCreatorConnector::laserNumber=0;
-		RobotCreatorConnector::sonarNumber=0;
-		RobotCreatorConnector::rfidNumber=0;
+		CRobotCreatorConnector::laser_number=0;
+		CRobotCreatorConnector::sonar_number=0;
+		CRobotCreatorConnector::rfid_number=0;
 		
 		updateRobotPreview();
 		
-		loader.show();
+		loader_.show();
 	}
 
-	void RobotCreatorConnector::treeItemClicked ( QTreeWidgetItem * item, int column ){
-		if(item==&loader.robotNode && column==2)		// Robot edit clicked
+	void CRobotCreatorConnector::treeItemClicked( 
+		QTreeWidgetItem * item, 
+		int column)
+	{
+		//!< Robot edit clicked
+		if(item==&loader_.robotNode && column==2)		
 			editRobot();
-		if(item==&loader.kinematicNode && column==2)	//	Kinematic edit clicked
-			loader.kinematicPropLoader.show();
-		if(item==&loader.lasersNode && column==2)	//	Add laser clicked
+			
+		//!< Kinematic edit clicked	
+		if(item==&loader_.kinematicNode && column==2)	
+			loader_.kinematicPropLoader.show();
+		
+		//!< Add laser clicked
+		if(item==&loader_.lasersNode && column==2)
 			addLaser();
-		if(item->parent()==&loader.lasersNode && column==2)	//	Erase a laser
+			
+		//!< Erase a laser
+		if(item->parent()==&loader_.lasersNode && column==2)
 			eraseLaser(item);
-		if(item->parent()==&loader.lasersNode && column==1)	//	Edit a laser
+			
+		//!< Edit a laser
+		if(item->parent()==&loader_.lasersNode && column==1)
 			editLaser(item);
-		if(item==&loader.sonarsNode && column==2)	//	Add a sonar
+			
+		//!< Add a sonar
+		if(item==&loader_.sonarsNode && column==2)
 			addSonar();
-		if(item==&loader.rfidAntennasNode && column==2)	//	Add a rfid antenna
+			
+		//!< Add a rfid antenna
+		if(item==&loader_.rfidAntennasNode && column==2)
 			addRfidAntenna();
-		if(item->parent()==&loader.sonarsNode && column==2)	//	Erase a sonar
+			
+		//!< Erase a sonar
+		if(item->parent()==&loader_.sonarsNode && column==2)
 			eraseSonar(item);
-		if(item->parent()==&loader.rfidAntennasNode && column==2)	//	Erase a rfid antenna
+			
+		//!< Erase a rfid antenna
+		if(item->parent()==&loader_.rfidAntennasNode && column==2)
 			eraseRfid(item);
-		if(item->parent()==&loader.sonarsNode && column==1)	//	Edit a sonar
+			
+		//!< Edit a sonar
+		if(item->parent()==&loader_.sonarsNode && column==1)
 			editSonar(item);
-		if(item->parent()==&loader.rfidAntennasNode && column==1)	//	Edit a rfid antenna
+			
+		//!< Edit a rfid antenna	
+		if(item->parent()==&loader_.rfidAntennasNode && column==1)
 			editRfid(item);
 	}
 	
-	void RobotCreatorConnector::addLaser(void){
-		QString laserFrameId=QString("laser_")+QString().setNum(RobotCreatorConnector::laserNumber++);
+	void CRobotCreatorConnector::addLaser(void)
+	{
+		QString laserFrameId=QString("laser_")+
+			QString().setNum(CRobotCreatorConnector::laser_number++);
 		
 		stdr_msgs::LaserSensorMsg lmsg;
 		lmsg.frame_id=laserFrameId.toStdString();
@@ -117,15 +172,26 @@ namespace stdr_gui{
 		lmsg.noise.noiseStd=0;
 		lmsg.frequency=10.0;
 		
-		newRobotMsg.laserSensors.push_back(lmsg);
+		new_robot_msg_.laserSensors.push_back(lmsg);
 		
 		QTreeWidgetItem	*lnode;
 		lnode=new QTreeWidgetItem();
 		lnode->setText(0,laserFrameId);
-		lnode->setIcon(1,loader.editIcon);
-		lnode->setIcon(2,loader.removeIcon);
+		lnode->setIcon(1,loader_.editIcon);
+		lnode->setIcon(2,loader_.removeIcon);
 
-		QTreeWidgetItem *angleSpan,*orientation,*maxRange,*minRange,*noiseMean,*noiseStd,*poseX,*poseY,*frequency,*rays;
+		QTreeWidgetItem 
+			*angleSpan,
+			*orientation,
+			*maxRange,
+			*minRange,
+			*noiseMean,
+			*noiseStd,
+			*poseX,
+			*poseY,
+			*frequency,
+			*rays;
+			
 		rays=new QTreeWidgetItem();
 		angleSpan=new QTreeWidgetItem();
 		orientation=new QTreeWidgetItem();
@@ -136,6 +202,7 @@ namespace stdr_gui{
 		poseX=new QTreeWidgetItem();
 		poseY=new QTreeWidgetItem();
 		frequency=new QTreeWidgetItem();
+		
 		rays->setText(0,QString("Number of rays"));
 		angleSpan->setText(0,QString("Angle span"));
 		orientation->setText(0,QString("Orientation"));
@@ -146,6 +213,7 @@ namespace stdr_gui{
 		poseX->setText(0,QString("Pose - x"));
 		poseY->setText(0,QString("Pose - y"));
 		frequency->setText(0,QString("Frequency"));
+		
 		rays->setText(1,QString().setNum(lmsg.numRays));
 		angleSpan->setText(1,QString().setNum(lmsg.maxAngle-lmsg.minAngle));
 		orientation->setText(1,QString().setNum(lmsg.maxAngle+lmsg.minAngle));
@@ -168,15 +236,18 @@ namespace stdr_gui{
 		lnode->addChild(poseY);
 		lnode->addChild(frequency);
 		
-		loader.lasersNode.addChild(lnode);
+		loader_.lasersNode.addChild(lnode);
 		
 		lnode->setExpanded(false);
 		
 		updateRobotPreview();
 	}
 	
-	void RobotCreatorConnector::addSonar(void){
-		QString sonarFrameId=QString("sonar_")+QString().setNum(RobotCreatorConnector::sonarNumber++);
+	void CRobotCreatorConnector::addSonar(void)
+	{
+		QString sonarFrameId=
+			QString("sonar_")+
+			QString().setNum(CRobotCreatorConnector::sonar_number++);
 		
 		stdr_msgs::SonarSensorMsg smsg;
 		smsg.frame_id=sonarFrameId.toStdString();
@@ -190,15 +261,25 @@ namespace stdr_gui{
 		smsg.noise.noiseStd=0;
 		smsg.frequency=0;
 		
-		newRobotMsg.sonarSensors.push_back(smsg);
+		new_robot_msg_.sonarSensors.push_back(smsg);
 		
 		QTreeWidgetItem	*snode;
 		snode=new QTreeWidgetItem();
 		snode->setText(0,sonarFrameId);
-		snode->setIcon(1,loader.editIcon);
-		snode->setIcon(2,loader.removeIcon);
+		snode->setIcon(1,loader_.editIcon);
+		snode->setIcon(2,loader_.removeIcon);
 
-		QTreeWidgetItem *coneAngle,*orientation,*maxRange,*minRange,*noiseMean,*noiseStd,*poseX,*poseY,*frequency;
+		QTreeWidgetItem 
+			*coneAngle,
+			*orientation,
+			*maxRange,
+			*minRange,
+			*noiseMean,
+			*noiseStd,
+			*poseX,
+			*poseY,
+			*frequency;
+			
 		coneAngle=new QTreeWidgetItem();
 		orientation=new QTreeWidgetItem();
 		maxRange=new QTreeWidgetItem();
@@ -208,6 +289,7 @@ namespace stdr_gui{
 		poseX=new QTreeWidgetItem();
 		poseY=new QTreeWidgetItem();
 		frequency=new QTreeWidgetItem();
+		
 		coneAngle->setText(0,QString("Cone span"));
 		orientation->setText(0,QString("Orientation"));
 		maxRange->setText(0,QString("Max range"));
@@ -217,6 +299,7 @@ namespace stdr_gui{
 		poseX->setText(0,QString("Pose - x"));
 		poseY->setText(0,QString("Pose - y"));
 		frequency->setText(0,QString("Frequency"));
+		
 		coneAngle->setText(1,QString().setNum(smsg.coneAngle));
 		orientation->setText(1,QString().setNum(smsg.pose.theta));
 		maxRange->setText(1,QString().setNum(smsg.maxRange));
@@ -237,15 +320,17 @@ namespace stdr_gui{
 		snode->addChild(poseY);
 		snode->addChild(frequency);
 		
-		loader.sonarsNode.addChild(snode);
+		loader_.sonarsNode.addChild(snode);
 		
 		snode->setExpanded(false);
 		
 		updateRobotPreview();
 	}
 	
-	void RobotCreatorConnector::addRfidAntenna(void){
-		QString rfidFrameId=QString("rfid_antenna_")+QString().setNum(RobotCreatorConnector::rfidNumber++);
+	void CRobotCreatorConnector::addRfidAntenna(void)
+	{
+		QString rfidFrameId=QString("rfid_antenna_")+
+			QString().setNum(CRobotCreatorConnector::rfid_number++);
 		
 		stdr_msgs::RfidSensorMsg smsg;
 		smsg.frame_id=rfidFrameId.toStdString();
@@ -257,15 +342,23 @@ namespace stdr_gui{
 		smsg.signalCutoff=0;
 		smsg.frequency=0;
 		
-		newRobotMsg.rfidSensors.push_back(smsg);
+		new_robot_msg_.rfidSensors.push_back(smsg);
 		
 		QTreeWidgetItem	*snode;
 		snode=new QTreeWidgetItem();
 		snode->setText(0,rfidFrameId);
-		snode->setIcon(1,loader.editIcon);
-		snode->setIcon(2,loader.removeIcon);
+		snode->setIcon(1,loader_.editIcon);
+		snode->setIcon(2,loader_.removeIcon);
 
-		QTreeWidgetItem *angleSpan,*orientation,*maxRange,*poseX,*poseY,*signalCutoff,*frequency;
+		QTreeWidgetItem 
+			*angleSpan,
+			*orientation,
+			*maxRange,
+			*poseX,
+			*poseY,
+			*signalCutoff,
+			*frequency;
+			
 		angleSpan=new QTreeWidgetItem();
 		orientation=new QTreeWidgetItem();
 		maxRange=new QTreeWidgetItem();
@@ -298,464 +391,706 @@ namespace stdr_gui{
 		snode->addChild(signalCutoff);
 		snode->addChild(frequency);
 		
-		loader.rfidAntennasNode.addChild(snode);
+		loader_.rfidAntennasNode.addChild(snode);
 		
 		snode->setExpanded(false);
 		
 		updateRobotPreview();
 	}
 	
-	void RobotCreatorConnector::eraseLaser(QTreeWidgetItem *item){
+	void CRobotCreatorConnector::eraseLaser(QTreeWidgetItem *item)
+	{
 		unsigned int laserFrameId=searchLaser(item->text(0));
 		if(laserFrameId==-1) 
 			return;
-		newRobotMsg.laserSensors.erase(newRobotMsg.laserSensors.begin()+laserFrameId);
+		new_robot_msg_.laserSensors.erase(
+			new_robot_msg_.laserSensors.begin()+laserFrameId);
 		deleteTreeNode(item);
 		updateRobotPreview();
 	}
 	
-	void RobotCreatorConnector::eraseSonar(QTreeWidgetItem *item){
+	void CRobotCreatorConnector::eraseSonar(QTreeWidgetItem *item)
+	{
 		unsigned int sonarFrameId=searchSonar(item->text(0));
 		if(sonarFrameId==-1) 
 			return;
-		newRobotMsg.sonarSensors.erase(newRobotMsg.sonarSensors.begin()+sonarFrameId);
+		new_robot_msg_.sonarSensors.erase(
+			new_robot_msg_.sonarSensors.begin()+sonarFrameId);
 		deleteTreeNode(item);
 		updateRobotPreview();
 	}
 	
-	void RobotCreatorConnector::eraseRfid(QTreeWidgetItem *item){
+	void CRobotCreatorConnector::eraseRfid(QTreeWidgetItem *item)
+	{
 		unsigned int rfidFrameId=searchRfid(item->text(0));
 		if(rfidFrameId==-1) 
 			return;
-		newRobotMsg.rfidSensors.erase(newRobotMsg.rfidSensors.begin()+rfidFrameId);
+		new_robot_msg_.rfidSensors.erase(
+			new_robot_msg_.rfidSensors.begin()+rfidFrameId);
 		deleteTreeNode(item);
 		updateRobotPreview();
 	}
 	
-	void RobotCreatorConnector::editLaser(QTreeWidgetItem *item){
+	void CRobotCreatorConnector::editLaser(QTreeWidgetItem *item)
+	{
 		unsigned int laserFrameId=searchLaser(item->text(0));
 		if(laserFrameId==-1) 
 			return;
 			
-		loader.laserPropLoader.laserRays->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].numRays));
-		loader.laserPropLoader.laserMaxDistance->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].maxRange));
-		loader.laserPropLoader.laserMinDistance->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].minRange));
-		loader.laserPropLoader.laserAngleSpan->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].maxAngle-newRobotMsg.laserSensors[laserFrameId].minAngle));
-		loader.laserPropLoader.laserOrientation->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].pose.theta));
-		loader.laserPropLoader.laserNoiseMean->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].noise.noiseMean));
-		loader.laserPropLoader.laserNoiseStd->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].noise.noiseStd));
-		loader.laserPropLoader.laserTranslationX->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].pose.x));
-		loader.laserPropLoader.laserTranslationY->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].pose.y));
-		loader.laserPropLoader.laserFrequency->setText(QString().setNum(newRobotMsg.laserSensors[laserFrameId].frequency));
+		loader_.laserPropLoader.laserRays->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].numRays));
+				
+		loader_.laserPropLoader.laserMaxDistance->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].maxRange));
 		
-		loader.laserPropLoader.setWindowTitle(QApplication::translate("LaserProperties", item->text(0).toStdString().c_str(), 0, QApplication::UnicodeUTF8));
+		loader_.laserPropLoader.laserMinDistance->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].minRange));
 		
-		currentLaser=item;
+		loader_.laserPropLoader.laserAngleSpan->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].maxAngle-
+				new_robot_msg_.laserSensors[laserFrameId].minAngle));
 		
-		loader.laserPropLoader.show();
+		loader_.laserPropLoader.laserOrientation->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].pose.theta));
+		
+		loader_.laserPropLoader.laserNoiseMean->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].noise.noiseMean));
+		
+		loader_.laserPropLoader.laserNoiseStd->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].noise.noiseStd));
+		
+		loader_.laserPropLoader.laserTranslationX->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].pose.x));
+		
+		loader_.laserPropLoader.laserTranslationY->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].pose.y));
+		
+		loader_.laserPropLoader.laserFrequency->setText(
+			QString().setNum(
+				new_robot_msg_.laserSensors[laserFrameId].frequency));
+		
+		loader_.laserPropLoader.setWindowTitle(
+			QApplication::translate(
+				"LaserProperties", 
+				item->text(0).toStdString().c_str(), 
+				0, 
+				QApplication::UnicodeUTF8));
+		
+		current_laser_=item;
+		
+		loader_.laserPropLoader.show();
 	}
 	
-	void RobotCreatorConnector::editSonar(QTreeWidgetItem *item){
+	void CRobotCreatorConnector::editSonar(QTreeWidgetItem *item)
+	{
 		unsigned int sonarFrameId=searchSonar(item->text(0));
 		if(sonarFrameId==-1) 
 			return;
 			
-		loader.sonarPropLoader.sonarMaxDistance->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].maxRange));
-		loader.sonarPropLoader.sonarMinDistance->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].minRange));
-		loader.sonarPropLoader.sonarX->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].pose.x));
-		loader.sonarPropLoader.sonarY->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].pose.y));
-		loader.sonarPropLoader.sonarConeSpan->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].coneAngle));
-		loader.sonarPropLoader.sonarNoiseMean->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].noise.noiseMean));
-		loader.sonarPropLoader.sonarNoiseStd->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].noise.noiseStd));
-		loader.sonarPropLoader.sonarOrientation->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].pose.theta));
-		loader.sonarPropLoader.sonarFrequency->setText(QString().setNum(newRobotMsg.sonarSensors[sonarFrameId].frequency));
+		loader_.sonarPropLoader.sonarMaxDistance->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].maxRange));
 		
-		loader.sonarPropLoader.setWindowTitle(QApplication::translate("SonarProperties", item->text(0).toStdString().c_str(), 0, QApplication::UnicodeUTF8));
+		loader_.sonarPropLoader.sonarMinDistance->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].minRange));
 		
-		currentSonar=item;
+		loader_.sonarPropLoader.sonarX->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].pose.x));
 		
-		loader.sonarPropLoader.show();
+		loader_.sonarPropLoader.sonarY->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].pose.y));
+		
+		loader_.sonarPropLoader.sonarConeSpan->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].coneAngle));
+		
+		loader_.sonarPropLoader.sonarNoiseMean->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].noise.noiseMean));
+		
+		loader_.sonarPropLoader.sonarNoiseStd->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].noise.noiseStd));
+		
+		loader_.sonarPropLoader.sonarOrientation->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].pose.theta));
+		
+		loader_.sonarPropLoader.sonarFrequency->setText(
+			QString().setNum(
+				new_robot_msg_.sonarSensors[sonarFrameId].frequency));
+		
+		loader_.sonarPropLoader.setWindowTitle(
+			QApplication::translate(
+				"SonarProperties", 
+				item->text(0).toStdString().c_str(), 
+				0, 
+				QApplication::UnicodeUTF8));
+		
+		current_sonar_=item;
+		
+		loader_.sonarPropLoader.show();
 	}
 	
-	void RobotCreatorConnector::editRfid(QTreeWidgetItem *item){
+	void CRobotCreatorConnector::editRfid(QTreeWidgetItem *item)
+	{
 		unsigned int frameId=searchRfid(item->text(0));
 		if(frameId==-1) 
 			return;
 			
-		loader.rfidAntennaPropLoader.rfidMaxDistance->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].maxRange));
-		loader.rfidAntennaPropLoader.rfidX->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].pose.x));
-		loader.rfidAntennaPropLoader.rfidY->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].pose.y));
-		loader.rfidAntennaPropLoader.rfidAngleSpan->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].angleSpan));
-		loader.rfidAntennaPropLoader.rfidOrientation->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].pose.theta));
-		loader.rfidAntennaPropLoader.rfidSignalCutoff->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].signalCutoff));
-		loader.rfidAntennaPropLoader.rfidFrequency->setText(QString().setNum(newRobotMsg.rfidSensors[frameId].frequency));
+		loader_.rfidAntennaPropLoader.rfidMaxDistance->setText(
+			QString().setNum(
+				new_robot_msg_.rfidSensors[frameId].maxRange));
+	
+		loader_.rfidAntennaPropLoader.rfidX->setText(
+			QString().setNum(
+				new_robot_msg_.rfidSensors[frameId].pose.x));
+	
+		loader_.rfidAntennaPropLoader.rfidY->setText(
+			QString().setNum(
+				new_robot_msg_.rfidSensors[frameId].pose.y));
+	
+		loader_.rfidAntennaPropLoader.rfidAngleSpan->setText(
+			QString().setNum(
+				new_robot_msg_.rfidSensors[frameId].angleSpan));
+	
+		loader_.rfidAntennaPropLoader.rfidOrientation->setText(
+			QString().setNum(
+				new_robot_msg_.rfidSensors[frameId].pose.theta));
+	
+		loader_.rfidAntennaPropLoader.rfidSignalCutoff->setText(
+			QString().setNum(
+				new_robot_msg_.rfidSensors[frameId].signalCutoff));
+	
+		loader_.rfidAntennaPropLoader.rfidFrequency->setText(
+			QString().setNum(
+				new_robot_msg_.rfidSensors[frameId].frequency));
 		
-		loader.rfidAntennaPropLoader.setWindowTitle(QApplication::translate("RfidAntennaProperties", item->text(0).toStdString().c_str(), 0, QApplication::UnicodeUTF8));
+		loader_.rfidAntennaPropLoader.setWindowTitle(
+			QApplication::translate(
+				"RfidAntennaProperties", 
+				item->text(0).toStdString().c_str(), 
+				0, 
+				QApplication::UnicodeUTF8));
 		
-		currentRfid=item;
+		current_rfid_=item;
 		
-		loader.rfidAntennaPropLoader.show();
+		loader_.rfidAntennaPropLoader.show();
 	}
 	
-	int RobotCreatorConnector::searchLaser(QString frameId){
-		for(unsigned int i=0;i<newRobotMsg.laserSensors.size();i++)
-			if(newRobotMsg.laserSensors[i].frame_id==frameId.toStdString())
+	int CRobotCreatorConnector::searchLaser(QString frameId)
+	{
+		for(unsigned int i=0;i<new_robot_msg_.laserSensors.size();i++)
+			if(new_robot_msg_.laserSensors[i].frame_id==frameId.toStdString())
 				return i;
 		return -1;
 	}
 	
-	int RobotCreatorConnector::searchSonar(QString frameId){
-		for(unsigned int i=0;i<newRobotMsg.sonarSensors.size();i++)
-			if(newRobotMsg.sonarSensors[i].frame_id==frameId.toStdString())
+	int CRobotCreatorConnector::searchSonar(QString frameId)
+	{
+		for(unsigned int i=0;i<new_robot_msg_.sonarSensors.size();i++)
+			if(new_robot_msg_.sonarSensors[i].frame_id==frameId.toStdString())
 				return i;
 		return -1;
 	}
 	
-	int RobotCreatorConnector::searchRfid(QString frameId){
-		for(unsigned int i=0;i<newRobotMsg.rfidSensors.size();i++)
-			if(newRobotMsg.rfidSensors[i].frame_id==frameId.toStdString())
+	int CRobotCreatorConnector::searchRfid(QString frameId)
+	{
+		for(unsigned int i=0;i<new_robot_msg_.rfidSensors.size();i++)
+			if(new_robot_msg_.rfidSensors[i].frame_id==frameId.toStdString())
 				return i;
 		return -1;
 	}
 			
-	void RobotCreatorConnector::updateLaser(void){
-		unsigned int laserFrameId=searchLaser(currentLaser->text(0));
+	void CRobotCreatorConnector::updateLaser(void)
+	{
+		unsigned int laserFrameId=searchLaser(current_laser_->text(0));
 		if(laserFrameId==-1) 
 			return;
-		for(unsigned int i=0;i<currentLaser->childCount();i++){
-			if(currentLaser->child(i)->text(0)==QString("Angle span")){
-				currentLaser->child(i)->setText(1,loader.laserPropLoader.laserAngleSpan->text());
-				float angleSpan=loader.laserPropLoader.laserAngleSpan->text().toFloat()/2.0;
-				newRobotMsg.laserSensors[laserFrameId].minAngle=-angleSpan;
-				newRobotMsg.laserSensors[laserFrameId].maxAngle=angleSpan;
+		for(unsigned int i=0;i<current_laser_->childCount();i++){
+			if(current_laser_->child(i)->text(0)==QString("Angle span")){
+				current_laser_->child(i)->setText(
+					1,loader_.laserPropLoader.laserAngleSpan->text());
+				float angleSpan=loader_.laserPropLoader.laserAngleSpan->
+					text().toFloat()/2.0;
+				new_robot_msg_.laserSensors[laserFrameId].minAngle=-angleSpan;
+				new_robot_msg_.laserSensors[laserFrameId].maxAngle=angleSpan;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Orientation")){
-				float orientation=loader.laserPropLoader.laserOrientation->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(orientation));
-				newRobotMsg.laserSensors[laserFrameId].minAngle+=orientation;
-				newRobotMsg.laserSensors[laserFrameId].maxAngle+=orientation;
-				newRobotMsg.laserSensors[laserFrameId].pose.theta=orientation;
+			else if(current_laser_->child(i)->text(0)==QString("Orientation")){
+				float orientation=loader_.laserPropLoader.laserOrientation->
+					text().toFloat();
+				current_laser_->child(i)->setText(
+					1,QString().setNum(orientation));
+				new_robot_msg_.laserSensors[laserFrameId].minAngle+=orientation;
+				new_robot_msg_.laserSensors[laserFrameId].maxAngle+=orientation;
+				new_robot_msg_.laserSensors[laserFrameId].pose.theta=
+					orientation;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Max range")){
-				float maxRange=loader.laserPropLoader.laserMaxDistance->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(maxRange));
-				newRobotMsg.laserSensors[laserFrameId].maxRange=maxRange;
+			else if(current_laser_->child(i)->text(0)==QString("Max range")){
+				float maxRange=loader_.laserPropLoader.laserMaxDistance->
+					text().toFloat();
+				current_laser_->child(i)->setText(1,QString().setNum(maxRange));
+				new_robot_msg_.laserSensors[laserFrameId].maxRange=maxRange;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Number of rays")){
-				int rays=loader.laserPropLoader.laserRays->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(rays));
-				newRobotMsg.laserSensors[laserFrameId].numRays=rays;
+			else if(current_laser_->child(i)->text(0)==
+				QString("Number of rays"))
+			{
+				int rays=loader_.laserPropLoader.laserRays->text().toFloat();
+				current_laser_->child(i)->setText(1,QString().setNum(rays));
+				new_robot_msg_.laserSensors[laserFrameId].numRays=rays;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Min range")){
-				float minRange=loader.laserPropLoader.laserMinDistance->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(minRange));
-				newRobotMsg.laserSensors[laserFrameId].minRange=minRange;
+			else if(current_laser_->child(i)->text(0)==QString("Min range")){
+				float minRange=loader_.laserPropLoader.laserMinDistance->
+					text().toFloat();
+				current_laser_->child(i)->setText(1,QString().setNum(minRange));
+				new_robot_msg_.laserSensors[laserFrameId].minRange=minRange;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Noise mean")){
-				float noiseMean=loader.laserPropLoader.laserNoiseMean->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(noiseMean));
-				newRobotMsg.laserSensors[laserFrameId].noise.noiseMean=noiseMean;
+			else if(current_laser_->child(i)->text(0)==QString("Noise mean")){
+				float noiseMean=loader_.laserPropLoader.laserNoiseMean->
+					text().toFloat();
+				current_laser_->child(i)->
+					setText(1,QString().setNum(noiseMean));
+				new_robot_msg_.laserSensors[laserFrameId].noise.noiseMean=
+					noiseMean;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Noise std")){
-				float noiseStd=loader.laserPropLoader.laserNoiseStd->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(noiseStd));
-				newRobotMsg.laserSensors[laserFrameId].noise.noiseStd=noiseStd;
+			else if(current_laser_->child(i)->text(0)==QString("Noise std")){
+				float noiseStd=
+					loader_.laserPropLoader.laserNoiseStd->text().toFloat();
+				current_laser_->child(i)->setText(1,QString().setNum(noiseStd));
+				new_robot_msg_.laserSensors[laserFrameId].noise.noiseStd=
+					noiseStd;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Pose - x")){
-				float dx=loader.laserPropLoader.laserTranslationX->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(dx));
-				newRobotMsg.laserSensors[laserFrameId].pose.x=dx;
+			else if(current_laser_->child(i)->text(0)==QString("Pose - x")){
+				float dx=loader_.laserPropLoader.laserTranslationX->
+					text().toFloat();
+				current_laser_->child(i)->setText(1,QString().setNum(dx));
+				new_robot_msg_.laserSensors[laserFrameId].pose.x=dx;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Pose - y")){
-				float dy=loader.laserPropLoader.laserTranslationY->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(dy));
-				newRobotMsg.laserSensors[laserFrameId].pose.y=dy;
+			else if(current_laser_->child(i)->text(0)==QString("Pose - y")){
+				float dy=loader_.laserPropLoader.laserTranslationY->
+					text().toFloat();
+				current_laser_->child(i)->setText(1,QString().setNum(dy));
+				new_robot_msg_.laserSensors[laserFrameId].pose.y=dy;
 			}
-			else if(currentLaser->child(i)->text(0)==QString("Frequency")){
-				float dy=loader.laserPropLoader.laserFrequency->text().toFloat();
-				currentLaser->child(i)->setText(1,QString().setNum(dy));
-				newRobotMsg.laserSensors[laserFrameId].frequency=dy;
+			else if(current_laser_->child(i)->text(0)==QString("Frequency")){
+				float dy=loader_.laserPropLoader.laserFrequency->
+					text().toFloat();
+				current_laser_->child(i)->setText(1,QString().setNum(dy));
+				new_robot_msg_.laserSensors[laserFrameId].frequency=dy;
 			}
 		}
-		
-		//printLaserMsg(newRobotMsg.laserSensors[laserFrameId]);
-		
-		loader.laserPropLoader.hide();
+
+		loader_.laserPropLoader.hide();
 		
 		updateRobotPreview();
 	}
 
-	void RobotCreatorConnector::updateSonar(void){
-		unsigned int frameId=searchSonar(currentSonar->text(0));
+	void CRobotCreatorConnector::updateSonar(void)
+	{
+		unsigned int frameId=searchSonar(current_sonar_->text(0));
 		if(frameId==-1) 
 			return;
-		for(unsigned int i=0;i<currentSonar->childCount();i++){
-			if(currentSonar->child(i)->text(0)==QString("Cone span")){
-				currentSonar->child(i)->setText(1,loader.sonarPropLoader.sonarConeSpan->text());
-				newRobotMsg.sonarSensors[frameId].coneAngle=loader.sonarPropLoader.sonarConeSpan->text().toFloat();
+		for(unsigned int i=0;i<current_sonar_->childCount();i++){
+			if(current_sonar_->child(i)->text(0)==QString("Cone span")){
+				current_sonar_->child(i)->
+					setText(1,loader_.sonarPropLoader.sonarConeSpan->text());
+				new_robot_msg_.sonarSensors[frameId].coneAngle=
+					loader_.sonarPropLoader.sonarConeSpan->text().toFloat();
 			}
-			else if(currentSonar->child(i)->text(0)==QString("Orientation")){
-				float orientation=loader.sonarPropLoader.sonarOrientation->text().toFloat();
-				currentSonar->child(i)->setText(1,QString().setNum(orientation));
-				newRobotMsg.sonarSensors[frameId].pose.theta=orientation;
+			else if(current_sonar_->child(i)->text(0)==QString("Orientation")){
+				float orientation=
+					loader_.sonarPropLoader.sonarOrientation->text().toFloat();
+				current_sonar_->child(i)->
+					setText(1,QString().setNum(orientation));
+				new_robot_msg_.sonarSensors[frameId].pose.theta=orientation;
 			}
-			else if(currentSonar->child(i)->text(0)==QString("Max range")){
-				float maxRange=loader.sonarPropLoader.sonarMaxDistance->text().toFloat();
-				currentSonar->child(i)->setText(1,QString().setNum(maxRange));
-				newRobotMsg.sonarSensors[frameId].maxRange=maxRange;
+			else if(current_sonar_->child(i)->text(0)==QString("Max range")){
+				float maxRange=
+					loader_.sonarPropLoader.sonarMaxDistance->text().toFloat();
+				current_sonar_->child(i)->
+					setText(1,QString().setNum(maxRange));
+				new_robot_msg_.sonarSensors[frameId].maxRange=maxRange;
 			}
-			else if(currentSonar->child(i)->text(0)==QString("Min range")){
-				float minRange=loader.sonarPropLoader.sonarMinDistance->text().toFloat();
-				currentSonar->child(i)->setText(1,QString().setNum(minRange));
-				newRobotMsg.sonarSensors[frameId].minRange=minRange;
+			else if(current_sonar_->child(i)->text(0)==QString("Min range")){
+				float minRange=
+					loader_.sonarPropLoader.sonarMinDistance->text().toFloat();
+				current_sonar_->child(i)->setText(1,QString().setNum(minRange));
+				new_robot_msg_.sonarSensors[frameId].minRange=minRange;
 			}
-			else if(currentSonar->child(i)->text(0)==QString("Noise mean")){
-				float noiseMean=loader.sonarPropLoader.sonarNoiseMean->text().toFloat();
-				currentSonar->child(i)->setText(1,QString().setNum(noiseMean));
-				newRobotMsg.sonarSensors[frameId].noise.noiseMean=noiseMean;
+			else if(current_sonar_->child(i)->text(0)==QString("Noise mean")){
+				float noiseMean=
+					loader_.sonarPropLoader.sonarNoiseMean->text().toFloat();
+				current_sonar_->child(i)->
+					setText(1,QString().setNum(noiseMean));
+				new_robot_msg_.sonarSensors[frameId].noise.noiseMean=noiseMean;
 			}
-			else if(currentSonar->child(i)->text(0)==QString("Noise std")){
-				float noiseStd=loader.sonarPropLoader.sonarNoiseStd->text().toFloat();
-				currentSonar->child(i)->setText(1,QString().setNum(noiseStd));
-				newRobotMsg.sonarSensors[frameId].noise.noiseStd=noiseStd;
+			else if(current_sonar_->child(i)->text(0)==QString("Noise std")){
+				float noiseStd=
+					loader_.sonarPropLoader.sonarNoiseStd->text().toFloat();
+				current_sonar_->
+					child(i)->setText(1,QString().setNum(noiseStd));
+				new_robot_msg_.sonarSensors[frameId].noise.noiseStd=noiseStd;
 			}
-			else if(currentSonar->child(i)->text(0)==QString("Pose - x")){
-				float dx=loader.sonarPropLoader.sonarX->text().toFloat();
-				currentSonar->child(i)->setText(1,QString().setNum(dx));
-				newRobotMsg.sonarSensors[frameId].pose.x=dx;
+			else if(current_sonar_->child(i)->text(0)==QString("Pose - x")){
+				float dx=loader_.sonarPropLoader.sonarX->text().toFloat();
+				current_sonar_->child(i)->setText(1,QString().setNum(dx));
+				new_robot_msg_.sonarSensors[frameId].pose.x=dx;
 			}
-			else if(currentSonar->child(i)->text(0)==QString("Pose - y")){
-				float dy=loader.sonarPropLoader.sonarY->text().toFloat();
-				currentSonar->child(i)->setText(1,QString().setNum(dy));
-				newRobotMsg.sonarSensors[frameId].pose.y=dy;
+			else if(current_sonar_->child(i)->text(0)==QString("Pose - y")){
+				float dy=loader_.sonarPropLoader.sonarY->text().toFloat();
+				current_sonar_->child(i)->setText(1,QString().setNum(dy));
+				new_robot_msg_.sonarSensors[frameId].pose.y=dy;
 			}
-			else if(currentSonar->child(i)->text(0)==QString("Frequency")){
-				float dy=loader.sonarPropLoader.sonarFrequency->text().toFloat();
-				currentSonar->child(i)->setText(1,QString().setNum(dy));
-				newRobotMsg.sonarSensors[frameId].frequency=dy;
+			else if(current_sonar_->child(i)->text(0)==QString("Frequency")){
+				float dy=
+					loader_.sonarPropLoader.sonarFrequency->text().toFloat();
+				current_sonar_->child(i)->setText(1,QString().setNum(dy));
+				new_robot_msg_.sonarSensors[frameId].frequency=dy;
 			}
 		}
 
-		loader.sonarPropLoader.hide();
+		loader_.sonarPropLoader.hide();
 		
 		updateRobotPreview();
 	}
 	
-	void RobotCreatorConnector::updateRfid(void){
-		unsigned int frameId=searchRfid(currentRfid->text(0));
+	void CRobotCreatorConnector::updateRfid(void)
+	{
+		unsigned int frameId=searchRfid(current_rfid_->text(0));
 		if(frameId==-1) 
 			return;
-		for(unsigned int i=0;i<currentRfid->childCount();i++){
-			if(currentRfid->child(i)->text(0)==QString("Angle span")){
-				currentRfid->child(i)->setText(1,loader.rfidAntennaPropLoader.rfidAngleSpan->text());
-				newRobotMsg.rfidSensors[frameId].angleSpan=loader.rfidAntennaPropLoader.rfidAngleSpan->text().toFloat();
+		for(unsigned int i=0;i<current_rfid_->childCount();i++){
+			if(current_rfid_->child(i)->text(0)==QString("Angle span")){
+				current_rfid_->child(i)->setText(1,
+					loader_.rfidAntennaPropLoader.rfidAngleSpan->text());
+				new_robot_msg_.rfidSensors[frameId].angleSpan=
+					loader_.rfidAntennaPropLoader.rfidAngleSpan->
+						text().toFloat();
 			}
-			else if(currentRfid->child(i)->text(0)==QString("Orientation")){
-				float orientation=loader.rfidAntennaPropLoader.rfidOrientation->text().toFloat();
-				currentRfid->child(i)->setText(1,QString().setNum(orientation));
-				newRobotMsg.rfidSensors[frameId].pose.theta=orientation;
+			else if(current_rfid_->child(i)->text(0)==QString("Orientation")){
+				float orientation=
+					loader_.rfidAntennaPropLoader.rfidOrientation->
+						text().toFloat();
+				current_rfid_->child(i)->
+					setText(1,QString().setNum(orientation));
+				new_robot_msg_.rfidSensors[frameId].pose.theta=orientation;
 			}
-			else if(currentRfid->child(i)->text(0)==QString("Max range")){
-				float maxRange=loader.rfidAntennaPropLoader.rfidMaxDistance->text().toFloat();
-				currentRfid->child(i)->setText(1,QString().setNum(maxRange));
-				newRobotMsg.rfidSensors[frameId].maxRange=maxRange;
+			else if(current_rfid_->child(i)->text(0)==QString("Max range")){
+				float maxRange=
+					loader_.rfidAntennaPropLoader.rfidMaxDistance->
+						text().toFloat();
+				current_rfid_->child(i)->setText(1,QString().setNum(maxRange));
+				new_robot_msg_.rfidSensors[frameId].maxRange=maxRange;
 			}
-			else if(currentRfid->child(i)->text(0)==QString("Pose - x")){
-				float dx=loader.rfidAntennaPropLoader.rfidX->text().toFloat();
-				currentRfid->child(i)->setText(1,QString().setNum(dx));
-				newRobotMsg.rfidSensors[frameId].pose.x=dx;
+			else if(current_rfid_->child(i)->text(0)==QString("Pose - x")){
+				float dx=loader_.rfidAntennaPropLoader.rfidX->text().toFloat();
+				current_rfid_->child(i)->setText(1,QString().setNum(dx));
+				new_robot_msg_.rfidSensors[frameId].pose.x=dx;
 			}
-			else if(currentRfid->child(i)->text(0)==QString("Pose - y")){
-				float dy=loader.rfidAntennaPropLoader.rfidY->text().toFloat();
-				currentRfid->child(i)->setText(1,QString().setNum(dy));
-				newRobotMsg.rfidSensors[frameId].pose.y=dy;
+			else if(current_rfid_->child(i)->text(0)==QString("Pose - y")){
+				float dy=loader_.rfidAntennaPropLoader.rfidY->text().toFloat();
+				current_rfid_->child(i)->setText(1,QString().setNum(dy));
+				new_robot_msg_.rfidSensors[frameId].pose.y=dy;
 			}
-			else if(currentRfid->child(i)->text(0)==QString("Signal cutoff")){
-				float signal=loader.rfidAntennaPropLoader.rfidSignalCutoff->text().toFloat();
-				currentRfid->child(i)->setText(1,QString().setNum(signal));
-				newRobotMsg.rfidSensors[frameId].signalCutoff=signal;
+			else if(current_rfid_->child(i)->text(0)==QString("Signal cutoff")){
+				float signal=
+					loader_.rfidAntennaPropLoader.rfidSignalCutoff->
+						text().toFloat();
+				current_rfid_->child(i)->setText(1,QString().setNum(signal));
+				new_robot_msg_.rfidSensors[frameId].signalCutoff=signal;
 			}
-			else if(currentRfid->child(i)->text(0)==QString("Frequency")){
-				float signal=loader.rfidAntennaPropLoader.rfidFrequency->text().toFloat();
-				currentRfid->child(i)->setText(1,QString().setNum(signal));
-				newRobotMsg.rfidSensors[frameId].frequency=signal;
+			else if(current_rfid_->child(i)->text(0)==QString("Frequency")){
+				float signal=
+					loader_.rfidAntennaPropLoader.rfidFrequency->
+						text().toFloat();
+				current_rfid_->child(i)->setText(1,QString().setNum(signal));
+				new_robot_msg_.rfidSensors[frameId].frequency=signal;
 			}
 		}
 
-		loader.rfidAntennaPropLoader.hide();
+		loader_.rfidAntennaPropLoader.hide();
 		
 		updateRobotPreview();
 	}
 	
-	void RobotCreatorConnector::editRobot(void){
-		loader.robotPropLoader.robotOrientation->setText(QString().setNum(newRobotMsg.initialPose.theta));
-		loader.robotPropLoader.show();
+	void CRobotCreatorConnector::editRobot(void)
+	{
+		loader_.robotPropLoader.robotOrientation->
+			setText(QString().setNum(new_robot_msg_.initialPose.theta));
+		loader_.robotPropLoader.show();
 	}
 	
-	void RobotCreatorConnector::updateRobot(void){
-		for(unsigned int i=0;i<loader.robotNode.childCount();i++){
-			if(loader.robotNode.child(i)->text(0)==QString("Orientation")){
-				loader.robotNode.child(i)->setText(1,loader.robotPropLoader.robotOrientation->text());
-				newRobotMsg.initialPose.theta=loader.robotPropLoader.robotOrientation->text().toFloat();
+	void CRobotCreatorConnector::updateRobot(void)
+	{
+		for(unsigned int i=0;i<loader_.robotNode.childCount();i++){
+			if(loader_.robotNode.child(i)->text(0)==QString("Orientation")){
+				loader_.robotNode.child(i)->
+					setText(1,loader_.robotPropLoader.robotOrientation->text());
+				new_robot_msg_.initialPose.theta=
+					loader_.robotPropLoader.robotOrientation->text().toFloat();
 			}
 		}
 
-		loader.robotPropLoader.hide();
+		loader_.robotPropLoader.hide();
 		
 		updateRobotPreview();
 	}
 
-	void RobotCreatorConnector::deleteTreeNode(QTreeWidgetItem *item){
+	void CRobotCreatorConnector::deleteTreeNode(QTreeWidgetItem *item)
+	{
 		int count=item->childCount();
 		for(int i=count-1;i>=0;i--)
 			deleteTreeNode(item->child(i));
 		delete item;
 	}
 		
-	void RobotCreatorConnector::updateRobotPreview(void){
+	void CRobotCreatorConnector::updateRobotPreview(void)
+	{
 		
-		loader.robotPreviewImage.fill(QColor(220,220,220,1));
+		loader_.robotPreviewImage.fill(QColor(220,220,220,1));
 		
-		climax=-1;
-		if(climax<newRobotMsg.footprint.radius) 
-			climax=newRobotMsg.footprint.radius;
-		for(unsigned int i=0;i<newRobotMsg.laserSensors.size();i++){
-			if(climax<(newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.x)) 
-				climax=newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.x;
-			if(climax<(newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.y) )
-				climax=newRobotMsg.laserSensors[i].maxRange+newRobotMsg.laserSensors[i].pose.y;	
-			if(climax<(newRobotMsg.laserSensors[i].maxRange-newRobotMsg.laserSensors[i].pose.x) )
-				climax=newRobotMsg.laserSensors[i].maxRange-newRobotMsg.laserSensors[i].pose.x;
-			if(climax<(newRobotMsg.laserSensors[i].maxRange-newRobotMsg.laserSensors[i].pose.y) )
-				climax=newRobotMsg.laserSensors[i].maxRange-newRobotMsg.laserSensors[i].pose.y;	
+		climax_=-1;
+		if(climax_<new_robot_msg_.footprint.radius) 
+			climax_=new_robot_msg_.footprint.radius;
+		for(unsigned int i=0;i<new_robot_msg_.laserSensors.size();i++){
+			if(climax_<(new_robot_msg_.laserSensors[i].maxRange+
+					new_robot_msg_.laserSensors[i].pose.x)) 
+				climax_=new_robot_msg_.laserSensors[i].maxRange+
+					new_robot_msg_.laserSensors[i].pose.x;
+			if(climax_<(new_robot_msg_.laserSensors[i].maxRange+
+					new_robot_msg_.laserSensors[i].pose.y) )
+				climax_=new_robot_msg_.laserSensors[i].maxRange+
+					new_robot_msg_.laserSensors[i].pose.y;	
+			if(climax_<(new_robot_msg_.laserSensors[i].maxRange-
+					new_robot_msg_.laserSensors[i].pose.x) )
+				climax_=new_robot_msg_.laserSensors[i].maxRange-
+					new_robot_msg_.laserSensors[i].pose.x;
+			if(climax_<(new_robot_msg_.laserSensors[i].maxRange-
+					new_robot_msg_.laserSensors[i].pose.y) )
+				climax_=new_robot_msg_.laserSensors[i].maxRange-
+					new_robot_msg_.laserSensors[i].pose.y;	
 		}
-		for(unsigned int i=0;i<newRobotMsg.sonarSensors.size();i++){
-			if(climax<(newRobotMsg.sonarSensors[i].maxRange+newRobotMsg.sonarSensors[i].pose.x) )
-				climax=newRobotMsg.sonarSensors[i].maxRange+newRobotMsg.sonarSensors[i].pose.x;
-			if(climax<(newRobotMsg.sonarSensors[i].maxRange+newRobotMsg.sonarSensors[i].pose.y) )
-				climax=newRobotMsg.sonarSensors[i].maxRange+newRobotMsg.sonarSensors[i].pose.y;	
-			if(climax<(newRobotMsg.sonarSensors[i].maxRange-newRobotMsg.sonarSensors[i].pose.x) )
-				climax=newRobotMsg.sonarSensors[i].maxRange-newRobotMsg.sonarSensors[i].pose.x;
-			if(climax<(newRobotMsg.sonarSensors[i].maxRange-newRobotMsg.sonarSensors[i].pose.y) )
-				climax=newRobotMsg.sonarSensors[i].maxRange-newRobotMsg.sonarSensors[i].pose.y;	
+		for(unsigned int i=0;i<new_robot_msg_.sonarSensors.size();i++){
+			if(climax_<(new_robot_msg_.sonarSensors[i].maxRange+
+					new_robot_msg_.sonarSensors[i].pose.x) )
+				climax_=new_robot_msg_.sonarSensors[i].maxRange+
+					new_robot_msg_.sonarSensors[i].pose.x;
+			if(climax_<(new_robot_msg_.sonarSensors[i].maxRange+
+					new_robot_msg_.sonarSensors[i].pose.y) )
+				climax_=new_robot_msg_.sonarSensors[i].maxRange+
+					new_robot_msg_.sonarSensors[i].pose.y;	
+			if(climax_<(new_robot_msg_.sonarSensors[i].maxRange-
+					new_robot_msg_.sonarSensors[i].pose.x) )
+				climax_=new_robot_msg_.sonarSensors[i].maxRange-
+					new_robot_msg_.sonarSensors[i].pose.x;
+			if(climax_<(new_robot_msg_.sonarSensors[i].maxRange-
+					new_robot_msg_.sonarSensors[i].pose.y) )
+				climax_=new_robot_msg_.sonarSensors[i].maxRange-
+					new_robot_msg_.sonarSensors[i].pose.y;	
 		}
-		for(unsigned int i=0;i<newRobotMsg.rfidSensors.size();i++){
-			if(climax<(newRobotMsg.rfidSensors[i].maxRange+newRobotMsg.rfidSensors[i].pose.x) )
-				climax=newRobotMsg.rfidSensors[i].maxRange+newRobotMsg.rfidSensors[i].pose.x;
-			if(climax<(newRobotMsg.rfidSensors[i].maxRange+newRobotMsg.rfidSensors[i].pose.y) )
-				climax=newRobotMsg.rfidSensors[i].maxRange+newRobotMsg.rfidSensors[i].pose.y;	
-			if(climax<(newRobotMsg.rfidSensors[i].maxRange-newRobotMsg.rfidSensors[i].pose.x) )
-				climax=newRobotMsg.rfidSensors[i].maxRange-newRobotMsg.rfidSensors[i].pose.x;
-			if(climax<(newRobotMsg.rfidSensors[i].maxRange-newRobotMsg.rfidSensors[i].pose.y) )
-				climax=newRobotMsg.rfidSensors[i].maxRange-newRobotMsg.rfidSensors[i].pose.y;	
+		for(unsigned int i=0;i<new_robot_msg_.rfidSensors.size();i++){
+			if(climax_<(new_robot_msg_.rfidSensors[i].maxRange+
+					new_robot_msg_.rfidSensors[i].pose.x) )
+				climax_=new_robot_msg_.rfidSensors[i].maxRange+
+					new_robot_msg_.rfidSensors[i].pose.x;
+			if(climax_<(new_robot_msg_.rfidSensors[i].maxRange+
+					new_robot_msg_.rfidSensors[i].pose.y) )
+				climax_=new_robot_msg_.rfidSensors[i].maxRange+
+					new_robot_msg_.rfidSensors[i].pose.y;	
+			if(climax_<(new_robot_msg_.rfidSensors[i].maxRange-
+					new_robot_msg_.rfidSensors[i].pose.x) )
+				climax_=new_robot_msg_.rfidSensors[i].maxRange-
+					new_robot_msg_.rfidSensors[i].pose.x;
+			if(climax_<(new_robot_msg_.rfidSensors[i].maxRange-
+					new_robot_msg_.rfidSensors[i].pose.y) )
+				climax_=new_robot_msg_.rfidSensors[i].maxRange-
+					new_robot_msg_.rfidSensors[i].pose.y;	
 		}
 		
-		climax=230.0/climax;
-		drawRobot(newRobotMsg.footprint.radius);
+		climax_=230.0/climax_;
+		drawRobot(new_robot_msg_.footprint.radius);
 		drawLasers();
 		drawSonars();
 		drawRfidAntennas();
 	}
 	
-	void RobotCreatorConnector::drawRobot(float radius){
-		QPainter painter(&loader.robotPreviewImage);
+	void CRobotCreatorConnector::drawRobot(float radius){
+		QPainter painter(&loader_.robotPreviewImage);
 		painter.setPen(Qt::blue);
-		painter.drawEllipse(250-radius*climax,
-							250-radius*climax,
-							radius*climax*2,
-							radius*climax*2);
+		painter.drawEllipse(250-radius*climax_,
+							250-radius*climax_,
+							radius*climax_*2,
+							radius*climax_*2);
 		painter.drawLine(	250,
 							250,
-							250+radius*climax*1.05*cos(newRobotMsg.initialPose.theta/180.0*STDR_PI),
-							250-radius*climax*1.05*sin(newRobotMsg.initialPose.theta/180.0*STDR_PI));
-		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
+							250+radius*climax_*1.05*cos(
+							new_robot_msg_.initialPose.theta/180.0*STDR_PI),
+							250-radius*climax_*1.05*sin(
+							new_robot_msg_.initialPose.theta/180.0*STDR_PI));
+		loader_.robotPreviewLabel->setPixmap(
+			QPixmap().fromImage(loader_.robotPreviewImage));
 	}
 	
-	void RobotCreatorConnector::drawRobot(float length,float width){
+	void CRobotCreatorConnector::drawRobot(float length,float width)
+	{
 		
 	}
 	
-	void RobotCreatorConnector::drawRobot(std::vector<std::pair<float,float> > geometry){
+	void CRobotCreatorConnector::drawRobot(
+		std::vector<std::pair<float,float> > geometry)
+	{
 		
 	}
 
-	void RobotCreatorConnector::drawLasers(void){
-		QPainter painter(&loader.robotPreviewImage);
+	void CRobotCreatorConnector::drawLasers(void)
+	{
+		QPainter painter(&loader_.robotPreviewImage);
 		QBrush brush(QColor(0,200,0,50));
 		painter.setBrush(brush);
-		float robotOrientation=newRobotMsg.initialPose.theta/180.0*STDR_PI;
-		for(unsigned int i=0;i<newRobotMsg.laserSensors.size();i++){
+		float robotOrientation=new_robot_msg_.initialPose.theta/180.0*STDR_PI;
+		for(unsigned int i=0;i<new_robot_msg_.laserSensors.size();i++){
 			
-			float laserx=newRobotMsg.laserSensors[i].pose.x;
-			float lasery=newRobotMsg.laserSensors[i].pose.y;
-			float newx=laserx*cos(robotOrientation)-lasery*sin(robotOrientation);
-			float newy=laserx*sin(robotOrientation)+lasery*cos(robotOrientation);
+			float laserx=new_robot_msg_.laserSensors[i].pose.x;
+			float lasery=new_robot_msg_.laserSensors[i].pose.y;
+			float newx=laserx*cos(robotOrientation)-
+				lasery*sin(robotOrientation);
+			float newy=laserx*sin(robotOrientation)+
+				lasery*cos(robotOrientation);
 			
-			painter.drawPie(250-newRobotMsg.laserSensors[i].maxRange*climax+newx*climax,
-							250-newRobotMsg.laserSensors[i].maxRange*climax-newy*climax,
-							newRobotMsg.laserSensors[i].maxRange*climax*2,
-							newRobotMsg.laserSensors[i].maxRange*climax*2,
-							(newRobotMsg.laserSensors[i].minAngle+newRobotMsg.initialPose.theta)*16,
-							newRobotMsg.laserSensors[i].maxAngle*16-newRobotMsg.laserSensors[i].minAngle*16);
+			painter.drawPie(
+				250-new_robot_msg_.laserSensors[i].maxRange*climax_+	
+					newx*climax_,
+				250-new_robot_msg_.laserSensors[i].maxRange*climax_-
+					newy*climax_,
+				new_robot_msg_.laserSensors[i].maxRange*climax_*2,
+				new_robot_msg_.laserSensors[i].maxRange*climax_*2,
+				(new_robot_msg_.laserSensors[i].minAngle+
+					new_robot_msg_.initialPose.theta)*16,
+				new_robot_msg_.laserSensors[i].maxAngle*16-
+					new_robot_msg_.laserSensors[i].minAngle*16);
 		}
-		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
+		loader_.robotPreviewLabel->setPixmap(
+			QPixmap().fromImage(loader_.robotPreviewImage));
 	}
 	
-	void RobotCreatorConnector::drawSonars(void){
-		QPainter painter(&loader.robotPreviewImage);
+	void CRobotCreatorConnector::drawSonars(void)
+	{
+		QPainter painter(&loader_.robotPreviewImage);
 		QBrush brush(QColor(200,0,0,50));
 		painter.setBrush(brush);
-		float robotOrientation=newRobotMsg.initialPose.theta/180.0*STDR_PI;
-		for(unsigned int i=0;i<newRobotMsg.sonarSensors.size();i++){
+		float robotOrientation=new_robot_msg_.initialPose.theta/180.0*STDR_PI;
+		for(unsigned int i=0;i<new_robot_msg_.sonarSensors.size();i++){
 			
-			float sonarx=newRobotMsg.sonarSensors[i].pose.x;
-			float sonary=newRobotMsg.sonarSensors[i].pose.y;
-			float newx=sonarx*cos(robotOrientation)-sonary*sin(robotOrientation);
-			float newy=sonarx*sin(robotOrientation)+sonary*cos(robotOrientation);
+			float sonarx=new_robot_msg_.sonarSensors[i].pose.x;
+			float sonary=new_robot_msg_.sonarSensors[i].pose.y;
+			float newx=sonarx*cos(robotOrientation)-
+						sonary*sin(robotOrientation);
+			float newy=sonarx*sin(robotOrientation)+
+						sonary*cos(robotOrientation);
 			
-			painter.drawPie(	250-newRobotMsg.sonarSensors[i].maxRange*climax+newx*climax,
-								250-newRobotMsg.sonarSensors[i].maxRange*climax-newy*climax,
-								newRobotMsg.sonarSensors[i].maxRange*climax*2,
-								newRobotMsg.sonarSensors[i].maxRange*climax*2,
-								(newRobotMsg.sonarSensors[i].pose.theta-newRobotMsg.sonarSensors[i].coneAngle/2.0+newRobotMsg.initialPose.theta)*16,
-								(newRobotMsg.sonarSensors[i].coneAngle)*16);
+			painter.drawPie(	
+				250-new_robot_msg_.sonarSensors[i].maxRange*climax_+
+					newx*climax_,
+				250-new_robot_msg_.sonarSensors[i].maxRange*climax_-
+					newy*climax_,
+				new_robot_msg_.sonarSensors[i].maxRange*climax_*2,
+				new_robot_msg_.sonarSensors[i].maxRange*climax_*2,
+				(new_robot_msg_.sonarSensors[i].pose.theta-
+					new_robot_msg_.sonarSensors[i].coneAngle/2.0+
+					new_robot_msg_.initialPose.theta)*16,
+				(new_robot_msg_.sonarSensors[i].coneAngle)*16);
 		}
-		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
+		loader_.robotPreviewLabel->setPixmap(
+			QPixmap().fromImage(loader_.robotPreviewImage));
 	}
 	
-	void RobotCreatorConnector::drawRfidAntennas(void){
-		QPainter painter(&loader.robotPreviewImage);
+	void CRobotCreatorConnector::drawRfidAntennas(void)
+	{
+		QPainter painter(&loader_.robotPreviewImage);
 		QBrush brush(QColor(0,0,200,20));
 		painter.setBrush(brush);
-		float robotOrientation=newRobotMsg.initialPose.theta/180.0*STDR_PI;
-		for(unsigned int i=0;i<newRobotMsg.rfidSensors.size();i++){
+		float robotOrientation=new_robot_msg_.initialPose.theta/180.0*STDR_PI;
+		for(unsigned int i=0;i<new_robot_msg_.rfidSensors.size();i++){
 			
-			float rfidx=newRobotMsg.rfidSensors[i].pose.x;
-			float rfidy=newRobotMsg.rfidSensors[i].pose.y;
+			float rfidx=new_robot_msg_.rfidSensors[i].pose.x;
+			float rfidy=new_robot_msg_.rfidSensors[i].pose.y;
 			float newx=rfidx*cos(robotOrientation)-rfidy*sin(robotOrientation);
 			float newy=rfidx*sin(robotOrientation)+rfidy*cos(robotOrientation);
 			
-			painter.drawPie(	250-newRobotMsg.rfidSensors[i].maxRange*climax+newx*climax,
-								250-newRobotMsg.rfidSensors[i].maxRange*climax-newy*climax,
-								newRobotMsg.rfidSensors[i].maxRange*climax*2,
-								newRobotMsg.rfidSensors[i].maxRange*climax*2,
-								(newRobotMsg.rfidSensors[i].pose.theta-newRobotMsg.rfidSensors[i].angleSpan/2.0+newRobotMsg.initialPose.theta)*16,
-								(newRobotMsg.rfidSensors[i].angleSpan)*16);
+			painter.drawPie(	
+				250-new_robot_msg_.rfidSensors[i].maxRange*climax_+newx*climax_,
+				250-new_robot_msg_.rfidSensors[i].maxRange*climax_-newy*climax_,
+				new_robot_msg_.rfidSensors[i].maxRange*climax_*2,
+				new_robot_msg_.rfidSensors[i].maxRange*climax_*2,
+				(new_robot_msg_.rfidSensors[i].pose.theta-
+					new_robot_msg_.rfidSensors[i].angleSpan/2.0+
+					new_robot_msg_.initialPose.theta)*16,
+				(new_robot_msg_.rfidSensors[i].angleSpan)*16);
 		}
-		loader.robotPreviewLabel->setPixmap(QPixmap().fromImage(loader.robotPreviewImage));
+		loader_.robotPreviewLabel->setPixmap(
+			QPixmap().fromImage(loader_.robotPreviewImage));
 	}
 
-	void RobotCreatorConnector::saveRobot(void){
-		Q_EMIT saveRobotPressed(newRobotMsg);
-		loader.hide();
+	void CRobotCreatorConnector::saveRobot(void)
+	{
+		Q_EMIT saveRobotPressed(new_robot_msg_);
+		loader_.hide();
 	}
 	
-	void RobotCreatorConnector::closeRobotCreator(void){
-		loader.hide();
+	void CRobotCreatorConnector::closeRobotCreator(void)
+	{
+		loader_.hide();
 	}
 	
-	void RobotCreatorConnector::loadRobot(void){
-		Q_EMIT loadRobotPressed(newRobotMsg);
-		loader.hide();
+	void CRobotCreatorConnector::loadRobot(void)
+	{
+		Q_EMIT loadRobotPressed(new_robot_msg_);
+		loader_.hide();
+	}
+	
+	void CRobotCreatorConnector::setInitialPose(QPoint p){
+		new_robot_msg_.initialPose.x=p.x();
+		new_robot_msg_.initialPose.y=p.y();
+	}
+	
+	void CRobotCreatorConnector::fixRobotMsgAngles(void){
+		new_robot_msg_.initialPose.theta=
+			new_robot_msg_.initialPose.theta/180.0*STDR_PI;
+		for(unsigned int i=0;i<new_robot_msg_.laserSensors.size();i++){
+			new_robot_msg_.laserSensors[i].maxAngle=
+				new_robot_msg_.laserSensors[i].maxAngle/180.0*STDR_PI;
+			new_robot_msg_.laserSensors[i].minAngle=
+				new_robot_msg_.laserSensors[i].minAngle/180.0*STDR_PI;
+			new_robot_msg_.laserSensors[i].pose.theta=
+				new_robot_msg_.laserSensors[i].pose.theta/180.0*STDR_PI;
+		}
+		for(unsigned int i=0;i<new_robot_msg_.sonarSensors.size();i++){
+			new_robot_msg_.sonarSensors[i].coneAngle=
+				new_robot_msg_.sonarSensors[i].coneAngle/180.0*STDR_PI;
+			new_robot_msg_.sonarSensors[i].pose.theta=
+				new_robot_msg_.sonarSensors[i].pose.theta/180.0*STDR_PI;
+		}
+		for(unsigned int i=0;i<new_robot_msg_.rfidSensors.size();i++){
+			new_robot_msg_.rfidSensors[i].angleSpan=
+				new_robot_msg_.rfidSensors[i].angleSpan/180.0*STDR_PI;
+			new_robot_msg_.rfidSensors[i].pose.theta=
+				new_robot_msg_.rfidSensors[i].pose.theta/180.0*STDR_PI;
+		}
+	}
+	
+	stdr_msgs::RobotMsg CRobotCreatorConnector::getNewRobot(void){
+		return new_robot_msg_;
 	}
 }

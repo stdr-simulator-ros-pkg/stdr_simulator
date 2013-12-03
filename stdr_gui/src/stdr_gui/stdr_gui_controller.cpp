@@ -24,95 +24,152 @@
 
 namespace stdr_gui{
 	
-	void spinThreadFunction(void){
+	void spinThreadFunction(void)
+	{
 		ros::spin();
 	}
 	
-	GuiController::GuiController(int argc,char **argv):
-			guiConnector(argc,argv),
-			infoConnector(argc,argv),
-			mapConnector(argc,argv)
+	CGuiController::CGuiController(int argc,char **argv):
+		gui_connector_(argc,argv),
+		info_connector_(argc,argv),
+		map_connector_(argc,argv),
+		argc_(argc),
+		argv_(argv)
 	{
-		this->argc=argc;
-		this->argv=argv;
 		setupWidgets();
 		
-		mapLock=false;
+		map_lock_=false;
 		
-        iconMove.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/arrow_move.png")).c_str()), QSize(20,20), QIcon::Normal, QIcon::Off);
+        icon_move_.addFile(QString::fromUtf8((
+			getRosPackagePath("stdr_gui")+
+			std::string("/resources/images/arrow_move.png")).c_str()), 
+			QSize(20,20), QIcon::Normal, QIcon::Off);
         
-        iconDelete.addFile(QString::fromUtf8((getRosPackagePath("stdr_gui")+std::string("/resources/images/remove_icon.png")).c_str()), QSize(20,20), QIcon::Normal, QIcon::Off);
+        icon_delete_.addFile(QString::fromUtf8((
+			getRosPackagePath("stdr_gui")+
+			std::string("/resources/images/remove_icon.png")).c_str()), 
+			QSize(20,20), QIcon::Normal, QIcon::Off);
 	}
 	
-	void GuiController::initializeCommunications(void){
-		mapSubscriber=n.subscribe("map", 1, &GuiController::receiveMap,this);
-		robotSubscriber=n.subscribe("stdr_server/active_robots", 1, &GuiController::receiveRobots,this);
+	CGuiController::~CGuiController(void)
+	{
 		
-		//----------------------------------Connections--------------------------------------------//
-		QObject::connect(&guiConnector,SIGNAL(setZoomInCursor(bool)),&mapConnector, SLOT(setCursorZoomIn(bool)));
-		
-		QObject::connect(&guiConnector,SIGNAL(setZoomOutCursor(bool)),&mapConnector, SLOT(setCursorZoomOut(bool)));
-		
-		QObject::connect(&guiConnector,SIGNAL(setAdjustedCursor(bool)),&mapConnector, SLOT(setCursorAdjusted(bool)));
-		
-		QObject::connect(&mapConnector,SIGNAL(zoomInPressed(QPoint)),this, SLOT(zoomInPressed(QPoint)));
-		
-		QObject::connect(&mapConnector,SIGNAL(zoomOutPressed(QPoint)),this, SLOT(zoomOutPressed(QPoint)));
-		
-		QObject::connect(&mapConnector,SIGNAL(itemClicked(QPoint,Qt::MouseButton)),this, SLOT(itemClicked(QPoint,Qt::MouseButton)));
-		
-		QObject::connect(&infoConnector,SIGNAL(laserVisualizerClicked(QString,QString)),this, SLOT(laserVisualizerClicked(QString,QString)));
-		
-		QObject::connect(&infoConnector,SIGNAL(sonarVisualizerClicked(QString,QString)),this, SLOT(sonarVisualizerClicked(QString,QString)));
-		
-		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg)));
-		
-		QObject::connect(&(guiConnector.robotCreatorConn),SIGNAL(loadRobotPressed(stdr_msgs::RobotMsg)),this, SLOT(loadRobotPressed(stdr_msgs::RobotMsg)));
-		
-		QObject::connect(this,SIGNAL(waitForRobotPose()),&mapConnector, SLOT(waitForPlace()));
-		
-		QObject::connect(&mapConnector,SIGNAL(robotPlaceSet(QPoint)),this, SLOT(robotPlaceSet(QPoint)));
-		
-		QObject::connect(this,SIGNAL(updateMap()),this, SLOT(updateMapInternal()));
-		
-		timer=new QTimer(this);
-		connect(timer, SIGNAL(timeout()), this, SLOT(updateMapInternal()));
-		//----------------------------------Connections end----------------------------------------//
 	}
 	
-	void GuiController::setupWidgets(void){
+	void CGuiController::initializeCommunications(void)
+	{
+		map_subscriber_=n_.subscribe(
+			"map", 
+			1, 
+			&CGuiController::receiveMap,
+			this);
+			
+		robot_subscriber_=n_.subscribe(
+			"stdr_server/active_robots", 
+			1, 
+			&CGuiController::receiveRobots,
+			this);
+		
+		QObject::connect(
+			&gui_connector_,SIGNAL(setZoomInCursor(bool)),
+			&map_connector_, SLOT(setCursorZoomIn(bool)));
+		
+		QObject::connect(
+			&gui_connector_,SIGNAL(setZoomOutCursor(bool)),
+			&map_connector_, SLOT(setCursorZoomOut(bool)));
+		
+		QObject::connect(
+			&gui_connector_,SIGNAL(setAdjustedCursor(bool)),
+			&map_connector_, SLOT(setCursorAdjusted(bool)));
+		
+		QObject::connect(
+			&map_connector_,SIGNAL(zoomInPressed(QPoint)),
+			this, SLOT(zoomInPressed(QPoint)));
+		
+		QObject::connect(
+			&map_connector_,SIGNAL(zoomOutPressed(QPoint)),
+			this, SLOT(zoomOutPressed(QPoint)));
+		
+		QObject::connect(
+			&map_connector_,SIGNAL(itemClicked(QPoint,Qt::MouseButton)),
+			this, SLOT(itemClicked(QPoint,Qt::MouseButton)));
+		
+		QObject::connect(
+			&info_connector_,SIGNAL(laserVisualizerClicked(QString,QString)),
+			this, SLOT(laserVisualizerClicked(QString,QString)));
+		
+		QObject::connect(
+			&info_connector_,SIGNAL(sonarVisualizerClicked(QString,QString)),
+			this, SLOT(sonarVisualizerClicked(QString,QString)));
+		
+		QObject::connect(
+			&(gui_connector_.robotCreatorConn),
+				SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg)),
+			this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg)));
+		
+		QObject::connect(
+			&(gui_connector_.robotCreatorConn),
+				SIGNAL(loadRobotPressed(stdr_msgs::RobotMsg)),
+			this, SLOT(loadRobotPressed(stdr_msgs::RobotMsg)));
+		
+		QObject::connect(
+			this,SIGNAL(waitForRobotPose()),
+			&map_connector_, SLOT(waitForPlace()));
+		
+		QObject::connect(
+			&map_connector_,SIGNAL(robotPlaceSet(QPoint)),
+			this, SLOT(robotPlaceSet(QPoint)));
+		
+		QObject::connect(
+			this,SIGNAL(updateMap()),
+			this, SLOT(updateMapInternal()));
+		
+		timer_=new QTimer(this);
+		connect(
+			timer_, SIGNAL(timeout()), 
+			this, SLOT(updateMapInternal()));
+	}
+	
+	void CGuiController::setupWidgets(void)
+	{
 		{
-			guiConnector.loader.gridLayout->addWidget(static_cast<QWidget *>(&infoConnector.loader),0,0,0);	
+			gui_connector_.addToGrid(info_connector_.getLoader(),0,0);
 		}
 		{
-			initialMap=runningMap=QImage((getRosPackagePath("stdr_gui")+std::string("/resources/images/logo.png")).c_str());
+			initial_map_=running_map_=QImage((
+				getRosPackagePath("stdr_gui")+
+				std::string("/resources/images/logo.png")).c_str());
 
-			mapMsg.info.width=initialMap.width();
-			mapMsg.info.height=initialMap.height();
+			map_msg_.info.width=initial_map_.width();
+			map_msg_.info.height=initial_map_.height();
 			
-			mapConnector.updateImage(&runningMap);
+			map_connector_.updateImage(&running_map_);
 			
-			guiConnector.loader.gridLayout->addWidget(static_cast<QWidget *>(&mapConnector.loader),0,1,0);	
-			guiConnector.loader.gridLayout->setColumnStretch(1,5);
-			guiConnector.loader.gridLayout->setColumnStretch(0,2);
+			gui_connector_.addToGrid(map_connector_.getLoader(),0,1);
+
+			gui_connector_.setGridColumnStretch(1,5);
+			gui_connector_.setGridColumnStretch(0,2);
 		}
 	}
 	
-	bool GuiController::init(void){
+	bool CGuiController::init(void)
+	{
 		if ( ! ros::master::check() ) {
 			return false;
 		}
-		guiConnector.loader.show();
+		gui_connector_.show();
 
 		initializeCommunications();
 		boost::thread spinThread(&spinThreadFunction);
 		return true;
 	}
 
-	void GuiController::receiveMap(const nav_msgs::OccupancyGrid& msg){
-		mapMsg=msg;
-		initialMap=runningMap=QImage(msg.info.width,msg.info.height,QImage::Format_RGB32);
-		QPainter painter(&runningMap);
+	void CGuiController::receiveMap(const nav_msgs::OccupancyGrid& msg)
+	{
+		map_msg_=msg;
+		initial_map_=running_map_=
+			QImage(msg.info.width,msg.info.height,QImage::Format_RGB32);
+		QPainter painter(&running_map_);
 		int d=0;
 		QColor c;
 		for(unsigned int i=0;i<msg.info.width;i++){
@@ -133,176 +190,235 @@ namespace stdr_gui{
 		painter.drawLine(originx,originy-20,originx,originy+20);
 		painter.drawLine(originx-20,originy,originx+20,originy);
 		
-		initialMap=runningMap;
+		initial_map_=running_map_;
 
-		guiConnector.setMapLoaded(true);
-		infoConnector.updateMapInfo(msg.info.width*msg.info.resolution,
+		gui_connector_.setMapLoaded(true);
+		info_connector_.updateMapInfo(msg.info.width*msg.info.resolution,
 									msg.info.height*msg.info.resolution,
 									msg.info.resolution);
-		mapConnector.loader.initialImageSize=QSize(initialMap.width(),initialMap.height());
-		elapsedTime.start();
+		map_connector_.setInitialImageSize(
+			QSize(initial_map_.width(),initial_map_.height()));
 		
-		timer->start(200);
+		elapsed_time_.start();
+		
+		timer_->start(200);
 	}
 	
-	void GuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
+	void CGuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
+	{
 		ROS_ERROR("Save Signal ok");
 	}
-	void GuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg){
+	void CGuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
+	{
 		Q_EMIT waitForRobotPose();
 	}
 	
-	void GuiController::zoomInPressed(QPoint p){
-		mapConnector.loader.updateZoom(p,true);
+	void CGuiController::zoomInPressed(QPoint p)
+	{
+		map_connector_.updateZoom(p,true);
 	}
-	void GuiController::zoomOutPressed(QPoint p){
-		mapConnector.loader.updateZoom(p,false);
+	void CGuiController::zoomOutPressed(QPoint p)
+	{
+		map_connector_.updateZoom(p,false);
 	}
 	
-	void GuiController::receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg){
-		while(mapLock)	usleep(100);
-		mapLock=true;
-		registeredRobots.clear();
-		allRobots=msg;
+	void CGuiController::receiveRobots(
+		const stdr_msgs::RobotIndexedVectorMsg& msg)
+	{
+		while(map_lock_)	
+			usleep(100);
+		map_lock_=true;
+		registered_robots_.clear();
+		all_robots_=msg;
 		for(unsigned int i=0;i<msg.robots.size();i++){
-			stdr_msgs::RobotIndexedMsg m=msg.robots[i];
-			registeredRobots.insert(std::pair<std::string,GuiRobot>(msg.robots[i].name,GuiRobot(m)));
+			registered_robots_.push_back(CGuiRobot(msg.robots[i]));
 		}
-		infoConnector.updateTree(msg);
-		mapLock=false;
+		info_connector_.updateTree(msg);
+		map_lock_=false;
 	}
 	
-	void GuiController::robotPlaceSet(QPoint p){
-		while(mapLock)	usleep(100);
-		mapLock=true;
-		QPoint pnew=mapConnector.loader.getGlobalPoint(p);
-		guiConnector.robotCreatorConn.newRobotMsg.initialPose.x=pnew.x()*mapMsg.info.resolution;
-		guiConnector.robotCreatorConn.newRobotMsg.initialPose.y=pnew.y()*mapMsg.info.resolution;
+	void CGuiController::robotPlaceSet(QPoint p)
+	{
+		while(map_lock_)	
+			usleep(100);
+		map_lock_=true;
+		QPoint pnew=map_connector_.getGlobalPoint(p);
+		
+		gui_connector_.robotCreatorConn.setInitialPose(QPoint(
+			pnew.x()*map_msg_.info.resolution,
+			pnew.y()*map_msg_.info.resolution));
+			
 		stdr_msgs::RobotIndexedMsg newRobot;
-		fixRobotMsgAngles(guiConnector.robotCreatorConn.newRobotMsg);
+		gui_connector_.robotCreatorConn.fixRobotMsgAngles();
 		try {
-			newRobot=robotHandler_.spawnNewRobot(guiConnector.robotCreatorConn.newRobotMsg);
+			newRobot=robot_handler_.spawnNewRobot(
+				gui_connector_.robotCreatorConn.getNewRobot());
 		}
 		catch (ConnectionException& ex) {
 			ROS_ERROR("%s", ex.what());
 			return;
 		}
-		myRobots_.insert(newRobot.name);
-		mapLock=false;
+		my_robots_.insert(newRobot.name);
+		map_lock_=false;
 	}
 	
-	void GuiController::updateMapInternal(void){
-		while(mapLock)	usleep(100);
-		mapLock=true;
-		runningMap=initialMap;
+	void CGuiController::updateMapInternal(void)
+	{
+		while(map_lock_)
+			usleep(100);
+		map_lock_=true;
+		running_map_=initial_map_;
 		
-		if(guiConnector.isGridEnabled())
-			mapConnector.loader.drawGrid(&(runningMap),mapMsg.info.resolution);
+		if(gui_connector_.isGridEnabled())
+			map_connector_.drawGrid(&(running_map_),map_msg_.info.resolution);
 		
-		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
-			it->second.draw(&runningMap,mapMsg.info.resolution);
+		for(unsigned int i=0;i<registered_robots_.size();i++){
+			registered_robots_[i].draw(
+				&running_map_,map_msg_.info.resolution,&listener_);
 		}
-		runningMap=runningMap.mirrored(false,true);
-		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
-			if(it->second.getShowLabel())
-				it->second.drawLabel(&runningMap,mapMsg.info.resolution);
+		running_map_=running_map_.mirrored(false,true);
+		for(unsigned int i=0;i<registered_robots_.size();i++){
+			if(registered_robots_[i].getShowLabel())
+				registered_robots_[i].drawLabel(
+					&running_map_,map_msg_.info.resolution);
 		}
 
-		mapConnector.loader.updateImage(&(runningMap));
+		map_connector_.updateImage(&(running_map_));
 		
-		guiConnector.loader.statusbar->showMessage(QString("Time elapsed : ")+getLiteralTime(elapsedTime.elapsed()),0);
-		mapLock=false;
+		gui_connector_.setStatusBarMessage(
+			QString("Time elapsed : ")+
+			getLiteralTime(elapsed_time_.elapsed()));
+		map_lock_=false;
 		
 		//Check if all visualisers are active
 		std::vector<QString> toBeErased;
-		for(std::map<QString,LaserVisualisation *>::iterator it=laserVisualizers.begin();it!=laserVisualizers.end();it++){
+		for(LaserVisIterator it=laser_visualizers_.begin();
+			it!=laser_visualizers_.end();
+			it++)
+		{
 			if(!it->second->getActive()){
 				toBeErased.push_back(it->first);
 			}
+			else{
+				it->second->paint();
+			}
 		}
 		for(unsigned int i=0;i<toBeErased.size();i++){
-			laserVisualizers.erase(toBeErased[i]);
+			laser_visualizers_.erase(toBeErased[i]);
 		}
 		toBeErased.clear();
-		for(std::map<QString,SonarVisualisation *>::iterator it=sonarVisualizers.begin();it!=sonarVisualizers.end();it++){
+		for(SonarVisIterator it=sonar_visualizers_.begin();
+			it!=sonar_visualizers_.end();
+			it++)
+		{
 			if(!it->second->getActive()){
 				toBeErased.push_back(it->first);
 			}
 		}
 		for(unsigned int i=0;i<toBeErased.size();i++){
-			sonarVisualizers.erase(toBeErased[i]);
+			sonar_visualizers_.erase(toBeErased[i]);
 		}
 	}
 	
-	void GuiController::fixRobotMsgAngles(stdr_msgs::RobotMsg& msg){
-		msg.initialPose.theta=msg.initialPose.theta/180.0*STDR_PI;
-		for(unsigned int i=0;i<msg.laserSensors.size();i++){
-			msg.laserSensors[i].maxAngle=msg.laserSensors[i].maxAngle/180.0*STDR_PI;
-			msg.laserSensors[i].minAngle=msg.laserSensors[i].minAngle/180.0*STDR_PI;
-			msg.laserSensors[i].pose.theta=msg.laserSensors[i].pose.theta/180.0*STDR_PI;
+	stdr_msgs::LaserSensorMsg CGuiController::getLaserDescription(
+		QString robotName,
+		QString laserName)
+	{
+		for(unsigned int i=0;i<all_robots_.robots.size();i++){					
+			if(all_robots_.robots[i].name==robotName.toStdString()){
+				for(unsigned int j=0;
+					j<all_robots_.robots[i].robot.laserSensors.size();
+					j++)
+				{
+					if(all_robots_.robots[i].robot.laserSensors[j].frame_id
+							==laserName.toStdString())
+					{
+						return all_robots_.robots[i].robot.laserSensors[j];
+					}
+				}
+			}
 		}
-		for(unsigned int i=0;i<msg.sonarSensors.size();i++){
-			msg.sonarSensors[i].coneAngle=msg.sonarSensors[i].coneAngle/180.0*STDR_PI;
-			msg.sonarSensors[i].pose.theta=msg.sonarSensors[i].pose.theta/180.0*STDR_PI;
-		}
-		for(unsigned int i=0;i<msg.rfidSensors.size();i++){
-			msg.rfidSensors[i].angleSpan=msg.rfidSensors[i].angleSpan/180.0*STDR_PI;
-			msg.rfidSensors[i].pose.theta=msg.rfidSensors[i].pose.theta/180.0*STDR_PI;
-		}
+		return stdr_msgs::LaserSensorMsg();			
+	}
+				
+	stdr_msgs::SonarSensorMsg CGuiController::getSonarDescription(
+		QString robotName,
+		QString sonarName)
+	{
+		for(unsigned int i=0;i<all_robots_.robots.size();i++){					
+			if(all_robots_.robots[i].name==robotName.toStdString()){
+				for(unsigned int j=0;
+					j<all_robots_.robots[i].robot.sonarSensors.size();
+					j++)
+				{
+					if(all_robots_.robots[i].robot.sonarSensors[j].frame_id
+							==sonarName.toStdString())
+					{
+						return all_robots_.robots[i].robot.sonarSensors[j];
+					}
+				}
+			}
+		}	
+		return stdr_msgs::SonarSensorMsg();						
 	}
 	
-	void GuiController::laserVisualizerClicked(QString robotName,QString laserName){
+	void CGuiController::laserVisualizerClicked(
+		QString robotName,
+		QString laserName)
+	{
 		QString name=robotName+QString("/")+laserName;
-		if(laserVisualizers.find(name)!=laserVisualizers.end())
+		if(laser_visualizers_.find(name)!=laser_visualizers_.end())
 			return;
-		LaserVisualisation *lv;
-		lv=new LaserVisualisation(name);
-		laserVisualizers.insert(std::pair<QString,LaserVisualisation *>(name,lv));
+		CLaserVisualisation *lv;
+		lv=new CLaserVisualisation(name,map_msg_.info.resolution);
+		laser_visualizers_.insert(
+			std::pair<QString,CLaserVisualisation *>(name,lv));
 		lv->setWindowFlags(Qt::WindowStaysOnTopHint);
-		
-		for(unsigned int i=0;i<allRobots.robots.size();i++)
-			if(allRobots.robots[i].name==robotName.toStdString())
-				for(unsigned int j=0;j<allRobots.robots[i].robot.laserSensors.size();j++)
-					if(allRobots.robots[i].robot.laserSensors[j].frame_id==laserName.toStdString())
-						lv->setLaser(allRobots.robots[i].robot.laserSensors[j]);
+
+		lv->setLaser(getLaserDescription(robotName,laserName));
 		
 		lv->show();
 	}
-	void GuiController::sonarVisualizerClicked(QString robotName,QString sonarName){
+	void CGuiController::sonarVisualizerClicked(
+		QString robotName,
+		QString sonarName)
+	{
 		QString name=robotName+QString("/")+sonarName;
-		if(sonarVisualizers.find(name)!=sonarVisualizers.end())
+		if(sonar_visualizers_.find(name)!=sonar_visualizers_.end())
 			return;
-		SonarVisualisation *sv;
-		sv=new SonarVisualisation(name);
-		sonarVisualizers.insert(std::pair<QString,SonarVisualisation *>(name,sv));
+		CSonarVisualisation *sv;
+		sv=new CSonarVisualisation(name);
+		sonar_visualizers_.insert(
+			std::pair<QString,CSonarVisualisation *>(name,sv));
 		sv->setWindowFlags(Qt::WindowStaysOnTopHint);
-		
-		for(unsigned int i=0;i<allRobots.robots.size();i++)
-			if(allRobots.robots[i].name==robotName.toStdString())
-				for(unsigned int j=0;j<allRobots.robots[i].robot.sonarSensors.size();j++)
-					if(allRobots.robots[i].robot.sonarSensors[j].frame_id==sonarName.toStdString())
-						sv->setSonar(allRobots.robots[i].robot.sonarSensors[j]);
+
+		sv->setSonar(getSonarDescription(robotName,sonarName));
 						
 		sv->show();
 	}
 	
-	void GuiController::itemClicked(QPoint p,Qt::MouseButton b){
-		QPoint pointClicked=mapConnector.loader.getGlobalPoint(p);
-		for(std::map<std::string,GuiRobot>::iterator it=registeredRobots.begin();it!=registeredRobots.end();it++){
-			if(it->second.checkEventProximity(pointClicked)){
+	void CGuiController::itemClicked(QPoint p,Qt::MouseButton b)
+	{
+		QPoint pointClicked=map_connector_.getGlobalPoint(p);
+		for(unsigned int i=0;i<registered_robots_.size();i++){
+			if(registered_robots_[i].checkEventProximity(pointClicked)){
 				if(b==Qt::RightButton){
 					QMenu myMenu;
-					QAction *deleteRobot=myMenu.addAction(iconDelete,"Delete robot");
-					QAction *moveRobot=myMenu.addAction(iconMove,"Move robot");
+					QAction *deleteRobot=
+						myMenu.addAction(icon_delete_,"Delete robot");
+					QAction *moveRobot=
+						myMenu.addAction(icon_move_,"Move robot");
 					myMenu.addSeparator();
-					QAction *showCircle=myMenu.addAction("Show proximity circles");
-					QAction* selectedItem = myMenu.exec(mapConnector.loader.mapToGlobal(p));
+					QAction *showCircle=
+						myMenu.addAction("Show proximity circles");
+					QAction* selectedItem = 
+						myMenu.exec(map_connector_.mapToGlobal(p));
 					if(selectedItem==showCircle){
-						it->second.toggleShowCircles();
+						registered_robots_[i].toggleShowCircles();
 					}
 				}
 				else if(b==Qt::LeftButton){
-					it->second.toggleShowLabel();
+					registered_robots_[i].toggleShowLabel();
 				}
 			}
 		}

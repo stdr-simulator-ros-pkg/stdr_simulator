@@ -24,19 +24,16 @@
 
 #include <iostream>
 #include <cstdlib>
-
 #include <boost/thread.hpp>
+
+#include "nav_msgs/OccupancyGrid.h"
 
 #include "stdr_gui/stdr_gui_connector.h"
 #include "stdr_gui/stdr_info_connector.h"
 #include "stdr_gui/stdr_map_connector.h"
-
 #include "stdr_gui/stdr_visualization/stdr_sonar_visualization.h"
 #include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
-
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
-
-#include "nav_msgs/OccupancyGrid.h"
 
 #include <stdr_robot/handle_robot.h>
 
@@ -46,55 +43,66 @@ namespace stdr_gui{
 	 @class GuiController
 	 @brief The main controller for the STDR GUI. Inherits QThread
 	 **/ 
-	class GuiController : public QThread{
+	class CGuiController : 
+		public QThread
+	{
 		Q_OBJECT
 		
 		private: 
-			int argc;
-			char **argv;
+		
+			typedef std::map<QString,CLaserVisualisation *>::iterator
+				LaserVisIterator;
+			typedef std::map<QString,CSonarVisualisation *>::iterator
+				SonarVisIterator;
+		
+			int 	argc_;	
+			char**	argv_;
 			
-			bool mapLock;
+			bool 	map_lock_;
 			
-			std::map<std::string,GuiRobot> registeredRobots;	
-			std::set<std::string> myRobots_;	
-			stdr_msgs::RobotIndexedVectorMsg allRobots;	
+			std::vector<CGuiRobot> 	registered_robots_;	
+			std::set<std::string> 	my_robots_;	
 			
-			ros::Subscriber mapSubscriber;
-			ros::Subscriber robotSubscriber;
+			std::map<QString,CLaserVisualisation *> laser_visualizers_;
+			std::map<QString,CSonarVisualisation *> sonar_visualizers_;
 			
-			ros::NodeHandle n;
+			ros::Subscriber 		map_subscriber_;
+			ros::Subscriber 		robot_subscriber_;
+			ros::NodeHandle 		n_;
+			tf::TransformListener 	listener_;
 			
-			nav_msgs::OccupancyGrid mapMsg;
-			QImage initialMap;
-			QImage runningMap;
-			
-			stdr_robot::HandleRobot robotHandler_;
-			
-			QTimer *timer;
-			QTime elapsedTime;
-			
-			void fixRobotMsgAngles(stdr_msgs::RobotMsg& msg);
-			
-			std::map<QString,LaserVisualisation *> laserVisualizers;
-			std::map<QString,SonarVisualisation *> sonarVisualizers;
-			
-			QIcon iconMove;
-			QIcon iconDelete;
+			nav_msgs::OccupancyGrid map_msg_;
+						
+			stdr_robot::HandleRobot 			robot_handler_;
+			stdr_msgs::RobotIndexedVectorMsg 	all_robots_;	
+
+			QTimer* 	timer_;
+			QTime 		elapsed_time_;
+			QIcon 		icon_move_;
+			QIcon 		icon_delete_;
+			QImage 		initial_map_;
+			QImage 		running_map_;
+
+			CGuiConnector 	gui_connector_;
+			CInfoConnector 	info_connector_;
+			CMapConnector 	map_connector_;
+
+			stdr_msgs::LaserSensorMsg getLaserDescription(
+				QString robotName,
+				QString laserName); 
+				
+			stdr_msgs::SonarSensorMsg getSonarDescription(
+				QString robotName,
+				QString sonarName); 
 			
 		public:
-			GuiController(int argc,char **argv);
+			CGuiController(int argc,char **argv);
+			~CGuiController(void);
 			
 			void setupWidgets(void);
-		
-			GuiConnector guiConnector;
-			InfoConnector infoConnector;
-			MapConnector mapConnector;
-			
 			void initializeCommunications(void);
-			
 			void receiveMap(const nav_msgs::OccupancyGrid& msg);
 			void receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
-			 
 			bool init();	
 		
 		public Q_SLOTS:

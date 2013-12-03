@@ -22,9 +22,14 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_rfid.h"
 
 namespace stdr_gui{
-	GuiRfid::GuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic):
-		_msg(msg)
+	CGuiRfid::CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic):
+		msg_(msg)
 	{
 		
+	}
+	
+	CGuiRfid::~CGuiRfid(void)
+	{
+	
 	}
 }

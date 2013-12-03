@@ -22,14 +22,19 @@
 #include "stdr_gui/stdr_visualization/stdr_sonar_visualization.h"
 
 namespace stdr_gui{
-	SonarVisualisation::SonarVisualisation(QString name){
-		this->name=name;
+	CSonarVisualisation::CSonarVisualisation(QString name):
+		name_(name)
+	{
 		setupUi(this);
-		setWindowTitle(name);
-		active=true;
+		setWindowTitle(name_);
+		active_=true;
 	}
 	
-	void SonarVisualisation::destruct(void){
+	CSonarVisualisation::~CSonarVisualisation(void){
+		
+	}
+	
+	void CSonarVisualisation::destruct(void){
 		hide();
 		delete sonarDistBar;
 		delete sonarDist;
@@ -37,17 +42,17 @@ namespace stdr_gui{
 		delete sonarMinDist;
 	}
 	
-	void SonarVisualisation::closeEvent(QCloseEvent *event){
+	void CSonarVisualisation::closeEvent(QCloseEvent *event){
 		destruct();
-		active=false;
+		active_=false;
 	}
 	
-	bool SonarVisualisation::getActive(void){
-		return active;
+	bool CSonarVisualisation::getActive(void){
+		return active_;
 	}
 	
-	void SonarVisualisation::setSonar(stdr_msgs::SonarSensorMsg& msg){
-		_msg=msg;
+	void CSonarVisualisation::setSonar(stdr_msgs::SonarSensorMsg msg){
+		msg_=msg;
 		sonarMaxDist->setText(QString().setNum(msg.maxRange)+QString(" m"));
 		sonarMinDist->setText(QString().setNum(msg.minRange)+QString(" m"));
 	}

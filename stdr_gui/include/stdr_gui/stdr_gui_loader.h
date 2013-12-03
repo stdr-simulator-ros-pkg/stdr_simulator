@@ -27,9 +27,11 @@
 
 namespace stdr_gui{
 	
-	class GuiLoader : public Ui_MainWindow, public QMainWindow{
-			int argc;
-			char **argv;
+	class CGuiLoader : public Ui_MainWindow, public QMainWindow
+	{
+		private:
+			int 	argc_;
+			char**	argv_;
 		public:
 
 			QAction *actionProperties;
@@ -42,7 +44,7 @@ namespace stdr_gui{
 			QAction *actionZoomOut;
 			QAction *actionAdjusted;
 		
-			GuiLoader(int argc,char **argv);
+			CGuiLoader(int argc,char **argv);
 			
 			void closeEvent(QCloseEvent *event);
 			

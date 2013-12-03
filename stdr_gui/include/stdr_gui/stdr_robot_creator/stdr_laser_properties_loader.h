@@ -26,11 +26,16 @@
 #include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui{
-	class LaserPropertiesLoader : public QWidget, public Ui_LaserProperties{
-			int argc;
-			char **argv;
+	class CLaserPropertiesLoader : 
+		public QWidget, 
+		public Ui_LaserProperties
+	{
+		private:
+			int 	argc_;
+			char**	argv_;
 		public:
-			LaserPropertiesLoader(int argc, char **argv);
+			CLaserPropertiesLoader(int argc, char **argv);
+			~CLaserPropertiesLoader(void);
 	};	
 }
 
