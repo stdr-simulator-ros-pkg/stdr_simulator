@@ -65,8 +65,8 @@ void Laser::updateSensorCallback(const ros::TimerEvent&) {
 		distance = 1;
 
 		while ( distance < _description.maxRange / _map.info.resolution ){
-			xMap = _robotPosePtr->x / _map.info.resolution + cos( angle ) * distance;
-			yMap = _robotPosePtr->y / _map.info.resolution + sin( angle ) * distance;
+			xMap = (_robotPosePtr->x + _description.pose.x * cos(_robotPosePtr->theta) - _description.pose.y * sin(_robotPosePtr->theta)) / _map.info.resolution + cos( angle ) * distance;
+			yMap = (_robotPosePtr->y + _description.pose.x * sin(_robotPosePtr->theta) + _description.pose.y * cos(_robotPosePtr->theta)) / _map.info.resolution + sin( angle ) * distance;
 			if ( _map.data[ yMap * _map.info.width + xMap ] > 70 ) break;
 			distance ++;
 		}
