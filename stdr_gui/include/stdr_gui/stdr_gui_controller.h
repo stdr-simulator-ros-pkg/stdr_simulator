@@ -115,10 +115,12 @@ namespace stdr_gui{
 			void laserVisualizerClicked(QString robotName,QString laserName);
 			void sonarVisualizerClicked(QString robotName,QString sonarName);
 			void itemClicked(QPoint p,Qt::MouseButton b);
+			void robotReplaceSet(QPoint p,std::string robotName);
 			
 		Q_SIGNALS:
 			void waitForRobotPose(void);
 			void updateMap(void);
+			void replaceRobot(std::string robotFrameId);
 	};
 }
 

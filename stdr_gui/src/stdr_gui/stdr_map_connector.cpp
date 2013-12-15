@@ -100,6 +100,11 @@ namespace stdr_gui{
 					else if(map_state_==NORMAL){
 						Q_EMIT itemClicked(p,Qt::LeftButton);
 					}
+					else if(map_state_==SETREPLACE){
+						map_state_=NORMAL;
+						loader_.map->setCursor(QCursor(Qt::CrossCursor));
+						Q_EMIT robotReplaceSet(p,current_robot_frame_id_);
+					}
 				}
 			}
 		}
@@ -161,5 +166,11 @@ namespace stdr_gui{
 	QWidget* CMapConnector::getLoader(void)
 	{
 		return static_cast<QWidget *>(&loader_);
+	}
+	
+	void CMapConnector::waitForReplace(std::string robotFrameId){
+		current_robot_frame_id_=robotFrameId;
+		map_state_=SETREPLACE;
+		loader_.map->setCursor(Qt::PointingHandCursor);
 	}
 }

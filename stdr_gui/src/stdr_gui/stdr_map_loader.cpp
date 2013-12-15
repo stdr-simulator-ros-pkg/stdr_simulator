@@ -139,6 +139,7 @@ namespace stdr_gui{
 		float y=p.y();
 		float initialWidth=internal_img_->width();
 		float currentWidth=map->width();
+		//~ ROS_ERROR("InitialW, CurrW : %f %f",initialWidth,currentWidth);
 		float climax=initialWidth/currentWidth;
 		newPoint.setX(x*climax);
 		newPoint.setY(y*climax);
@@ -153,9 +154,12 @@ namespace stdr_gui{
 	}
 	
 	QPoint CMapLoader::getGlobalPoint(QPoint p){
+		//~ ROS_ERROR("Robot place set (loader) : %d %d",p.x(),p.y());
 		QPoint np=pointUnscaled(p);
+		//~ ROS_ERROR("Robot place set (unscaled): %d %d",np.x(),np.y());
 		int xev=np.x()/pow(2,zoom_)+map_min_.x();
 		int yev=np.y()/pow(2,zoom_)+map_min_.y();
+		//~ ROS_ERROR("Robot place set (unzoomed): %d %d",xev,yev);
 		return QPoint(xev,internal_img_->height()-yev);
 	}
 	

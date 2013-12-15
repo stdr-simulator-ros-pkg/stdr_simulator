@@ -119,6 +119,14 @@ namespace stdr_gui{
 		QObject::connect(
 			&map_connector_,SIGNAL(robotPlaceSet(QPoint)),
 			this, SLOT(robotPlaceSet(QPoint)));
+			
+		QObject::connect(
+			this,SIGNAL(replaceRobot(std::string)),
+			&map_connector_, SLOT(waitForReplace(std::string)));
+			
+		QObject::connect(
+			&map_connector_,SIGNAL(robotReplaceSet(QPoint,std::string)),
+			this, SLOT(robotReplaceSet(QPoint,std::string)));
 		
 		QObject::connect(
 			this,SIGNAL(updateMap()),
@@ -232,6 +240,9 @@ namespace stdr_gui{
 		all_robots_=msg;
 		for(unsigned int i=0;i<msg.robots.size();i++){
 			registered_robots_.push_back(CGuiRobot(msg.robots[i]));
+			//~ ROS_ERROR("Place got : %f %f",
+				//~ msg.robots[i].robot.initialPose.x,
+				//~ msg.robots[i].robot.initialPose.y);
 		}
 		info_connector_.updateTree(msg);
 		map_lock_=false;
@@ -242,11 +253,17 @@ namespace stdr_gui{
 		while(map_lock_)	
 			usleep(100);
 		map_lock_=true;
-		QPoint pnew=map_connector_.getGlobalPoint(p);
 		
+		//~ ROS_ERROR("Robot place set : %d %d",p.x(),p.y());
+		QPoint pnew=map_connector_.getGlobalPoint(p);
+		//~ ROS_ERROR("Robot place set after : %d %d",pnew.x(),pnew.y());
 		gui_connector_.robotCreatorConn.setInitialPose(QPoint(
 			pnew.x()*map_msg_.info.resolution,
-			pnew.y()*map_msg_.info.resolution));
+			pnew.x()*map_msg_.info.resolution));
+			
+		//~ ROS_ERROR("Place send : %f %f",
+			//~ pnew.x()*map_msg_.info.resolution,
+			//~ pnew.x()*map_msg_.info.resolution);
 			
 		stdr_msgs::RobotIndexedMsg newRobot;
 		gui_connector_.robotCreatorConn.fixRobotMsgAngles();
@@ -400,10 +417,14 @@ namespace stdr_gui{
 	void CGuiController::itemClicked(QPoint p,Qt::MouseButton b)
 	{
 		QPoint pointClicked=map_connector_.getGlobalPoint(p);
-		for(unsigned int i=0;i<registered_robots_.size();i++){
-			if(registered_robots_[i].checkEventProximity(pointClicked)){
-				if(b==Qt::RightButton){
+		for(unsigned int i=0;i<registered_robots_.size();i++)
+		{
+			if(registered_robots_[i].checkEventProximity(pointClicked))
+			{
+				if(b==Qt::RightButton)
+				{
 					QMenu myMenu;
+					
 					QAction *deleteRobot=
 						myMenu.addAction(icon_delete_,"Delete robot");
 					QAction *moveRobot=
@@ -411,10 +432,21 @@ namespace stdr_gui{
 					myMenu.addSeparator();
 					QAction *showCircle=
 						myMenu.addAction("Show proximity circles");
+					
 					QAction* selectedItem = 
 						myMenu.exec(map_connector_.mapToGlobal(p));
-					if(selectedItem==showCircle){
+					if(selectedItem==showCircle)
+					{
 						registered_robots_[i].toggleShowCircles();
+					}
+					else if(selectedItem==deleteRobot)
+					{
+						robot_handler_.deleteRobot(
+							registered_robots_[i].getFrameId());
+					}
+					else if(selectedItem==moveRobot)
+					{
+						Q_EMIT replaceRobot(registered_robots_[i].getFrameId());
 					}
 				}
 				else if(b==Qt::LeftButton){
@@ -422,6 +454,16 @@ namespace stdr_gui{
 				}
 			}
 		}
+	}
+	
+	void CGuiController::robotReplaceSet(QPoint p,std::string robotName){
+		QPoint pnew=map_connector_.getGlobalPoint(p);
+		
+		geometry_msgs::Pose2D newPose;
+		newPose.x=pnew.x()*map_msg_.info.resolution;
+		newPose.y=pnew.y()*map_msg_.info.resolution;
+			
+		robot_handler_.moveRobot(robotName,newPose);
 	}
 }	
 
