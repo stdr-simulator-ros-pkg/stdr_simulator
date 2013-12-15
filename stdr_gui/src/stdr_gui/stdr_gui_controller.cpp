@@ -38,6 +38,8 @@ namespace stdr_gui{
 	{
 		setupWidgets();
 		
+		robot_following_="";
+		
 		map_lock_=false;
 		
         icon_move_.addFile(QString::fromUtf8((
@@ -299,6 +301,16 @@ namespace stdr_gui{
 				registered_robots_[i].drawLabel(
 					&running_map_,map_msg_.info.resolution);
 		}
+		
+		for(unsigned int i=0;i<registered_robots_.size();i++){
+			if(registered_robots_[i].getFrameId()==robot_following_)
+			{
+				map_connector_.updateCenter(
+					registered_robots_[i].getCurrentPose());
+			}
+		}
+		
+		
 
 		map_connector_.updateImage(&(running_map_));
 		
@@ -432,6 +444,8 @@ namespace stdr_gui{
 					myMenu.addSeparator();
 					QAction *showCircle=
 						myMenu.addAction("Show proximity circles");
+					QAction *followRobot=
+						myMenu.addAction("Follow robot");
 					
 					QAction* selectedItem = 
 						myMenu.exec(map_connector_.mapToGlobal(p));
@@ -447,6 +461,13 @@ namespace stdr_gui{
 					else if(selectedItem==moveRobot)
 					{
 						Q_EMIT replaceRobot(registered_robots_[i].getFrameId());
+					}
+					else if(selectedItem==followRobot)
+					{
+						if(robot_following_==registered_robots_[i].getFrameId())
+							robot_following_="";
+						else
+							robot_following_=registered_robots_[i].getFrameId();
 					}
 				}
 				else if(b==Qt::LeftButton){

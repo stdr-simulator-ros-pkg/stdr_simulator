@@ -52,6 +52,7 @@ namespace stdr_gui{
 			void updateImage(QImage *img);
 			void drawGrid(QImage *img,float resolution);
 			void updateZoom(QPoint p,bool zoomIn);
+			void updateCenter(QPoint p);
 			void resetZoom(void);
 			QPoint getGlobalPoint(QPoint);
 			void wheelEvent ( QWheelEvent * event );

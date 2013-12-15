@@ -94,6 +94,8 @@ namespace stdr_gui{
 			stdr_msgs::SonarSensorMsg getSonarDescription(
 				QString robotName,
 				QString sonarName); 
+				
+			std::string robot_following_;
 			
 		public:
 			CGuiController(int argc,char **argv);

@@ -155,4 +155,8 @@ namespace stdr_gui{
 	void CGuiRobot::toggleShowCircles(void){
 		show_circles_=!show_circles_;
 	}
+	
+	QPoint CGuiRobot::getCurrentPose(void){
+		return QPoint(current_pose_.x/resolution_,current_pose_.y/resolution_);
+	}
 }

@@ -65,6 +65,10 @@ namespace stdr_gui{
 		loader_.updateZoom(p,z);
 	}
 	
+	void CMapConnector::updateCenter(QPoint p){
+		loader_.updateCenter(p);
+	}
+	
 	QPoint CMapConnector::getGlobalPoint(QPoint p)
 	{
 		return loader_.getGlobalPoint(p);

@@ -132,6 +132,45 @@ namespace stdr_gui{
 		map_max_=QPoint(xmax,ymax);
 	}
 	
+	void CMapLoader::updateCenter(QPoint p)
+	{
+		
+		//~ ROS_ERROR("Update center :%d %d",p.x(),p.y());
+
+		float intW=internal_img_->width();
+		float intH=internal_img_->height();
+		float newWidth=internal_img_->width()/pow(2,zoom_);
+		float newHeight=internal_img_->height()/pow(2,zoom_);
+		QPoint evOriginal=p;
+		evOriginal.setY(internal_img_->height()-evOriginal.y());
+		
+		float xmin,xmax,ymin,ymax;
+		xmin=evOriginal.x()-newWidth/2;
+		xmax=evOriginal.x()+newWidth/2;
+		ymin=evOriginal.y()-newHeight/2;
+		ymax=evOriginal.y()+newHeight/2;
+		if(xmin<0){
+			xmax+=-xmin;
+			xmin=0;
+		}
+		else if(xmax>internal_img_->width()-1){
+			xmin-=xmax-internal_img_->width()+1;
+			xmax=internal_img_->width()-1;
+		}
+		if(ymin<0){
+			ymax+=-ymin;
+			ymin=0;
+		}
+		else if(ymax>internal_img_->height()-1){
+			ymin-=ymax-internal_img_->height()+1;
+			ymax=internal_img_->height()-1;
+		}
+		map_min_=QPoint(xmin,ymin);
+		map_max_=QPoint(xmax,ymax);
+		
+		//~ ROS_ERROR("Update center after:%d %d",map_min_.x(),map_min_.y());
+	}
+	
 	QPoint CMapLoader::pointUnscaled(QPoint p)
 	{
 		QPoint newPoint;

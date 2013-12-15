@@ -64,6 +64,7 @@ namespace stdr_gui{
 			void toggleShowLabel(void);
 			bool getShowLabel(void);
 			void toggleShowCircles(void);
+			QPoint getCurrentPose(void);
 	};	
 }
 

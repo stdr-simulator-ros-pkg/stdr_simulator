@@ -57,6 +57,7 @@ namespace stdr_gui{
 			void updateImage(QImage *img);	
 			void setInitialImageSize(QSize s);
 			void updateZoom(QPoint p,bool z);
+			void updateCenter(QPoint p);
 			QPoint getGlobalPoint(QPoint p);
 			void drawGrid(QImage *img,float resolution);
 			QPoint mapToGlobal(QPoint p);
