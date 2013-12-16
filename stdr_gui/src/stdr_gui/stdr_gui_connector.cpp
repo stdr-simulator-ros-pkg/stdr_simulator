@@ -86,8 +86,9 @@ namespace stdr_gui{
 		QString fileName = QFileDialog::getOpenFileName(
 			&loader_,
 			tr("Load map"), 
-			QString().fromStdString(getRosPackagePath("stdr_gui")), 
-			tr("Yaml Files (*.yaml)"));
+			QString().fromStdString(
+				stdr_gui_tools::getRosPackagePath("stdr_gui")), 
+				tr("Yaml Files (*.yaml)"));
 	}
 	
 	void CGuiConnector::actionAboutTriggered(void)

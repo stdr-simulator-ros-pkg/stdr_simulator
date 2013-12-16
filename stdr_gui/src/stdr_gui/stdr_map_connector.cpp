@@ -40,12 +40,12 @@ namespace stdr_gui{
 			this, SLOT(serveImage(QImage *)));
 		
 		QPixmap p((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/zoom_in.png")).c_str());
 		zoom_in_cursor_=QCursor(p.scaled(20,20));
 		
 		p=QPixmap((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/zoom_out.png")).c_str());
 		zoom_out_cursor_=QCursor(p.scaled(20,20));
 	}

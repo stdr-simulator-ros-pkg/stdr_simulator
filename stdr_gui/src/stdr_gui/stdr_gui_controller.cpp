@@ -43,12 +43,12 @@ namespace stdr_gui{
 		map_lock_=false;
 		
         icon_move_.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/arrow_move.png")).c_str()), 
 			QSize(20,20), QIcon::Normal, QIcon::Off);
         
         icon_delete_.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/remove_icon.png")).c_str()), 
 			QSize(20,20), QIcon::Normal, QIcon::Off);
 	}
@@ -147,7 +147,7 @@ namespace stdr_gui{
 		}
 		{
 			initial_map_=running_map_=QImage((
-				getRosPackagePath("stdr_gui")+
+				stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/logo.png")).c_str());
 
 			map_msg_.info.width=initial_map_.width();
@@ -309,14 +309,13 @@ namespace stdr_gui{
 					registered_robots_[i].getCurrentPose());
 			}
 		}
-		
-		
+
 
 		map_connector_.updateImage(&(running_map_));
 		
 		gui_connector_.setStatusBarMessage(
 			QString("Time elapsed : ")+
-			getLiteralTime(elapsed_time_.elapsed()));
+			stdr_gui_tools::getLiteralTime(elapsed_time_.elapsed()));
 		map_lock_=false;
 		
 		//Check if all visualisers are active

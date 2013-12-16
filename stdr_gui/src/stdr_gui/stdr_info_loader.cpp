@@ -54,7 +54,7 @@ namespace stdr_gui{
 		robotsInfo.setExpanded(true);
 		
 		visible_icon_.addFile(QString((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/visible.png")).c_str()));
 	}
 	

@@ -45,13 +45,13 @@ namespace stdr_gui{
 	void CRobotCreatorLoader::setupInitialTree(void)
 	{
 		addIcon=QIcon(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/add_icon.png")).c_str()));
 		editIcon=QIcon(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/edit_icon.png")).c_str()));
 		removeIcon=QIcon(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/remove_icon.png")).c_str()));
 		
 		robotTreeWidget->setColumnWidth(0,150);

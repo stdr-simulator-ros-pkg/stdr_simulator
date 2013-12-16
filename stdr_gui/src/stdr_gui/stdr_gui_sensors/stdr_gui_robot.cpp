@@ -37,6 +37,10 @@ namespace stdr_gui{
 			CGuiLaser *l=new CGuiLaser(msg.robot.laserSensors[i],frame_id_);
 			lasers_.push_back(l);
 		}
+		for(unsigned int i=0;i<msg.robot.sonarSensors.size();i++){
+			CGuiSonar *l=new CGuiSonar(msg.robot.sonarSensors[i],frame_id_);
+			sonars_.push_back(l);
+		}
 		robot_initialized_=true;
 	}
 
@@ -62,6 +66,9 @@ namespace stdr_gui{
 		drawSelf(m);
 		for(unsigned int i=0;i<lasers_.size();i++){
 			lasers_[i]->paint(m,resolution_,current_pose_);
+		}
+		for(unsigned int i=0;i<sonars_.size();i++){
+			sonars_[i]->paint(m,resolution_,current_pose_);
 		}
 	}
 	

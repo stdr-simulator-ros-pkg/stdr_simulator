@@ -25,12 +25,57 @@ namespace stdr_gui{
 	CGuiSonar::CGuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic):
 		msg_(msg)
 	{
-		
+		topic_=baseTopic+"/"+msg_.frame_id;
+		ros::NodeHandle n;
+		lock_=false;
+		subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiSonar::callback,this);
 	}
 	
 	CGuiSonar::~CGuiSonar(void)
 	{
 		
+	}
+	
+	void CGuiSonar::callback(const sensor_msgs::Range& msg)
+	{
+		if(lock_){
+			return;
+		}
+		range_=msg;
+	}
+	
+	void CGuiSonar::paint(
+		QImage *m,
+		float ocgd,
+		geometry_msgs::Pose2D robotPose)
+	{
+		range_.range=1.0; // Just to experiment
+		
+		lock_=true;
+		QPainter painter(m);
+		QBrush brush(QColor(0,200,0,50));
+		painter.setBrush(brush);
+		
+		painter.drawPie(	
+			robotPose.x/ocgd +
+				(msg_.pose.x/ocgd * cos(robotPose.theta) - 
+				msg_.pose.y/ocgd * sin(robotPose.theta)) - 
+				range_.range/ocgd,
+			robotPose.y/ocgd +
+				(msg_.pose.x/ocgd * sin(robotPose.theta) + 
+				msg_.pose.y/ocgd * cos(robotPose.theta)) -
+				range_.range/ocgd,
+				
+			range_.range/ocgd*2,
+			range_.range/ocgd*2,
+			
+			(msg_.pose.theta-
+				msg_.coneAngle/2.0-
+				robotPose.theta)*180.0/STDR_PI*16,
+				
+			(msg_.coneAngle*180.0/STDR_PI)*16);
+
+		lock_=false;
 	}
 }
 
