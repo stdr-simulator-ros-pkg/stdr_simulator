@@ -239,6 +239,62 @@ namespace stdr_gui
 		map_connector_.updateZoom(p,false);
 	}
 	
+	void CGuiController::cleanupVisualizers(const stdr_msgs::RobotIndexedVectorMsg& msg)
+	{
+		std::set<QString> newSensors,erasedSensorsL,erasedSensorsS;
+		for(unsigned int r=0;r<msg.robots.size();r++)
+		{
+			QString baseName=QString(msg.robots[r].name.c_str());
+			for(unsigned int l=0;
+				l<msg.robots[r].robot.laserSensors.size();l++)
+			{
+				QString fullName=baseName+QString("/")+
+					QString(
+						msg.robots[r].robot.laserSensors[l].frame_id.c_str());
+				newSensors.insert(fullName);
+			}
+			for(unsigned int s=0;
+				s<msg.robots[r].robot.sonarSensors.size();s++)
+			{
+				QString fullName=baseName+QString("/")+
+					QString(
+						msg.robots[r].robot.sonarSensors[s].frame_id.c_str());
+				newSensors.insert(fullName);
+			}
+		}
+		
+		for(LaserVisIterator it=laser_visualizers_.begin();
+			it!=laser_visualizers_.end();it++)
+		{
+			if(newSensors.find(it->first)==newSensors.end())
+			{
+				erasedSensorsL.insert(it->first);
+			}
+		}
+		for(SonarVisIterator it=sonar_visualizers_.begin();
+			it!=sonar_visualizers_.end();it++)
+		{
+			if(newSensors.find(it->first)==newSensors.end())
+			{
+				erasedSensorsS.insert(it->first);
+			}
+		}
+		
+		for(std::set<QString>::iterator it=erasedSensorsL.begin();
+			it!=erasedSensorsL.end();it++)
+		{
+			laser_visualizers_[*it]->destruct();
+			laser_visualizers_.erase(*it);
+		}
+		for(std::set<QString>::iterator it=erasedSensorsS.begin();
+			it!=erasedSensorsS.end();it++)
+		{
+			sonar_visualizers_[*it]->destruct();
+			sonar_visualizers_.erase(*it);
+		}
+			
+	}
+	
 	void CGuiController::receiveRobots(
 		const stdr_msgs::RobotIndexedVectorMsg& msg)
 	{
@@ -247,6 +303,9 @@ namespace stdr_gui
 			usleep(100);
 		}
 		map_lock_=true;
+		
+		cleanupVisualizers(msg);
+		
 		registered_robots_.clear();
 		all_robots_=msg;
 		for(unsigned int i=0;i<msg.robots.size();i++)
@@ -273,11 +332,11 @@ namespace stdr_gui
 		//~ ROS_ERROR("Robot place set after : %d %d",pnew.x(),pnew.y());
 		gui_connector_.robotCreatorConn.setInitialPose(QPoint(
 			pnew.x()*map_msg_.info.resolution,
-			pnew.x()*map_msg_.info.resolution));
+			pnew.y()*map_msg_.info.resolution));
 			
 		//~ ROS_ERROR("Place send : %f %f",
 			//~ pnew.x()*map_msg_.info.resolution,
-			//~ pnew.x()*map_msg_.info.resolution);
+			//~ pnew.y()*map_msg_.info.resolution);
 			
 		stdr_msgs::RobotIndexedMsg newRobot;
 		gui_connector_.robotCreatorConn.fixRobotMsgAngles();
@@ -285,6 +344,7 @@ namespace stdr_gui
 		{
 			newRobot=robot_handler_.spawnNewRobot(
 				gui_connector_.robotCreatorConn.getNewRobot());
+				
 		}
 		catch (ConnectionException& ex) 
 		{

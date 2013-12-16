@@ -127,6 +127,17 @@ namespace stdr_gui
 		
 	}
 	
+	void CGuiRobot::destroy(void){
+		for(unsigned int i=0;i<lasers_.size();i++)
+		{
+			delete lasers_[i];
+		}
+		for(unsigned int i=0;i<sonars_.size();i++)
+		{
+			delete sonars_[i];
+		}
+	}
+
 	std::string CGuiRobot::getFrameId(void)
 	{
 		return frame_id_;
@@ -182,5 +193,15 @@ namespace stdr_gui
 	QPoint CGuiRobot::getCurrentPose(void)
 	{
 		return QPoint(current_pose_.x/resolution_,current_pose_.y/resolution_);
+	}
+	
+	int CGuiRobot::getLasersNumber(void)
+	{
+		return lasers_.size();
+	}
+	
+	int CGuiRobot::getSonarsNumber(void)
+	{
+		return sonars_.size();
 	}
 }

@@ -33,7 +33,7 @@ namespace stdr_gui{
 	
 	CGuiSonar::~CGuiSonar(void)
 	{
-		
+
 	}
 	
 	void CGuiSonar::callback(const sensor_msgs::Range& msg)

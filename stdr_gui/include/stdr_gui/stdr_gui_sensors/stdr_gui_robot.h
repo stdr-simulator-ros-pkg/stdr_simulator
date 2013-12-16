@@ -66,6 +66,9 @@ namespace stdr_gui
 			bool getShowLabel(void);
 			void toggleShowCircles(void);
 			QPoint getCurrentPose(void);
+			void destroy(void);
+			int getLasersNumber(void);
+			int getSonarsNumber(void);
 	};	
 }
 

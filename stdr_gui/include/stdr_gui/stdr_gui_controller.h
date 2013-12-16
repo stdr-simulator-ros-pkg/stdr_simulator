@@ -107,6 +107,7 @@ namespace stdr_gui
 			void receiveMap(const nav_msgs::OccupancyGrid& msg);
 			void receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
 			bool init();	
+			void cleanupVisualizers(const stdr_msgs::RobotIndexedVectorMsg& msg);
 		
 		public Q_SLOTS:
 			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);

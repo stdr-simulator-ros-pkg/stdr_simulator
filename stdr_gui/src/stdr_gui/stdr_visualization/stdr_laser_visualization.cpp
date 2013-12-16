@@ -55,6 +55,8 @@ namespace stdr_gui
 	
 	void CLaserVisualisation::destruct(void)
 	{
+		active_=false;
+		subscriber_.shutdown();
 		hide();
 		delete laserMean;
 		delete laserMax;

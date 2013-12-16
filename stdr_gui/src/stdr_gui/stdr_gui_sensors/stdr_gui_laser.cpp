@@ -35,7 +35,7 @@ namespace stdr_gui
 	
 	CGuiLaser::~CGuiLaser(void)
 	{
-		
+
 	}
 	
 	void CGuiLaser::callback(const sensor_msgs::LaserScan& msg)
