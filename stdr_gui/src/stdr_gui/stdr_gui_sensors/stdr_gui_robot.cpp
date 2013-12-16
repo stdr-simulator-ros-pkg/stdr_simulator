@@ -205,8 +205,35 @@ namespace stdr_gui
 		return sonars_.size();
 	}
 	
-	 QImage CGuiRobot::getVisualization(void)
+	 QImage CGuiRobot::getVisualization(float ocgd)
 	 {
+		 float maxRange=-1;
+		 for(unsigned int l=0;l<lasers_.size();l++)
+		 {
+			 float t=lasers_[l]->getMaxRange();
+			 if(t>maxRange)
+			 {
+				 maxRange=t;
+			 }
+		 }
+		 for(unsigned int l=0;l<sonars_.size();l++)
+		 {
+			 float t=sonars_[l]->getMaxRange();
+			 if(t>maxRange)
+			 {
+				 maxRange=t;
+			 }
+		 }
+		 visualization=QImage(310,310,QImage::Format_RGB32);
+		 visualization.fill(Qt::white);
+		 for(unsigned int l=0;l<lasers_.size();l++)
+		 {
+			 lasers_[l]->visualizerPaint(&visualization,ocgd,maxRange);
+		 }
+		 for(unsigned int l=0;l<sonars_.size();l++)
+		 {
+			 sonars_[l]->visualizerPaint(&visualization,ocgd,maxRange);
+		 }
 		 return visualization;
 	 }
 }

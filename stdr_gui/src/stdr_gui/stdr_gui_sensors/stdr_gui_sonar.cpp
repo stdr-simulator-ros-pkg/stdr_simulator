@@ -78,5 +78,37 @@ namespace stdr_gui{
 
 		lock_=false;
 	}
+	
+	void CGuiSonar::visualizerPaint(
+		QImage *m,
+		float ocgd,
+		float maxRange)
+	{
+		range_.range=1.0; // Just to experiment
+		float size=m->width();
+		float climax=size/maxRange*ocgd/2.1;
+		lock_=true;
+		QPainter painter(m);
+		QBrush brush(QColor(0,200,0,50));
+		painter.setBrush(brush);
+		
+		painter.drawPie(	
+			size/2 + (msg_.pose.x/ocgd - range_.range/ocgd)*climax,
+			size/2 + (msg_.pose.y/ocgd - range_.range/ocgd)*climax,
+				
+			range_.range/ocgd*2*climax,
+			range_.range/ocgd*2*climax,
+			
+			(msg_.pose.theta-msg_.coneAngle/2.0)*180.0/STDR_PI*16,
+				
+			(msg_.coneAngle*180.0/STDR_PI)*16);
+
+		lock_=false;
+	}
+	
+	float CGuiSonar::getMaxRange(void)
+	{
+		return msg_.maxRange;
+	}
 }
 

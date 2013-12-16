@@ -72,7 +72,7 @@ namespace stdr_gui
 			int getLasersNumber(void);
 			int getSonarsNumber(void);
 			
-			 QImage getVisualization(void);
+			QImage getVisualization(float ocgd);
 	};	
 }
 

@@ -48,6 +48,8 @@ namespace stdr_gui
 			
 			void callback(const sensor_msgs::Range& msg); 
 			void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
+			void visualizerPaint(QImage *m,float ocgd,float maxRange);
+			float getMaxRange(void);
 	};	
 }
 

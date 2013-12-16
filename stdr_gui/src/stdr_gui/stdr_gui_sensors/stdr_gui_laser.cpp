@@ -76,5 +76,43 @@ namespace stdr_gui
 		}
 		lock_=false;
 	}
+	
+	void CGuiLaser::visualizerPaint(
+		QImage *m,
+		float ocgd,
+		float maxRange)
+	{
+		lock_=true;
+		QPainter painter(m);
+		painter.setPen(QColor(255,0,0,100));
+		float size=m->width();
+		float climax=size/maxRange*ocgd/2.1;
+		for(unsigned int i=0;i<scan_.ranges.size();i++)
+		{
+			painter.drawLine(
+				size/2+ 
+					(msg_.pose.x/ocgd)*climax,
+				size/2+
+					(msg_.pose.y/ocgd)*climax,
+					
+				size/2+
+					((msg_.pose.x/ocgd)+
+					scan_.ranges[i]*
+					cos(scan_.angle_min+i*scan_.angle_increment)
+					/ocgd)*climax,
+				size/2+
+					((msg_.pose.y/ocgd)+
+					scan_.ranges[i]*
+					sin(scan_.angle_min+i*scan_.angle_increment)
+					/ocgd)*climax
+			);				
+		}
+		lock_=false;
+	}
+	
+	float CGuiLaser::getMaxRange(void)
+	{
+		return msg_.maxRange;
+	}
 }
 

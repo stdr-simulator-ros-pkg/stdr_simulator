@@ -449,7 +449,19 @@ namespace stdr_gui
 			}
 			else
 			{
-				it->second->setImage(QImage());
+				QString robotName=it->first;
+				for(unsigned int r=0;r<registered_robots_.size();r++)
+				{
+					if(registered_robots_[r].getFrameId()==
+						robotName.toStdString())
+					{
+						it->second->setImage(
+							registered_robots_[r].
+								getVisualization(map_msg_.info.resolution));
+						break;
+					}
+				}
+				
 			}
 		}
 		for(unsigned int i=0;i<toBeErased.size();i++)
