@@ -67,7 +67,6 @@ namespace stdr_gui{
 		msg_=msg;
 		sonarMaxDist->setText(QString().setNum(msg.maxRange)+QString(" m"));
 		sonarMinDist->setText(QString().setNum(msg.minRange)+QString(" m"));
-		paint();	// Debug reasons
 	}
 	
 	void CSonarVisualisation::callback(const sensor_msgs::Range& msg){

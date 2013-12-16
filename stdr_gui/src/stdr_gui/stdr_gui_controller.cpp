@@ -324,10 +324,12 @@ namespace stdr_gui{
 			it!=laser_visualizers_.end();
 			it++)
 		{
-			if(!it->second->getActive()){
+			if(!it->second->getActive())
+			{
 				toBeErased.push_back(it->first);
 			}
-			else{
+			else
+			{
 				it->second->paint();
 			}
 		}
@@ -341,6 +343,9 @@ namespace stdr_gui{
 		{
 			if(!it->second->getActive()){
 				toBeErased.push_back(it->first);
+			}
+			else{
+				it->second->paint();
 			}
 		}
 		for(unsigned int i=0;i<toBeErased.size();i++){
