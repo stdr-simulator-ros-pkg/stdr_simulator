@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_laser.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+	
 	CGuiLaser::CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic):
 		msg_(msg)
 	{
@@ -33,12 +35,13 @@ namespace stdr_gui{
 	
 	CGuiLaser::~CGuiLaser(void)
 	{
-		
+
 	}
 	
 	void CGuiLaser::callback(const sensor_msgs::LaserScan& msg)
 	{
-		if(lock_){
+		if(lock_)
+		{
 			return;
 		}
 		scan_=msg;
@@ -52,21 +55,64 @@ namespace stdr_gui{
 		lock_=true;
 		QPainter painter(m);
 		painter.setPen(QColor(255,0,0,100));
-		for(unsigned int i=0;i<scan_.ranges.size();i++){
+		for(unsigned int i=0;i<scan_.ranges.size();i++)
+		{
 			painter.drawLine(
-				robotPose.x/ocgd+(msg_.pose.x/ocgd * cos(robotPose.theta) - msg_.pose.y/ocgd * sin(robotPose.theta)),
-				robotPose.y/ocgd+(msg_.pose.x/ocgd * sin(robotPose.theta) + msg_.pose.y/ocgd * cos(robotPose.theta)),
-				robotPose.x/ocgd+(msg_.pose.x/ocgd * cos(robotPose.theta) - msg_.pose.y/ocgd * sin(robotPose.theta))+
+				robotPose.x/ocgd+(msg_.pose.x/ocgd * cos(robotPose.theta) - 
+					msg_.pose.y/ocgd * sin(robotPose.theta)),
+				robotPose.y/ocgd+(msg_.pose.x/ocgd * sin(robotPose.theta) + 
+					msg_.pose.y/ocgd * cos(robotPose.theta)),
+				robotPose.x/ocgd+(msg_.pose.x/ocgd * cos(robotPose.theta) - 
+					msg_.pose.y/ocgd * sin(robotPose.theta))+
 					scan_.ranges[i]*
 					cos(robotPose.theta+scan_.angle_min+i*scan_.angle_increment)
 					/ocgd,
-				robotPose.y/ocgd+(msg_.pose.x/ocgd * sin(robotPose.theta) + msg_.pose.y/ocgd * cos(robotPose.theta))+
+				robotPose.y/ocgd+(msg_.pose.x/ocgd * sin(robotPose.theta) + 
+					msg_.pose.y/ocgd * cos(robotPose.theta))+
 					scan_.ranges[i]*
 					sin(robotPose.theta+scan_.angle_min+i*scan_.angle_increment)
 					/ocgd
 			);				
 		}
 		lock_=false;
+	}
+	
+	void CGuiLaser::visualizerPaint(
+		QImage *m,
+		float ocgd,
+		float maxRange)
+	{
+		lock_=true;
+		QPainter painter(m);
+		painter.setPen(QColor(255,0,0,100));
+		float size=m->width();
+		float climax=size/maxRange*ocgd/2.1;
+		for(unsigned int i=0;i<scan_.ranges.size();i++)
+		{
+			painter.drawLine(
+				size/2+ 
+					(msg_.pose.x/ocgd)*climax,
+				size/2+
+					(msg_.pose.y/ocgd)*climax,
+					
+				size/2+
+					((msg_.pose.x/ocgd)+
+					scan_.ranges[i]*
+					cos(scan_.angle_min+i*scan_.angle_increment)
+					/ocgd)*climax,
+				size/2+
+					((msg_.pose.y/ocgd)+
+					scan_.ranges[i]*
+					sin(scan_.angle_min+i*scan_.angle_increment)
+					/ocgd)*climax
+			);				
+		}
+		lock_=false;
+	}
+	
+	float CGuiLaser::getMaxRange(void)
+	{
+		return msg_.maxRange;
 	}
 }
 

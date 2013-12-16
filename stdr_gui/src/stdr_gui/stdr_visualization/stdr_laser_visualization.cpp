@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	CLaserVisualisation::CLaserVisualisation(QString name,float resolution):
 		name_(name),
 		resolution_(resolution)
@@ -46,11 +48,15 @@ namespace stdr_gui{
 		void_image_.fill(QColor(255,255,255,255));
 	}
 	
-	CLaserVisualisation::~CLaserVisualisation(void){
+	CLaserVisualisation::~CLaserVisualisation(void)
+	{
 		
 	}
 	
-	void CLaserVisualisation::destruct(void){
+	void CLaserVisualisation::destruct(void)
+	{
+		active_=false;
+		subscriber_.shutdown();
 		hide();
 		delete laserMean;
 		delete laserMax;
@@ -58,32 +64,38 @@ namespace stdr_gui{
 		delete laserImage;
 	}
 	
-	void CLaserVisualisation::closeEvent(QCloseEvent *event){
+	void CLaserVisualisation::closeEvent(QCloseEvent *event)
+	{
 		destruct();
 		active_=false;
 		subscriber_.shutdown();
 	}
 	
-	bool CLaserVisualisation::getActive(void){
+	bool CLaserVisualisation::getActive(void)
+	{
 		return active_;
 	}
 	
-	void CLaserVisualisation::setLaser(stdr_msgs::LaserSensorMsg msg){
+	void CLaserVisualisation::setLaser(stdr_msgs::LaserSensorMsg msg)
+	{
 		msg_=msg;
 		laserMax->setText(QString().setNum(msg.maxRange)+QString(" m"));
 		laserMin->setText(QString().setNum(msg.minRange)+QString(" m"));
 	}
 	
-	void CLaserVisualisation::callback(const sensor_msgs::LaserScan& msg){
+	void CLaserVisualisation::callback(const sensor_msgs::LaserScan& msg)
+	{
 		scan_=msg;
 	}
 	
-	void CLaserVisualisation::paint(void){
+	void CLaserVisualisation::paint(void)
+	{
 		internal_image_=void_image_;
 		QPainter painter(&internal_image_);
 		painter.setPen(QColor(255,0,0,255));
 		float mean=0;
-		for(unsigned int i=0;i<scan_.ranges.size();i++){
+		for(unsigned int i=0;i<scan_.ranges.size();i++)
+		{
 			mean+=scan_.ranges[i];
 			painter.drawLine(
 				internal_image_.width()/2,

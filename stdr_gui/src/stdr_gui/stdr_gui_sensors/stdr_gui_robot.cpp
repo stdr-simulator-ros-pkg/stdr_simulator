@@ -21,7 +21,8 @@
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 
 	CGuiRobot::CGuiRobot(const stdr_msgs::RobotIndexedMsg& msg)
 	{
@@ -33,25 +34,35 @@ namespace stdr_gui{
 		frame_id_=msg.name;
 		show_label_=true;
 		show_circles_=false;
-		for(unsigned int i=0;i<msg.robot.laserSensors.size();i++){
+		for(unsigned int i=0;i<msg.robot.laserSensors.size();i++)
+		{
 			CGuiLaser *l=new CGuiLaser(msg.robot.laserSensors[i],frame_id_);
 			lasers_.push_back(l);
+		}
+		for(unsigned int i=0;i<msg.robot.sonarSensors.size();i++)
+		{
+			CGuiSonar *l=new CGuiSonar(msg.robot.sonarSensors[i],frame_id_);
+			sonars_.push_back(l);
 		}
 		robot_initialized_=true;
 	}
 
 	void CGuiRobot::draw(QImage *m,float ocgd,tf::TransformListener *listener)
 	{
-		if(!robot_initialized_) 
+		if(!robot_initialized_)
+		{
 			return;
+		}
 		resolution_=ocgd;
 		tf::StampedTransform transform;
 		
-		try{
+		try
+		{
 			listener->lookupTransform("map", 
 				frame_id_.c_str(),ros::Time(0), transform);
 		}
-		catch (tf::TransformException ex){
+		catch (tf::TransformException ex)
+		{
 			ROS_DEBUG("%s",ex.what());
 		}
 		tfScalar roll,pitch,yaw;
@@ -60,8 +71,13 @@ namespace stdr_gui{
 		transform.getBasis().getRPY(roll,pitch,yaw);
 		current_pose_.theta=yaw;
 		drawSelf(m);
-		for(unsigned int i=0;i<lasers_.size();i++){
+		for(unsigned int i=0;i<lasers_.size();i++)
+		{
 			lasers_[i]->paint(m,resolution_,current_pose_);
+		}
+		for(unsigned int i=0;i<sonars_.size();i++)
+		{
+			sonars_[i]->paint(m,resolution_,current_pose_);
 		}
 	}
 	
@@ -84,9 +100,11 @@ namespace stdr_gui{
 			current_pose_.y/resolution_+
 				radius_/resolution_*1.05*sin(current_pose_.theta));
 		
-		if(show_circles_){
+		if(show_circles_)
+		{
 			painter.setPen(QColor(255,0,0,150));
-			for(unsigned int i=0;i<5;i++){
+			for(unsigned int i=0;i<5;i++)
+			{
 				painter.drawEllipse(
 					(current_pose_.x-(i+1.0)/2.0)/resolution_,
 					(current_pose_.y-(i+1.0)/2.0)/resolution_,
@@ -109,11 +127,24 @@ namespace stdr_gui{
 		
 	}
 	
-	std::string CGuiRobot::getFrameId(void){
+	void CGuiRobot::destroy(void){
+		for(unsigned int i=0;i<lasers_.size();i++)
+		{
+			delete lasers_[i];
+		}
+		for(unsigned int i=0;i<sonars_.size();i++)
+		{
+			delete sonars_[i];
+		}
+	}
+
+	std::string CGuiRobot::getFrameId(void)
+	{
 		return frame_id_;
 	}
 	
-	void CGuiRobot::drawLabel(QImage *m,float ocgd){
+	void CGuiRobot::drawLabel(QImage *m,float ocgd)
+	{
 		QPainter painter(m);
 		
 		painter.setPen(Qt::black);
@@ -144,15 +175,65 @@ namespace stdr_gui{
 		show_label_=b;
 	}
 	
-	bool CGuiRobot::getShowLabel(void){
+	bool CGuiRobot::getShowLabel(void)
+	{
 		return show_label_;
 	}
 	
-	void CGuiRobot::toggleShowLabel(void){
+	void CGuiRobot::toggleShowLabel(void)
+	{
 		show_label_=!show_label_;
 	}
 	
-	void CGuiRobot::toggleShowCircles(void){
+	void CGuiRobot::toggleShowCircles(void)
+	{
 		show_circles_=!show_circles_;
 	}
+	
+	QPoint CGuiRobot::getCurrentPose(void)
+	{
+		return QPoint(current_pose_.x/resolution_,current_pose_.y/resolution_);
+	}
+	
+	int CGuiRobot::getLasersNumber(void)
+	{
+		return lasers_.size();
+	}
+	
+	int CGuiRobot::getSonarsNumber(void)
+	{
+		return sonars_.size();
+	}
+	
+	 QImage CGuiRobot::getVisualization(float ocgd)
+	 {
+		 float maxRange=-1;
+		 for(unsigned int l=0;l<lasers_.size();l++)
+		 {
+			 float t=lasers_[l]->getMaxRange();
+			 if(t>maxRange)
+			 {
+				 maxRange=t;
+			 }
+		 }
+		 for(unsigned int l=0;l<sonars_.size();l++)
+		 {
+			 float t=sonars_[l]->getMaxRange();
+			 if(t>maxRange)
+			 {
+				 maxRange=t;
+			 }
+		 }
+		 visualization=QImage(310,310,QImage::Format_RGB32);
+		 visualization.fill(Qt::white);
+		 for(unsigned int l=0;l<lasers_.size();l++)
+		 {
+			 lasers_[l]->visualizerPaint(&visualization,ocgd,maxRange);
+		 }
+		 for(unsigned int l=0;l<sonars_.size();l++)
+		 {
+			 sonars_[l]->visualizerPaint(&visualization,ocgd,maxRange);
+		 }
+		 return visualization;
+	 }
 }

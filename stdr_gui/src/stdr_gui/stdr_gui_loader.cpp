@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_gui_loader.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	CGuiLoader::CGuiLoader(int argc,char **argv):
 		argc_(argc),
 		argv_(argv)
@@ -29,6 +31,7 @@ namespace stdr_gui{
 		setupUi(this);
 		
 		addToolbarIcons();
+		close_signal_=false;
 	}
 	
 	void CGuiLoader::addToolbarIcons(void)
@@ -42,7 +45,7 @@ namespace stdr_gui{
         
         
         iconLoadMap.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/load_map.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -59,7 +62,7 @@ namespace stdr_gui{
         actionGrid->setIconText(QString("Enable grid"));
         QIcon iconGrid;
         iconGrid.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/grid.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -73,7 +76,7 @@ namespace stdr_gui{
         actionAddRobot->setIconText(QString("Add robot"));
         QIcon iconAddRobot;
         iconAddRobot.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/add_robot.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -87,7 +90,7 @@ namespace stdr_gui{
         actionNewRobot->setIconText(QString("Add robot"));
         QIcon iconNewRobot;
         iconNewRobot.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/new_robot.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -101,7 +104,7 @@ namespace stdr_gui{
         actionNewRfid->setIconText(QString("Add RFID tag"));
         QIcon iconNewRfid;
         iconNewRfid.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/rfid.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -117,7 +120,7 @@ namespace stdr_gui{
         actionProperties->setIconText(QString("Properties"));
         QIcon iconProperties;
         iconProperties.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/properties.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -133,7 +136,7 @@ namespace stdr_gui{
         actionZoomIn->setIconText(QString("Zoom in"));
         QIcon iconZoomIn;
         iconZoomIn.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/zoom_in_b.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -147,7 +150,7 @@ namespace stdr_gui{
         actionZoomOut->setIconText(QString("Zoom out"));
         QIcon iconZoomOut;
         iconZoomOut.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/zoom_out_b.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -162,7 +165,7 @@ namespace stdr_gui{
         actionAdjusted->setIconText(QString("Auto size"));
         QIcon iconAdjust;
         iconAdjust.addFile(QString::fromUtf8((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 				std::string("/resources/images/adjusted.png")).c_str()), 
 			QSize(), 
 			QIcon::Normal, 
@@ -175,6 +178,32 @@ namespace stdr_gui{
 	
 	void CGuiLoader::closeEvent(QCloseEvent *event)
 	{
-		ros::shutdown();
+		//~ ROS_ERROR("Shutdown signal!");
+		if(close_signal_)
+		{
+			event->accept();
+			//~ ROS_ERROR("Shutting down ros...");
+			ros::shutdown();
+			exit(0);
+			return;
+		}
+		close_signal_=true;
+		event->ignore();
+		event_=event;
+	}
+	
+	QEvent* CGuiLoader::getCloseEvent(void)
+	{
+		return event_;
+	}
+		
+	bool CGuiLoader::closeTriggered(void)
+	{
+		return close_signal_;
+	}
+	
+	void CGuiLoader::shutdown(void)
+	{
+		this->close();
 	}
 }

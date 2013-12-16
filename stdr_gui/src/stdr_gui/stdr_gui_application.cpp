@@ -21,14 +21,16 @@
 
 #include "stdr_gui/stdr_gui_application.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 
 	CStdrApplication::CStdrApplication(int &argc,char **argv):
 		QApplication(argc,argv)	
 	{
 	}
 	
-	bool CStdrApplication::notify(QObject * receiver, QEvent * event){
+	bool CStdrApplication::notify(QObject * receiver, QEvent * event)
+	{
 		try 
 		{
 			return QApplication::notify(receiver, event);

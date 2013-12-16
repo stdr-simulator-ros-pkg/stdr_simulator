@@ -24,7 +24,9 @@
 
 #include "stdr_gui/stdr_info_loader.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	class CInfoConnector : 
 		public QObject
 	{
@@ -46,6 +48,7 @@ namespace stdr_gui{
 		Q_SIGNALS:
 			void laserVisualizerClicked(QString robotName,QString laserName);
 			void sonarVisualizerClicked(QString robotName,QString sonarName);
+			void robotVisualizerClicked(QString robotName);
 	};
 }
 

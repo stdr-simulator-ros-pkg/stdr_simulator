@@ -27,7 +27,8 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_rfid.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sonar.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	
 	class CGuiRobot
 	{
@@ -50,6 +51,8 @@ namespace stdr_gui{
 			
 			stdr_msgs::FootprintMsg footprint_;
 			
+			QImage visualization;
+			
 			void drawSelf(QImage *m);
 			
 		public:
@@ -64,6 +67,12 @@ namespace stdr_gui{
 			void toggleShowLabel(void);
 			bool getShowLabel(void);
 			void toggleShowCircles(void);
+			QPoint getCurrentPose(void);
+			void destroy(void);
+			int getLasersNumber(void);
+			int getSonarsNumber(void);
+			
+			QImage getVisualization(float ocgd);
 	};	
 }
 

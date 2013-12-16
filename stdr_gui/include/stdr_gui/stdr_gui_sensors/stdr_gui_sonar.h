@@ -25,20 +25,31 @@
 
 #include "stdr_gui/stdr_tools.h"
 #include "stdr_msgs/SonarSensorMsg.h"
+#include "sensor_msgs/Range.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	class CGuiSonar
 	{
 		private:
+			bool lock_;
+			
 			std::string topic_;
+			
 			stdr_msgs::SonarSensorMsg msg_;
+			
 			ros::Subscriber subscriber_;
+			sensor_msgs::Range range_;
 		
 		public:
 			CGuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic);
 			~CGuiSonar(void);
-		
-			void paint(QImage *m);
+			
+			void callback(const sensor_msgs::Range& msg); 
+			void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
+			void visualizerPaint(QImage *m,float ocgd,float maxRange);
+			float getMaxRange(void);
 	};	
 }
 

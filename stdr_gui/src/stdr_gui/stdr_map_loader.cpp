@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_map_loader.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	CMapLoader::CMapLoader(int argc, char **argv):
 		argc_(argc),
 		argv_(argv)
@@ -43,11 +45,13 @@ namespace stdr_gui{
 		float containerHeight=this->height();
 		float aspectRatio=(float)w/(float)h;
 		float finalW,finalH;
-		if(containerHeight*aspectRatio>containerWidth){
+		if(containerHeight*aspectRatio>containerWidth)
+		{
 			finalW=containerWidth;
 			finalH=containerWidth/aspectRatio;
 		}
-		else{
+		else
+		{
 			finalW=containerHeight*aspectRatio;
 			finalH=containerHeight;
 		}
@@ -79,15 +83,19 @@ namespace stdr_gui{
 		painter.setPen(QColor(100,100,100,150));
 		int pix=1.0/resolution;
 		for(unsigned int i=1;i<=img->width()/pix+1;i++)
+		{
 			painter.drawLine(	0,
 								i*pix,
 								img->width()-1,
 								i*pix);
+		}
 		for(unsigned int i=1;i<=img->height()/pix+1;i++)
+		{
 			painter.drawLine(	i*pix,
 								0,
 								i*pix,
 								img->height()-1);
+		}
 	}
 	
 	void CMapLoader::updateZoom(QPoint p,bool zoom_In)
@@ -97,7 +105,8 @@ namespace stdr_gui{
 		int prevZoom=zoom_;
 		if(zoom_In)	zoom_++;
 		else zoom_--;
-		if(zoom_<0){
+		if(zoom_<0)
+		{
 			zoom_=0;
 			return;
 		}
@@ -112,24 +121,71 @@ namespace stdr_gui{
 		xmax=evOriginal.x()+newWidth/2;
 		ymin=evOriginal.y()-newHeight/2;
 		ymax=evOriginal.y()+newHeight/2;
-		if(xmin<0){
+		if(xmin<0)
+		{
 			xmax+=-xmin;
 			xmin=0;
 		}
-		else if(xmax>internal_img_->width()-1){
+		else if(xmax>internal_img_->width()-1)
+		{
 			xmin-=xmax-internal_img_->width()+1;
 			xmax=internal_img_->width()-1;
 		}
-		if(ymin<0){
+		if(ymin<0)
+		{
 			ymax+=-ymin;
 			ymin=0;
 		}
-		else if(ymax>internal_img_->height()-1){
+		else if(ymax>internal_img_->height()-1)
+		{
 			ymin-=ymax-internal_img_->height()+1;
 			ymax=internal_img_->height()-1;
 		}
 		map_min_=QPoint(xmin,ymin);
 		map_max_=QPoint(xmax,ymax);
+	}
+	
+	void CMapLoader::updateCenter(QPoint p)
+	{
+		
+		//~ ROS_ERROR("Update center :%d %d",p.x(),p.y());
+
+		float intW=internal_img_->width();
+		float intH=internal_img_->height();
+		float newWidth=internal_img_->width()/pow(2,zoom_);
+		float newHeight=internal_img_->height()/pow(2,zoom_);
+		QPoint evOriginal=p;
+		evOriginal.setY(internal_img_->height()-evOriginal.y());
+		
+		float xmin,xmax,ymin,ymax;
+		xmin=evOriginal.x()-newWidth/2;
+		xmax=evOriginal.x()+newWidth/2;
+		ymin=evOriginal.y()-newHeight/2;
+		ymax=evOriginal.y()+newHeight/2;
+		if(xmin<0)
+		{
+			xmax+=-xmin;
+			xmin=0;
+		}
+		else if(xmax>internal_img_->width()-1)
+		{
+			xmin-=xmax-internal_img_->width()+1;
+			xmax=internal_img_->width()-1;
+		}
+		if(ymin<0)
+		{
+			ymax+=-ymin;
+			ymin=0;
+		}
+		else if(ymax>internal_img_->height()-1)
+		{
+			ymin-=ymax-internal_img_->height()+1;
+			ymax=internal_img_->height()-1;
+		}
+		map_min_=QPoint(xmin,ymin);
+		map_max_=QPoint(xmax,ymax);
+		
+		//~ ROS_ERROR("Update center after:%d %d",map_min_.x(),map_min_.y());
 	}
 	
 	QPoint CMapLoader::pointUnscaled(QPoint p)
@@ -139,6 +195,7 @@ namespace stdr_gui{
 		float y=p.y();
 		float initialWidth=internal_img_->width();
 		float currentWidth=map->width();
+		//~ ROS_ERROR("InitialW, CurrW : %f %f",initialWidth,currentWidth);
 		float climax=initialWidth/currentWidth;
 		newPoint.setX(x*climax);
 		newPoint.setY(y*climax);
@@ -153,22 +210,29 @@ namespace stdr_gui{
 	}
 	
 	QPoint CMapLoader::getGlobalPoint(QPoint p){
+		//~ ROS_ERROR("Robot place set (loader) : %d %d",p.x(),p.y());
 		QPoint np=pointUnscaled(p);
+		//~ ROS_ERROR("Robot place set (unscaled): %d %d",np.x(),np.y());
 		int xev=np.x()/pow(2,zoom_)+map_min_.x();
 		int yev=np.y()/pow(2,zoom_)+map_min_.y();
+		//~ ROS_ERROR("Robot place set (unzoomed): %d %d",xev,yev);
 		return QPoint(xev,internal_img_->height()-yev);
 	}
 	
 	void CMapLoader::wheelEvent ( QWheelEvent * event )
 	{
-		if(event->delta()>0){
-			if(map_max_.y()+30<internal_img_->height()){
+		if(event->delta()>0)
+		{
+			if(map_max_.y()+30<internal_img_->height())
+			{
 				map_max_.setY(map_max_.y()+30);
 				map_min_.setY(map_min_.y()+30);
 			}
 		}
-		if(event->delta()<0){
-			if(map_min_.y()-30>=0){
+		if(event->delta()<0)
+		{
+			if(map_min_.y()-30>=0)
+			{
 				map_max_.setY(map_max_.y()-30);
 				map_min_.setY(map_min_.y()-30);
 			}

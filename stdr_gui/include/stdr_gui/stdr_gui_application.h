@@ -25,7 +25,8 @@
 #include <QDebug>
 #include <QApplication>
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 
 	class CStdrApplication:public QApplication
 	{

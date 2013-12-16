@@ -40,12 +40,12 @@ namespace stdr_gui{
 			this, SLOT(serveImage(QImage *)));
 		
 		QPixmap p((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/zoom_in.png")).c_str());
 		zoom_in_cursor_=QCursor(p.scaled(20,20));
 		
 		p=QPixmap((
-			getRosPackagePath("stdr_gui")+
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
 			std::string("/resources/images/zoom_out.png")).c_str());
 		zoom_out_cursor_=QCursor(p.scaled(20,20));
 	}
@@ -65,6 +65,10 @@ namespace stdr_gui{
 		loader_.updateZoom(p,z);
 	}
 	
+	void CMapConnector::updateCenter(QPoint p){
+		loader_.updateCenter(p);
+	}
+	
 	QPoint CMapConnector::getGlobalPoint(QPoint p)
 	{
 		return loader_.getGlobalPoint(p);
@@ -77,28 +81,45 @@ namespace stdr_gui{
 
 	bool CMapConnector::eventFilter( QObject* watched, QEvent* event ) 
 	{
-		if(watched==loader_.map){
-			if(event->type() == QEvent::MouseButtonPress){
+		if(watched==loader_.map)
+		{
+			if(event->type() == QEvent::MouseButtonPress)
+			{
 				const QMouseEvent* const me = 
 					static_cast<const QMouseEvent*>( event );
 				QPoint p=me->pos();
-				if(me->button()==Qt::RightButton){
-					if(map_state_==NORMAL){
+				if(me->button()==Qt::RightButton)
+				{
+					if(map_state_==NORMAL)
+					{
 						Q_EMIT itemClicked(p,Qt::RightButton);
 					}
 				}
-				else if(me->button()==Qt::LeftButton){
+				else if(me->button()==Qt::LeftButton)
+				{
 					if(map_state_==ZOOMIN)
+					{
 						Q_EMIT zoomInPressed(p);
+					}
 					else if(map_state_==ZOOMOUT)
+					{
 						Q_EMIT zoomOutPressed(p);
-					else if(map_state_==SETPLACE){
+					}
+					else if(map_state_==SETPLACE)
+					{
 						map_state_=NORMAL;
 						loader_.map->setCursor(QCursor(Qt::CrossCursor));
 						Q_EMIT robotPlaceSet(p);
 					}
-					else if(map_state_==NORMAL){
+					else if(map_state_==NORMAL)
+					{
 						Q_EMIT itemClicked(p,Qt::LeftButton);
+					}
+					else if(map_state_==SETREPLACE)
+					{
+						map_state_=NORMAL;
+						loader_.map->setCursor(QCursor(Qt::CrossCursor));
+						Q_EMIT robotReplaceSet(p,current_robot_frame_id_);
 					}
 				}
 			}
@@ -123,11 +144,13 @@ namespace stdr_gui{
 	
 	void CMapConnector::setCursorZoomIn(bool state)
 	{
-		if(state){
+		if(state)
+		{
 			map_state_=ZOOMIN;
 			loader_.map->setCursor(zoom_in_cursor_);
 		}
-		else{
+		else
+		{
 			map_state_=NORMAL;
 			loader_.map->setCursor(QCursor(Qt::CrossCursor));
 		}
@@ -135,11 +158,13 @@ namespace stdr_gui{
 	
 	void CMapConnector::setCursorZoomOut(bool state)
 	{
-		if(state){
+		if(state)
+		{
 			map_state_=ZOOMOUT;
 			loader_.map->setCursor(zoom_out_cursor_);
 		}
-		else{
+		else
+		{
 			map_state_=NORMAL;
 			loader_.map->setCursor(QCursor(Qt::CrossCursor));
 		}
@@ -161,5 +186,11 @@ namespace stdr_gui{
 	QWidget* CMapConnector::getLoader(void)
 	{
 		return static_cast<QWidget *>(&loader_);
+	}
+	
+	void CMapConnector::waitForReplace(std::string robotFrameId){
+		current_robot_frame_id_=robotFrameId;
+		map_state_=SETREPLACE;
+		loader_.map->setCursor(Qt::PointingHandCursor);
 	}
 }

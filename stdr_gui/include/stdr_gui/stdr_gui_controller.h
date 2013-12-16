@@ -33,11 +33,13 @@
 #include "stdr_gui/stdr_map_connector.h"
 #include "stdr_gui/stdr_visualization/stdr_sonar_visualization.h"
 #include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
+#include "stdr_gui/stdr_visualization/stdr_robot_visualization.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 
 #include <stdr_robot/handle_robot.h>
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 
 	/**
 	 @class GuiController
@@ -54,6 +56,8 @@ namespace stdr_gui{
 				LaserVisIterator;
 			typedef std::map<QString,CSonarVisualisation *>::iterator
 				SonarVisIterator;
+			typedef std::map<QString,CRobotVisualisation *>::iterator
+				RobotVisIterator;
 		
 			int 	argc_;	
 			char**	argv_;
@@ -65,6 +69,7 @@ namespace stdr_gui{
 			
 			std::map<QString,CLaserVisualisation *> laser_visualizers_;
 			std::map<QString,CSonarVisualisation *> sonar_visualizers_;
+			std::map<QString,CRobotVisualisation *> robot_visualizers_;
 			
 			ros::Subscriber 		map_subscriber_;
 			ros::Subscriber 		robot_subscriber_;
@@ -94,6 +99,8 @@ namespace stdr_gui{
 			stdr_msgs::SonarSensorMsg getSonarDescription(
 				QString robotName,
 				QString sonarName); 
+				
+			std::string robot_following_;
 			
 		public:
 			CGuiController(int argc,char **argv);
@@ -104,6 +111,7 @@ namespace stdr_gui{
 			void receiveMap(const nav_msgs::OccupancyGrid& msg);
 			void receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
 			bool init();	
+			void cleanupVisualizers(const stdr_msgs::RobotIndexedVectorMsg& msg);
 		
 		public Q_SLOTS:
 			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
@@ -114,11 +122,14 @@ namespace stdr_gui{
 			void updateMapInternal(void);
 			void laserVisualizerClicked(QString robotName,QString laserName);
 			void sonarVisualizerClicked(QString robotName,QString sonarName);
+			void robotVisualizerClicked(QString robotName);
 			void itemClicked(QPoint p,Qt::MouseButton b);
+			void robotReplaceSet(QPoint p,std::string robotName);
 			
 		Q_SIGNALS:
 			void waitForRobotPose(void);
 			void updateMap(void);
+			void replaceRobot(std::string robotFrameId);
 	};
 }
 

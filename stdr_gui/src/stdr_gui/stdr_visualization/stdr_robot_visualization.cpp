@@ -19,42 +19,56 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_INFO_LOADER
-#define STDR_INFO_LOADER
-
-#include "ui_information.h"
-#include "stdr_gui/stdr_tools.h"
+#include "stdr_gui/stdr_visualization/stdr_robot_visualization.h"
 
 namespace stdr_gui
 {
 
-	class CInfoLoader : 
-		public QWidget, 
-		public Ui_information
+	CRobotVisualisation::CRobotVisualisation(QString name,float resolution):
+		name_(name),
+		resolution_(resolution)
 	{
-		private:
-			int 	argc_;
-			char **	argv_;
+		setupUi(this);
+		setWindowTitle(name_);
+		active_=true;
 		
-			std::vector<QTreeWidgetItem> robot_nodes_;
+		void_image_=QImage(
+			robotImage->width(),
+			robotImage->height(),
+			QImage::Format_RGB32);
 			
-			QIcon visible_icon_;
-			
-		public:
-			QTreeWidgetItem	generalInfo,
-							robotsInfo,
-							mapHeight,
-							mapWidth,
-							mapOcgd;
+		void_image_.fill(QColor(255,255,255,255));
+	}
+	
+	CRobotVisualisation::~CRobotVisualisation(void)
+	{
 		
-			CInfoLoader(int argc, char **argv);
-			~CInfoLoader(void);
-			
-			void deleteTree(void);
-			void deleteTreeNode(QTreeWidgetItem *item);
-			void updateMapInfo(float width,float height,float ocgd);
-			void updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
-	};	
-}
+	}
+	
+	void CRobotVisualisation::destruct(void)
+	{
+		active_=false;
+		hide();
+		delete robotImage;
+		delete robotPose;
+		delete robotSpeeds;
+	}
+	
+	void CRobotVisualisation::closeEvent(QCloseEvent *event)
+	{
+		destruct();
+		active_=false;
+	}
+	
+	bool CRobotVisualisation::getActive(void)
+	{
+		return active_;
+	}
 
-#endif
+	void CRobotVisualisation::setImage(QImage img)
+	{
+		internal_image_=img;
+		robotImage->setPixmap(
+			QPixmap().fromImage(internal_image_.mirrored(false,true)));
+	}
+}

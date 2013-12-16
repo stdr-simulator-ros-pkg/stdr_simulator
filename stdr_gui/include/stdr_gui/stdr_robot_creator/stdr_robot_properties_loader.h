@@ -25,7 +25,8 @@
 #include "ui_robotProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	class CRobotPropertiesLoader : 
 		public QWidget, 
 		public Ui_RobotProperties

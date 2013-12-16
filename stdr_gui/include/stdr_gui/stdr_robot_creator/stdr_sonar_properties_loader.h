@@ -25,7 +25,8 @@
 #include "ui_sonarProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	class CSonarPropertiesLoader : 
 		public QWidget, 
 		public Ui_SonarProperties

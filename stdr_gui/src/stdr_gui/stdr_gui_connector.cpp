@@ -21,7 +21,8 @@
 
 #include "stdr_gui/stdr_gui_connector.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	CGuiConnector::CGuiConnector(int argc, char **argv):
 		QObject(),
 		loader_(argc,argv),
@@ -86,8 +87,9 @@ namespace stdr_gui{
 		QString fileName = QFileDialog::getOpenFileName(
 			&loader_,
 			tr("Load map"), 
-			QString().fromStdString(getRosPackagePath("stdr_gui")), 
-			tr("Yaml Files (*.yaml)"));
+			QString().fromStdString(
+				stdr_gui_tools::getRosPackagePath("stdr_gui")), 
+				tr("Yaml Files (*.yaml)"));
 	}
 	
 	void CGuiConnector::actionAboutTriggered(void)
@@ -165,5 +167,20 @@ namespace stdr_gui{
 	void CGuiConnector::setStatusBarMessage(QString s)
 	{
 		loader_.statusbar->showMessage(s,0);
+	}
+	
+	QEvent* CGuiConnector::getCloseEvent(void)
+	{
+		return loader_.getCloseEvent();
+	}
+		
+	bool CGuiConnector::closeTriggered(void)
+	{
+		return loader_.closeTriggered();
+	}
+	
+	void CGuiConnector::shutdown(void)
+	{
+		loader_.shutdown();
 	}
 }
