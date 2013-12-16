@@ -81,30 +81,42 @@ namespace stdr_gui{
 
 	bool CMapConnector::eventFilter( QObject* watched, QEvent* event ) 
 	{
-		if(watched==loader_.map){
-			if(event->type() == QEvent::MouseButtonPress){
+		if(watched==loader_.map)
+		{
+			if(event->type() == QEvent::MouseButtonPress)
+			{
 				const QMouseEvent* const me = 
 					static_cast<const QMouseEvent*>( event );
 				QPoint p=me->pos();
-				if(me->button()==Qt::RightButton){
-					if(map_state_==NORMAL){
+				if(me->button()==Qt::RightButton)
+				{
+					if(map_state_==NORMAL)
+					{
 						Q_EMIT itemClicked(p,Qt::RightButton);
 					}
 				}
-				else if(me->button()==Qt::LeftButton){
+				else if(me->button()==Qt::LeftButton)
+				{
 					if(map_state_==ZOOMIN)
+					{
 						Q_EMIT zoomInPressed(p);
+					}
 					else if(map_state_==ZOOMOUT)
+					{
 						Q_EMIT zoomOutPressed(p);
-					else if(map_state_==SETPLACE){
+					}
+					else if(map_state_==SETPLACE)
+					{
 						map_state_=NORMAL;
 						loader_.map->setCursor(QCursor(Qt::CrossCursor));
 						Q_EMIT robotPlaceSet(p);
 					}
-					else if(map_state_==NORMAL){
+					else if(map_state_==NORMAL)
+					{
 						Q_EMIT itemClicked(p,Qt::LeftButton);
 					}
-					else if(map_state_==SETREPLACE){
+					else if(map_state_==SETREPLACE)
+					{
 						map_state_=NORMAL;
 						loader_.map->setCursor(QCursor(Qt::CrossCursor));
 						Q_EMIT robotReplaceSet(p,current_robot_frame_id_);
@@ -132,11 +144,13 @@ namespace stdr_gui{
 	
 	void CMapConnector::setCursorZoomIn(bool state)
 	{
-		if(state){
+		if(state)
+		{
 			map_state_=ZOOMIN;
 			loader_.map->setCursor(zoom_in_cursor_);
 		}
-		else{
+		else
+		{
 			map_state_=NORMAL;
 			loader_.map->setCursor(QCursor(Qt::CrossCursor));
 		}
@@ -144,11 +158,13 @@ namespace stdr_gui{
 	
 	void CMapConnector::setCursorZoomOut(bool state)
 	{
-		if(state){
+		if(state)
+		{
 			map_state_=ZOOMOUT;
 			loader_.map->setCursor(zoom_out_cursor_);
 		}
-		else{
+		else
+		{
 			map_state_=NORMAL;
 			loader_.map->setCursor(QCursor(Qt::CrossCursor));
 		}

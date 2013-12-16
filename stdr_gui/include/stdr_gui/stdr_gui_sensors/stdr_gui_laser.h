@@ -26,7 +26,9 @@
 #include "stdr_msgs/LaserSensorMsg.h"
 #include "sensor_msgs/LaserScan.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	class CGuiLaser
 	{
 		private:

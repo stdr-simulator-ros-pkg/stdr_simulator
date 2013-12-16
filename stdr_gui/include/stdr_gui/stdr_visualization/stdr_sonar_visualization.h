@@ -26,7 +26,9 @@
 #include "ui_sonarVisualization.h"
 #include "sensor_msgs/Range.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	class CSonarVisualisation : 
 		public QWidget, 
 		public Ui_sonarVisualization

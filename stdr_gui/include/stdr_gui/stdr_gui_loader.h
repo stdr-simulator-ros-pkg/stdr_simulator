@@ -25,7 +25,8 @@
 #include "ui_simulator.h"
 #include "stdr_gui/stdr_tools.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	
 	class CGuiLoader : public Ui_MainWindow, public QMainWindow
 	{

@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_tools.h"
 
-namespace stdr_gui_tools{
+namespace stdr_gui_tools
+{
+
 	std::string getRosPackagePath(std::string package)
 	{
 		return ros::package::getPath(package.c_str());
@@ -35,17 +37,26 @@ namespace stdr_gui_tools{
 		int s=ms/1000-h*60*60-m*60;
 		int ms_=ms-h*60*60*1000-m*1000*60-s*1000;
 		if(h)
+		{
 			str+=QString().setNum(h)+QString(" h ");
+		}
 		if(m || h)
+		{
 			str+=QString().setNum(m)+QString(" min ");
+		}
 		if(s || h || m)
+		{
 			str+=QString().setNum(s)+QString(" sec ");
+		}
 		if(ms_ || s || h || m)
+		{
 			str+=QString().setNum(ms_)+QString(" ms");
+		}
 		return str;
 	}
 	
-	void printSonarMsg(stdr_msgs::SonarSensorMsg &msg){
+	void printSonarMsg(stdr_msgs::SonarSensorMsg &msg)
+	{
 		ROS_ERROR("Sonar sensor msg :");
 		ROS_ERROR("\tMax range : %f",msg.maxRange);
 		ROS_ERROR("\tMin range : %f",msg.minRange);
@@ -61,7 +72,8 @@ namespace stdr_gui_tools{
 		ROS_ERROR("\t\ttheta : %f",msg.pose.theta);
 	}
 	
-	void printPose2D(geometry_msgs::Pose2D &msg){
+	void printPose2D(geometry_msgs::Pose2D &msg)
+	{
 		ROS_ERROR("Pose 2D :");
 		ROS_ERROR("\tx : %f",msg.x);
 		ROS_ERROR("\ty : %f",msg.y);

@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_gui_loader.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	CGuiLoader::CGuiLoader(int argc,char **argv):
 		argc_(argc),
 		argv_(argv)

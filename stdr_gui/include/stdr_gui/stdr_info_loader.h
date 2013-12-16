@@ -25,7 +25,9 @@
 #include "ui_information.h"
 #include "stdr_gui/stdr_tools.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	class CInfoLoader : 
 		public QWidget, 
 		public Ui_information

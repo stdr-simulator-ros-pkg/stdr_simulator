@@ -27,7 +27,9 @@
 #include "stdr_msgs/SonarSensorMsg.h"
 #include "sensor_msgs/Range.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	class CGuiSonar
 	{
 		private:

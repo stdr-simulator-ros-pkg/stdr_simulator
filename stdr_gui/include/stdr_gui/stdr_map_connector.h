@@ -24,7 +24,8 @@
 
 #include "stdr_gui/stdr_map_loader.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	
 	enum EStdrMapState
 	{

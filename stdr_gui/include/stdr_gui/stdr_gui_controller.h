@@ -37,7 +37,8 @@
 
 #include <stdr_robot/handle_robot.h>
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 
 	/**
 	 @class GuiController

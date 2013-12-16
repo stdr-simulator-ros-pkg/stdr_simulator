@@ -21,7 +21,8 @@
 
 #include "stdr_gui/stdr_robot_creator/stdr_robot_properties_loader.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	CRobotPropertiesLoader::CRobotPropertiesLoader(int argc, char **argv):
 		argc_(argc),
 		argv_(argv)

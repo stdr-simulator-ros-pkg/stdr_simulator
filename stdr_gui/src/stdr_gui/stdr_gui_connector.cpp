@@ -21,7 +21,8 @@
 
 #include "stdr_gui/stdr_gui_connector.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	CGuiConnector::CGuiConnector(int argc, char **argv):
 		QObject(),
 		loader_(argc,argv),

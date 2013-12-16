@@ -72,7 +72,8 @@
 
 #define STDR_PI 3.14159
 
-namespace stdr_gui_tools{
+namespace stdr_gui_tools
+{
 	std::string getRosPackagePath(std::string package);
 	QString getLiteralTime(int ms);
 	void printSonarMsg(stdr_msgs::SonarSensorMsg &msg);

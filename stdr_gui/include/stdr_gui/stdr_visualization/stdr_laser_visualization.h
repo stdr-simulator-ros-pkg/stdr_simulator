@@ -25,7 +25,9 @@
 #include "stdr_gui/stdr_tools.h"
 #include "ui_laserVisualization.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	class CLaserVisualisation : 
 		public QWidget, 
 		public Ui_laserVisualization

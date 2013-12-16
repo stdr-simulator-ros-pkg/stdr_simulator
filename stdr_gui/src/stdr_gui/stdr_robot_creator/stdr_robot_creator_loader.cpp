@@ -21,9 +21,9 @@
 
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_loader.h"
 
-namespace stdr_gui{
-	
-	
+namespace stdr_gui
+{
+		
 	CRobotCreatorLoader::CRobotCreatorLoader(int argc, char **argv):
 		robotPropLoader(argc,argv),
 		laserPropLoader(argc,argv),

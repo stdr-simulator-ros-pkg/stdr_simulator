@@ -38,7 +38,8 @@ namespace stdr_gui{
 	
 	void CGuiSonar::callback(const sensor_msgs::Range& msg)
 	{
-		if(lock_){
+		if(lock_)
+		{
 			return;
 		}
 		range_=msg;

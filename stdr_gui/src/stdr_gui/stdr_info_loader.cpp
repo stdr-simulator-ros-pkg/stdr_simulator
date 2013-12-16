@@ -67,7 +67,9 @@ namespace stdr_gui{
 	{
 		int count=item->childCount();
 		for(int i=count-1;i>=0;i--)
+		{
 			deleteTreeNode(item->child(i));
+		}
 		stdrInformationTree->removeItemWidget(item,0);
 		delete item;
 	}
@@ -75,7 +77,8 @@ namespace stdr_gui{
 	void CInfoLoader::deleteTree(void)
 	{
 		int count=robotsInfo.childCount();
-		for(int i=count-1;i>=0;i--){
+		for(int i=count-1;i>=0;i--)
+		{
 			deleteTreeNode(robotsInfo.child(i));
 		}
 	}
@@ -89,7 +92,8 @@ namespace stdr_gui{
 	
 	void CInfoLoader::updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg)
 	{
-		for(unsigned int i=0;i<msg.robots.size();i++){
+		for(unsigned int i=0;i<msg.robots.size();i++)
+		{
 			QTreeWidgetItem	*rnode=new QTreeWidgetItem();
 			rnode->setText(0,QString(msg.robots[i].name.c_str()));
 			
@@ -109,7 +113,10 @@ namespace stdr_gui{
 			rfids->setText(0,"RFID antennas");
 			kinematics->setText(0,"Kinematic");
 			
-			for(unsigned int l=0;l<msg.robots[i].robot.laserSensors.size();l++){
+			for(	unsigned int l=0;
+					l<msg.robots[i].robot.laserSensors.size();
+					l++)
+			{
 				QTreeWidgetItem *lname;
 				lname=new QTreeWidgetItem();
 				lname->setText(0,
@@ -169,7 +176,10 @@ namespace stdr_gui{
 				lasers->addChild(lname);
 			}
 			
-			for(unsigned int l=0;l<msg.robots[i].robot.sonarSensors.size();l++){
+			for(unsigned int l=0;
+				l<msg.robots[i].robot.sonarSensors.size();
+				l++)
+			{
 				QTreeWidgetItem *sname;
 				sname=new QTreeWidgetItem();
 				sname->setText(0,

@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_laser.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+	
 	CGuiLaser::CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic):
 		msg_(msg)
 	{
@@ -38,7 +40,8 @@ namespace stdr_gui{
 	
 	void CGuiLaser::callback(const sensor_msgs::LaserScan& msg)
 	{
-		if(lock_){
+		if(lock_)
+		{
 			return;
 		}
 		scan_=msg;
@@ -52,7 +55,8 @@ namespace stdr_gui{
 		lock_=true;
 		QPainter painter(m);
 		painter.setPen(QColor(255,0,0,100));
-		for(unsigned int i=0;i<scan_.ranges.size();i++){
+		for(unsigned int i=0;i<scan_.ranges.size();i++)
+		{
 			painter.drawLine(
 				robotPose.x/ocgd+(msg_.pose.x/ocgd * cos(robotPose.theta) - 
 					msg_.pose.y/ocgd * sin(robotPose.theta)),

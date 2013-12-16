@@ -27,7 +27,8 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_rfid.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sonar.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	
 	class CGuiRobot
 	{

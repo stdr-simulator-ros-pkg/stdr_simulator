@@ -22,7 +22,8 @@
 #include "stdr_gui/stdr_gui_controller.h"
 
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	
 	void spinThreadFunction(void)
 	{
@@ -164,7 +165,8 @@ namespace stdr_gui{
 	
 	bool CGuiController::init(void)
 	{
-		if ( ! ros::master::check() ) {
+		if ( ! ros::master::check() ) 
+		{
 			return false;
 		}
 		gui_connector_.show();
@@ -182,11 +184,16 @@ namespace stdr_gui{
 		QPainter painter(&running_map_);
 		int d=0;
 		QColor c;
-		for(unsigned int i=0;i<msg.info.width;i++){
-			for(unsigned int j=0;j<msg.info.height;j++){
+		for(unsigned int i=0;i<msg.info.width;i++)
+		{
+			for(unsigned int j=0;j<msg.info.height;j++)
+			{
 				if(msg.data[j*msg.info.width+i]==-1)
+				{
 					c=QColor(127,127,127);
-				else{
+				}
+				else
+				{
 					d=(100.0-msg.data[j*msg.info.width+i])/100.0*255.0;
 					c=QColor(d,d,d);
 				}
@@ -236,11 +243,14 @@ namespace stdr_gui{
 		const stdr_msgs::RobotIndexedVectorMsg& msg)
 	{
 		while(map_lock_)	
+		{
 			usleep(100);
+		}
 		map_lock_=true;
 		registered_robots_.clear();
 		all_robots_=msg;
-		for(unsigned int i=0;i<msg.robots.size();i++){
+		for(unsigned int i=0;i<msg.robots.size();i++)
+		{
 			registered_robots_.push_back(CGuiRobot(msg.robots[i]));
 			//~ ROS_ERROR("Place got : %f %f",
 				//~ msg.robots[i].robot.initialPose.x,
@@ -252,8 +262,10 @@ namespace stdr_gui{
 	
 	void CGuiController::robotPlaceSet(QPoint p)
 	{
-		while(map_lock_)	
+		while(map_lock_)
+		{	
 			usleep(100);
+		}
 		map_lock_=true;
 		
 		//~ ROS_ERROR("Robot place set : %d %d",p.x(),p.y());
@@ -269,11 +281,13 @@ namespace stdr_gui{
 			
 		stdr_msgs::RobotIndexedMsg newRobot;
 		gui_connector_.robotCreatorConn.fixRobotMsgAngles();
-		try {
+		try 
+		{
 			newRobot=robot_handler_.spawnNewRobot(
 				gui_connector_.robotCreatorConn.getNewRobot());
 		}
-		catch (ConnectionException& ex) {
+		catch (ConnectionException& ex) 
+		{
 			ROS_ERROR("%s", ex.what());
 			return;
 		}
@@ -284,25 +298,30 @@ namespace stdr_gui{
 	void CGuiController::updateMapInternal(void)
 	{
 		while(map_lock_)
+		{
 			usleep(100);
+		}
 		map_lock_=true;
 		running_map_=initial_map_;
 		
 		if(gui_connector_.isGridEnabled())
 			map_connector_.drawGrid(&(running_map_),map_msg_.info.resolution);
 		
-		for(unsigned int i=0;i<registered_robots_.size();i++){
+		for(unsigned int i=0;i<registered_robots_.size();i++)
+		{
 			registered_robots_[i].draw(
 				&running_map_,map_msg_.info.resolution,&listener_);
 		}
 		running_map_=running_map_.mirrored(false,true);
-		for(unsigned int i=0;i<registered_robots_.size();i++){
+		for(unsigned int i=0;i<registered_robots_.size();i++)
+		{
 			if(registered_robots_[i].getShowLabel())
 				registered_robots_[i].drawLabel(
 					&running_map_,map_msg_.info.resolution);
 		}
 		
-		for(unsigned int i=0;i<registered_robots_.size();i++){
+		for(unsigned int i=0;i<registered_robots_.size();i++)
+		{
 			if(registered_robots_[i].getFrameId()==robot_following_)
 			{
 				map_connector_.updateCenter(
@@ -333,7 +352,8 @@ namespace stdr_gui{
 				it->second->paint();
 			}
 		}
-		for(unsigned int i=0;i<toBeErased.size();i++){
+		for(unsigned int i=0;i<toBeErased.size();i++)
+		{
 			laser_visualizers_.erase(toBeErased[i]);
 		}
 		toBeErased.clear();
@@ -341,14 +361,17 @@ namespace stdr_gui{
 			it!=sonar_visualizers_.end();
 			it++)
 		{
-			if(!it->second->getActive()){
+			if(!it->second->getActive())
+			{
 				toBeErased.push_back(it->first);
 			}
-			else{
+			else
+			{
 				it->second->paint();
 			}
 		}
-		for(unsigned int i=0;i<toBeErased.size();i++){
+		for(unsigned int i=0;i<toBeErased.size();i++)
+		{
 			sonar_visualizers_.erase(toBeErased[i]);
 		}
 	}
@@ -357,8 +380,10 @@ namespace stdr_gui{
 		QString robotName,
 		QString laserName)
 	{
-		for(unsigned int i=0;i<all_robots_.robots.size();i++){					
-			if(all_robots_.robots[i].name==robotName.toStdString()){
+		for(unsigned int i=0;i<all_robots_.robots.size();i++)
+		{					
+			if(all_robots_.robots[i].name==robotName.toStdString())
+			{
 				for(unsigned int j=0;
 					j<all_robots_.robots[i].robot.laserSensors.size();
 					j++)
@@ -378,8 +403,10 @@ namespace stdr_gui{
 		QString robotName,
 		QString sonarName)
 	{
-		for(unsigned int i=0;i<all_robots_.robots.size();i++){					
-			if(all_robots_.robots[i].name==robotName.toStdString()){
+		for(unsigned int i=0;i<all_robots_.robots.size();i++)
+		{					
+			if(all_robots_.robots[i].name==robotName.toStdString())
+			{
 				for(unsigned int j=0;
 					j<all_robots_.robots[i].robot.sonarSensors.size();
 					j++)
@@ -401,7 +428,9 @@ namespace stdr_gui{
 	{
 		QString name=robotName+QString("/")+laserName;
 		if(laser_visualizers_.find(name)!=laser_visualizers_.end())
+		{
 			return;
+		}
 		CLaserVisualisation *lv;
 		lv=new CLaserVisualisation(name,map_msg_.info.resolution);
 		laser_visualizers_.insert(
@@ -418,7 +447,9 @@ namespace stdr_gui{
 	{
 		QString name=robotName+QString("/")+sonarName;
 		if(sonar_visualizers_.find(name)!=sonar_visualizers_.end())
+		{
 			return;
+		}
 		CSonarVisualisation *sv;
 		sv=new CSonarVisualisation(name,map_msg_.info.resolution);
 		sonar_visualizers_.insert(
@@ -469,19 +500,25 @@ namespace stdr_gui{
 					else if(selectedItem==followRobot)
 					{
 						if(robot_following_==registered_robots_[i].getFrameId())
+						{
 							robot_following_="";
+						}
 						else
+						{
 							robot_following_=registered_robots_[i].getFrameId();
+						}
 					}
 				}
-				else if(b==Qt::LeftButton){
+				else if(b==Qt::LeftButton)
+				{
 					registered_robots_[i].toggleShowLabel();
 				}
 			}
 		}
 	}
 	
-	void CGuiController::robotReplaceSet(QPoint p,std::string robotName){
+	void CGuiController::robotReplaceSet(QPoint p,std::string robotName)
+	{
 		QPoint pnew=map_connector_.getGlobalPoint(p);
 		
 		geometry_msgs::Pose2D newPose;
