@@ -76,6 +76,10 @@ namespace stdr_gui
 			void show(void);
 			
 			void setStatusBarMessage(QString s);
+			
+			QEvent* getCloseEvent(void);
+			
+			bool closeTriggered(void);
 
 		public Q_SLOTS:
 		
@@ -140,6 +144,10 @@ namespace stdr_gui
 			**/
 			void setZoomOutCursor(bool state);
 			void setAdjustedCursor(bool state);
+			
+			void guiExitEvent(void);
+			
+			
 	};
 }
 

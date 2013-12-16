@@ -374,6 +374,15 @@ namespace stdr_gui
 		{
 			sonar_visualizers_.erase(toBeErased[i]);
 		}
+		
+		//!< ---------Check for close event----------------
+		if(gui_connector_.closeTriggered())
+		{
+			QEvent *e=gui_connector_.getCloseEvent();
+			ros::shutdown();
+			e->accept();
+			exit();
+		}
 	}
 	
 	stdr_msgs::LaserSensorMsg CGuiController::getLaserDescription(

@@ -33,6 +33,9 @@ namespace stdr_gui
 		private:
 			int 	argc_;
 			char**	argv_;
+			
+			bool 	close_signal_;
+			QCloseEvent 	*event_;
 		public:
 
 			QAction *actionProperties;
@@ -50,6 +53,10 @@ namespace stdr_gui
 			void closeEvent(QCloseEvent *event);
 			
 			void addToolbarIcons(void);
+			
+			QEvent* getCloseEvent(void);
+			bool closeTriggered(void);
+			
 	};
 	
 }

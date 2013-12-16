@@ -31,6 +31,7 @@ namespace stdr_gui
 		setupUi(this);
 		
 		addToolbarIcons();
+		close_signal_=false;
 	}
 	
 	void CGuiLoader::addToolbarIcons(void)
@@ -177,6 +178,18 @@ namespace stdr_gui
 	
 	void CGuiLoader::closeEvent(QCloseEvent *event)
 	{
-		ros::shutdown();
+		close_signal_=true;
+		event->ignore();
+		event_=event;
+	}
+	
+	QEvent* CGuiLoader::getCloseEvent(void)
+	{
+		return event_;
+	}
+		
+	bool CGuiLoader::closeTriggered(void)
+	{
+		return close_signal_;
 	}
 }

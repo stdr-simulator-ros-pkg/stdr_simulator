@@ -168,4 +168,14 @@ namespace stdr_gui
 	{
 		loader_.statusbar->showMessage(s,0);
 	}
+	
+	QEvent* CGuiConnector::getCloseEvent(void)
+	{
+		return loader_.getCloseEvent();
+	}
+		
+	bool CGuiConnector::closeTriggered(void)
+	{
+		return loader_.closeTriggered();
+	}
 }
