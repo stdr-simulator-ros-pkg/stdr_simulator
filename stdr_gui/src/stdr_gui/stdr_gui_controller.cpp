@@ -415,7 +415,7 @@ namespace stdr_gui{
 		if(sonar_visualizers_.find(name)!=sonar_visualizers_.end())
 			return;
 		CSonarVisualisation *sv;
-		sv=new CSonarVisualisation(name);
+		sv=new CSonarVisualisation(name,map_msg_.info.resolution);
 		sonar_visualizers_.insert(
 			std::pair<QString,CSonarVisualisation *>(name,sv));
 		sv->setWindowFlags(Qt::WindowStaysOnTopHint);

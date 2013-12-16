@@ -22,12 +22,23 @@
 #include "stdr_gui/stdr_visualization/stdr_sonar_visualization.h"
 
 namespace stdr_gui{
-	CSonarVisualisation::CSonarVisualisation(QString name):
-		name_(name)
+	CSonarVisualisation::CSonarVisualisation(QString name,float resolution):
+		name_(name),
+		resolution_(resolution)
 	{
 		setupUi(this);
 		setWindowTitle(name_);
 		active_=true;
+		
+		ros::NodeHandle n;
+		
+		subscriber_ = n.subscribe(
+			name_.toStdString().c_str(), 
+			1, 
+			&CSonarVisualisation::callback,
+			this);
+			
+		
 	}
 	
 	CSonarVisualisation::~CSonarVisualisation(void){
@@ -45,6 +56,7 @@ namespace stdr_gui{
 	void CSonarVisualisation::closeEvent(QCloseEvent *event){
 		destruct();
 		active_=false;
+		subscriber_.shutdown();
 	}
 	
 	bool CSonarVisualisation::getActive(void){
@@ -55,5 +67,17 @@ namespace stdr_gui{
 		msg_=msg;
 		sonarMaxDist->setText(QString().setNum(msg.maxRange)+QString(" m"));
 		sonarMinDist->setText(QString().setNum(msg.minRange)+QString(" m"));
+		paint();	// Debug reasons
+	}
+	
+	void CSonarVisualisation::callback(const sensor_msgs::Range& msg){
+		range_=msg;
+	}
+	
+	void CSonarVisualisation::paint(void){
+		range_.range=1.0; //Debug reasons
+		sonarDist->setText(QString().setNum(range_.range)+QString(" m"));
+		sonarDistBar->setValue(
+			sonarDistBar->maximum()*range_.range/msg_.maxRange);
 	}
 }
