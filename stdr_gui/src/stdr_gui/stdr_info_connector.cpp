@@ -51,7 +51,7 @@ namespace stdr_gui
 	
 	void CInfoConnector::treeItemClicked ( QTreeWidgetItem * item, int column )
 	{
-		if(item==&loader.robotsInfo || item==&loader.robotsInfo)
+		if(item==&loader.robotsInfo)
 		{
 			return;
 		}
@@ -64,6 +64,10 @@ namespace stdr_gui
 		{
 			Q_EMIT sonarVisualizerClicked(
 				item->parent()->parent()->text(0),item->text(0));
+		}
+		else if(item->parent()==&loader.robotsInfo)
+		{
+			Q_EMIT robotVisualizerClicked(item->text(0));
 		}
 	}
 	

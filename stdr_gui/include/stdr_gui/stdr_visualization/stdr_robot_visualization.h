@@ -19,37 +19,39 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_INFO_CONNECTOR
-#define STDR_INFO_CONNECTOR
+#ifndef STDR_ROBOT_VISUALIZATION
+#define STDR_ROBOT_VISUALIZATION
 
-#include "stdr_gui/stdr_info_loader.h"
+#include "stdr_gui/stdr_tools.h"
+#include "ui_robotVisualization.h"
 
 namespace stdr_gui
 {
 
-	class CInfoConnector : 
-		public QObject
+	class CRobotVisualisation : 
+		public QWidget, 
+		public Ui_robotVisualization
 	{
-		Q_OBJECT
+		private:
 			
-			int 	argc_;
-			char**	argv_;
-	
+			bool active_;
+			
+			float resolution_;
+			
+			QImage 	internal_image_;
+			QImage 	void_image_;
+			QString name_;
+			
 		public:
-			CInfoLoader loader;
-			 
-			CInfoConnector(int argc, char **argv);
-			void updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg);
-			void updateMapInfo(float width,float height,float ocgd);
-			QWidget* getLoader(void);
-
-		public Q_SLOTS:
-			void treeItemClicked ( QTreeWidgetItem * item, int column ); 
-		Q_SIGNALS:
-			void laserVisualizerClicked(QString robotName,QString laserName);
-			void sonarVisualizerClicked(QString robotName,QString sonarName);
-			void robotVisualizerClicked(QString robotName);
-	};
+			CRobotVisualisation(QString name,float resolution);
+			~CRobotVisualisation(void);
+		
+			bool getActive(void);
+			void destruct(void);
+			void closeEvent(QCloseEvent *event);
+			void setImage(QImage img);
+			int getInternalImageSize(void);
+	};	
 }
 
 #endif

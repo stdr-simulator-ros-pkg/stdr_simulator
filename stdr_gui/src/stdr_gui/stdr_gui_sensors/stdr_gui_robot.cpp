@@ -204,4 +204,9 @@ namespace stdr_gui
 	{
 		return sonars_.size();
 	}
+	
+	 QImage CGuiRobot::getVisualization(void)
+	 {
+		 return visualization;
+	 }
 }

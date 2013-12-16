@@ -96,6 +96,7 @@ namespace stdr_gui{
 		{
 			QTreeWidgetItem	*rnode=new QTreeWidgetItem();
 			rnode->setText(0,QString(msg.robots[i].name.c_str()));
+			rnode->setIcon(3,visible_icon_);
 			
 			QTreeWidgetItem *radius=new QTreeWidgetItem();
 			radius->setText(0,"Radius");

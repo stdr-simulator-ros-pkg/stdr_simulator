@@ -104,6 +104,10 @@ namespace stdr_gui
 		QObject::connect(
 			&info_connector_,SIGNAL(sonarVisualizerClicked(QString,QString)),
 			this, SLOT(sonarVisualizerClicked(QString,QString)));
+			
+		QObject::connect(
+			&info_connector_,SIGNAL(robotVisualizerClicked(QString)),
+			this, SLOT(robotVisualizerClicked(QString)));
 		
 		QObject::connect(
 			&(gui_connector_.robotCreatorConn),
@@ -434,6 +438,24 @@ namespace stdr_gui
 		{
 			sonar_visualizers_.erase(toBeErased[i]);
 		}
+		toBeErased.clear();
+		for(RobotVisIterator it=robot_visualizers_.begin();
+			it!=robot_visualizers_.end();
+			it++)
+		{
+			if(!it->second->getActive())
+			{
+				toBeErased.push_back(it->first);
+			}
+			else
+			{
+				it->second->setImage(QImage());
+			}
+		}
+		for(unsigned int i=0;i<toBeErased.size();i++)
+		{
+			robot_visualizers_.erase(toBeErased[i]);
+		}
 		
 		//!< ---------Check for close event----------------
 		if(gui_connector_.closeTriggered())
@@ -528,6 +550,21 @@ namespace stdr_gui
 
 		sv->setSonar(getSonarDescription(robotName,sonarName));
 						
+		sv->show();
+	}
+	void CGuiController::robotVisualizerClicked(QString robotName)
+	{
+		QString name=robotName;
+		if(robot_visualizers_.find(name)!=robot_visualizers_.end())
+		{
+			return;
+		}
+		CRobotVisualisation *sv;
+		sv=new CRobotVisualisation(name,map_msg_.info.resolution);
+		robot_visualizers_.insert(
+			std::pair<QString,CRobotVisualisation *>(name,sv));
+		sv->setWindowFlags(Qt::WindowStaysOnTopHint);
+
 		sv->show();
 	}
 	

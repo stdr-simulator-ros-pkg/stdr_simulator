@@ -51,6 +51,8 @@ namespace stdr_gui
 			
 			stdr_msgs::FootprintMsg footprint_;
 			
+			QImage visualization;
+			
 			void drawSelf(QImage *m);
 			
 		public:
@@ -69,6 +71,8 @@ namespace stdr_gui
 			void destroy(void);
 			int getLasersNumber(void);
 			int getSonarsNumber(void);
+			
+			 QImage getVisualization(void);
 	};	
 }
 

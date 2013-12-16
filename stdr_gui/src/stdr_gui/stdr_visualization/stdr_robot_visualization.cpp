@@ -19,37 +19,56 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_INFO_CONNECTOR
-#define STDR_INFO_CONNECTOR
-
-#include "stdr_gui/stdr_info_loader.h"
+#include "stdr_gui/stdr_visualization/stdr_robot_visualization.h"
 
 namespace stdr_gui
 {
 
-	class CInfoConnector : 
-		public QObject
+	CRobotVisualisation::CRobotVisualisation(QString name,float resolution):
+		name_(name),
+		resolution_(resolution)
 	{
-		Q_OBJECT
+		setupUi(this);
+		setWindowTitle(name_);
+		active_=true;
+		
+		void_image_=QImage(
+			robotImage->width(),
+			robotImage->height(),
+			QImage::Format_RGB32);
 			
-			int 	argc_;
-			char**	argv_;
+		void_image_.fill(QColor(255,255,255,255));
+	}
 	
-		public:
-			CInfoLoader loader;
-			 
-			CInfoConnector(int argc, char **argv);
-			void updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg);
-			void updateMapInfo(float width,float height,float ocgd);
-			QWidget* getLoader(void);
+	CRobotVisualisation::~CRobotVisualisation(void)
+	{
+		
+	}
+	
+	void CRobotVisualisation::destruct(void)
+	{
+		active_=false;
+		hide();
+		delete robotImage;
+		delete robotPose;
+		delete robotSpeeds;
+	}
+	
+	void CRobotVisualisation::closeEvent(QCloseEvent *event)
+	{
+		destruct();
+		active_=false;
+	}
+	
+	bool CRobotVisualisation::getActive(void)
+	{
+		return active_;
+	}
 
-		public Q_SLOTS:
-			void treeItemClicked ( QTreeWidgetItem * item, int column ); 
-		Q_SIGNALS:
-			void laserVisualizerClicked(QString robotName,QString laserName);
-			void sonarVisualizerClicked(QString robotName,QString sonarName);
-			void robotVisualizerClicked(QString robotName);
-	};
+	void CRobotVisualisation::setImage(QImage img)
+	{
+		internal_image_=img;
+		robotImage->setPixmap(
+			QPixmap().fromImage(internal_image_.mirrored(false,true)));
+	}
 }
-
-#endif
