@@ -178,6 +178,15 @@ namespace stdr_gui
 	
 	void CGuiLoader::closeEvent(QCloseEvent *event)
 	{
+		//~ ROS_ERROR("Shutdown signal!");
+		if(close_signal_)
+		{
+			event->accept();
+			//~ ROS_ERROR("Shutting down ros...");
+			ros::shutdown();
+			exit(0);
+			return;
+		}
 		close_signal_=true;
 		event->ignore();
 		event_=event;
@@ -191,5 +200,10 @@ namespace stdr_gui
 	bool CGuiLoader::closeTriggered(void)
 	{
 		return close_signal_;
+	}
+	
+	void CGuiLoader::shutdown(void)
+	{
+		this->close();
 	}
 }

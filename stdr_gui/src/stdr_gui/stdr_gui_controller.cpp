@@ -438,10 +438,11 @@ namespace stdr_gui
 		//!< ---------Check for close event----------------
 		if(gui_connector_.closeTriggered())
 		{
+			//~ ROS_ERROR("Exit triggered to controller");
 			QEvent *e=gui_connector_.getCloseEvent();
-			ros::shutdown();
-			e->accept();
-			exit();
+			
+			this->exit();
+			gui_connector_.shutdown();
 		}
 	}
 	

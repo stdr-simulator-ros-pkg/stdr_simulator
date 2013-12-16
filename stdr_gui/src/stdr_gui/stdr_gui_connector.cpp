@@ -178,4 +178,9 @@ namespace stdr_gui
 	{
 		return loader_.closeTriggered();
 	}
+	
+	void CGuiConnector::shutdown(void)
+	{
+		loader_.shutdown();
+	}
 }

@@ -57,6 +57,8 @@ namespace stdr_gui
 			QEvent* getCloseEvent(void);
 			bool closeTriggered(void);
 			
+			void shutdown(void);
+			
 	};
 	
 }
