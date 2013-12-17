@@ -40,7 +40,7 @@ catkin_package(
 )
 
 ######################### Sensors ######################################
-add_library(laser src/sensors/sonar.cpp)
+add_library(sonar src/sensors/sonar.cpp)
 add_dependencies(sonar stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(sonar ${catkin_LIBRARIES})
 
@@ -58,6 +58,7 @@ add_library(stdr_robot_nodelet src/stdr_robot.cpp)
 add_dependencies(stdr_robot_nodelet stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_robot_nodelet ${catkin_LIBRARIES}
 	laser
+        sonar
 	ideal_motion_controller
 )
 

@@ -23,7 +23,7 @@
 #define SONAR_H
 
 #include <stdr_robot/sensors/sensor_base.h>
-#include <std_msgs/Float32.h>
+#include <sensor_msgs/Range.h>
 #include <stdr_msgs/SonarSensorMsg.h>
 
 namespace stdr_robot {
