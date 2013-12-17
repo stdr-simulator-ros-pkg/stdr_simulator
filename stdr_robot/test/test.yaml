@@ -1,0 +1,80 @@
+map: 
+  filename: map2.yaml
+  # OR
+  image: map1.png
+  resolution: 0.02
+  origin: [0.0, 0.0, 0.0]
+  free_thresh: 0.196
+  negate: 0
+  occupied_thresh: 0.6
+  
+robots: 
+  - filename: simple_robot.yaml
+    # OR
+    initial_pose:
+      x: 1
+      y: 1
+      theta: 1
+    footprint:
+      radius: 3
+      points: [[0, 1], [1, 2], [0, 3], [0, 5]]
+    sensors:
+      lasers:
+        - filename: hokuyo.yaml
+          # OR 
+          max_angle: 1
+          min_angle: 1
+          max_range: 30
+          min_range: 0.1
+          num_rays: 270
+          frequency: 50
+          frame_id: front_laser
+          pose:
+            x: 0.1
+            y: 0
+            theta: 0
+          noise:
+            filename: gauss.yaml
+            mean: 0.1
+            std: 0.01
+      sonars:
+        - filename: sr05.yaml
+          # OR 
+          cone_angle: 1
+          max_range: 30
+          min_range: 0.1
+          frequency: 50
+          frame_id: front_sonar
+          pose:
+            x: 0.1
+            y: 0
+            theta: 0
+          noise:
+            filename: gauss.yaml
+            mean: 0.1
+            std: 0.01
+      rfids:
+        - filename: rfid.yaml
+          # OR 
+          angle_span: 1
+          signal_cutoff: 1
+          max_range: 30
+          frequency: 50
+          frame_id: front_rfid
+          pose:
+            x: 0.1
+            y: 0
+            theta: 0
+    kinematic:
+      filename: mpifteki.yaml
+      type: mpifteki
+  - filename: robot2.yaml
+    initial_pose:
+      x: 1
+      y: 2
+      theta: 6
+
+rfid_tags:
+  - x: 1
+    y: 1
+    message: geia
