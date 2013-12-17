@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_rfid.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	CGuiRfid::CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic):
 		msg_(msg)
 	{

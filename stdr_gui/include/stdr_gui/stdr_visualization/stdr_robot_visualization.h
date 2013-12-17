@@ -19,41 +19,38 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_INFO_LOADER
-#define STDR_INFO_LOADER
+#ifndef STDR_ROBOT_VISUALIZATION
+#define STDR_ROBOT_VISUALIZATION
 
-#include "ui_information.h"
 #include "stdr_gui/stdr_tools.h"
+#include "ui_robotVisualization.h"
 
 namespace stdr_gui
 {
 
-	class CInfoLoader : 
+	class CRobotVisualisation : 
 		public QWidget, 
-		public Ui_information
+		public Ui_robotVisualization
 	{
 		private:
-			int 	argc_;
-			char **	argv_;
-		
-			std::vector<QTreeWidgetItem> robot_nodes_;
 			
-			QIcon visible_icon_;
+			bool active_;
+			
+			float resolution_;
+			
+			QImage 	internal_image_;
+			QImage 	void_image_;
+			QString name_;
 			
 		public:
-			QTreeWidgetItem	generalInfo,
-							robotsInfo,
-							mapHeight,
-							mapWidth,
-							mapOcgd;
+			CRobotVisualisation(QString name,float resolution);
+			~CRobotVisualisation(void);
 		
-			CInfoLoader(int argc, char **argv);
-			~CInfoLoader(void);
-			
-			void deleteTree(void);
-			void deleteTreeNode(QTreeWidgetItem *item);
-			void updateMapInfo(float width,float height,float ocgd);
-			void updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
+			bool getActive(void);
+			void destruct(void);
+			void closeEvent(QCloseEvent *event);
+			void setImage(QImage img);
+			int getInternalImageSize(void);
 	};	
 }
 

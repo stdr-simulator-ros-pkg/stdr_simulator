@@ -25,7 +25,8 @@
 #include "stdr_gui/stdr_gui_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	
 	/**
 	 @class GuiConnector
@@ -75,6 +76,12 @@ namespace stdr_gui{
 			void show(void);
 			
 			void setStatusBarMessage(QString s);
+			
+			QEvent* getCloseEvent(void);
+			
+			bool closeTriggered(void);
+			
+			void shutdown(void);
 
 		public Q_SLOTS:
 		
@@ -139,6 +146,10 @@ namespace stdr_gui{
 			**/
 			void setZoomOutCursor(bool state);
 			void setAdjustedCursor(bool state);
+			
+			void guiExitEvent(void);
+			
+			
 	};
 }
 

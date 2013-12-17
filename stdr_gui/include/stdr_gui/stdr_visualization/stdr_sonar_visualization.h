@@ -24,28 +24,37 @@
 
 #include "stdr_gui/stdr_tools.h"
 #include "ui_sonarVisualization.h"
+#include "sensor_msgs/Range.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	class CSonarVisualisation : 
 		public QWidget, 
 		public Ui_sonarVisualization
 	{
 		private:
 			bool active_;
+			
+			float resolution_;
+			
+			sensor_msgs::Range 	range_;
+			ros::Subscriber 	subscriber_;
+			
+			stdr_msgs::SonarSensorMsg msg_;
 
 			QString name_;
-
-			stdr_msgs::SonarSensorMsg msg_;
 		
 		public:
-			CSonarVisualisation(QString name);
+			CSonarVisualisation(QString name,float resolution);
 			~CSonarVisualisation(void);
-			
+		
 			bool getActive(void);
 			void setSonar(stdr_msgs::SonarSensorMsg msg);
-			
 			void destruct(void);
 			void closeEvent(QCloseEvent *event);
+			void callback(const sensor_msgs::Range& msg); 
+			void paint(void);
 	};	
 }
 

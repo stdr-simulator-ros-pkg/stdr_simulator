@@ -22,7 +22,8 @@
 #include "stdr_gui/stdr_gui_controller.h"
 #include "stdr_gui/stdr_gui_application.h"
 
-int main(int argc,char **argv){
+int main(int argc,char **argv)
+{
 	stdr_gui::CStdrApplication app(argc, argv);
 	app.setAttribute(Qt::AA_DontShowIconsInMenus, false);
 	ros::init(argc,argv,"stdr_gui_node");

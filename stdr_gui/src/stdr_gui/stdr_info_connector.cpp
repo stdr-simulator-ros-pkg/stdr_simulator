@@ -21,7 +21,9 @@
 
 #include "stdr_gui/stdr_info_connector.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
+
 	CInfoConnector::CInfoConnector(int argc, char **argv):
 		QObject(),
 		loader(argc,argv),
@@ -40,7 +42,8 @@ namespace stdr_gui{
 		loader.updateMapInfo(width,height,ocgd);
 	}
 	
-	void CInfoConnector::updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg)
+	void CInfoConnector::updateTree(
+		const stdr_msgs::RobotIndexedVectorMsg& msg)
 	{
 		loader.deleteTree();
 		loader.updateRobots(msg);
@@ -48,15 +51,24 @@ namespace stdr_gui{
 	
 	void CInfoConnector::treeItemClicked ( QTreeWidgetItem * item, int column )
 	{
-		if(item==&loader.robotsInfo || item==&loader.robotsInfo)
+		if(item==&loader.robotsInfo)
+		{
 			return;
-		else if(item->parent()->text(0)==QString("Lasers") && column==3){
+		}
+		else if(item->parent()->text(0)==QString("Lasers") && column==3)
+		{
 			Q_EMIT laserVisualizerClicked(
 				item->parent()->parent()->text(0),item->text(0));
 		}
 		else if(item->parent()->text(0)==QString("Sonars") && column==3)
+		{
 			Q_EMIT sonarVisualizerClicked(
 				item->parent()->parent()->text(0),item->text(0));
+		}
+		else if(item->parent()==&loader.robotsInfo)
+		{
+			Q_EMIT robotVisualizerClicked(item->text(0));
+		}
 	}
 	
 	QWidget* CInfoConnector::getLoader(void)

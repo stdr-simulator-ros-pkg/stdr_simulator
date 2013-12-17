@@ -25,7 +25,8 @@
 #include "stdr_gui/stdr_tools.h"
 #include "stdr_msgs/RfidSensorMsg.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	class CGuiRfid
 	{
 		private:

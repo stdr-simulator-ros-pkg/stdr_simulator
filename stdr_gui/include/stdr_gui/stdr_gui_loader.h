@@ -25,13 +25,17 @@
 #include "ui_simulator.h"
 #include "stdr_gui/stdr_tools.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	
 	class CGuiLoader : public Ui_MainWindow, public QMainWindow
 	{
 		private:
 			int 	argc_;
 			char**	argv_;
+			
+			bool 	close_signal_;
+			QCloseEvent 	*event_;
 		public:
 
 			QAction *actionProperties;
@@ -49,6 +53,12 @@ namespace stdr_gui{
 			void closeEvent(QCloseEvent *event);
 			
 			void addToolbarIcons(void);
+			
+			QEvent* getCloseEvent(void);
+			bool closeTriggered(void);
+			
+			void shutdown(void);
+			
 	};
 	
 }

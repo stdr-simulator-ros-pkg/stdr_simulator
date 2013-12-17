@@ -21,7 +21,8 @@
 
 #include "stdr_gui/stdr_robot_creator/stdr_rfid_antenna_properties_loader.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	CRfidAntennaPropertiesLoader::CRfidAntennaPropertiesLoader(
 		int argc, char **argv):
 		argc_(argc),

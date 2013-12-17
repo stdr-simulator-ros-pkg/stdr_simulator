@@ -24,14 +24,16 @@
 
 #include "stdr_gui/stdr_map_loader.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	
 	enum EStdrMapState
 	{
 		NORMAL,
 		ZOOMIN,
 		ZOOMOUT,
-		SETPLACE
+		SETPLACE,
+		SETREPLACE
 	};
 	
 	class CMapConnector : 
@@ -40,12 +42,15 @@ namespace stdr_gui{
 		Q_OBJECT
 			int 		argc_;
 			char** 		argv_;
+			
+			std::string 	current_robot_frame_id_;
+			
 			QCursor 	zoom_in_cursor_;
 			QCursor 	zoom_out_cursor_;
 			
 			EStdrMapState 	map_state_;
 			CMapLoader 		loader_;
-		
+			
 		public:
 			CMapConnector(int argc, char **argv);
 			~CMapConnector(void);
@@ -53,6 +58,7 @@ namespace stdr_gui{
 			void updateImage(QImage *img);	
 			void setInitialImageSize(QSize s);
 			void updateZoom(QPoint p,bool z);
+			void updateCenter(QPoint p);
 			QPoint getGlobalPoint(QPoint p);
 			void drawGrid(QImage *img,float resolution);
 			QPoint mapToGlobal(QPoint p);
@@ -65,6 +71,7 @@ namespace stdr_gui{
 			void setCursorZoomOut(bool state);
 			void setCursorAdjusted(bool state);
 			void waitForPlace(void);
+			void waitForReplace(std::string robotFrameId);
 		
 		Q_SIGNALS:
 			void signalUpdateImage(QImage *img);	
@@ -72,6 +79,7 @@ namespace stdr_gui{
 			void zoomOutPressed(QPoint p);	
 			void robotPlaceSet(QPoint p);
 			void itemClicked(QPoint p,Qt::MouseButton b);
+			void robotReplaceSet(QPoint p,std::string robotName);
 	};	
 }
 

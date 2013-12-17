@@ -25,7 +25,8 @@
 #include "ui_rfidAntennaProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
-namespace stdr_gui{
+namespace stdr_gui
+{
 	class CRfidAntennaPropertiesLoader : 
 		public QWidget, 
 		public Ui_RfidAntennaProperties
