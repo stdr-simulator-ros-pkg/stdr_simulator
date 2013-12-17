@@ -29,6 +29,7 @@
 #include <stdr_msgs/MoveRobot.h>
 #include <stdr_robot/sensors/sensor_base.h>
 #include <stdr_robot/sensors/laser.h>
+#include <stdr_robot/sensors/sonar.h>
 #include <stdr_robot/motion/motion_controller_base.h>
 #include <stdr_robot/motion/ideal_motion_controller.h>
 #include <nav_msgs/OccupancyGrid.h>
