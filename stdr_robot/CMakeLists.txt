@@ -40,6 +40,10 @@ catkin_package(
 )
 
 ######################### Sensors ######################################
+add_library(laser src/sensors/sonar.cpp)
+add_dependencies(sonar stdr_msgs_gencpp) # wait for stdr_msgs to be build
+target_link_libraries(sonar ${catkin_LIBRARIES})
+
 add_library(laser src/sensors/laser.cpp)
 add_dependencies(laser stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(laser ${catkin_LIBRARIES})

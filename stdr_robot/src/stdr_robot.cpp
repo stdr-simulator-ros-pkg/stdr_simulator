@@ -61,6 +61,9 @@ void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const
 	for ( unsigned int laserIter = 0; laserIter < result->description.laserSensors.size(); laserIter++ ){
 		_sensors.push_back( SensorPtr( new Laser( _map, _currentPosePtr, _tfBroadcaster, result->description.laserSensors[laserIter], getName(), n ) ) );
 	}
+	for ( unsigned int sonarIter = 0; sonarIter < result->description.sonarSensors.size(); sonarIter++ ){
+		_sensors.push_back( SensorPtr( new Sonar( _map, _currentPosePtr, _tfBroadcaster, result->description.sonarSensors[sonarIter], getName(), n ) ) );
+	}
 	
 	_motionControllerPtr.reset( new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()) );
 }
