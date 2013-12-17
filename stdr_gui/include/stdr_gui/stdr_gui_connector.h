@@ -115,6 +115,10 @@ namespace stdr_gui
 			**/
 			void actionNewRobotTriggered(void);
 			
+			void actionNewRfidTriggered(void);
+			void actionNewCo2Triggered(void);
+			void actionNewThermalTriggered(void);
+			
 			/**
 			@brief Qt slot that is called when the zoom in tool button is pressed
 			@return void
@@ -127,7 +131,7 @@ namespace stdr_gui
 			**/
 			void actionZoomOutTriggered(void);
 			
-			void actionAdjustedTriggered(void);
+			void actionAdjustedTriggered(void); 
 			void actionGridTriggered(void);
 			
 		Q_SIGNALS:
@@ -148,6 +152,10 @@ namespace stdr_gui
 			void setAdjustedCursor(bool state);
 			
 			void guiExitEvent(void);
+			
+			void loadRfidPressed(void);
+			void loadThermalPressed(void);
+			void loadCo2Pressed(void);
 			
 			
 	};

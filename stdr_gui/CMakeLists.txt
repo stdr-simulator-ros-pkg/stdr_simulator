@@ -88,6 +88,9 @@ add_executable(stdr_gui_node
 	src/stdr_gui/stdr_visualization/stdr_laser_visualization.cpp
 	src/stdr_gui/stdr_visualization/stdr_sonar_visualization.cpp
 	src/stdr_gui/stdr_visualization/stdr_robot_visualization.cpp
+	src/stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.cpp
+	src/stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.cpp
+	src/stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.cpp
 	${QT_SOURCES} ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
 )
 add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)	# Wait for std messages to build

@@ -54,21 +54,6 @@ namespace stdr_gui
         toolBar->addAction(actionLoadMap);
 		
 		toolBar->addSeparator();
-        
-        actionGrid = new QAction(this);
-        actionGrid->setObjectName(QString::fromUtf8("actionGrid"));
-        actionGrid->setCheckable(true);
-        actionGrid->setChecked(true);
-        actionGrid->setIconText(QString("Enable grid"));
-        QIcon iconGrid;
-        iconGrid.addFile(QString::fromUtf8((
-			stdr_gui_tools::getRosPackagePath("stdr_gui")+
-				std::string("/resources/images/grid.png")).c_str()), 
-			QSize(), 
-			QIcon::Normal, 
-			QIcon::Off);
-        actionGrid->setIcon(iconGrid);
-        toolBar->addAction(actionGrid);
 		
 		actionAddRobot = new QAction(this);
         actionAddRobot->setObjectName(QString::fromUtf8("actionNewRobot"));
@@ -98,6 +83,8 @@ namespace stdr_gui
         actionNewRobot->setIcon(iconNewRobot);
         toolBar->addAction(actionNewRobot);
         
+        toolBar->addSeparator();
+        
         actionNewRfid = new QAction(this);
         actionNewRfid->setObjectName(QString::fromUtf8("actionNewRfid"));
         actionNewRfid->setCheckable(false);
@@ -111,6 +98,34 @@ namespace stdr_gui
 			QIcon::Off);
         actionNewRfid->setIcon(iconNewRfid);
         toolBar->addAction(actionNewRfid);
+        
+        actionNewThermal = new QAction(this);
+        actionNewThermal->setObjectName(QString::fromUtf8("actionNewThermal"));
+        actionNewThermal->setCheckable(false);
+        actionNewThermal->setIconText(QString("Add heat source"));
+        QIcon iconNewThermal;
+        iconNewThermal.addFile(QString::fromUtf8((
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
+				std::string("/resources/images/thermal.png")).c_str()), 
+			QSize(), 
+			QIcon::Normal, 
+			QIcon::Off);
+        actionNewThermal->setIcon(iconNewThermal);
+        toolBar->addAction(actionNewThermal);
+        
+        actionNewCo2 = new QAction(this);
+        actionNewCo2->setObjectName(QString::fromUtf8("actionNewCo2"));
+        actionNewCo2->setCheckable(false);
+        actionNewCo2->setIconText(QString("Add CO2 source"));
+        QIcon iconNewCo2;
+        iconNewCo2.addFile(QString::fromUtf8((
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
+				std::string("/resources/images/co2.png")).c_str()), 
+			QSize(), 
+			QIcon::Normal, 
+			QIcon::Off);
+        actionNewCo2->setIcon(iconNewCo2);
+        toolBar->addAction(actionNewCo2);
         
         toolBar->addSeparator();
         
@@ -129,6 +144,21 @@ namespace stdr_gui
         toolBar->addAction(actionProperties);
         
         toolBar->addSeparator();
+        
+        actionGrid = new QAction(this);
+        actionGrid->setObjectName(QString::fromUtf8("actionGrid"));
+        actionGrid->setCheckable(true);
+        actionGrid->setChecked(true);
+        actionGrid->setIconText(QString("Enable grid"));
+        QIcon iconGrid;
+        iconGrid.addFile(QString::fromUtf8((
+			stdr_gui_tools::getRosPackagePath("stdr_gui")+
+				std::string("/resources/images/grid.png")).c_str()), 
+			QSize(), 
+			QIcon::Normal, 
+			QIcon::Off);
+        actionGrid->setIcon(iconGrid);
+        toolBar->addAction(actionGrid);
         
         actionZoomIn = new QAction(this);
         actionZoomIn->setObjectName(QString::fromUtf8("actionZoomIn"));

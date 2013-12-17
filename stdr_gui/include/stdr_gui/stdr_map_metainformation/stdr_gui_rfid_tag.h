@@ -19,50 +19,26 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_GUI_LOADER
-#define STDR_GUI_LOADER
 
-#include "ui_simulator.h"
+#ifndef STDR_GUI_RFID_TAG_CONTAINER
+#define STDR_GUI_RFID_TAG_CONTAINER
+
 #include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui
 {
-	
-	class CGuiLoader : public Ui_MainWindow, public QMainWindow
+
+	class CGuiRfidTag
 	{
 		private:
-			int 	argc_;
-			char**	argv_;
-			
-			bool 	close_signal_;
-			QCloseEvent 	*event_;
+			QPoint position_;	
+			std::string name_;	
 		public:
-
-			QAction *actionProperties;
-			QAction *actionGrid;
-			QAction *actionNewRobot;
-			QAction *actionAddRobot;
-			QAction *actionNewRfid;
-			QAction *actionNewThermal;
-			QAction *actionNewCo2;
-			QAction *actionLoadMap;
-			QAction *actionZoomIn;
-			QAction *actionZoomOut;
-			QAction *actionAdjusted;
-		
-			CGuiLoader(int argc,char **argv);
-			
-			void closeEvent(QCloseEvent *event);
-			
-			void addToolbarIcons(void);
-			
-			QEvent* getCloseEvent(void);
-			bool closeTriggered(void);
-			
-			void shutdown(void);
-			
-	};
-	
+			CGuiRfidTag(QPoint p);
+			~CGuiRfidTag(void);
+			std::string getName(void);
+			bool checkProximity(QPoint p);
+	};	
 }
 
 #endif

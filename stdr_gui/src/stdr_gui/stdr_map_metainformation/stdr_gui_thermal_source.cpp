@@ -19,50 +19,27 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_GUI_LOADER
-#define STDR_GUI_LOADER
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.h"
 
-#include "ui_simulator.h"
-#include "stdr_gui/stdr_tools.h"
-
-namespace stdr_gui
-{
-	
-	class CGuiLoader : public Ui_MainWindow, public QMainWindow
+namespace stdr_gui{
+	CGuiThermalSource::CGuiThermalSource(QPoint p):
+		position_(p)
 	{
-		private:
-			int 	argc_;
-			char**	argv_;
-			
-			bool 	close_signal_;
-			QCloseEvent 	*event_;
-		public:
 
-			QAction *actionProperties;
-			QAction *actionGrid;
-			QAction *actionNewRobot;
-			QAction *actionAddRobot;
-			QAction *actionNewRfid;
-			QAction *actionNewThermal;
-			QAction *actionNewCo2;
-			QAction *actionLoadMap;
-			QAction *actionZoomIn;
-			QAction *actionZoomOut;
-			QAction *actionAdjusted;
-		
-			CGuiLoader(int argc,char **argv);
-			
-			void closeEvent(QCloseEvent *event);
-			
-			void addToolbarIcons(void);
-			
-			QEvent* getCloseEvent(void);
-			bool closeTriggered(void);
-			
-			void shutdown(void);
-			
-	};
+	}
 	
+	CGuiThermalSource::~CGuiThermalSource(void)
+	{
+
+	}
+	
+	std::string CGuiThermalSource::getName(void)
+	{
+		return name_;
+	}
+	
+	bool CGuiThermalSource::checkProximity(QPoint p){
+		return false;	// 2b changed
+	}
 }
 
-#endif

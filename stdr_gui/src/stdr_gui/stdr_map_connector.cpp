@@ -121,6 +121,24 @@ namespace stdr_gui{
 						loader_.map->setCursor(QCursor(Qt::CrossCursor));
 						Q_EMIT robotReplaceSet(p,current_robot_frame_id_);
 					}
+					else if(map_state_==SETPLACERFID)
+					{
+						map_state_=NORMAL;
+						loader_.map->setCursor(QCursor(Qt::CrossCursor));
+						Q_EMIT rfidPlaceSet(p);
+					}
+					else if(map_state_==SETPLACETHERMAL)
+					{
+						map_state_=NORMAL;
+						loader_.map->setCursor(QCursor(Qt::CrossCursor));
+						Q_EMIT thermalPlaceSet(p);
+					}
+					else if(map_state_==SETPLACECO2)
+					{
+						map_state_=NORMAL;
+						loader_.map->setCursor(QCursor(Qt::CrossCursor));
+						Q_EMIT co2PlaceSet(p);
+					}
 				}
 			}
 		}
@@ -180,6 +198,24 @@ namespace stdr_gui{
 	void CMapConnector::waitForPlace(void)
 	{
 		map_state_=SETPLACE;
+		loader_.map->setCursor(Qt::PointingHandCursor);
+	}
+	
+	void CMapConnector::waitForThermalPlace(void)
+	{
+		map_state_=SETPLACETHERMAL;
+		loader_.map->setCursor(Qt::PointingHandCursor);
+	}
+	
+	void CMapConnector::waitForRfidPlace(void)
+	{
+		map_state_=SETPLACERFID;
+		loader_.map->setCursor(Qt::PointingHandCursor);
+	}
+	
+	void CMapConnector::waitForCo2Place(void)
+	{
+		map_state_=SETPLACECO2;
 		loader_.map->setCursor(Qt::PointingHandCursor);
 	}
 	

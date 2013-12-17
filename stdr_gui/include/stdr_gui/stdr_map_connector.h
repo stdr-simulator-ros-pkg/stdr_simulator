@@ -33,7 +33,10 @@ namespace stdr_gui
 		ZOOMIN,
 		ZOOMOUT,
 		SETPLACE,
-		SETREPLACE
+		SETREPLACE,
+		SETPLACECO2,
+		SETPLACERFID,
+		SETPLACETHERMAL
 	};
 	
 	class CMapConnector : 
@@ -71,6 +74,9 @@ namespace stdr_gui
 			void setCursorZoomOut(bool state);
 			void setCursorAdjusted(bool state);
 			void waitForPlace(void);
+			void waitForThermalPlace(void);
+			void waitForCo2Place(void);
+			void waitForRfidPlace(void);
 			void waitForReplace(std::string robotFrameId);
 		
 		Q_SIGNALS:
@@ -78,6 +84,9 @@ namespace stdr_gui
 			void zoomInPressed(QPoint p);	
 			void zoomOutPressed(QPoint p);	
 			void robotPlaceSet(QPoint p);
+			void thermalPlaceSet(QPoint p);
+			void co2PlaceSet(QPoint p);
+			void rfidPlaceSet(QPoint p);
 			void itemClicked(QPoint p,Qt::MouseButton b);
 			void robotReplaceSet(QPoint p,std::string robotName);
 	};	

@@ -35,6 +35,9 @@
 #include "stdr_gui/stdr_visualization/stdr_laser_visualization.h"
 #include "stdr_gui/stdr_visualization/stdr_robot_visualization.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.h"
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.h"
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.h"
 
 #include <stdr_robot/handle_robot.h>
 
@@ -70,6 +73,10 @@ namespace stdr_gui
 			std::map<QString,CLaserVisualisation *> laser_visualizers_;
 			std::map<QString,CSonarVisualisation *> sonar_visualizers_;
 			std::map<QString,CRobotVisualisation *> robot_visualizers_;
+			
+			std::map<QString,CGuiRfidTag> rfid_tags_;
+			std::map<QString,CGuiThermalSource> thermal_source_;
+			std::map<QString,CGuiCo2Source> co2_source_;
 			
 			ros::Subscriber 		map_subscriber_;
 			ros::Subscriber 		robot_subscriber_;
@@ -116,9 +123,15 @@ namespace stdr_gui
 		public Q_SLOTS:
 			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
 			void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+			void loadRfidPressed(void);
+			void loadCo2Pressed(void);
+			void loadThermalPressed(void);
 			void zoomInPressed(QPoint p);
 			void zoomOutPressed(QPoint p);
 			void robotPlaceSet(QPoint p);
+			void rfidPlaceSet(QPoint p);
+			void thermalPlaceSet(QPoint p);
+			void co2PlaceSet(QPoint p);
 			void updateMapInternal(void);
 			void laserVisualizerClicked(QString robotName,QString laserName);
 			void sonarVisualizerClicked(QString robotName,QString sonarName);
@@ -128,6 +141,9 @@ namespace stdr_gui
 			
 		Q_SIGNALS:
 			void waitForRobotPose(void);
+			void waitForThermalPose(void);
+			void waitForCo2Pose(void);
+			void waitForRfidPose(void);
 			void updateMap(void);
 			void replaceRobot(std::string robotFrameId);
 	};
