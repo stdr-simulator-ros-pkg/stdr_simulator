@@ -118,6 +118,21 @@ namespace stdr_gui
 			&(gui_connector_.robotCreatorConn),
 				SIGNAL(loadRobotPressed(stdr_msgs::RobotMsg)),
 			this, SLOT(loadRobotPressed(stdr_msgs::RobotMsg)));
+			
+		QObject::connect(
+			&(gui_connector_),
+				SIGNAL(loadRfidPressed()),
+			this, SLOT(loadRfidPressed()));
+		
+		QObject::connect(
+			&(gui_connector_),
+				SIGNAL(loadThermalPressed()),
+			this, SLOT(loadThermalPressed()));
+		
+		QObject::connect(
+			&(gui_connector_),
+				SIGNAL(loadCo2Pressed()),
+			this, SLOT(loadCo2Pressed()));
 		
 		QObject::connect(
 			this,SIGNAL(waitForRobotPose()),
@@ -143,6 +158,30 @@ namespace stdr_gui
 		connect(
 			timer_, SIGNAL(timeout()), 
 			this, SLOT(updateMapInternal()));
+			
+		QObject::connect(
+			this,SIGNAL(waitForRfidPose()),
+			&map_connector_, SLOT(waitForRfidPlace()));
+		
+		QObject::connect(
+			&map_connector_,SIGNAL(rfidPlaceSet(QPoint)),
+			this, SLOT(rfidPlaceSet(QPoint)));
+			
+		QObject::connect(
+			this,SIGNAL(waitForThermalPose()),
+			&map_connector_, SLOT(waitForThermalPlace()));
+		
+		QObject::connect(
+			&map_connector_,SIGNAL(thermalPlaceSet(QPoint)),
+			this, SLOT(thermalPlaceSet(QPoint)));
+			
+		QObject::connect(
+			this,SIGNAL(waitForCo2Pose()),
+			&map_connector_, SLOT(waitForCo2Place()));
+		
+		QObject::connect(
+			&map_connector_,SIGNAL(co2PlaceSet(QPoint)),
+			this, SLOT(co2PlaceSet(QPoint)));
 	}
 	
 	void CGuiController::setupWidgets(void)
@@ -232,6 +271,19 @@ namespace stdr_gui
 	void CGuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
 	{
 		Q_EMIT waitForRobotPose();
+	}
+	
+	void CGuiController::loadRfidPressed(void)
+	{
+		Q_EMIT waitForRfidPose();
+	}
+	void CGuiController::loadThermalPressed(void)
+	{
+		Q_EMIT waitForRfidPose();
+	}
+	void CGuiController::loadCo2Pressed(void)
+	{
+		Q_EMIT waitForRfidPose();
 	}
 	
 	void CGuiController::zoomInPressed(QPoint p)
@@ -356,6 +408,39 @@ namespace stdr_gui
 			return;
 		}
 		my_robots_.insert(newRobot.name);
+		map_lock_=false;
+	}
+	
+	void CGuiController::rfidPlaceSet(QPoint p)
+	{
+		while(map_lock_)
+		{	
+			usleep(100);
+		}
+		map_lock_=true;
+		
+		map_lock_=false;
+	}
+	
+	void CGuiController::co2PlaceSet(QPoint p)
+	{
+		while(map_lock_)
+		{	
+			usleep(100);
+		}
+		map_lock_=true;
+		
+		map_lock_=false;
+	}
+	
+	void CGuiController::thermalPlaceSet(QPoint p)
+	{
+		while(map_lock_)
+		{	
+			usleep(100);
+		}
+		map_lock_=true;
+		
 		map_lock_=false;
 	}
 	

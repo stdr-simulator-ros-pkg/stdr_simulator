@@ -58,13 +58,25 @@ namespace stdr_gui
 			loader_.actionZoomOut,SIGNAL(triggered(bool)),
 			this,SLOT(actionZoomOutTriggered()));
 		
-		QObject::connect(
+		QObject::connect( 
 			loader_.actionAdjusted,SIGNAL(triggered(bool)),
 			this,SLOT(actionAdjustedTriggered()));
 		
 		QObject::connect(
 			loader_.actionGrid,SIGNAL(triggered(bool)),
 			this,SLOT(actionGridTriggered()));
+			
+		QObject::connect(
+			loader_.actionNewRfid,SIGNAL(triggered(bool)),
+			this,SLOT(actionNewRfidTriggered()));
+			
+		QObject::connect(
+			loader_.actionNewThermal,SIGNAL(triggered(bool)),
+			this,SLOT(actionNewThermalTriggered()));
+			
+		QObject::connect(
+			loader_.actionNewCo2,SIGNAL(triggered(bool)),
+			this,SLOT(actionNewCo2Triggered()));
 		
 		grid_enabled_=true;
 	}
@@ -109,6 +121,21 @@ namespace stdr_gui
 	void CGuiConnector::actionNewRobotTriggered(void)
 	{
 		robotCreatorConn.initialise();
+	}
+	
+	void CGuiConnector::actionNewRfidTriggered(void)
+	{
+		Q_EMIT loadRfidPressed();
+	}
+	
+	void CGuiConnector::actionNewThermalTriggered(void)
+	{
+		Q_EMIT loadThermalPressed();
+	}
+	
+	void CGuiConnector::actionNewCo2Triggered(void)
+	{
+		Q_EMIT loadCo2Pressed();
 	}
 	
 	void CGuiConnector::setMapLoaded(bool mapLoaded)
