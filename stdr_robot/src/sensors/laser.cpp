@@ -71,7 +71,12 @@ void Laser::updateSensorCallback(const ros::TimerEvent&) {
 			distance ++;
 		}
 		
-		_laserScan.ranges.push_back( distance * _map.info.resolution );
+                if ( distance * _map.info.resolution > _description.maxRange )
+                  _laserScan.ranges.push_back( std::numeric_limits<float>::infinity() );
+                else if ( distance * _map.info.resolution < _description.minRange )
+                  _laserScan.ranges.push_back( -std::numeric_limits<float>::infinity() );
+                else
+                  _laserScan.ranges.push_back( distance * _map.info.resolution );
 	}
 	
 	_laserScan.header.stamp = ros::Time::now();

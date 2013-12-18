@@ -87,6 +87,11 @@ namespace stdr_robot {
         sonarRangeMsg.range = distance * _map.info.resolution;
     }
 
+    if ( sonarRangeMsg.range < _description.minRange )
+      sonarRangeMsg.range = -std::numeric_limits<float>::infinity();
+    else if ( sonarRangeMsg.range >= _description.maxRange )
+      sonarRangeMsg.range = std::numeric_limits<float>::infinity();
+
     sonarRangeMsg.header.stamp = ros::Time::now();
     sonarRangeMsg.header.frame_id = _description.frame_id;
     _publisher.publish( sonarRangeMsg );
