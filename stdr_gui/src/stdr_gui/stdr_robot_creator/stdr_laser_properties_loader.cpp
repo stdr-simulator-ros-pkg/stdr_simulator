@@ -23,15 +23,15 @@
 
 namespace stdr_gui
 {
-	CLaserPropertiesLoader::CLaserPropertiesLoader(int argc, char **argv):
-		argc_(argc),
-		argv_(argv)
-	{
-		setupUi(this);
-	}
-	
-	CLaserPropertiesLoader::~CLaserPropertiesLoader(void)
-	{
-		
-	}
+  CLaserPropertiesLoader::CLaserPropertiesLoader(int argc, char **argv):
+    argc_(argc),
+    argv_(argv)
+  {
+    setupUi(this);
+  }
+  
+  CLaserPropertiesLoader::~CLaserPropertiesLoader(void)
+  {
+    
+  }
 }

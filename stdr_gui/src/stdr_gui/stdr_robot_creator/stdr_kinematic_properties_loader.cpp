@@ -23,16 +23,16 @@
 
 namespace stdr_gui
 {
-	CKinematicPropertiesLoader::CKinematicPropertiesLoader(
-		int argc, char **argv):
-		argc_(argc),
-		argv_(argv)
-	{
-		setupUi(this);
-	}
-	
-	CKinematicPropertiesLoader::~CKinematicPropertiesLoader(void)
-	{
-		
-	}
+  CKinematicPropertiesLoader::CKinematicPropertiesLoader(
+    int argc, char **argv):
+    argc_(argc),
+    argv_(argv)
+  {
+    setupUi(this);
+  }
+  
+  CKinematicPropertiesLoader::~CKinematicPropertiesLoader(void)
+  {
+    
+  }
 }

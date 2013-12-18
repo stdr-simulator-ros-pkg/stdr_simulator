@@ -23,10 +23,10 @@
 
 namespace stdr_gui
 {
-	CRobotPropertiesLoader::CRobotPropertiesLoader(int argc, char **argv):
-		argc_(argc),
-		argv_(argv)
-	{
-		setupUi(this);
-	}
+  CRobotPropertiesLoader::CRobotPropertiesLoader(int argc, char **argv):
+    argc_(argc),
+    argv_(argv)
+  {
+    setupUi(this);
+  }
 }

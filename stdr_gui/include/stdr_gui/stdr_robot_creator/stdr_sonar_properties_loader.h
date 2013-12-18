@@ -27,15 +27,15 @@
 
 namespace stdr_gui
 {
-	class CSonarPropertiesLoader : 
-		public QWidget, 
-		public Ui_SonarProperties
-	{
-			int 	argc_;
-			char**	argv_;
-		public:
-			CSonarPropertiesLoader(int argc, char **argv);
-	};	
+  class CSonarPropertiesLoader : 
+    public QWidget, 
+    public Ui_SonarProperties
+  {
+      int   argc_;
+      char**  argv_;
+    public:
+      CSonarPropertiesLoader(int argc, char **argv);
+  };  
 }
 
 #endif

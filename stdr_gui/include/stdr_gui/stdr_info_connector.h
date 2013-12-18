@@ -27,29 +27,29 @@
 namespace stdr_gui
 {
 
-	class CInfoConnector : 
-		public QObject
-	{
-		Q_OBJECT
-			
-			int 	argc_;
-			char**	argv_;
-	
-		public:
-			CInfoLoader loader;
-			 
-			CInfoConnector(int argc, char **argv);
-			void updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg);
-			void updateMapInfo(float width,float height,float ocgd);
-			QWidget* getLoader(void);
+  class CInfoConnector : 
+    public QObject
+  {
+    Q_OBJECT
+      
+      int   argc_;
+      char**  argv_;
+  
+    public:
+      CInfoLoader loader;
+       
+      CInfoConnector(int argc, char **argv);
+      void updateTree(const stdr_msgs::RobotIndexedVectorMsg& msg);
+      void updateMapInfo(float width,float height,float ocgd);
+      QWidget* getLoader(void);
 
-		public Q_SLOTS:
-			void treeItemClicked ( QTreeWidgetItem * item, int column ); 
-		Q_SIGNALS:
-			void laserVisualizerClicked(QString robotName,QString laserName);
-			void sonarVisualizerClicked(QString robotName,QString sonarName);
-			void robotVisualizerClicked(QString robotName);
-	};
+    public Q_SLOTS:
+      void treeItemClicked ( QTreeWidgetItem * item, int column ); 
+    Q_SIGNALS:
+      void laserVisualizerClicked(QString robotName,QString laserName);
+      void sonarVisualizerClicked(QString robotName,QString sonarName);
+      void robotVisualizerClicked(QString robotName);
+  };
 }
 
 #endif

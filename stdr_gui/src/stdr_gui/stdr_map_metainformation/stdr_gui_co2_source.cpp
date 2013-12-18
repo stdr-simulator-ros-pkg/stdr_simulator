@@ -18,15 +18,45 @@
    * Aris Thallas, aris.thallas@gmail.com
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
+  
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.h"
 
-#include "stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.h"
-
-namespace stdr_gui
-{
-  CSonarPropertiesLoader::CSonarPropertiesLoader(int argc, char **argv):
-    argc_(argc),
-    argv_(argv)
+namespace stdr_gui{
+  CGuiCo2Source::CGuiCo2Source(QPoint p,std::string name):
+    position_(p),
+    name_(name)
   {
-    setupUi(this);
+
+  }
+  
+  CGuiCo2Source::~CGuiCo2Source(void)
+  {
+
+  }
+  
+  std::string CGuiCo2Source::getName(void)
+  {
+    return name_;
+  }
+  
+  bool CGuiCo2Source::checkProximity(QPoint p)
+  {
+    return false;  // 2b changed
+  }
+  
+  void CGuiCo2Source::draw(QImage *img)
+  {
+    QPainter painter(img);
+    int step = 3;
+    painter.setPen(QColor(0,0,255,200));
+    for(unsigned int i = 0 ; i < 4 ; i++)
+    {
+      painter.drawEllipse(
+        position_.x() - i * step, 
+        img->height() - position_.y() - i * step, 
+        2 * i * step, 
+        2 * i * step);
+    }
   }
 }
+

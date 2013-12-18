@@ -24,14 +24,14 @@
 namespace stdr_gui
 {
 
-	CGuiRfid::CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic):
-		msg_(msg)
-	{
-		
-	}
-	
-	CGuiRfid::~CGuiRfid(void)
-	{
-	
-	}
+  CGuiRfid::CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic):
+    msg_(msg)
+  {
+    
+  }
+  
+  CGuiRfid::~CGuiRfid(void)
+  {
+
+  }
 }
