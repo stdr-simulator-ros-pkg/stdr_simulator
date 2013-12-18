@@ -44,109 +44,109 @@
 namespace stdr_gui
 {
 
-	/**
-	 @class GuiController
-	 @brief The main controller for the STDR GUI. Inherits QThread
-	 **/ 
-	class CGuiController : 
-		public QThread
-	{
-		Q_OBJECT
-		
-		private: 
-		
-			typedef std::map<QString,CLaserVisualisation *>::iterator
-				LaserVisIterator;
-			typedef std::map<QString,CSonarVisualisation *>::iterator
-				SonarVisIterator;
-			typedef std::map<QString,CRobotVisualisation *>::iterator
-				RobotVisIterator;
-		
-			int 	argc_;	
-			char**	argv_;
-			
-			bool 	map_lock_;
-			
-			std::vector<CGuiRobot> 	registered_robots_;	
-			std::set<std::string> 	my_robots_;	
-			
-			std::map<QString,CLaserVisualisation *> laser_visualizers_;
-			std::map<QString,CSonarVisualisation *> sonar_visualizers_;
-			std::map<QString,CRobotVisualisation *> robot_visualizers_;
-			
-			std::map<QString,CGuiRfidTag> rfid_tags_;
-			std::map<QString,CGuiThermalSource> thermal_source_;
-			std::map<QString,CGuiCo2Source> co2_source_;
-			
-			ros::Subscriber 		map_subscriber_;
-			ros::Subscriber 		robot_subscriber_;
-			ros::NodeHandle 		n_;
-			tf::TransformListener 	listener_;
-			
-			nav_msgs::OccupancyGrid map_msg_;
-						
-			stdr_robot::HandleRobot 			robot_handler_;
-			stdr_msgs::RobotIndexedVectorMsg 	all_robots_;	
+  /**
+  @class GuiController
+  @brief The main controller for the STDR GUI. Inherits QThread
+  **/ 
+  class CGuiController : 
+    public QThread
+  {
+    Q_OBJECT
+    
+    private: 
+    
+      typedef std::map<QString,CLaserVisualisation *>::iterator
+        LaserVisIterator;
+      typedef std::map<QString,CSonarVisualisation *>::iterator
+        SonarVisIterator;
+      typedef std::map<QString,CRobotVisualisation *>::iterator
+        RobotVisIterator;
 
-			QTimer* 	timer_;
-			QTime 		elapsed_time_;
-			QIcon 		icon_move_;
-			QIcon 		icon_delete_;
-			QImage 		initial_map_;
-			QImage 		running_map_;
+      int  argc_;
+      char** argv_;
+      
+      bool 	map_lock_;
+      
+      std::vector<CGuiRobot> registered_robots_;
+      std::set<std::string> my_robots_;
+      
+      std::map<QString,CLaserVisualisation *> laser_visualizers_;
+      std::map<QString,CSonarVisualisation *> sonar_visualizers_;
+      std::map<QString,CRobotVisualisation *> robot_visualizers_;
 
-			CGuiConnector 	gui_connector_;
-			CInfoConnector 	info_connector_;
-			CMapConnector 	map_connector_;
+      std::map<QString,CGuiRfidTag> rfid_tags_;
+      std::map<QString,CGuiThermalSource> thermal_source_;
+      std::map<QString,CGuiCo2Source> co2_source_;
+      
+      ros::Subscriber map_subscriber_;
+      ros::Subscriber robot_subscriber_;
+      ros::NodeHandle n_;
+      tf::TransformListener listener_;
+      
+      nav_msgs::OccupancyGrid map_msg_;
 
-			stdr_msgs::LaserSensorMsg getLaserDescription(
-				QString robotName,
-				QString laserName); 
-				
-			stdr_msgs::SonarSensorMsg getSonarDescription(
-				QString robotName,
-				QString sonarName); 
-				
-			std::string robot_following_;
-			
-		public:
-			CGuiController(int argc,char **argv);
-			~CGuiController(void);
-			
-			void setupWidgets(void);
-			void initializeCommunications(void);
-			void receiveMap(const nav_msgs::OccupancyGrid& msg);
-			void receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
-			bool init();	
-			void cleanupVisualizers(const stdr_msgs::RobotIndexedVectorMsg& msg);
-		
-		public Q_SLOTS:
-			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
-			void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
-			void loadRfidPressed(void);
-			void loadCo2Pressed(void);
-			void loadThermalPressed(void);
-			void zoomInPressed(QPoint p);
-			void zoomOutPressed(QPoint p);
-			void robotPlaceSet(QPoint p);
-			void rfidPlaceSet(QPoint p);
-			void thermalPlaceSet(QPoint p);
-			void co2PlaceSet(QPoint p);
-			void updateMapInternal(void);
-			void laserVisualizerClicked(QString robotName,QString laserName);
-			void sonarVisualizerClicked(QString robotName,QString sonarName);
-			void robotVisualizerClicked(QString robotName);
-			void itemClicked(QPoint p,Qt::MouseButton b);
-			void robotReplaceSet(QPoint p,std::string robotName);
-			
-		Q_SIGNALS:
-			void waitForRobotPose(void);
-			void waitForThermalPose(void);
-			void waitForCo2Pose(void);
-			void waitForRfidPose(void);
-			void updateMap(void);
-			void replaceRobot(std::string robotFrameId);
-	};
+      stdr_robot::HandleRobot robot_handler_;
+      stdr_msgs::RobotIndexedVectorMsg all_robots_;
+
+      QTimer* timer_;
+      QTime elapsed_time_;
+      QIcon icon_move_;
+      QIcon icon_delete_;
+      QImage initial_map_;
+      QImage running_map_;
+
+      CGuiConnector gui_connector_;
+      CInfoConnector info_connector_;
+      CMapConnector map_connector_;
+
+      stdr_msgs::LaserSensorMsg getLaserDescription(
+        QString robotName,
+        QString laserName); 
+
+      stdr_msgs::SonarSensorMsg getSonarDescription(
+        QString robotName,
+        QString sonarName); 
+        
+      std::string robot_following_;
+      
+    public:
+      CGuiController(int argc,char **argv);
+      ~CGuiController(void);
+      
+      void setupWidgets(void);
+      void initializeCommunications(void);
+      void receiveMap(const nav_msgs::OccupancyGrid& msg);
+      void receiveRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
+      bool init();
+      void cleanupVisualizers(const stdr_msgs::RobotIndexedVectorMsg& msg);
+    
+    public Q_SLOTS:
+      void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+      void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+      void loadRfidPressed(void);
+      void loadCo2Pressed(void);
+      void loadThermalPressed(void);
+      void zoomInPressed(QPoint p);
+      void zoomOutPressed(QPoint p);
+      void robotPlaceSet(QPoint p);
+      void rfidPlaceSet(QPoint p);
+      void thermalPlaceSet(QPoint p);
+      void co2PlaceSet(QPoint p);
+      void updateMapInternal(void);
+      void laserVisualizerClicked(QString robotName,QString laserName);
+      void sonarVisualizerClicked(QString robotName,QString sonarName);
+      void robotVisualizerClicked(QString robotName);
+      void itemClicked(QPoint p,Qt::MouseButton b);
+      void robotReplaceSet(QPoint p,std::string robotName);
+      
+    Q_SIGNALS:
+      void waitForRobotPose(void);
+      void waitForThermalPose(void);
+      void waitForCo2Pose(void);
+      void waitForRfidPose(void);
+      void updateMap(void);
+      void replaceRobot(std::string robotFrameId);
+  };
 }
 
 #endif
