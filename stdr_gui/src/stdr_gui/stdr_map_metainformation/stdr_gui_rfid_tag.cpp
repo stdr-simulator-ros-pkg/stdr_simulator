@@ -18,15 +18,55 @@
    * Aris Thallas, aris.thallas@gmail.com
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
+  
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.h"
 
-#include "stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.h"
-
-namespace stdr_gui
-{
-  CSonarPropertiesLoader::CSonarPropertiesLoader(int argc, char **argv):
-    argc_(argc),
-    argv_(argv)
+namespace stdr_gui{
+  CGuiRfidTag::CGuiRfidTag(QPoint p,std::string name):
+    position_(p),
+    name_(name),
+    message_("")
   {
-    setupUi(this);
+  
+  }
+  
+  CGuiRfidTag::~CGuiRfidTag(void)
+  {
+
+  }
+  
+  std::string CGuiRfidTag::getName(void)
+  {
+    return name_;
+  }
+  
+  bool CGuiRfidTag::checkProximity(QPoint p)
+  {
+    return false;  // 2b changed
+  }
+  
+  void CGuiRfidTag::draw(QImage *img)
+  {
+    QPainter painter(img);
+    int step = 3;
+    painter.setPen(QColor(0,200,0,200));
+    for(unsigned int i = 0 ; i < 4 ; i++)
+    {
+      painter.drawEllipse(
+        position_.x() - i * step, 
+        img->height() - position_.y() - i * step, 
+        2 * i * step, 
+        2 * i * step);
+    }
+  }
+  
+  void CGuiRfidTag::setMessage(QString msg)
+  {
+    message_ = msg;
+  }
+  
+  QString CGuiRfidTag::getMessage(void)
+  {
+    return message_;
   }
 }

@@ -29,27 +29,27 @@
 namespace stdr_gui
 {
 
-	class CGuiLaser
-	{
-		private:
-			bool lock_;
-			
-			std::string topic_;
-			
-			stdr_msgs::LaserSensorMsg msg_;
-			
-			ros::Subscriber subscriber_;
-			sensor_msgs::LaserScan scan_;
-		
-		public:
-			CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic);
-			~CGuiLaser(void);
-			
-			void callback(const sensor_msgs::LaserScan& msg); 
-			void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
-			void visualizerPaint(QImage *m,float ocgd,float maxRange);
-			float getMaxRange(void);
-	};	
+  class CGuiLaser
+  {
+    private:
+      bool lock_;
+      
+      std::string topic_;
+      
+      stdr_msgs::LaserSensorMsg msg_;
+      
+      ros::Subscriber subscriber_;
+      sensor_msgs::LaserScan scan_;
+    
+    public:
+      CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic);
+      ~CGuiLaser(void);
+      
+      void callback(const sensor_msgs::LaserScan& msg); 
+      void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
+      void visualizerPaint(QImage *m,float ocgd,float maxRange);
+      float getMaxRange(void);
+  };  
 }
 
 #endif

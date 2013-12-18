@@ -24,68 +24,67 @@
 namespace stdr_gui
 {
 
-	CSonarVisualisation::CSonarVisualisation(QString name,float resolution):
-		name_(name),
-		resolution_(resolution)
-	{
-		setupUi(this);
-		setWindowTitle(name_);
-		active_=true;
-		
-		ros::NodeHandle n;
-		
-		subscriber_ = n.subscribe(
-			name_.toStdString().c_str(), 
-			1, 
-			&CSonarVisualisation::callback,
-			this);
-			
-		
-	}
-	
-	CSonarVisualisation::~CSonarVisualisation(void)
-	{
-		
-	}
-	
-	void CSonarVisualisation::destruct(void)
-	{
-		hide();
-		delete sonarDistBar;
-		delete sonarDist;
-		delete sonarMaxDist;
-		delete sonarMinDist;
-	}
-	
-	void CSonarVisualisation::closeEvent(QCloseEvent *event)
-	{
-		destruct();
-		active_=false;
-		subscriber_.shutdown();
-	}
-	
-	bool CSonarVisualisation::getActive(void)
-	{
-		return active_;
-	}
-	
-	void CSonarVisualisation::setSonar(stdr_msgs::SonarSensorMsg msg)
-	{
-		msg_=msg;
-		sonarMaxDist->setText(QString().setNum(msg.maxRange)+QString(" m"));
-		sonarMinDist->setText(QString().setNum(msg.minRange)+QString(" m"));
-	}
-	
-	void CSonarVisualisation::callback(const sensor_msgs::Range& msg)
-	{
-		range_=msg;
-	}
-	
-	void CSonarVisualisation::paint(void)
-	{
-		range_.range=1.0; //Debug reasons
-		sonarDist->setText(QString().setNum(range_.range)+QString(" m"));
-		sonarDistBar->setValue(
-			sonarDistBar->maximum()*range_.range/msg_.maxRange);
-	}
+  CSonarVisualisation::CSonarVisualisation(QString name,float resolution):
+    name_(name),
+    resolution_(resolution)
+  {
+    setupUi(this);
+    setWindowTitle(name_);
+    active_ = true;
+    
+    ros::NodeHandle n;
+    
+    subscriber_ = n.subscribe(
+      name_.toStdString().c_str(), 
+      1, 
+      &CSonarVisualisation::callback,
+      this);
+      
+    
+  }
+  
+  CSonarVisualisation::~CSonarVisualisation(void)
+  {
+    
+  }
+  
+  void CSonarVisualisation::destruct(void)
+  {
+    hide();
+    delete sonarDistBar;
+    delete sonarDist;
+    delete sonarMaxDist;
+    delete sonarMinDist;
+  }
+  
+  void CSonarVisualisation::closeEvent(QCloseEvent *event)
+  {
+    destruct();
+    active_ = false;
+    subscriber_.shutdown();
+  }
+  
+  bool CSonarVisualisation::getActive(void)
+  {
+    return active_;
+  }
+  
+  void CSonarVisualisation::setSonar(stdr_msgs::SonarSensorMsg msg)
+  {
+    msg_ = msg;
+    sonarMaxDist->setText(QString().setNum(msg.maxRange) + QString(" m"));
+    sonarMinDist->setText(QString().setNum(msg.minRange) + QString(" m"));
+  }
+  
+  void CSonarVisualisation::callback(const sensor_msgs::Range& msg)
+  {
+    range_ = msg;
+  }
+  
+  void CSonarVisualisation::paint(void)
+  {
+    sonarDist->setText(QString().setNum(range_.range) + QString(" m"));
+    sonarDistBar->setValue(
+      sonarDistBar->maximum() * range_.range/msg_.maxRange);
+  }
 }

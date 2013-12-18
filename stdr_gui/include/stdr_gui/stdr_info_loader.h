@@ -28,33 +28,33 @@
 namespace stdr_gui
 {
 
-	class CInfoLoader : 
-		public QWidget, 
-		public Ui_information
-	{
-		private:
-			int 	argc_;
-			char **	argv_;
-		
-			std::vector<QTreeWidgetItem> robot_nodes_;
-			
-			QIcon visible_icon_;
-			
-		public:
-			QTreeWidgetItem	generalInfo,
-							robotsInfo,
-							mapHeight,
-							mapWidth,
-							mapOcgd;
-		
-			CInfoLoader(int argc, char **argv);
-			~CInfoLoader(void);
-			
-			void deleteTree(void);
-			void deleteTreeNode(QTreeWidgetItem *item);
-			void updateMapInfo(float width,float height,float ocgd);
-			void updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
-	};	
+  class CInfoLoader : 
+    public QWidget, 
+    public Ui_information
+  {
+    private:
+      int   argc_;
+      char **  argv_;
+    
+      std::vector<QTreeWidgetItem> robot_nodes_;
+      
+      QIcon visible_icon_;
+      
+    public:
+      QTreeWidgetItem  generalInfo,
+              robotsInfo,
+              mapHeight,
+              mapWidth,
+              mapOcgd;
+    
+      CInfoLoader(int argc, char **argv);
+      ~CInfoLoader(void);
+      
+      void deleteTree(void);
+      void deleteTreeNode(QTreeWidgetItem *item);
+      void updateMapInfo(float width,float height,float ocgd);
+      void updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
+  };  
 }
 
 #endif

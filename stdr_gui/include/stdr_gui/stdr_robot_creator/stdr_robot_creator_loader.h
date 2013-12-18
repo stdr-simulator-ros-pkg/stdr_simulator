@@ -33,40 +33,40 @@
 
 namespace stdr_gui
 {
-	class CRobotCreatorLoader : public QWidget, public Ui_RobotCreator
-	{	
-		private:
-			int 	argc_;
-			char **	argv_;
-		
-		public:
-			
-			std::vector<QTreeWidgetItem> lasers;
-			std::vector<QTreeWidgetItem> sonars;
-			std::vector<QTreeWidgetItem> rfids;
-			
-			QTreeWidgetItem	robotNode,
-							lasersNode,
-							sonarsNode,
-							rfidAntennasNode,
-							kinematicNode;
-			QTreeWidgetItem robotInfoShape;
-			QTreeWidgetItem robotInfoOrientation;
-			QImage robotPreviewImage;
-			QIcon 	addIcon;
-			QIcon	editIcon;
-			QIcon	removeIcon;
-					
-			CRobotPropertiesLoader robotPropLoader;
-			CLaserPropertiesLoader laserPropLoader;
-			CSonarPropertiesLoader sonarPropLoader;
-			CKinematicPropertiesLoader kinematicPropLoader;
-			CRfidAntennaPropertiesLoader rfidAntennaPropLoader;
-			
-			CRobotCreatorLoader(int argc, char **argv);
-			
-			void setupInitialTree(void);
-	};	
+  class CRobotCreatorLoader : public QWidget, public Ui_RobotCreator
+  {  
+    private:
+      int   argc_;
+      char **  argv_;
+    
+    public:
+      
+      std::vector<QTreeWidgetItem> lasers;
+      std::vector<QTreeWidgetItem> sonars;
+      std::vector<QTreeWidgetItem> rfids;
+      
+      QTreeWidgetItem  robotNode,
+              lasersNode,
+              sonarsNode,
+              rfidAntennasNode,
+              kinematicNode;
+      QTreeWidgetItem robotInfoShape;
+      QTreeWidgetItem robotInfoOrientation;
+      QImage robotPreviewImage;
+      QIcon   addIcon;
+      QIcon  editIcon;
+      QIcon  removeIcon;
+          
+      CRobotPropertiesLoader robotPropLoader;
+      CLaserPropertiesLoader laserPropLoader;
+      CSonarPropertiesLoader sonarPropLoader;
+      CKinematicPropertiesLoader kinematicPropLoader;
+      CRfidAntennaPropertiesLoader rfidAntennaPropLoader;
+      
+      CRobotCreatorLoader(int argc, char **argv);
+      
+      void setupInitialTree(void);
+  };  
 }
 
 #endif

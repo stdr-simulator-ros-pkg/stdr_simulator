@@ -29,51 +29,51 @@
 
 namespace stdr_gui
 {
-	
-	class CGuiRobot
-	{
-		private:
-			bool show_label_;
-			bool show_circles_;
-			bool robot_initialized_;
-			
-			float radius_;
-			float resolution_;
-			
-			std::vector<CGuiLaser*> 	lasers_;
-			std::vector<CGuiSonar*> 	sonars_;
-			std::vector<CGuiRfid*> 		rfids_;
-			
-			std::string frame_id_;
-			
-			geometry_msgs::Pose2D initial_pose_;
-			geometry_msgs::Pose2D current_pose_;
-			
-			stdr_msgs::FootprintMsg footprint_;
-			
-			QImage visualization;
-			
-			void drawSelf(QImage *m);
-			
-		public:
-			CGuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
-			~CGuiRobot(void);
-			
-			std::string getFrameId(void);
-			void draw(QImage *m,float ocgd,tf::TransformListener *_listener);
-			void drawLabel(QImage *m,float ocgd);
-			bool checkEventProximity(QPoint p);
-			void setShowLabel(bool b);
-			void toggleShowLabel(void);
-			bool getShowLabel(void);
-			void toggleShowCircles(void);
-			QPoint getCurrentPose(void);
-			void destroy(void);
-			int getLasersNumber(void);
-			int getSonarsNumber(void);
-			
-			QImage getVisualization(float ocgd);
-	};	
+  
+  class CGuiRobot
+  {
+    private:
+      bool show_label_;
+      bool show_circles_;
+      bool robot_initialized_;
+      
+      float radius_;
+      float resolution_;
+      
+      std::vector<CGuiLaser*>   lasers_;
+      std::vector<CGuiSonar*>   sonars_;
+      std::vector<CGuiRfid*>     rfids_;
+      
+      std::string frame_id_;
+      
+      geometry_msgs::Pose2D initial_pose_;
+      geometry_msgs::Pose2D current_pose_;
+      
+      stdr_msgs::FootprintMsg footprint_;
+      
+      QImage visualization;
+      
+      void drawSelf(QImage *m);
+      
+    public:
+      CGuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
+      ~CGuiRobot(void);
+      
+      std::string getFrameId(void);
+      void draw(QImage *m,float ocgd,tf::TransformListener *_listener);
+      void drawLabel(QImage *m,float ocgd);
+      bool checkEventProximity(QPoint p);
+      void setShowLabel(bool b);
+      void toggleShowLabel(void);
+      bool getShowLabel(void);
+      void toggleShowCircles(void);
+      QPoint getCurrentPose(void);
+      void destroy(void);
+      int getLasersNumber(void);
+      int getSonarsNumber(void);
+      
+      QImage getVisualization(float ocgd);
+  };  
 }
 
 #endif

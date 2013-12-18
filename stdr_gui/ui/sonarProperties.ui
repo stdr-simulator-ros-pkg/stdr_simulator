@@ -24,7 +24,11 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="sonarMaxDistance"/>
+      <widget class="QLineEdit" name="sonarMaxDistance">
+       <property name="text">
+        <string>3.0</string>
+       </property>
+      </widget>
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="sonarMinDistance">
@@ -149,7 +153,11 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="sonarOrientation"/>
+      <widget class="QLineEdit" name="sonarOrientation">
+       <property name="text">
+        <string>0.0</string>
+       </property>
+      </widget>
      </item>
      <item row="9" column="0">
       <widget class="QLabel" name="label_4">
@@ -159,7 +167,11 @@
       </widget>
      </item>
      <item row="9" column="1">
-      <widget class="QLineEdit" name="sonarFrequency"/>
+      <widget class="QLineEdit" name="sonarFrequency">
+       <property name="text">
+        <string>10</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

@@ -24,55 +24,55 @@
 namespace stdr_gui
 {
 
-	CInfoConnector::CInfoConnector(int argc, char **argv):
-		QObject(),
-		loader(argc,argv),
-		argc_(argc),
-		argv_(argv)
-	{
-		QObject::connect(
-			loader.stdrInformationTree,
-				SIGNAL(itemClicked(QTreeWidgetItem *, int)),
-			this,
-				SLOT(treeItemClicked(QTreeWidgetItem *, int)));
-	}
+  CInfoConnector::CInfoConnector(int argc, char **argv):
+    QObject(),
+    loader(argc,argv),
+    argc_(argc),
+    argv_(argv)
+  {
+    QObject::connect(
+      loader.stdrInformationTree,
+        SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+      this,
+        SLOT(treeItemClicked(QTreeWidgetItem*, int)));
+  }
 
-	void CInfoConnector::updateMapInfo(float width,float height,float ocgd)
-	{
-		loader.updateMapInfo(width,height,ocgd);
-	}
-	
-	void CInfoConnector::updateTree(
-		const stdr_msgs::RobotIndexedVectorMsg& msg)
-	{
-		loader.deleteTree();
-		loader.updateRobots(msg);
-	}
-	
-	void CInfoConnector::treeItemClicked ( QTreeWidgetItem * item, int column )
-	{
-		if(item==&loader.robotsInfo)
-		{
-			return;
-		}
-		else if(item->parent()->text(0)==QString("Lasers") && column==3)
-		{
-			Q_EMIT laserVisualizerClicked(
-				item->parent()->parent()->text(0),item->text(0));
-		}
-		else if(item->parent()->text(0)==QString("Sonars") && column==3)
-		{
-			Q_EMIT sonarVisualizerClicked(
-				item->parent()->parent()->text(0),item->text(0));
-		}
-		else if(item->parent()==&loader.robotsInfo)
-		{
-			Q_EMIT robotVisualizerClicked(item->text(0));
-		}
-	}
-	
-	QWidget* CInfoConnector::getLoader(void)
-	{
-		return static_cast<QWidget *>(&loader);
-	}
+  void CInfoConnector::updateMapInfo(float width,float height,float ocgd)
+  {
+    loader.updateMapInfo(width,height,ocgd);
+  }
+  
+  void CInfoConnector::updateTree(
+    const stdr_msgs::RobotIndexedVectorMsg& msg)
+  {
+    loader.deleteTree();
+    loader.updateRobots(msg);
+  }
+  
+  void CInfoConnector::treeItemClicked ( QTreeWidgetItem * item, int column )
+  {
+    if(item == &loader.robotsInfo)
+    {
+      return;
+    }
+    else if(item->parent()->text(0) == QString("Lasers") && column == 3)
+    {
+      Q_EMIT laserVisualizerClicked(
+        item->parent()->parent()->text(0), item->text(0));
+    }
+    else if(item->parent()->text(0) == QString("Sonars") && column == 3)
+    {
+      Q_EMIT sonarVisualizerClicked(
+        item->parent()->parent()->text(0),item->text(0));
+    }
+    else if(item->parent() == &loader.robotsInfo)
+    {
+      Q_EMIT robotVisualizerClicked(item->text(0));
+    }
+  }
+  
+  QWidget* CInfoConnector::getLoader(void)
+  {
+    return static_cast<QWidget *>(&loader);
+  }
 }

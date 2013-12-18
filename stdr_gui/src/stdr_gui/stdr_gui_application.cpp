@@ -24,22 +24,22 @@
 namespace stdr_gui
 {
 
-	CStdrApplication::CStdrApplication(int &argc,char **argv):
-		QApplication(argc,argv)	
-	{
-	}
-	
-	bool CStdrApplication::notify(QObject * receiver, QEvent * event)
-	{
-		try 
-		{
-			return QApplication::notify(receiver, event);
-		} 
-		catch(std::exception& e) 
-		{
-			qDebug() << "Exception thrown:" << e.what();
-		}
-		return false;
-	}
+  CStdrApplication::CStdrApplication(int &argc,char **argv):
+    QApplication(argc,argv)  
+  {
+  }
+  
+  bool CStdrApplication::notify(QObject * receiver, QEvent * event)
+  {
+    try 
+    {
+      return QApplication::notify(receiver, event);
+    } 
+    catch(std::exception& e) 
+    {
+      qDebug() << "Exception thrown:" << e.what();
+    }
+    return false;
+  }
 }
 

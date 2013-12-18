@@ -29,33 +29,33 @@
 namespace stdr_gui
 {
 
-	class CSonarVisualisation : 
-		public QWidget, 
-		public Ui_sonarVisualization
-	{
-		private:
-			bool active_;
-			
-			float resolution_;
-			
-			sensor_msgs::Range 	range_;
-			ros::Subscriber 	subscriber_;
-			
-			stdr_msgs::SonarSensorMsg msg_;
+  class CSonarVisualisation : 
+    public QWidget, 
+    public Ui_sonarVisualization
+  {
+    private:
+      bool active_;
+      
+      float resolution_;
+      
+      sensor_msgs::Range   range_;
+      ros::Subscriber   subscriber_;
+      
+      stdr_msgs::SonarSensorMsg msg_;
 
-			QString name_;
-		
-		public:
-			CSonarVisualisation(QString name,float resolution);
-			~CSonarVisualisation(void);
-		
-			bool getActive(void);
-			void setSonar(stdr_msgs::SonarSensorMsg msg);
-			void destruct(void);
-			void closeEvent(QCloseEvent *event);
-			void callback(const sensor_msgs::Range& msg); 
-			void paint(void);
-	};	
+      QString name_;
+    
+    public:
+      CSonarVisualisation(QString name,float resolution);
+      ~CSonarVisualisation(void);
+    
+      bool getActive(void);
+      void setSonar(stdr_msgs::SonarSensorMsg msg);
+      void destruct(void);
+      void closeEvent(QCloseEvent *event);
+      void callback(const sensor_msgs::Range& msg); 
+      void paint(void);
+  };  
 }
 
 #endif
