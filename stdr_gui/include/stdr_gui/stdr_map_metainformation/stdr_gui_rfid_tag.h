@@ -33,11 +33,15 @@ namespace stdr_gui
     private:
       QPoint position_;  
       std::string name_;  
+      QString message_;
     public:
-      CGuiRfidTag(QPoint p);
+      CGuiRfidTag(QPoint p,std::string name);
       ~CGuiRfidTag(void);
       std::string getName(void);
       bool checkProximity(QPoint p);
+      void draw(QImage *img);
+      void setMessage(QString msg);
+      QString getMessage(void);
   };  
 }
 

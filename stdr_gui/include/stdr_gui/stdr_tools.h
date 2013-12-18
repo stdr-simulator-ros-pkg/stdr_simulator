@@ -62,6 +62,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QMessageBox>
 #include <QtGui/QTimeEdit>
+#include <QtGui/QInputDialog>
 
 #include <stdr_msgs/RobotIndexedVectorMsg.h>
 #include <stdr_msgs/RobotIndexedMsg.h>
