@@ -1152,10 +1152,10 @@ namespace stdr_gui
     loader_.hide();
   }
   
-  void CRobotCreatorConnector::setInitialPose(QPoint p)
+  void CRobotCreatorConnector::setInitialPose(float x, float y)
   {
-    new_robot_msg_.initialPose.x = p.x();
-    new_robot_msg_.initialPose.y = p.y();
+    new_robot_msg_.initialPose.x = x;
+    new_robot_msg_.initialPose.y = y;
   }
   
   void CRobotCreatorConnector::fixRobotMsgAngles(void)

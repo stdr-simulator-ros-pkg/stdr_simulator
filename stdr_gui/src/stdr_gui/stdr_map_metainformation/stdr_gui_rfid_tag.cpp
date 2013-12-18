@@ -22,10 +22,12 @@
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.h"
 
 namespace stdr_gui{
-  CGuiRfidTag::CGuiRfidTag(QPoint p):
-    position_(p)
+  CGuiRfidTag::CGuiRfidTag(QPoint p,std::string name):
+    position_(p),
+    name_(name),
+    message_("")
   {
-
+  
   }
   
   CGuiRfidTag::~CGuiRfidTag(void)
@@ -38,7 +40,33 @@ namespace stdr_gui{
     return name_;
   }
   
-  bool CGuiRfidTag::checkProximity(QPoint p){
+  bool CGuiRfidTag::checkProximity(QPoint p)
+  {
     return false;  // 2b changed
+  }
+  
+  void CGuiRfidTag::draw(QImage *img)
+  {
+    QPainter painter(img);
+    int step = 3;
+    painter.setPen(QColor(0,200,0,200));
+    for(unsigned int i = 0 ; i < 4 ; i++)
+    {
+      painter.drawEllipse(
+        position_.x() - i * step, 
+        img->height() - position_.y() - i * step, 
+        2 * i * step, 
+        2 * i * step);
+    }
+  }
+  
+  void CGuiRfidTag::setMessage(QString msg)
+  {
+    message_ = msg;
+  }
+  
+  QString CGuiRfidTag::getMessage(void)
+  {
+    return message_;
   }
 }

@@ -32,10 +32,11 @@ namespace stdr_gui
       QPoint position_;  
       std::string name_;    
     public:
-      CGuiCo2Source(QPoint p);
+      CGuiCo2Source(QPoint p,std::string name);
       ~CGuiCo2Source(void);
       std::string getName(void);
       bool checkProximity(QPoint p);
+      void draw(QImage *img);
   };  
 }
 

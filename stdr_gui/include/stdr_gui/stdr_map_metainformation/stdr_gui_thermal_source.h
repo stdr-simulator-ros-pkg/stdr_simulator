@@ -34,10 +34,11 @@ namespace stdr_gui
       QPoint position_;    
       std::string name_;  
     public:
-      CGuiThermalSource(QPoint p);
+      CGuiThermalSource(QPoint p,std::string name);
       ~CGuiThermalSource(void);
       std::string getName(void);
       bool checkProximity(QPoint p);
+      void draw(QImage *img);
   };  
 }
 

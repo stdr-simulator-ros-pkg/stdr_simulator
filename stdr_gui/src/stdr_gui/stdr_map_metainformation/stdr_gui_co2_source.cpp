@@ -22,8 +22,9 @@
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.h"
 
 namespace stdr_gui{
-  CGuiCo2Source::CGuiCo2Source(QPoint p):
-    position_(p)
+  CGuiCo2Source::CGuiCo2Source(QPoint p,std::string name):
+    position_(p),
+    name_(name)
   {
 
   }
@@ -38,8 +39,24 @@ namespace stdr_gui{
     return name_;
   }
   
-  bool CGuiCo2Source::checkProximity(QPoint p){
+  bool CGuiCo2Source::checkProximity(QPoint p)
+  {
     return false;  // 2b changed
+  }
+  
+  void CGuiCo2Source::draw(QImage *img)
+  {
+    QPainter painter(img);
+    int step = 3;
+    painter.setPen(QColor(0,0,255,200));
+    for(unsigned int i = 0 ; i < 4 ; i++)
+    {
+      painter.drawEllipse(
+        position_.x() - i * step, 
+        img->height() - position_.y() - i * step, 
+        2 * i * step, 
+        2 * i * step);
+    }
   }
 }
 

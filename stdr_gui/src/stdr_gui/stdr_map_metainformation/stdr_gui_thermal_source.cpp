@@ -22,8 +22,9 @@
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.h"
 
 namespace stdr_gui{
-  CGuiThermalSource::CGuiThermalSource(QPoint p):
-    position_(p)
+  CGuiThermalSource::CGuiThermalSource(QPoint p,std::string name):
+    position_(p),
+    name_(name)
   {
 
   }
@@ -38,8 +39,24 @@ namespace stdr_gui{
     return name_;
   }
   
-  bool CGuiThermalSource::checkProximity(QPoint p){
+  bool CGuiThermalSource::checkProximity(QPoint p)
+  {
     return false;  // 2b changed
+  }
+  
+  void CGuiThermalSource::draw(QImage *img)
+  {
+    QPainter painter(img);
+    int step=3;
+    painter.setPen(QColor(255,0,0,200));
+    for(unsigned int i = 0 ; i < 4 ; i++)
+    {
+      painter.drawEllipse(
+        position_.x() - i * step, 
+        img->height() - position_.y() - i * step, 
+        2 * i * step, 
+        2 * i * step);
+    }
   }
 }
 

@@ -281,12 +281,12 @@ namespace stdr_gui
   
   void CGuiController::loadThermalPressed(void)
   {
-    Q_EMIT waitForRfidPose();
+    Q_EMIT waitForThermalPose();
   }
   
   void CGuiController::loadCo2Pressed(void)
   {
-    Q_EMIT waitForRfidPose();
+    Q_EMIT waitForCo2Pose();
   }
   
   void CGuiController::zoomInPressed(QPoint p)
@@ -388,16 +388,10 @@ namespace stdr_gui
     }
     map_lock_ = true;
     
-    //~ ROS_ERROR("Robot place set : %d %d",p.x(),p.y());
     QPoint pnew = map_connector_.getGlobalPoint(p);
-    //~ ROS_ERROR("Robot place set after : %d %d",pnew.x(),pnew.y());
-    gui_connector_.robotCreatorConn.setInitialPose(QPoint(
+    gui_connector_.robotCreatorConn.setInitialPose(
       pnew.x() * map_msg_.info.resolution,
-      pnew.y() * map_msg_.info.resolution));
-      
-    //~ ROS_ERROR("Place send : %f %f",
-      //~ pnew.x()*map_msg_.info.resolution,
-      //~ pnew.y()*map_msg_.info.resolution);
+      pnew.y() * map_msg_.info.resolution);
       
     stdr_msgs::RobotIndexedMsg newRobot;
     gui_connector_.robotCreatorConn.fixRobotMsgAngles();
@@ -424,6 +418,21 @@ namespace stdr_gui
     }
     map_lock_ = true;
     
+    QPoint pnew = map_connector_.getGlobalPoint(p);
+    QString name=QString("rfid_tag_") + QString().setNum(rfid_tags_.size());
+    CGuiRfidTag new_tag(pnew,name.toStdString());
+    
+    bool ok;
+            
+    //~ QString message = QInputDialog::getText(
+      //~ this, tr("QInputDialog::getText()"),
+      //~ tr("User name:"), QLineEdit::Normal,
+      //~ QDir::home().dirName(), &ok);
+    //~ if ( ok && !message.isEmpty() ) {
+        //~ new_tag.setMessage(message);
+    //~ }
+
+    rfid_tags_.insert(std::pair<QString,CGuiRfidTag>(name,new_tag));
     map_lock_ = false;
   }
   
@@ -434,18 +443,24 @@ namespace stdr_gui
       usleep(100);
     }
     map_lock_ = true;
-    
+    QPoint pnew = map_connector_.getGlobalPoint(p);
+    QString name=QString("co2_source_") + QString().setNum(co2_sources_.size());
+    CGuiCo2Source new_source(pnew,name.toStdString());
+    co2_sources_.insert(std::pair<QString,CGuiCo2Source>(name,new_source));
     map_lock_ = false;
   }
   
   void CGuiController::thermalPlaceSet(QPoint p)
   {
     while(map_lock_)
-    { 
+    {	
       usleep(100);
     }
     map_lock_ = true;
-  
+    QPoint pnew = map_connector_.getGlobalPoint(p);
+    QString name=QString("thermal_source_") + QString().setNum(thermal_sources_.size());
+    CGuiThermalSource new_source(pnew,name.toStdString());
+    thermal_sources_.insert(std::pair<QString,CGuiThermalSource>(name,new_source));
     map_lock_ = false;
   }
   
@@ -483,6 +498,23 @@ namespace stdr_gui
       }
     }
 
+    for(RfidTagIterator it = rfid_tags_.begin() ; it != rfid_tags_.end() ; it++)
+    {
+      it->second.draw(&running_map_);
+    }
+    
+    for(Co2SourcesIterator it = co2_sources_.begin() ; 
+      it != co2_sources_.end() ; it++)
+    {
+      it->second.draw(&running_map_);
+    }
+    
+    for(ThermalSourcesIterator it = thermal_sources_.begin() ; 
+      it != thermal_sources_.end() ; it++)
+    {
+      it->second.draw(&running_map_);
+    }
+    
     map_connector_.updateImage(&running_map_);
     
     gui_connector_.setStatusBarMessage(
@@ -490,7 +522,7 @@ namespace stdr_gui
       stdr_gui_tools::getLiteralTime(elapsed_time_.elapsed()));
     map_lock_ = false;
   
-    //Check if all visualisers are active
+    //!<--------------------------- Check if all visualisers are active
     std::vector<QString> toBeErased;
     for(LaserVisIterator it = laser_visualizers_.begin() ; 
       it != laser_visualizers_.end() ; it++)
@@ -554,7 +586,7 @@ namespace stdr_gui
       robot_visualizers_.erase(toBeErased[i]);
     }
     
-    //!< ---------Check for close event----------------
+    //!< -----------------------------------------Check for close event
     if(gui_connector_.closeTriggered())
     {
       //~ ROS_ERROR("Exit triggered to controller");

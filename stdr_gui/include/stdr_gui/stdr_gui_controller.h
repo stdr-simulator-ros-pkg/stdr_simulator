@@ -61,6 +61,10 @@ namespace stdr_gui
         SonarVisIterator;
       typedef std::map<QString,CRobotVisualisation *>::iterator
         RobotVisIterator;
+      typedef std::map<QString,CGuiRfidTag>::iterator RfidTagIterator;
+      typedef std::map<QString,CGuiCo2Source>::iterator Co2SourcesIterator;
+      typedef std::map<QString,CGuiThermalSource>::iterator 
+        ThermalSourcesIterator;
 
       int  argc_;
       char** argv_;
@@ -75,8 +79,8 @@ namespace stdr_gui
       std::map<QString,CRobotVisualisation *> robot_visualizers_;
 
       std::map<QString,CGuiRfidTag> rfid_tags_;
-      std::map<QString,CGuiThermalSource> thermal_source_;
-      std::map<QString,CGuiCo2Source> co2_source_;
+      std::map<QString,CGuiThermalSource> thermal_sources_;
+      std::map<QString,CGuiCo2Source> co2_sources_;
       
       ros::Subscriber map_subscriber_;
       ros::Subscriber robot_subscriber_;
