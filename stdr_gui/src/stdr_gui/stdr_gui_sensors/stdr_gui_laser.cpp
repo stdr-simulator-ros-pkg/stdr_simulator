@@ -60,13 +60,16 @@ namespace stdr_gui
 			painter.drawLine(
 				robotPose.x/ocgd+(msg_.pose.x/ocgd * cos(robotPose.theta) - 
 					msg_.pose.y/ocgd * sin(robotPose.theta)),
+					
 				robotPose.y/ocgd+(msg_.pose.x/ocgd * sin(robotPose.theta) + 
 					msg_.pose.y/ocgd * cos(robotPose.theta)),
+					
 				robotPose.x/ocgd+(msg_.pose.x/ocgd * cos(robotPose.theta) - 
 					msg_.pose.y/ocgd * sin(robotPose.theta))+
 					scan_.ranges[i]*
 					cos(robotPose.theta+scan_.angle_min+i*scan_.angle_increment)
 					/ocgd,
+					
 				robotPose.y/ocgd+(msg_.pose.x/ocgd * sin(robotPose.theta) + 
 					msg_.pose.y/ocgd * cos(robotPose.theta))+
 					scan_.ranges[i]*
