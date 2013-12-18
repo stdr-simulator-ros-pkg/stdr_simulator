@@ -77,8 +77,8 @@ namespace stdr_robot {
 
       while ( distance < _description.maxRange / _map.info.resolution )
       {
-        xMap = (_robotPosePtr->x + _description.pose.x * cos(_robotPosePtr->theta) - _description.pose.y * sin(_robotPosePtr->theta)) / _map.info.resolution + cos( sonarIter + _robotPosePtr->theta ) * distance;
-        yMap = (_robotPosePtr->y + _description.pose.x * sin(_robotPosePtr->theta) + _description.pose.y * cos(_robotPosePtr->theta)) / _map.info.resolution + sin( sonarIter + _robotPosePtr->theta ) * distance;
+        xMap = (_robotPosePtr->x + _description.pose.x * cos(_robotPosePtr->theta) - _description.pose.y * sin(_robotPosePtr->theta)) / _map.info.resolution + cos( sonarIter + _description.pose.theta + _robotPosePtr->theta ) * distance;
+        yMap = (_robotPosePtr->y + _description.pose.x * sin(_robotPosePtr->theta) + _description.pose.y * cos(_robotPosePtr->theta)) / _map.info.resolution + sin( sonarIter + _description.pose.theta + _robotPosePtr->theta ) * distance;
         if ( _map.data[ yMap * _map.info.width + xMap ] > 70 ) break;
         distance ++;
       }
