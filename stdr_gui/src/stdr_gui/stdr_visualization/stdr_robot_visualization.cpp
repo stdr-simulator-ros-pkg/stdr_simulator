@@ -24,51 +24,51 @@
 namespace stdr_gui
 {
 
-	CRobotVisualisation::CRobotVisualisation(QString name,float resolution):
-		name_(name),
-		resolution_(resolution)
-	{
-		setupUi(this);
-		setWindowTitle(name_);
-		active_=true;
-		
-		void_image_=QImage(
-			robotImage->width(),
-			robotImage->height(),
-			QImage::Format_RGB32);
-			
-		void_image_.fill(QColor(255,255,255,255));
-	}
-	
-	CRobotVisualisation::~CRobotVisualisation(void)
-	{
-		
-	}
-	
-	void CRobotVisualisation::destruct(void)
-	{
-		active_=false;
-		hide();
-		delete robotImage;
-		delete robotPose;
-		delete robotSpeeds;
-	}
-	
-	void CRobotVisualisation::closeEvent(QCloseEvent *event)
-	{
-		destruct();
-		active_=false;
-	}
-	
-	bool CRobotVisualisation::getActive(void)
-	{
-		return active_;
-	}
+  CRobotVisualisation::CRobotVisualisation(QString name,float resolution):
+    name_(name),
+    resolution_(resolution)
+  {
+    setupUi(this);
+    setWindowTitle(name_);
+    active_ = true;
+    
+    void_image_ = QImage(
+      robotImage->width(),
+      robotImage->height(),
+      QImage::Format_RGB32);
+      
+    void_image_.fill(QColor(255,255,255,255));
+  }
+  
+  CRobotVisualisation::~CRobotVisualisation(void)
+  {
+    
+  }
+  
+  void CRobotVisualisation::destruct(void)
+  {
+    active_ = false;
+    hide();
+    delete robotImage;
+    delete robotPose;
+    delete robotSpeeds;
+  }
+  
+  void CRobotVisualisation::closeEvent(QCloseEvent *event)
+  {
+    destruct();
+    active_ = false;
+  }
+  
+  bool CRobotVisualisation::getActive(void)
+  {
+    return active_;
+  }
 
-	void CRobotVisualisation::setImage(QImage img)
-	{
-		internal_image_=img;
-		robotImage->setPixmap(
-			QPixmap().fromImage(internal_image_.mirrored(false,true)));
-	}
+  void CRobotVisualisation::setImage(QImage img)
+  {
+    internal_image_ = img;
+    robotImage->setPixmap(
+      QPixmap().fromImage(internal_image_.mirrored(false,true)));
+  }
 }

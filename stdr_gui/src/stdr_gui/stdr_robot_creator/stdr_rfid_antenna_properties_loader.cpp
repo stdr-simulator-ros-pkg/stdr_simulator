@@ -23,16 +23,16 @@
 
 namespace stdr_gui
 {
-	CRfidAntennaPropertiesLoader::CRfidAntennaPropertiesLoader(
-		int argc, char **argv):
-		argc_(argc),
-		argv_(argv)
-	{
-		setupUi(this);
-	}
-	
-	CRfidAntennaPropertiesLoader::~CRfidAntennaPropertiesLoader(void)
-	{
-		
-	}
+  CRfidAntennaPropertiesLoader::CRfidAntennaPropertiesLoader(
+    int argc, char **argv):
+    argc_(argc),
+    argv_(argv)
+  {
+    setupUi(this);
+  }
+  
+  CRfidAntennaPropertiesLoader::~CRfidAntennaPropertiesLoader(void)
+  {
+    
+  }
 }

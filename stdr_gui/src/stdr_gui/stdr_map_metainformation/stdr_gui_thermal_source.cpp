@@ -22,24 +22,24 @@
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.h"
 
 namespace stdr_gui{
-	CGuiThermalSource::CGuiThermalSource(QPoint p):
-		position_(p)
-	{
+  CGuiThermalSource::CGuiThermalSource(QPoint p):
+    position_(p)
+  {
 
-	}
-	
-	CGuiThermalSource::~CGuiThermalSource(void)
-	{
+  }
+  
+  CGuiThermalSource::~CGuiThermalSource(void)
+  {
 
-	}
-	
-	std::string CGuiThermalSource::getName(void)
-	{
-		return name_;
-	}
-	
-	bool CGuiThermalSource::checkProximity(QPoint p){
-		return false;	// 2b changed
-	}
+  }
+  
+  std::string CGuiThermalSource::getName(void)
+  {
+    return name_;
+  }
+  
+  bool CGuiThermalSource::checkProximity(QPoint p){
+    return false;  // 2b changed
+  }
 }
 

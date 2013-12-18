@@ -24,59 +24,59 @@
 namespace stdr_gui_tools
 {
 
-	std::string getRosPackagePath(std::string package)
-	{
-		return ros::package::getPath(package.c_str());
-	}
-	
-	QString getLiteralTime(int ms)
-	{
-		QString str;
-		int h=ms/(1000*60*60);
-		int m=ms/(1000*60)-h*60;
-		int s=ms/1000-h*60*60-m*60;
-		int ms_=ms-h*60*60*1000-m*1000*60-s*1000;
-		if(h)
-		{
-			str+=QString().setNum(h)+QString(" h ");
-		}
-		if(m || h)
-		{
-			str+=QString().setNum(m)+QString(" min ");
-		}
-		if(s || h || m)
-		{
-			str+=QString().setNum(s)+QString(" sec ");
-		}
-		if(ms_ || s || h || m)
-		{
-			str+=QString().setNum(ms_)+QString(" ms");
-		}
-		return str;
-	}
-	
-	void printSonarMsg(stdr_msgs::SonarSensorMsg &msg)
-	{
-		ROS_ERROR("Sonar sensor msg :");
-		ROS_ERROR("\tMax range : %f",msg.maxRange);
-		ROS_ERROR("\tMin range : %f",msg.minRange);
-		ROS_ERROR("\tCone angle : %f",msg.coneAngle);
-		ROS_ERROR("\tFrequency : %f",msg.frequency);
-		ROS_ERROR("\tNoise :");
-		ROS_ERROR("\t\tMean : %f",msg.noise.noiseMean);
-		ROS_ERROR("\t\tStd : %f",msg.noise.noiseStd);
-		ROS_ERROR("\tFrame id : %s",msg.frame_id.c_str());
-		ROS_ERROR("\tRelative pose :");
-		ROS_ERROR("\t\tx : %f",msg.pose.x);
-		ROS_ERROR("\t\ty : %f",msg.pose.y);
-		ROS_ERROR("\t\ttheta : %f",msg.pose.theta);
-	}
-	
-	void printPose2D(geometry_msgs::Pose2D &msg)
-	{
-		ROS_ERROR("Pose 2D :");
-		ROS_ERROR("\tx : %f",msg.x);
-		ROS_ERROR("\ty : %f",msg.y);
-		ROS_ERROR("\ttheta : %f",msg.theta);
-	}
+  std::string getRosPackagePath(std::string package)
+  {
+    return ros::package::getPath(package.c_str());
+  }
+  
+  QString getLiteralTime(int ms)
+  {
+    QString str;
+    int h = ms / (1000 * 60 * 60);
+    int m = ms / (1000 * 60) - h * 60;
+    int s = ms / 1000 - h * 60 * 60 - m * 60;
+    int ms_ = ms - h * 60 * 60 * 1000 - m * 1000 * 60 - s * 1000;
+    if(h)
+    {
+      str += QString().setNum(h) + QString(" h ");
+    }
+    if(m || h)
+    {
+      str += QString().setNum(m) + QString(" min ");
+    }
+    if(s || h || m)
+    {
+      str += QString().setNum(s) + QString(" sec ");
+    }
+    if(ms_ || s || h || m)
+    {
+      str += QString().setNum(ms_) + QString(" ms");
+    }
+    return str;
+  }
+  
+  void printSonarMsg(stdr_msgs::SonarSensorMsg &msg)
+  {
+    ROS_ERROR("Sonar sensor msg :");
+    ROS_ERROR("\tMax range : %f",msg.maxRange);
+    ROS_ERROR("\tMin range : %f",msg.minRange);
+    ROS_ERROR("\tCone angle : %f",msg.coneAngle);
+    ROS_ERROR("\tFrequency : %f",msg.frequency);
+    ROS_ERROR("\tNoise :");
+    ROS_ERROR("\t\tMean : %f",msg.noise.noiseMean);
+    ROS_ERROR("\t\tStd : %f",msg.noise.noiseStd);
+    ROS_ERROR("\tFrame id : %s",msg.frame_id.c_str());
+    ROS_ERROR("\tRelative pose :");
+    ROS_ERROR("\t\tx : %f",msg.pose.x);
+    ROS_ERROR("\t\ty : %f",msg.pose.y);
+    ROS_ERROR("\t\ttheta : %f",msg.pose.theta);
+  }
+  
+  void printPose2D(geometry_msgs::Pose2D &msg)
+  {
+    ROS_ERROR("Pose 2D :");
+    ROS_ERROR("\tx : %f",msg.x);
+    ROS_ERROR("\ty : %f",msg.y);
+    ROS_ERROR("\ttheta : %f",msg.theta);
+  }
 }

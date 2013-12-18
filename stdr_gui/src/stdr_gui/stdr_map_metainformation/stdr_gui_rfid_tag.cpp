@@ -18,27 +18,27 @@
    * Aris Thallas, aris.thallas@gmail.com
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
-	
+  
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.h"
 
 namespace stdr_gui{
-	CGuiRfidTag::CGuiRfidTag(QPoint p):
-		position_(p)
-	{
+  CGuiRfidTag::CGuiRfidTag(QPoint p):
+    position_(p)
+  {
 
-	}
-	
-	CGuiRfidTag::~CGuiRfidTag(void)
-	{
+  }
+  
+  CGuiRfidTag::~CGuiRfidTag(void)
+  {
 
-	}
-	
-	std::string CGuiRfidTag::getName(void)
-	{
-		return name_;
-	}
-	
-	bool CGuiRfidTag::checkProximity(QPoint p){
-		return false;	// 2b changed
-	}
+  }
+  
+  std::string CGuiRfidTag::getName(void)
+  {
+    return name_;
+  }
+  
+  bool CGuiRfidTag::checkProximity(QPoint p){
+    return false;  // 2b changed
+  }
 }

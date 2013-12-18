@@ -23,72 +23,72 @@
 
 namespace stdr_gui
 {
-		
-	CRobotCreatorLoader::CRobotCreatorLoader(int argc, char **argv):
-		robotPropLoader(argc,argv),
-		laserPropLoader(argc,argv),
-		sonarPropLoader(argc,argv),
-		kinematicPropLoader(argc,argv),
-		rfidAntennaPropLoader(argc,argv),
-		argc_(argc),
-		argv_(argv)
-	{
-		setupUi(this);
-		
-		setupInitialTree();
-		robotPreviewLabel->setScaledContents(true);
-		
-		robotPreviewImage=QImage(500,500,QImage::Format_RGB32);
-		robotPreviewImage.fill(QColor(220,220,220,1));
-	}
-	
-	void CRobotCreatorLoader::setupInitialTree(void)
-	{
-		addIcon=QIcon(QString::fromUtf8((
-			stdr_gui_tools::getRosPackagePath("stdr_gui")+
-			std::string("/resources/images/add_icon.png")).c_str()));
-		editIcon=QIcon(QString::fromUtf8((
-			stdr_gui_tools::getRosPackagePath("stdr_gui")+
-			std::string("/resources/images/edit_icon.png")).c_str()));
-		removeIcon=QIcon(QString::fromUtf8((
-			stdr_gui_tools::getRosPackagePath("stdr_gui")+
-			std::string("/resources/images/remove_icon.png")).c_str()));
-		
-		robotTreeWidget->setColumnWidth(0,150);
-		robotTreeWidget->setColumnWidth(1,60);
-		robotTreeWidget->setColumnWidth(2,20);
-		
-		robotNode.setText(0,"Robot");
-		lasersNode.setText(0,"Lasers");
-		sonarsNode.setText(0,"Sonars");
-		rfidAntennasNode.setText(0,"Rfid Antennas");
-		kinematicNode.setText(0,"Kinematic");
-		
-		robotNode.setIcon(2,editIcon);
-		lasersNode.setIcon(2,addIcon);
-		sonarsNode.setIcon(2,addIcon);
-		rfidAntennasNode.setIcon(2,addIcon);
-		kinematicNode.setIcon(2,editIcon);
-		
-		robotTreeWidget->addTopLevelItem(&robotNode);
-		robotTreeWidget->addTopLevelItem(&lasersNode);
-		robotTreeWidget->addTopLevelItem(&sonarsNode);
-		robotTreeWidget->addTopLevelItem(&rfidAntennasNode);
-		robotTreeWidget->addTopLevelItem(&kinematicNode);
-		
-		robotInfoShape.setText(0,"Shape");
-		robotInfoShape.setText(1,"Circle");
-		robotInfoOrientation.setText(0,"Orientation");
-		robotInfoOrientation.setText(1,"0");
+    
+  CRobotCreatorLoader::CRobotCreatorLoader(int argc, char **argv):
+    robotPropLoader(argc,argv),
+    laserPropLoader(argc,argv),
+    sonarPropLoader(argc,argv),
+    kinematicPropLoader(argc,argv),
+    rfidAntennaPropLoader(argc,argv),
+    argc_(argc),
+    argv_(argv)
+  {
+    setupUi(this);
+    
+    setupInitialTree();
+    robotPreviewLabel->setScaledContents(true);
+    
+    robotPreviewImage = QImage(500,500,QImage::Format_RGB32);
+    robotPreviewImage.fill(QColor(220,220,220,1));
+  }
+  
+  void CRobotCreatorLoader::setupInitialTree(void)
+  {
+    addIcon = QIcon(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+      std::string("/resources/images/add_icon.png")).c_str()));
+    editIcon = QIcon(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+      std::string("/resources/images/edit_icon.png")).c_str()));
+    removeIcon = QIcon(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+      std::string("/resources/images/remove_icon.png")).c_str()));
+    
+    robotTreeWidget->setColumnWidth(0,150);
+    robotTreeWidget->setColumnWidth(1,60);
+    robotTreeWidget->setColumnWidth(2,20);
+    
+    robotNode.setText(0,"Robot");
+    lasersNode.setText(0,"Lasers");
+    sonarsNode.setText(0,"Sonars");
+    rfidAntennasNode.setText(0,"Rfid Antennas");
+    kinematicNode.setText(0,"Kinematic");
+    
+    robotNode.setIcon(2,editIcon);
+    lasersNode.setIcon(2,addIcon);
+    sonarsNode.setIcon(2,addIcon);
+    rfidAntennasNode.setIcon(2,addIcon);
+    kinematicNode.setIcon(2,editIcon);
+    
+    robotTreeWidget->addTopLevelItem(&robotNode);
+    robotTreeWidget->addTopLevelItem(&lasersNode);
+    robotTreeWidget->addTopLevelItem(&sonarsNode);
+    robotTreeWidget->addTopLevelItem(&rfidAntennasNode);
+    robotTreeWidget->addTopLevelItem(&kinematicNode);
+    
+    robotInfoShape.setText(0,"Shape");
+    robotInfoShape.setText(1,"Circle");
+    robotInfoOrientation.setText(0,"Orientation");
+    robotInfoOrientation.setText(1,"0");
 
-		
-		robotNode.addChild(&robotInfoShape);
-		robotNode.addChild(&robotInfoOrientation);
-		
-		robotNode.setExpanded(true);
-		lasersNode.setExpanded(true);
-		sonarsNode.setExpanded(true);
-		rfidAntennasNode.setExpanded(true);
-		kinematicNode.setExpanded(true);
-	}
+    
+    robotNode.addChild(&robotInfoShape);
+    robotNode.addChild(&robotInfoOrientation);
+    
+    robotNode.setExpanded(true);
+    lasersNode.setExpanded(true);
+    sonarsNode.setExpanded(true);
+    rfidAntennasNode.setExpanded(true);
+    kinematicNode.setExpanded(true);
+  }
 }

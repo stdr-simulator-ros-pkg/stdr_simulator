@@ -18,28 +18,28 @@
    * Aris Thallas, aris.thallas@gmail.com
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
-	
+  
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.h"
 
 namespace stdr_gui{
-	CGuiCo2Source::CGuiCo2Source(QPoint p):
-		position_(p)
-	{
+  CGuiCo2Source::CGuiCo2Source(QPoint p):
+    position_(p)
+  {
 
-	}
-	
-	CGuiCo2Source::~CGuiCo2Source(void)
-	{
+  }
+  
+  CGuiCo2Source::~CGuiCo2Source(void)
+  {
 
-	}
-	
-	std::string CGuiCo2Source::getName(void)
-	{
-		return name_;
-	}
-	
-	bool CGuiCo2Source::checkProximity(QPoint p){
-		return false;	// 2b changed
-	}
+  }
+  
+  std::string CGuiCo2Source::getName(void)
+  {
+    return name_;
+  }
+  
+  bool CGuiCo2Source::checkProximity(QPoint p){
+    return false;  // 2b changed
+  }
 }
 
