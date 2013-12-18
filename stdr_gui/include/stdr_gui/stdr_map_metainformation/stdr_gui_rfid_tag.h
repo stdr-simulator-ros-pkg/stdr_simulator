@@ -28,17 +28,17 @@
 namespace stdr_gui
 {
 
-	class CGuiRfidTag
-	{
-		private:
-			QPoint position_;	
-			std::string name_;	
-		public:
-			CGuiRfidTag(QPoint p);
-			~CGuiRfidTag(void);
-			std::string getName(void);
-			bool checkProximity(QPoint p);
-	};	
+  class CGuiRfidTag
+  {
+    private:
+      QPoint position_;  
+      std::string name_;  
+    public:
+      CGuiRfidTag(QPoint p);
+      ~CGuiRfidTag(void);
+      std::string getName(void);
+      bool checkProximity(QPoint p);
+  };  
 }
 
 #endif

@@ -27,42 +27,42 @@
 
 namespace stdr_gui
 {
-	
-	class CGuiLoader : public Ui_MainWindow, public QMainWindow
-	{
-		private:
-			int 	argc_;
-			char**	argv_;
-			
-			bool 	close_signal_;
-			QCloseEvent 	*event_;
-		public:
+  
+  class CGuiLoader : public Ui_MainWindow, public QMainWindow
+  {
+    private:
+      int   argc_;
+      char**  argv_;
+      
+      bool   close_signal_;
+      QCloseEvent   *event_;
+    public:
 
-			QAction *actionProperties;
-			QAction *actionGrid;
-			QAction *actionNewRobot;
-			QAction *actionAddRobot;
-			QAction *actionNewRfid;
-			QAction *actionNewThermal;
-			QAction *actionNewCo2;
-			QAction *actionLoadMap;
-			QAction *actionZoomIn;
-			QAction *actionZoomOut;
-			QAction *actionAdjusted;
-		
-			CGuiLoader(int argc,char **argv);
-			
-			void closeEvent(QCloseEvent *event);
-			
-			void addToolbarIcons(void);
-			
-			QEvent* getCloseEvent(void);
-			bool closeTriggered(void);
-			
-			void shutdown(void);
-			
-	};
-	
+      QAction *actionProperties;
+      QAction *actionGrid;
+      QAction *actionNewRobot;
+      QAction *actionAddRobot;
+      QAction *actionNewRfid;
+      QAction *actionNewThermal;
+      QAction *actionNewCo2;
+      QAction *actionLoadMap;
+      QAction *actionZoomIn;
+      QAction *actionZoomOut;
+      QAction *actionAdjusted;
+    
+      CGuiLoader(int argc,char **argv);
+      
+      void closeEvent(QCloseEvent *event);
+      
+      void addToolbarIcons(void);
+      
+      QEvent* getCloseEvent(void);
+      bool closeTriggered(void);
+      
+      void shutdown(void);
+      
+  };
+  
 }
 
 #endif
