@@ -19,14 +19,30 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.h"
+
+#ifndef STDR_GUI_RFID_TAG_CONTAINER
+#define STDR_GUI_RFID_TAG_CONTAINER
+
+#include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui
 {
-  CSonarPropertiesLoader::CSonarPropertiesLoader(int argc, char **argv):
-    argc_(argc),
-    argv_(argv)
+
+  class CGuiRfidTag
   {
-    setupUi(this);
-  }
+    private:
+      QPoint position_;  
+      std::string name_;  
+      QString message_;
+    public:
+      CGuiRfidTag(QPoint p,std::string name);
+      ~CGuiRfidTag(void);
+      std::string getName(void);
+      bool checkProximity(QPoint p);
+      void draw(QImage *img);
+      void setMessage(QString msg);
+      QString getMessage(void);
+  };  
 }
+
+#endif

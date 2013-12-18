@@ -28,30 +28,30 @@
 namespace stdr_gui
 {
 
-	class CRobotVisualisation : 
-		public QWidget, 
-		public Ui_robotVisualization
-	{
-		private:
-			
-			bool active_;
-			
-			float resolution_;
-			
-			QImage 	internal_image_;
-			QImage 	void_image_;
-			QString name_;
-			
-		public:
-			CRobotVisualisation(QString name,float resolution);
-			~CRobotVisualisation(void);
-		
-			bool getActive(void);
-			void destruct(void);
-			void closeEvent(QCloseEvent *event);
-			void setImage(QImage img);
-			int getInternalImageSize(void);
-	};	
+  class CRobotVisualisation : 
+    public QWidget, 
+    public Ui_robotVisualization
+  {
+    private:
+      
+      bool active_;
+      
+      float resolution_;
+      
+      QImage   internal_image_;
+      QImage   void_image_;
+      QString name_;
+      
+    public:
+      CRobotVisualisation(QString name,float resolution);
+      ~CRobotVisualisation(void);
+    
+      bool getActive(void);
+      void destruct(void);
+      void closeEvent(QCloseEvent *event);
+      void setImage(QImage img);
+      int getInternalImageSize(void);
+  };  
 }
 
 #endif

@@ -27,17 +27,17 @@
 
 namespace stdr_gui
 {
-	class CLaserPropertiesLoader : 
-		public QWidget, 
-		public Ui_LaserProperties
-	{
-		private:
-			int 	argc_;
-			char**	argv_;
-		public:
-			CLaserPropertiesLoader(int argc, char **argv);
-			~CLaserPropertiesLoader(void);
-	};	
+  class CLaserPropertiesLoader : 
+    public QWidget, 
+    public Ui_LaserProperties
+  {
+    private:
+      int   argc_;
+      char**  argv_;
+    public:
+      CLaserPropertiesLoader(int argc, char **argv);
+      ~CLaserPropertiesLoader(void);
+  };  
 }
 
 #endif

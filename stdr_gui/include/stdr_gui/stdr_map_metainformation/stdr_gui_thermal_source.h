@@ -19,14 +19,27 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.h"
+
+#ifndef STDR_GUI_THERMAL_SOURCE_CONTAINER
+#define STDR_GUI_THERMAL_SOURCE_CONTAINER
+
+#include "stdr_gui/stdr_tools.h"
 
 namespace stdr_gui
 {
-  CSonarPropertiesLoader::CSonarPropertiesLoader(int argc, char **argv):
-    argc_(argc),
-    argv_(argv)
+
+  class CGuiThermalSource
   {
-    setupUi(this);
-  }
+    private:
+      QPoint position_;    
+      std::string name_;  
+    public:
+      CGuiThermalSource(QPoint p,std::string name);
+      ~CGuiThermalSource(void);
+      std::string getName(void);
+      bool checkProximity(QPoint p);
+      void draw(QImage *img);
+  };  
 }
+
+#endif

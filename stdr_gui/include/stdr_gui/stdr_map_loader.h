@@ -28,37 +28,37 @@
 namespace stdr_gui
 {
 
-	class CMapLoader : 
-		public QWidget, 
-		public Ui_mapWidget
-	{
-		private:
-			int 	argc_;
-			char**	argv_;
-			int 	zoom_;
-			
-			QImage*	internal_img_;
-			QPoint map_min_;
-			QPoint map_max_;
-			QSize initial_image_size_;
-			
-			QPoint pointUnscaled(QPoint p);
-			std::pair<int,int> checkDimensions(int w,int h);
-			
-		public:
-			
-			CMapLoader(int argc, char **argv);
-			
-			void setInitialImageSize(QSize s);
-			void resizeEvent(QResizeEvent *e);
-			void updateImage(QImage *img);
-			void drawGrid(QImage *img,float resolution);
-			void updateZoom(QPoint p,bool zoomIn);
-			void updateCenter(QPoint p);
-			void resetZoom(void);
-			QPoint getGlobalPoint(QPoint);
-			void wheelEvent ( QWheelEvent * event );
-	};	
+  class CMapLoader : 
+    public QWidget, 
+    public Ui_mapWidget
+  {
+    private:
+      int   argc_;
+      char**  argv_;
+      int   zoom_;
+      
+      QImage*  internal_img_;
+      QPoint map_min_;
+      QPoint map_max_;
+      QSize initial_image_size_;
+      
+      QPoint pointUnscaled(QPoint p);
+      std::pair<int,int> checkDimensions(int w,int h);
+      
+    public:
+      
+      CMapLoader(int argc, char **argv);
+      
+      void setInitialImageSize(QSize s);
+      void resizeEvent(QResizeEvent *e);
+      void updateImage(QImage *img);
+      void drawGrid(QImage *img,float resolution);
+      void updateZoom(QPoint p,bool zoomIn);
+      void updateCenter(QPoint p);
+      void resetZoom(void);
+      QPoint getGlobalPoint(QPoint);
+      void wheelEvent ( QWheelEvent * event );
+  };  
 }
 
 #endif

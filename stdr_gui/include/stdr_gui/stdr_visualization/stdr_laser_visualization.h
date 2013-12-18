@@ -28,36 +28,36 @@
 namespace stdr_gui
 {
 
-	class CLaserVisualisation : 
-		public QWidget, 
-		public Ui_laserVisualization
-	{
-		private:
-			
-			bool active_;
-			
-			float resolution_;
-			
-			sensor_msgs::LaserScan 	scan_;
-			ros::Subscriber 		subscriber_;
-			
-			stdr_msgs::LaserSensorMsg msg_;
-			
-			QImage 	internal_image_;
-			QImage 	void_image_;
-			QString name_;
-			
-		public:
-			CLaserVisualisation(QString name,float resolution);
-			~CLaserVisualisation(void);
-		
-			bool getActive(void);
-			void setLaser(stdr_msgs::LaserSensorMsg msg);
-			void destruct(void);
-			void closeEvent(QCloseEvent *event);
-			void callback(const sensor_msgs::LaserScan& msg); 
-			void paint(void);
-	};	
+  class CLaserVisualisation : 
+    public QWidget, 
+    public Ui_laserVisualization
+  {
+    private:
+      
+      bool active_;
+      
+      float resolution_;
+      
+      sensor_msgs::LaserScan   scan_;
+      ros::Subscriber     subscriber_;
+      
+      stdr_msgs::LaserSensorMsg msg_;
+      
+      QImage   internal_image_;
+      QImage   void_image_;
+      QString name_;
+      
+    public:
+      CLaserVisualisation(QString name,float resolution);
+      ~CLaserVisualisation(void);
+    
+      bool getActive(void);
+      void setLaser(stdr_msgs::LaserSensorMsg msg);
+      void destruct(void);
+      void closeEvent(QCloseEvent *event);
+      void callback(const sensor_msgs::LaserScan& msg); 
+      void paint(void);
+  };  
 }
 
 #endif
