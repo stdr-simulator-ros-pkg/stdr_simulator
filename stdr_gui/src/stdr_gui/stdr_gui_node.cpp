@@ -24,11 +24,11 @@
 
 int main(int argc,char **argv)
 {
-	stdr_gui::CStdrApplication app(argc, argv);
-	app.setAttribute(Qt::AA_DontShowIconsInMenus, false);
-	ros::init(argc,argv,"stdr_gui_node");
-	stdr_gui::CGuiController con(argc,argv);
-	con.init();
-	app.exec();
-	return 0;
+  stdr_gui::CStdrApplication app(argc, argv);
+  app.setAttribute(Qt::AA_DontShowIconsInMenus, false);
+  ros::init(argc,argv,"stdr_gui_node");
+  stdr_gui::CGuiController con(argc,argv);
+  con.init();
+  app.exec();
+  return 0;
 }

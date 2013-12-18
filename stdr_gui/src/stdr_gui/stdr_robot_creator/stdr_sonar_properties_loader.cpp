@@ -23,10 +23,10 @@
 
 namespace stdr_gui
 {
-	CSonarPropertiesLoader::CSonarPropertiesLoader(int argc, char **argv):
-		argc_(argc),
-		argv_(argv)
-	{
-		setupUi(this);
-	}
+  CSonarPropertiesLoader::CSonarPropertiesLoader(int argc, char **argv):
+    argc_(argc),
+    argv_(argv)
+  {
+    setupUi(this);
+  }
 }
