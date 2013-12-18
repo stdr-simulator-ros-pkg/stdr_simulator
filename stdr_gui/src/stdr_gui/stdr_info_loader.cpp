@@ -132,6 +132,9 @@ namespace stdr_gui{
 				QTreeWidgetItem *lnoisemean=new QTreeWidgetItem();
 				QTreeWidgetItem *lnoisestd=new QTreeWidgetItem();
 				QTreeWidgetItem *lfreq=new QTreeWidgetItem();
+				QTreeWidgetItem *lposex=new QTreeWidgetItem();
+				QTreeWidgetItem *lposey=new QTreeWidgetItem();
+				QTreeWidgetItem *lorientation=new QTreeWidgetItem();
 				
 				lrays->setText(0,"Rays");
 				lrays->setText(1,QString().setNum(
@@ -164,6 +167,19 @@ namespace stdr_gui{
 				lfreq->setText(1,(QString().setNum(
 					msg.robots[i].robot.laserSensors[l].frequency)+
 						QString(" Hz")));
+						
+				lposex->setText(0,"x pose");
+				lposex->setText(1,(QString().setNum(
+					msg.robots[i].robot.laserSensors[l].pose.x)+
+						QString(" m")));
+				lposey->setText(0,"y pose");
+				lposey->setText(1,(QString().setNum(
+					msg.robots[i].robot.laserSensors[l].pose.y)+
+						QString(" m")));
+				lorientation->setText(0,"Orientation");
+				lorientation->setText(1,(QString().setNum(
+					msg.robots[i].robot.laserSensors[l].pose.theta)+
+						QString(" rad")));
 									
 				lname->addChild(lrays);
 				lname->addChild(lmaxrange);
@@ -173,6 +189,9 @@ namespace stdr_gui{
 				lname->addChild(lnoisemean);
 				lname->addChild(lnoisestd);
 				lname->addChild(lfreq);
+				lname->addChild(lposex);
+				lname->addChild(lposey);
+				lname->addChild(lorientation);
 				
 				lasers->addChild(lname);
 			}
@@ -194,6 +213,8 @@ namespace stdr_gui{
 				QTreeWidgetItem *snoisemean=new QTreeWidgetItem();
 				QTreeWidgetItem *snoisestd=new QTreeWidgetItem();
 				QTreeWidgetItem *sfreq=new QTreeWidgetItem();
+				QTreeWidgetItem *sposex=new QTreeWidgetItem();
+				QTreeWidgetItem *sposey=new QTreeWidgetItem();
 				
 				smaxrange->setText(0,"Max dist");
 				smaxrange->setText(1,(QString().setNum(
@@ -223,6 +244,15 @@ namespace stdr_gui{
 				sfreq->setText(1,(QString().setNum(
 					msg.robots[i].robot.sonarSensors[l].frequency)+
 						QString(" Hz")));
+						
+				sposex->setText(0,"x pose");
+				sposex->setText(1,(QString().setNum(
+					msg.robots[i].robot.sonarSensors[l].pose.x)+
+						QString(" m")));
+				sposey->setText(0,"y pose");
+				sposey->setText(1,(QString().setNum(
+					msg.robots[i].robot.sonarSensors[l].pose.y)+
+						QString(" m")));
 									
 				sname->addChild(smaxrange);
 				sname->addChild(sminrange);
@@ -231,6 +261,8 @@ namespace stdr_gui{
 				sname->addChild(snoisemean);
 				sname->addChild(snoisestd);
 				sname->addChild(sfreq);
+				sname->addChild(sposex);
+				sname->addChild(sposey);
 				
 				sonars->addChild(sname);
 			}

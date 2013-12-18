@@ -272,7 +272,7 @@ namespace stdr_gui
 		smsg.pose.theta=0;
 		smsg.noise.noiseMean=0;
 		smsg.noise.noiseStd=0;
-		smsg.frequency=0;
+		smsg.frequency=10;
 		
 		new_robot_msg_.sonarSensors.push_back(smsg);
 		
@@ -353,7 +353,7 @@ namespace stdr_gui
 		smsg.pose.y=0;
 		smsg.pose.theta=0;
 		smsg.signalCutoff=0;
-		smsg.frequency=0;
+		smsg.frequency=10;
 		
 		new_robot_msg_.rfidSensors.push_back(smsg);
 		

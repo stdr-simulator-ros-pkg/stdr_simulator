@@ -60,7 +60,11 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="laserMaxDistance"/>
+      <widget class="QLineEdit" name="laserMaxDistance">
+       <property name="text">
+        <string>10</string>
+       </property>
+      </widget>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_2">
@@ -145,7 +149,11 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QLineEdit" name="laserOrientation"/>
+      <widget class="QLineEdit" name="laserOrientation">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_9">
@@ -155,7 +163,11 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="laserMinDistance"/>
+      <widget class="QLineEdit" name="laserMinDistance">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
      </item>
      <item row="10" column="0">
       <widget class="QLabel" name="label_10">
@@ -165,7 +177,11 @@
       </widget>
      </item>
      <item row="10" column="1">
-      <widget class="QLineEdit" name="laserFrequency"/>
+      <widget class="QLineEdit" name="laserFrequency">
+       <property name="text">
+        <string>10</string>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_11">
@@ -175,7 +191,11 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="laserRays"/>
+      <widget class="QLineEdit" name="laserRays">
+       <property name="text">
+        <string>270</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

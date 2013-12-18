@@ -261,7 +261,7 @@ namespace stdr_gui
 		
 		elapsed_time_.start();
 		
-		timer_->start(200);
+		timer_->start(50);
 	}
 	
 	void CGuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
