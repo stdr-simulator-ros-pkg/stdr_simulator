@@ -28,17 +28,17 @@
 namespace stdr_gui
 {
 
-	class CGuiThermalSource
-	{
-		private:
-			QPoint position_;		
-			std::string name_;	
-		public:
-			CGuiThermalSource(QPoint p);
-			~CGuiThermalSource(void);
-			std::string getName(void);
-			bool checkProximity(QPoint p);
-	};	
+  class CGuiThermalSource
+  {
+    private:
+      QPoint position_;    
+      std::string name_;  
+    public:
+      CGuiThermalSource(QPoint p);
+      ~CGuiThermalSource(void);
+      std::string getName(void);
+      bool checkProximity(QPoint p);
+  };  
 }
 
 #endif

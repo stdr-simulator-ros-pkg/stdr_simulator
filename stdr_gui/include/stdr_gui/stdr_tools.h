@@ -74,10 +74,10 @@
 
 namespace stdr_gui_tools
 {
-	std::string getRosPackagePath(std::string package);
-	QString getLiteralTime(int ms);
-	void printSonarMsg(stdr_msgs::SonarSensorMsg &msg);
-	void printPose2D(geometry_msgs::Pose2D &msg);
+  std::string getRosPackagePath(std::string package);
+  QString getLiteralTime(int ms);
+  void printSonarMsg(stdr_msgs::SonarSensorMsg &msg);
+  void printPose2D(geometry_msgs::Pose2D &msg);
 }
 
 #endif

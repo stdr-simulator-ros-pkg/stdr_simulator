@@ -27,15 +27,15 @@
 
 namespace stdr_gui
 {
-	class CRobotPropertiesLoader : 
-		public QWidget, 
-		public Ui_RobotProperties
-	{
-			int 	argc_;
-			char**	argv_;
-		public:
-			CRobotPropertiesLoader(int argc, char **argv);
-	};	
+  class CRobotPropertiesLoader : 
+    public QWidget, 
+    public Ui_RobotProperties
+  {
+      int   argc_;
+      char**  argv_;
+    public:
+      CRobotPropertiesLoader(int argc, char **argv);
+  };  
 }
 
 #endif

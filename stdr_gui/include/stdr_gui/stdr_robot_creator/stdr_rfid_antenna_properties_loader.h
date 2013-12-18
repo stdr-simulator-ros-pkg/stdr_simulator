@@ -27,17 +27,17 @@
 
 namespace stdr_gui
 {
-	class CRfidAntennaPropertiesLoader : 
-		public QWidget, 
-		public Ui_RfidAntennaProperties
-	{
-		private:
-			int 	argc_;
-			char**	argv_;
-		public:
-			CRfidAntennaPropertiesLoader(int argc, char **argv);
-			~CRfidAntennaPropertiesLoader(void);
-	};	
+  class CRfidAntennaPropertiesLoader : 
+    public QWidget, 
+    public Ui_RfidAntennaProperties
+  {
+    private:
+      int   argc_;
+      char**  argv_;
+    public:
+      CRfidAntennaPropertiesLoader(int argc, char **argv);
+      ~CRfidAntennaPropertiesLoader(void);
+  };  
 }
 
 #endif

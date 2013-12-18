@@ -27,18 +27,18 @@
 
 namespace stdr_gui
 {
-	class CKinematicPropertiesLoader : 
-		public QWidget, 
-		public Ui_KinematicProperties
-	{
-		private:
-			int 	argc_;
-			char** 	argv_;
-		
-		public:
-			CKinematicPropertiesLoader(int argc, char **argv);
-			~CKinematicPropertiesLoader(void);
-	};	
+  class CKinematicPropertiesLoader : 
+    public QWidget, 
+    public Ui_KinematicProperties
+  {
+    private:
+      int   argc_;
+      char**   argv_;
+    
+    public:
+      CKinematicPropertiesLoader(int argc, char **argv);
+      ~CKinematicPropertiesLoader(void);
+  };  
 }
 
 #endif

@@ -27,80 +27,80 @@
 
 namespace stdr_gui
 {
-	class CRobotCreatorConnector:
-		public QObject
-	{
-		Q_OBJECT
-		
-		private:
-			int 	argc_; 
-			char**	argv_;
-			float climax_;
-			
-			CRobotCreatorLoader loader_;
-			
-			stdr_msgs::RobotMsg new_robot_msg_;
-			
-			QTreeWidgetItem* 	current_laser_;
-			QTreeWidgetItem*	current_sonar_;
-			QTreeWidgetItem*	current_rfid_;
-			
-		public:
-			static unsigned int laser_number;
-			static unsigned int sonar_number;
-			static unsigned int rfid_number;
-		
-			CRobotCreatorConnector(int argc, char **argv);
-			~CRobotCreatorConnector(void);
-			
-			void initialise(void);
-			void deleteTreeNode(QTreeWidgetItem *item);
-			
-			void editRobot(void);
-			
-			void addLaser(void);
-			void eraseLaser(QTreeWidgetItem *item);
-			void editLaser(QTreeWidgetItem *item);
-			int searchLaser(QString frameId);
-			
-			void addSonar(void);
-			void eraseSonar(QTreeWidgetItem *item);
-			void editSonar(QTreeWidgetItem *item);
-			int searchSonar(QString frameId);
-			
-			void addRfidAntenna(void);
-			void eraseRfid(QTreeWidgetItem *item);
-			void editRfid(QTreeWidgetItem *item);
-			int searchRfid(QString frameId);
-			
-			void drawRobot(float radius);
-			void drawRobot(float length,float width);
-			void drawRobot(std::vector<std::pair<float,float> > geometry);
-			void drawLasers(void);
-			void drawSonars(void);
-			void drawRfidAntennas(void);
+  class CRobotCreatorConnector:
+    public QObject
+  {
+    Q_OBJECT
+    
+    private:
+      int   argc_; 
+      char**  argv_;
+      float climax_;
+      
+      CRobotCreatorLoader loader_;
+      
+      stdr_msgs::RobotMsg new_robot_msg_;
+      
+      QTreeWidgetItem*   current_laser_;
+      QTreeWidgetItem*  current_sonar_;
+      QTreeWidgetItem*  current_rfid_;
+      
+    public:
+      static unsigned int laser_number;
+      static unsigned int sonar_number;
+      static unsigned int rfid_number;
+    
+      CRobotCreatorConnector(int argc, char **argv);
+      ~CRobotCreatorConnector(void);
+      
+      void initialise(void);
+      void deleteTreeNode(QTreeWidgetItem *item);
+      
+      void editRobot(void);
+      
+      void addLaser(void);
+      void eraseLaser(QTreeWidgetItem *item);
+      void editLaser(QTreeWidgetItem *item);
+      int searchLaser(QString frameId);
+      
+      void addSonar(void);
+      void eraseSonar(QTreeWidgetItem *item);
+      void editSonar(QTreeWidgetItem *item);
+      int searchSonar(QString frameId);
+      
+      void addRfidAntenna(void);
+      void eraseRfid(QTreeWidgetItem *item);
+      void editRfid(QTreeWidgetItem *item);
+      int searchRfid(QString frameId);
+      
+      void drawRobot(float radius);
+      void drawRobot(float length,float width);
+      void drawRobot(std::vector<std::pair<float,float> > geometry);
+      void drawLasers(void);
+      void drawSonars(void);
+      void drawRfidAntennas(void);
 
-			void updateRobotPreview(void);
-			
-			void setInitialPose(QPoint p);
-			void fixRobotMsgAngles(void);
-			
-			stdr_msgs::RobotMsg getNewRobot(void);
-			
-		public Q_SLOTS:
-			void treeItemClicked ( QTreeWidgetItem * item, int column ); 
-			void updateLaser(void);
-			void updateSonar(void);
-			void updateRfid(void);
-			void updateRobot(void);
-			void saveRobot(void);
-			void closeRobotCreator(void);
-			void loadRobot(void);
-			
-		Q_SIGNALS:
-			void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
-			void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
-	};
+      void updateRobotPreview(void);
+      
+      void setInitialPose(QPoint p);
+      void fixRobotMsgAngles(void);
+      
+      stdr_msgs::RobotMsg getNewRobot(void);
+      
+    public Q_SLOTS:
+      void treeItemClicked ( QTreeWidgetItem * item, int column ); 
+      void updateLaser(void);
+      void updateSonar(void);
+      void updateRfid(void);
+      void updateRobot(void);
+      void saveRobot(void);
+      void closeRobotCreator(void);
+      void loadRobot(void);
+      
+    Q_SIGNALS:
+      void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+      void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+  };
 }
 
 #endif

@@ -28,12 +28,12 @@
 namespace stdr_gui
 {
 
-	class CStdrApplication:public QApplication
-	{
-		public:
-			CStdrApplication(int &argc,char **argv);
-			bool notify(QObject * receiver, QEvent * event);
-	};
+  class CStdrApplication:public QApplication
+  {
+    public:
+      CStdrApplication(int &argc,char **argv);
+      bool notify(QObject * receiver, QEvent * event);
+  };
 
 }
 

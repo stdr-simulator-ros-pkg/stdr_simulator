@@ -27,19 +27,19 @@
 
 namespace stdr_gui
 {
-	class CGuiRfid
-	{
-		private:
-			std::string topic_;
-			stdr_msgs::RfidSensorMsg msg_;
-			ros::Subscriber subscriber_;
-			
-		public:
-			CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);
-			~CGuiRfid(void);
-			
-			void paint(QImage *m);
-	};	
+  class CGuiRfid
+  {
+    private:
+      std::string topic_;
+      stdr_msgs::RfidSensorMsg msg_;
+      ros::Subscriber subscriber_;
+      
+    public:
+      CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);
+      ~CGuiRfid(void);
+      
+      void paint(QImage *m);
+  };  
 }
 
 #endif

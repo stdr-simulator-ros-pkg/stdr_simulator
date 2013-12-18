@@ -65,7 +65,7 @@ namespace stdr_gui
       int  argc_;
       char** argv_;
       
-      bool 	map_lock_;
+      bool   map_lock_;
       
       std::vector<CGuiRobot> registered_robots_;
       std::set<std::string> my_robots_;

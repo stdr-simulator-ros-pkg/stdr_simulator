@@ -26,17 +26,17 @@
 namespace stdr_gui
 {
 
-	class CGuiCo2Source
-	{
-		private:
-			QPoint position_;	
-			std::string name_;		
-		public:
-			CGuiCo2Source(QPoint p);
-			~CGuiCo2Source(void);
-			std::string getName(void);
-			bool checkProximity(QPoint p);
-	};	
+  class CGuiCo2Source
+  {
+    private:
+      QPoint position_;  
+      std::string name_;    
+    public:
+      CGuiCo2Source(QPoint p);
+      ~CGuiCo2Source(void);
+      std::string getName(void);
+      bool checkProximity(QPoint p);
+  };  
 }
 
 #endif
