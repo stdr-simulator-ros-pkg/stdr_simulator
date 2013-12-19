@@ -71,6 +71,9 @@
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/LaserScan.h>
 
+#include <stdr_robot/stdr_yaml_parser.h>
+#include "yaml-cpp/exceptions.h"
+
 #define STDR_PI 3.14159
 
 namespace stdr_gui_tools
