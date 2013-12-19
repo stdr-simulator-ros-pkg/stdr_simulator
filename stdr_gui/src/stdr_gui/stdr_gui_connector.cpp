@@ -51,6 +51,10 @@ namespace stdr_gui
       this,SLOT(actionNewRobotTriggered()));
       
     QObject::connect(
+      loader_.actionAddRobot,SIGNAL(triggered(bool)),
+      this,SLOT(actionAddRobotTriggered()));
+      
+    QObject::connect(
       loader_.actionZoomIn,SIGNAL(triggered(bool)),
       this,SLOT(actionZoomInTriggered()));
     
@@ -121,6 +125,30 @@ namespace stdr_gui
   void CGuiConnector::actionNewRobotTriggered(void)
   {
     robotCreatorConn.initialise();
+  }
+  
+  void CGuiConnector::actionAddRobotTriggered(void)
+  {
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load robot"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_gui")), 
+        tr("Yaml Files (*.yaml)"));
+    
+    if (file_name.isEmpty()) { // Not a valid filename
+      return;
+    }
+    
+    try {
+      new_robot_msg_ = 
+      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg for painting
+    }
+    catch(YAML::RepresentationException& e) {
+      ROS_ERROR("%s", e.what());
+      return;
+    }
+    
   }
   
   void CGuiConnector::actionNewRfidTriggered(void)
