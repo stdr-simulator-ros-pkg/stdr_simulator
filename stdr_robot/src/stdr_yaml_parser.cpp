@@ -41,12 +41,8 @@ namespace stdr_robot {
     
     stdr_msgs::RobotMsg robot;
     
-    try {
-      doc["robots"][0] >> robot;
-    }
-    catch(YAML::RepresentationException& e) {
-      std::cout << e.what() << "\n";
-    }
+    //~ doc["robots"][0] >> robot; //multiple robots
+    doc >> robot; 
     
     return robot;
     
@@ -122,8 +118,6 @@ namespace stdr_robot {
     robotYamlFile << out.c_str();
     
     robotYamlFile.close();
-    
-    std::cout << out.c_str() << std::endl;
   }
 
   // operators for parsing
