@@ -94,7 +94,7 @@
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
      <item row="0" column="2">
-      <widget class="QPushButton" name="cancelButton">
+      <widget class="QPushButton" name="addButton">
        <property name="maximumSize">
         <size>
          <width>150</width>
@@ -102,7 +102,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Cancel</string>
+        <string>Load robot from file</string>
        </property>
       </widget>
      </item>
@@ -134,7 +134,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Load Robot</string>
+        <string>Add Robot to map</string>
        </property>
       </widget>
      </item>

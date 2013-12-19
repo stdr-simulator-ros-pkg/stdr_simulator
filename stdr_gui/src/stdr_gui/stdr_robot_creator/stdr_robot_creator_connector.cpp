@@ -63,8 +63,8 @@ namespace stdr_gui
       this,SLOT(loadRobot()));
     
     QObject::connect(
-      loader_.cancelButton,SIGNAL(clicked(bool)),
-      this,SLOT(closeRobotCreator()));
+      loader_.addButton,SIGNAL(clicked(bool)),
+      this,SLOT(getRobotFromYaml()));
 
     climax_ = - 1;
   }
@@ -1137,13 +1137,36 @@ namespace stdr_gui
 
   void CRobotCreatorConnector::saveRobot(void)
   {
-    Q_EMIT saveRobotPressed(new_robot_msg_);
-    loader_.hide();
+    QString file_name = QFileDialog::getSaveFileName(&loader_, 
+      tr("Save File"),
+        "",
+        tr("Yaml files (*.yaml)"));
+    fixRobotMsgAngles();
+    Q_EMIT saveRobotPressed(new_robot_msg_,file_name);
   }
   
-  void CRobotCreatorConnector::closeRobotCreator(void)
+  void CRobotCreatorConnector::getRobotFromYaml(void)
   {
-    loader_.hide();
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load robot"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_gui")), 
+        tr("Yaml Files (*.yaml)"));
+    
+    if (file_name.isEmpty()) { // Not a valid filename
+      return;
+    }
+    
+    try {
+      new_robot_msg_ = 
+      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg
+    }
+    catch(YAML::RepresentationException& e) {
+      ROS_ERROR("%s", e.what());
+      return;
+    }
+    updateRobotPreview(); 
   }
   
   void CRobotCreatorConnector::loadRobot(void)
