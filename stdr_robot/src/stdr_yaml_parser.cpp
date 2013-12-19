@@ -48,58 +48,6 @@ namespace stdr_robot {
       std::cout << e.what() << "\n";
     }
     
-    for (YAML::Iterator it0=doc.begin(); it0!=doc.end(); ++it0) {
-      const YAML::Node& node = it0.second();
-      std::string key;
-      it0.first() >> key;
-      std::cout << "> " << key << std::endl;
-  //~     std::cout << it0.second().size() << std::endl;
-  //~   }
-      
-  //~   const YAML::Node& node = doc["robots"];
-    
-  
-  //~   for (unsigned i = 0; i <node.size() ; i++) {
-   
-    
-    if (node.Type() == YAML::NodeType::Sequence) {
-      for (int i = 0; i < node.size(); i++) {
-        std::cout << "--> ---" << std::endl;
-        for (YAML::Iterator map = node[i].begin(); map != node[i].end(); ++map) {
-          std::string k;
-          map.first() >> k;
-  //~         std::cout << ((map.second()).Type() == YAML::NodeType::Map);
-          std::cout << "--> " << k << std::endl;
-          if (map.second().Type() == YAML::NodeType::Map) {
-            for (YAML::Iterator map2 = map.second().begin(); map2 != map.second().end(); ++map2) {
-              std::string j;
-              map2.first() >> j;
-              std::cout<< "----> " << j << std::endl; 
-            }
-          }
-          
-        }
-  //~       std::string key0;
-  //~       node[i] >> key0;
-  //~       std::cout << "--> " << key0 << std::endl;
-  //~       std::cout << node[i].size() << std::endl;
-      }
-      
-    }
-    else {
-    
-      
-      for (YAML::Iterator it=node.begin(); it!=node.end(); ++it) {
-  //~       std::cout<< it.second().size()<< std::endl;
-        std::string key2;
-        it.first() >> key2;
-        std::cout << "--> " << key2 << std::endl;
-  
-      }    
-    }
-  }
-  //~   std::cout << robots.size() << std::endl;
-    
     return robot;
     
   }
@@ -162,9 +110,18 @@ namespace stdr_robot {
   }
 
   void robotMsgToYaml(const std::string& filename, const stdr_msgs::RobotMsg& msg) {
+    
     YAML::Emitter out;
     
     out << msg;
+    
+    std::ofstream robotYamlFile;
+    
+    robotYamlFile.open(filename.c_str());
+    
+    robotYamlFile << out.c_str();
+    
+    robotYamlFile.close();
     
     std::cout << out.c_str() << std::endl;
   }
@@ -392,32 +349,3 @@ namespace stdr_robot {
   } // end of namespace parser
 
 } // end of namespace stdr_robot
-
-
-int main(int argc, char** argv) {
-  
-  ros::init(argc, argv, "parser");
-  
-  std::string fil(argv[1]);
-  
-  
-  stdr_msgs::RobotMsg msg;
-  try {
-    msg = stdr_robot::parser::yamlToRobotMsg(fil);
-  }
-  catch (YAML::RepresentationException& e) {
-    ROS_ERROR("%s", e.what());
-  }
-  
-   stdr_robot::parser::robotMsgToYaml("tata", msg);
-  
-  ros::NodeHandle n;
-  ros::Publisher pub;
-  pub = n.advertise<stdr_msgs::RobotMsg>("robot", 1, true);
-//~   pub = n.advertise<stdr_msgs::LaserSensorMsg>("robot", 1, true);
-//~   
-  pub.publish(msg);
-  
-  ros::Duration(10).sleep();
-  return 0;
-}
