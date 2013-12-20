@@ -83,7 +83,7 @@ namespace stdr_gui
       void updateRobotPreview(void);
       
       void setInitialPose(float x, float y);
-      void fixRobotMsgAngles(void);
+      
       
       stdr_msgs::RobotMsg getNewRobot(void);
       

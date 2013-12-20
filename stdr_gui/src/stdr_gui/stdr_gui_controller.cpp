@@ -398,11 +398,11 @@ namespace stdr_gui
       pnew.y() * map_msg_.info.resolution);
       
     stdr_msgs::RobotIndexedMsg newRobot;
-    gui_connector_.robotCreatorConn.fixRobotMsgAngles();
     try 
     {
       newRobot = robot_handler_.spawnNewRobot(
-        gui_connector_.robotCreatorConn.getNewRobot());
+        stdr_gui_tools::fixRobotAnglesToRad(
+          gui_connector_.robotCreatorConn.getNewRobot()));
         
     }
     catch (ConnectionException& ex) 
