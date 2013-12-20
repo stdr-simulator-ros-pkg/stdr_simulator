@@ -52,7 +52,11 @@ namespace stdr_robot {
     stdr_msgs::SonarSensorMsg yamlToSonarSensorMsg(const std::string& filename);
     stdr_msgs::RfidSensorMsg yamlToRfidSensorMsg(const std::string& filename);
     
+    // maybe use template
     void robotMsgToYaml(const std::string& filename, const stdr_msgs::RobotMsg& msg);
+    void laserSensorMsgToYaml(const std::string& filename, const stdr_msgs::LaserSensorMsg& msg);
+    void sonarSensorMsgToYaml(const std::string& filename, const stdr_msgs::SonarSensorMsg& msg);
+    void rfidSensorMsgToYaml(const std::string& filename, const stdr_msgs::RfidSensorMsg& msg);
     
     // operators for parsing
     void operator >> (const YAML::Node& node, stdr_msgs::RobotMsg& msg);
