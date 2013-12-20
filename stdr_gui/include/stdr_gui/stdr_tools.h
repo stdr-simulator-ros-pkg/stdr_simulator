@@ -71,6 +71,9 @@
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/LaserScan.h>
 
+#include <stdr_robot/stdr_yaml_parser.h>
+#include "yaml-cpp/exceptions.h"
+
 #define STDR_PI 3.14159
 
 namespace stdr_gui_tools
@@ -79,6 +82,8 @@ namespace stdr_gui_tools
   QString getLiteralTime(int ms);
   void printSonarMsg(stdr_msgs::SonarSensorMsg &msg);
   void printPose2D(geometry_msgs::Pose2D &msg);
+  stdr_msgs::RobotMsg fixRobotAnglesToRad(stdr_msgs::RobotMsg robot);
+  stdr_msgs::RobotMsg fixRobotAnglesToDegrees(stdr_msgs::RobotMsg robot);
 }
 
 #endif

@@ -53,9 +53,23 @@ namespace stdr_gui
   {
     lock_ = true;
     QPainter painter(m);
-    painter.setPen(QColor(255,0,0,100));
+    
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
     {
+      float real_dist = scan_.ranges[i];
+      if(real_dist > msg_.maxRange)
+      {
+        real_dist = msg_.maxRange;
+      }
+      else if(real_dist < msg_.minRange)
+      {
+        real_dist = msg_.minRange;
+        painter.setPen(QColor(100,100,100,100));
+      }
+      else
+      {
+        painter.setPen(QColor(255,0,0,100));
+      }
       painter.drawLine(
         robotPose.x / ocgd + (msg_.pose.x / ocgd * cos(robotPose.theta) - 
           msg_.pose.y / ocgd * sin(robotPose.theta)),
@@ -64,12 +78,12 @@ namespace stdr_gui
           msg_.pose.y / ocgd * cos(robotPose.theta)),
           
         robotPose.x / ocgd + (msg_.pose.x / ocgd * cos(robotPose.theta) - 
-          msg_.pose.y /ocgd * sin(robotPose.theta)) + scan_.ranges[i] * 
+          msg_.pose.y /ocgd * sin(robotPose.theta)) + real_dist * 
           cos(robotPose.theta + scan_.angle_min + i * scan_.angle_increment)
            / ocgd,
           
         robotPose.y / ocgd + (msg_.pose.x / ocgd * sin(robotPose.theta) + 
-          msg_.pose.y / ocgd * cos(robotPose.theta)) + scan_.ranges[i] *
+          msg_.pose.y / ocgd * cos(robotPose.theta)) + real_dist *
           sin(robotPose.theta + scan_.angle_min + i * scan_.angle_increment)
            / ocgd
       );

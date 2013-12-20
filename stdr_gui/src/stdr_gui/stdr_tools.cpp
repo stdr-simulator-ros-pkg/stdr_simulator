@@ -79,4 +79,64 @@ namespace stdr_gui_tools
     ROS_ERROR("\ty : %f",msg.y);
     ROS_ERROR("\ttheta : %f",msg.theta);
   }
+  
+  stdr_msgs::RobotMsg fixRobotAnglesToRad(stdr_msgs::RobotMsg rmsg)
+  {
+    rmsg.initialPose.theta = 
+      rmsg.initialPose.theta / 180.0 * STDR_PI;
+    for(unsigned int i = 0 ; i < rmsg.laserSensors.size() ; i++)
+    {
+      rmsg.laserSensors[i].maxAngle = 
+        rmsg.laserSensors[i].maxAngle / 180.0 * STDR_PI;
+      rmsg.laserSensors[i].minAngle = 
+        rmsg.laserSensors[i].minAngle / 180.0 * STDR_PI;
+      rmsg.laserSensors[i].pose.theta = 
+        rmsg.laserSensors[i].pose.theta / 180.0 * STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.sonarSensors.size() ; i++)
+    {
+      rmsg.sonarSensors[i].coneAngle = 
+        rmsg.sonarSensors[i].coneAngle / 180.0 * STDR_PI;
+      rmsg.sonarSensors[i].pose.theta = 
+        rmsg.sonarSensors[i].pose.theta / 180.0 * STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.rfidSensors.size() ; i++)
+    {
+      rmsg.rfidSensors[i].angleSpan = 
+        rmsg.rfidSensors[i].angleSpan / 180.0 * STDR_PI;
+      rmsg.rfidSensors[i].pose.theta = 
+        rmsg.rfidSensors[i].pose.theta / 180.0 * STDR_PI;
+    }
+    return rmsg;
+  }
+  
+  stdr_msgs::RobotMsg fixRobotAnglesToDegrees(stdr_msgs::RobotMsg rmsg)
+  {
+    rmsg.initialPose.theta = 
+      rmsg.initialPose.theta * 180.0 / STDR_PI;
+    for(unsigned int i = 0 ; i < rmsg.laserSensors.size() ; i++)
+    {
+      rmsg.laserSensors[i].maxAngle = 
+        rmsg.laserSensors[i].maxAngle * 180.0 / STDR_PI;
+      rmsg.laserSensors[i].minAngle = 
+        rmsg.laserSensors[i].minAngle * 180.0 / STDR_PI;
+      rmsg.laserSensors[i].pose.theta = 
+        rmsg.laserSensors[i].pose.theta * 180.0 / STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.sonarSensors.size() ; i++)
+    {
+      rmsg.sonarSensors[i].coneAngle = 
+        rmsg.sonarSensors[i].coneAngle * 180.0 / STDR_PI;
+      rmsg.sonarSensors[i].pose.theta = 
+        rmsg.sonarSensors[i].pose.theta * 180.0 / STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.rfidSensors.size() ; i++)
+    {
+      rmsg.rfidSensors[i].angleSpan = 
+        rmsg.rfidSensors[i].angleSpan * 180.0 / STDR_PI;
+      rmsg.rfidSensors[i].pose.theta = 
+        rmsg.rfidSensors[i].pose.theta * 180.0 / STDR_PI;
+    }
+    return rmsg;
+  }
 }

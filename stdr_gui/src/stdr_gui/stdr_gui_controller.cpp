@@ -111,8 +111,8 @@ namespace stdr_gui
     
     QObject::connect(
       &(gui_connector_.robotCreatorConn),
-        SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg)),
-      this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg)));
+        SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg,QString)),
+      this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg,QString)));
     
     QObject::connect(
       &(gui_connector_.robotCreatorConn),
@@ -264,9 +264,13 @@ namespace stdr_gui
     timer_->start(50);
   }
   
-  void CGuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
+  void CGuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg,
+    QString file_name)
   {
-    ROS_ERROR("Save Signal ok");
+    std::string file_name_str=file_name.toStdString();
+    
+    stdr_robot::parser::robotMsgToYaml(file_name_str,newRobotMsg);
+    
   }
   
   void CGuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
@@ -394,11 +398,11 @@ namespace stdr_gui
       pnew.y() * map_msg_.info.resolution);
       
     stdr_msgs::RobotIndexedMsg newRobot;
-    gui_connector_.robotCreatorConn.fixRobotMsgAngles();
     try 
     {
       newRobot = robot_handler_.spawnNewRobot(
-        gui_connector_.robotCreatorConn.getNewRobot());
+        stdr_gui_tools::fixRobotAnglesToRad(
+          gui_connector_.robotCreatorConn.getNewRobot()));
         
     }
     catch (ConnectionException& ex) 

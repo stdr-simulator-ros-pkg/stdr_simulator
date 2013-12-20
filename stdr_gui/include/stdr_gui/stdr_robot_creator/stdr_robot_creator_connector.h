@@ -83,7 +83,7 @@ namespace stdr_gui
       void updateRobotPreview(void);
       
       void setInitialPose(float x, float y);
-      void fixRobotMsgAngles(void);
+      
       
       stdr_msgs::RobotMsg getNewRobot(void);
       
@@ -94,12 +94,12 @@ namespace stdr_gui
       void updateRfid(void);
       void updateRobot(void);
       void saveRobot(void);
-      void closeRobotCreator(void);
+      void getRobotFromYaml(void);
       void loadRobot(void);
       
     Q_SIGNALS:
       void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
-      void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+      void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg,QString file_name);
   };
 }
 
