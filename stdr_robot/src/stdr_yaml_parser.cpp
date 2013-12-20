@@ -163,7 +163,7 @@ namespace stdr_robot {
     if (msg.maxRange <= 0)
       throw YAML::RepresentationException(node["max_range"].GetMark(), "negative or zero value");
     node["min_range"] >> msg.minRange;
-    if (msg.minRange <= 0)
+    if (msg.minRange < 0)
       throw YAML::RepresentationException(node["min_range"].GetMark(), "negative or zero value");
     node["num_rays"] >> msg.numRays;
     if (msg.numRays <= 0)
@@ -186,7 +186,7 @@ namespace stdr_robot {
     if (msg.maxRange <= 0)
       throw YAML::RepresentationException(node["max_range"].GetMark(), "negative or zero value");
     node["min_range"] >> msg.minRange;
-    if (msg.minRange <= 0)
+    if (msg.minRange < 0)
       throw YAML::RepresentationException(node["min_range"].GetMark(), "negative or zero value");
     node["frequency"] >> msg.frequency;
     if (msg.frequency <= 0)
