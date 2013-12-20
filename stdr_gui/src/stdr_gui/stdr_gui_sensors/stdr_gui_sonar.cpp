@@ -53,22 +53,40 @@ namespace stdr_gui{
   {
     lock_ = true;
     QPainter painter(m);
-    QBrush brush(QColor(0,200,0,50));
-    painter.setBrush(brush);
+    
+    
+    float real_dist = range_.range;
+    if(real_dist > msg_.maxRange)
+    {
+      real_dist = msg_.maxRange;
+      QBrush brush(QColor(100,100,100,100));
+      painter.setBrush(brush);
+    }
+    else if(real_dist < msg_.minRange)
+    {
+      real_dist = msg_.minRange;
+      QBrush brush(QColor(100,100,100,100));
+      painter.setBrush(brush);
+    }
+    else
+    {
+      QBrush brush(QColor(0,200,0,100));
+      painter.setBrush(brush);
+    }
     
     painter.drawPie(
       robotPose.x / ocgd +
         (msg_.pose.x / ocgd * cos(robotPose.theta) - 
         msg_.pose.y / ocgd * sin(robotPose.theta)) - 
-        range_.range / ocgd,
+        real_dist / ocgd,
         
       robotPose.y / ocgd +
         (msg_.pose.x / ocgd * sin(robotPose.theta) + 
         msg_.pose.y / ocgd * cos(robotPose.theta)) -
-        range_.range / ocgd,
+        real_dist / ocgd,
       
-      range_.range / ocgd * 2,
-      range_.range / ocgd * 2,
+      real_dist / ocgd * 2,
+      real_dist / ocgd * 2,
       
       - (robotPose.theta + msg_.pose.theta - msg_.coneAngle / 2.0)
         * 180.0 / STDR_PI * 16,
