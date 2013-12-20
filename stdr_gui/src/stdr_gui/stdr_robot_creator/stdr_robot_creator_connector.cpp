@@ -1141,8 +1141,9 @@ namespace stdr_gui
       tr("Save File"),
         "",
         tr("Yaml files (*.yaml)"));
-    fixRobotMsgAngles();
-    Q_EMIT saveRobotPressed(new_robot_msg_,file_name);
+    
+    Q_EMIT saveRobotPressed(
+      stdr_gui_tools::fixRobotAnglesToRad(new_robot_msg_),file_name);
   }
   
   void CRobotCreatorConnector::getRobotFromYaml(void)
@@ -1161,6 +1162,7 @@ namespace stdr_gui
     try {
       new_robot_msg_ = 
       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg
+      new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
     }
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());
@@ -1179,35 +1181,6 @@ namespace stdr_gui
   {
     new_robot_msg_.initialPose.x = x;
     new_robot_msg_.initialPose.y = y;
-  }
-  
-  void CRobotCreatorConnector::fixRobotMsgAngles(void)
-  {
-    new_robot_msg_.initialPose.theta = 
-      new_robot_msg_.initialPose.theta / 180.0 * STDR_PI;
-    for(unsigned int i = 0 ; i < new_robot_msg_.laserSensors.size() ; i++)
-    {
-      new_robot_msg_.laserSensors[i].maxAngle = 
-        new_robot_msg_.laserSensors[i].maxAngle / 180.0 * STDR_PI;
-      new_robot_msg_.laserSensors[i].minAngle = 
-        new_robot_msg_.laserSensors[i].minAngle / 180.0 * STDR_PI;
-      new_robot_msg_.laserSensors[i].pose.theta = 
-        new_robot_msg_.laserSensors[i].pose.theta / 180.0 * STDR_PI;
-    }
-    for(unsigned int i = 0 ; i < new_robot_msg_.sonarSensors.size() ; i++)
-    {
-      new_robot_msg_.sonarSensors[i].coneAngle = 
-        new_robot_msg_.sonarSensors[i].coneAngle / 180.0 * STDR_PI;
-      new_robot_msg_.sonarSensors[i].pose.theta = 
-        new_robot_msg_.sonarSensors[i].pose.theta / 180.0 * STDR_PI;
-    }
-    for(unsigned int i = 0 ; i < new_robot_msg_.rfidSensors.size() ; i++)
-    {
-      new_robot_msg_.rfidSensors[i].angleSpan = 
-        new_robot_msg_.rfidSensors[i].angleSpan / 180.0 * STDR_PI;
-      new_robot_msg_.rfidSensors[i].pose.theta = 
-        new_robot_msg_.rfidSensors[i].pose.theta / 180.0 * STDR_PI;
-    }
   }
   
   stdr_msgs::RobotMsg CRobotCreatorConnector::getNewRobot(void)

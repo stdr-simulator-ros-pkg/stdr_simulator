@@ -82,6 +82,8 @@ namespace stdr_gui_tools
   QString getLiteralTime(int ms);
   void printSonarMsg(stdr_msgs::SonarSensorMsg &msg);
   void printPose2D(geometry_msgs::Pose2D &msg);
+  stdr_msgs::RobotMsg fixRobotAnglesToRad(stdr_msgs::RobotMsg robot);
+  stdr_msgs::RobotMsg fixRobotAnglesToDegrees(stdr_msgs::RobotMsg robot);
 }
 
 #endif
