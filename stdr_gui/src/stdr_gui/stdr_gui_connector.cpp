@@ -141,7 +141,7 @@ namespace stdr_gui
     }
     
     try {
-      new_robot_msg_ = 
+      stdr_msgs::RobotMsg new_robot_msg_ = 
       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg for painting
     }
     catch(YAML::RepresentationException& e) {
