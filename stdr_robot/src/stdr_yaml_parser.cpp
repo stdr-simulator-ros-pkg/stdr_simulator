@@ -304,6 +304,7 @@ namespace stdr_robot {
     out << YAML::Key << "signal_cutoff" << YAML::Value << msg.signalCutoff;
     out << YAML::Key << "frame_id" << YAML::Value << msg.frame_id;
     out << YAML::Key << "pose" << YAML::Value << msg.pose;
+    out << YAML::Key << "frequency" << YAML::Value << msg.frequency;
     out << YAML::EndMap;
     return out;
   }
