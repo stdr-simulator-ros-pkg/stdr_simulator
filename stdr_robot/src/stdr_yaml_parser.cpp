@@ -119,6 +119,52 @@ namespace stdr_robot {
     
     robotYamlFile.close();
   }
+  
+  void laserSensorMsgToYaml(const std::string& filename, const stdr_msgs::LaserSensorMsg& msg) {
+    
+    YAML::Emitter out;
+    
+    out << msg;
+    
+    std::ofstream sensorYamlFile;
+    
+    sensorYamlFile.open(filename.c_str());
+    
+    sensorYamlFile << out.c_str();
+    
+    sensorYamlFile.close();
+  }
+  
+  void sonarSensorMsgToYaml(const std::string& filename, const stdr_msgs::SonarSensorMsg& msg) {
+    
+    YAML::Emitter out;
+    
+    out << msg;
+    
+    std::ofstream sensorYamlFile;
+    
+    sensorYamlFile.open(filename.c_str());
+    
+    sensorYamlFile << out.c_str();
+    
+    sensorYamlFile.close();
+  }
+  
+  void rfidSensorMsgToYaml(const std::string& filename, const stdr_msgs::RfidSensorMsg& msg) {
+    
+    
+    YAML::Emitter out;
+    
+    out << msg;
+    
+    std::ofstream sensorYamlFile;
+    
+    sensorYamlFile.open(filename.c_str());
+    
+    sensorYamlFile << out.c_str();
+    
+    sensorYamlFile.close();
+  }
 
   // operators for parsing
   void operator >> (const YAML::Node& node, stdr_msgs::RobotMsg& msg) {
