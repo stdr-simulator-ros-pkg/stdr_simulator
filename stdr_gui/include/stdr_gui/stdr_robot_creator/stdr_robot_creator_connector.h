@@ -62,6 +62,8 @@ namespace stdr_gui
       void eraseLaser(QTreeWidgetItem *item);
       void editLaser(QTreeWidgetItem *item);
       int searchLaser(QString frameId);
+      void saveLaser(QTreeWidgetItem *item);
+      void loadLaser(QTreeWidgetItem *item);
       
       void addSonar(void);
       void eraseSonar(QTreeWidgetItem *item);
