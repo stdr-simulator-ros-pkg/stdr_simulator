@@ -534,9 +534,10 @@ namespace stdr_gui
         tr("Yaml files (*.yaml)"));
     
     std::string file_name_str=file_name.toStdString();
-   
+    stdr_msgs::LaserSensorMsg lmsg = new_robot_msg_.laserSensors[laserFrameId];
     try {
-      //~ stdr_robot::parser::laserMsgToYaml(file_name_str,newRobotMsg);
+      stdr_robot::parser::laserSensorMsgToYaml(file_name_str,
+        stdr_gui_tools::fixLaserAnglesToRad(lmsg));
     }
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());
@@ -546,28 +547,35 @@ namespace stdr_gui
   
   void CRobotCreatorConnector::loadLaser(QTreeWidgetItem *item)
   {
-    //~ unsigned int laserFrameId = searchLaser(item->text(0));
-    //~ if(laserFrameId == -1) 
-    //~ {
-      //~ return;
-    //~ }  
-    //~ QString file_name = QFileDialog::getSaveFileName(&loader_, 
-      //~ tr("Save laser sensor"),
-        //~ QString().fromStdString(
-        //~ stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
-        //~ QString("/resources/"),
-        //~ tr("Yaml files (*.yaml)"));
-    //~ 
-    //~ std::string file_name_str=file_name.toStdString();
-   //~ 
-    //~ try {
-      //~ stdr_robot::parser::laserMsgToYaml(file_name_str,newRobotMsg);
-    //~ }
-    //~ catch(YAML::RepresentationException& e) {
-      //~ ROS_ERROR("%s", e.what());
-      //~ return;
-    //~ }
-    //~ updateRobotPreview(); 
+    unsigned int laserFrameId = searchLaser(item->text(0));
+    if(laserFrameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load laser sensor"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
+        tr("Yaml Files (*.yaml)"));
+    
+    if (file_name.isEmpty()) {
+      return;
+    }
+    try {
+      stdr_msgs::LaserSensorMsg lmsg = 
+      stdr_robot::parser::yamlToLaserSensorMsg(file_name.toStdString());
+
+      lmsg = stdr_gui_tools::fixLaserAnglesToDegrees(lmsg);
+      new_robot_msg_.laserSensors[laserFrameId]=lmsg;
+      updateLaserTree(item,lmsg);
+    }
+    catch(YAML::RepresentationException& e) {
+      ROS_ERROR("%s", e.what());
+      return;
+    }
+    updateRobotPreview(); 
   }
   
   void CRobotCreatorConnector::editSonar(QTreeWidgetItem *item)
@@ -692,6 +700,55 @@ namespace stdr_gui
       }
     }
     return -1;
+  }
+  
+  void CRobotCreatorConnector::updateLaserTree(
+    QTreeWidgetItem *item,
+    stdr_msgs::LaserSensorMsg l)
+  {
+    for(unsigned int i = 0 ; i < item->childCount() ; i++)
+    {
+      if(item->child(i)->text(0) == QString("Angle span"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.maxAngle - l.minAngle));
+      }
+      else if(item->child(i)->text(0) == QString("Orientation"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.theta));
+      }
+      else if(item->child(i)->text(0) == QString("Max range"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.maxRange));
+      }
+      else if(item->child(i)->text(0) == QString("Number of rays"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.numRays));
+      }
+      else if(item->child(i)->text(0) == QString("Min range"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.minRange));
+      }
+      else if(item->child(i)->text(0) == QString("Noise mean"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.noise.noiseMean));
+      }
+      else if(item->child(i)->text(0) == QString("Noise std"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.noise.noiseStd));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - x"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.x));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - y"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.y));
+      }
+      else if(item->child(i)->text(0) == QString("Frequency"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.frequency));
+      }
+    }
   }
       
   void CRobotCreatorConnector::updateLaser(void)

@@ -29,6 +29,16 @@ namespace stdr_gui_tools
     return ros::package::getPath(package.c_str());
   }
   
+  float angleRadToDegrees(float angle)
+  {
+    return angle * 180.0 / STDR_PI;
+  }
+  
+  float angleDegreesToRad(float angle)
+  {
+    return angle / 180.0 * STDR_PI;
+  }
+  
   QString getLiteralTime(int ms)
   {
     QString str;
@@ -61,6 +71,24 @@ namespace stdr_gui_tools
     ROS_ERROR("\tMax range : %f",msg.maxRange);
     ROS_ERROR("\tMin range : %f",msg.minRange);
     ROS_ERROR("\tCone angle : %f",msg.coneAngle);
+    ROS_ERROR("\tFrequency : %f",msg.frequency);
+    ROS_ERROR("\tNoise :");
+    ROS_ERROR("\t\tMean : %f",msg.noise.noiseMean);
+    ROS_ERROR("\t\tStd : %f",msg.noise.noiseStd);
+    ROS_ERROR("\tFrame id : %s",msg.frame_id.c_str());
+    ROS_ERROR("\tRelative pose :");
+    ROS_ERROR("\t\tx : %f",msg.pose.x);
+    ROS_ERROR("\t\ty : %f",msg.pose.y);
+    ROS_ERROR("\t\ttheta : %f",msg.pose.theta);
+  }
+  
+  void printLaserMsg(stdr_msgs::LaserSensorMsg &msg)
+  {
+    ROS_ERROR("Laser sensor msg :");
+    ROS_ERROR("\tMax range : %f",msg.maxRange);
+    ROS_ERROR("\tMin range : %f",msg.minRange);
+    ROS_ERROR("\tMax angle : %f",msg.maxAngle);
+    ROS_ERROR("\tMin angle : %f",msg.minAngle);
     ROS_ERROR("\tFrequency : %f",msg.frequency);
     ROS_ERROR("\tNoise :");
     ROS_ERROR("\t\tMean : %f",msg.noise.noiseMean);
@@ -110,6 +138,14 @@ namespace stdr_gui_tools
     return rmsg;
   }
   
+  stdr_msgs::LaserSensorMsg fixLaserAnglesToRad(stdr_msgs::LaserSensorMsg rmsg)
+  {
+    rmsg.maxAngle = rmsg.maxAngle / 180.0 * STDR_PI;
+    rmsg.minAngle = rmsg.minAngle / 180.0 * STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta / 180.0 * STDR_PI;
+    return rmsg;
+  }
+  
   stdr_msgs::RobotMsg fixRobotAnglesToDegrees(stdr_msgs::RobotMsg rmsg)
   {
     rmsg.initialPose.theta = 
@@ -137,6 +173,14 @@ namespace stdr_gui_tools
       rmsg.rfidSensors[i].pose.theta = 
         rmsg.rfidSensors[i].pose.theta * 180.0 / STDR_PI;
     }
+    return rmsg;
+  }
+  
+  stdr_msgs::LaserSensorMsg fixLaserAnglesToDegrees(stdr_msgs::LaserSensorMsg rmsg)
+  {
+    rmsg.maxAngle = rmsg.maxAngle * 180.0 / STDR_PI;
+    rmsg.minAngle = rmsg.minAngle * 180.0 / STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
     return rmsg;
   }
 }

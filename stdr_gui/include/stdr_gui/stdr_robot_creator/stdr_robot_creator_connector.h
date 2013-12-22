@@ -23,7 +23,8 @@
 #define STDR_ROBOT_CREATOR_CONNECTOR
 
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_loader.h"
-#include "stdr_msgs/RobotMsg.h"
+//~ #include "stdr_msgs/RobotMsg.h"
+//~ #include "stdr_msgs/LaserSensorMsg.h"
 
 namespace stdr_gui
 {
@@ -64,6 +65,7 @@ namespace stdr_gui
       int searchLaser(QString frameId);
       void saveLaser(QTreeWidgetItem *item);
       void loadLaser(QTreeWidgetItem *item);
+      void updateLaserTree(QTreeWidgetItem *item,stdr_msgs::LaserSensorMsg l);
       
       void addSonar(void);
       void eraseSonar(QTreeWidgetItem *item);

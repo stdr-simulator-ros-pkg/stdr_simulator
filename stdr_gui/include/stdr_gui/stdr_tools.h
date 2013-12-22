@@ -79,11 +79,27 @@
 namespace stdr_gui_tools
 {
   std::string getRosPackagePath(std::string package);
+  
   QString getLiteralTime(int ms);
+  
+  float angleRadToDegrees(float angle);
+  
+  float angleDegreesToRad(float angle);
+  
   void printSonarMsg(stdr_msgs::SonarSensorMsg &msg);
+  
+  void printLaserMsg(stdr_msgs::LaserSensorMsg &msg);
+  
   void printPose2D(geometry_msgs::Pose2D &msg);
+  
   stdr_msgs::RobotMsg fixRobotAnglesToRad(stdr_msgs::RobotMsg robot);
+  
   stdr_msgs::RobotMsg fixRobotAnglesToDegrees(stdr_msgs::RobotMsg robot);
+  
+  stdr_msgs::LaserSensorMsg fixLaserAnglesToRad(stdr_msgs::LaserSensorMsg rmsg);
+  
+  stdr_msgs::LaserSensorMsg fixLaserAnglesToDegrees(
+    stdr_msgs::LaserSensorMsg rmsg);
 }
 
 #endif
