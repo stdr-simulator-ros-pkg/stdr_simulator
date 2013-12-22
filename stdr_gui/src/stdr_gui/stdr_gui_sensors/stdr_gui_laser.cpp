@@ -60,6 +60,7 @@ namespace stdr_gui
       if(real_dist > msg_.maxRange)
       {
         real_dist = msg_.maxRange;
+        painter.setPen(QColor(255,0,0,100));
       }
       else if(real_dist < msg_.minRange)
       {
@@ -98,18 +99,36 @@ namespace stdr_gui
   {
     lock_ = true;
     QPainter painter(m);
-    painter.setPen(QColor(255,0,0,100));
     float size = m->width();
     float climax = size / maxRange * ocgd / 2.1;
+    
+    
+    
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
     {
+	  float real_dist = scan_.ranges[i];
+      if(real_dist > msg_.maxRange)
+      {
+        real_dist = msg_.maxRange;
+        painter.setPen(QColor(255,0,0,100));
+      }
+      else if(real_dist < msg_.minRange)
+      {
+        real_dist = msg_.minRange;
+        painter.setPen(QColor(100,100,100,100));
+      }
+      else
+      {
+        painter.setPen(QColor(255,0,0,100));
+      }
+		
       painter.drawLine(
         size / 2 + (msg_.pose.x / ocgd) * climax,
         size / 2 + (msg_.pose.y / ocgd) * climax,
 
-        size / 2 + ((msg_.pose.x / ocgd) + scan_.ranges[i] *
+        size / 2 + ((msg_.pose.x / ocgd) + real_dist *
           cos(scan_.angle_min + i * scan_.angle_increment) / ocgd) * climax,
-        size / 2 + ((msg_.pose.y / ocgd) + scan_.ranges[i] * 
+        size / 2 + ((msg_.pose.y / ocgd) + real_dist * 
           sin(scan_.angle_min + i * scan_.angle_increment) / ocgd) * climax
       );
     }

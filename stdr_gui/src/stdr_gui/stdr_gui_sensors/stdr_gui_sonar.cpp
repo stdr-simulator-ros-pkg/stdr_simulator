@@ -26,7 +26,6 @@ namespace stdr_gui{
     msg_(msg)
   {
     topic_ = baseTopic + "/" + msg_.frame_id;
-    ROS_ERROR("Topic: %s",topic_.c_str());
     ros::NodeHandle n;
     lock_ = false;
     subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiSonar::callback,this);
@@ -105,19 +104,36 @@ namespace stdr_gui{
     float climax = size / maxRange * ocgd / 2.1;
     lock_ = true;
     QPainter painter(m);
-    QBrush brush(QColor(0,200,0,50));
-    painter.setBrush(brush);
+    
+    float real_dist = range_.range;
+    if(real_dist > msg_.maxRange)
+    {
+      real_dist = msg_.maxRange;
+      QBrush brush(QColor(100,100,100,100));
+      painter.setBrush(brush);
+    }
+    else if(real_dist < msg_.minRange)
+    {
+      real_dist = msg_.minRange;
+      QBrush brush(QColor(100,100,100,100));
+      painter.setBrush(brush);
+    }
+    else
+    {
+      QBrush brush(QColor(0,200,0,100));
+      painter.setBrush(brush);
+    }
     
     painter.drawPie(
-      size / 2 + (msg_.pose.x / ocgd - range_.range / ocgd) * climax,
-      size / 2 + (msg_.pose.y / ocgd - range_.range / ocgd) * climax,
+      size / 2 + (msg_.pose.x / ocgd - real_dist / ocgd) * climax,
+      size / 2 + (msg_.pose.y / ocgd - real_dist / ocgd) * climax,
       
-      range_.range / ocgd * 2 * climax,
-      range_.range / ocgd * 2 * climax,
+      real_dist / ocgd * 2 * climax,
+      real_dist / ocgd * 2 * climax,
       
-      (msg_.pose.theta - msg_.coneAngle / 2.0) * 180.0 / STDR_PI * 16,
+      -(msg_.pose.theta - msg_.coneAngle / 2.0) * 180.0 / STDR_PI * 16,
       
-      (msg_.coneAngle * 180.0 / STDR_PI) * 16);
+      -(msg_.coneAngle * 180.0 / STDR_PI) * 16);
 
     lock_ = false;
   }

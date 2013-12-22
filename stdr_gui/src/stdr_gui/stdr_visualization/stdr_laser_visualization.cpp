@@ -92,18 +92,34 @@ namespace stdr_gui
   {
     internal_image_ = void_image_;
     QPainter painter(&internal_image_);
-    painter.setPen(QColor(255,0,0,255));
     float mean = 0;
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
     {
-      mean += scan_.ranges[i];
+		
+	  float real_dist = scan_.ranges[i];
+      if(real_dist > msg_.maxRange)
+      {
+        real_dist = msg_.maxRange;
+        painter.setPen(QColor(255,0,0,100));
+      }
+      else if(real_dist < msg_.minRange)
+      {
+        real_dist = msg_.minRange;
+        painter.setPen(QColor(100,100,100,100));
+      }
+      else
+      {
+        painter.setPen(QColor(255,0,0,100));
+      }
+      
+      mean += real_dist;
       painter.drawLine(
         internal_image_.width() / 2,
         internal_image_.height() / 2,
-        internal_image_.width() / 2 + scan_.ranges[i] / msg_.maxRange * 
+        internal_image_.width() / 2 + real_dist / msg_.maxRange * 
             cos(scan_.angle_min + ((float)i) * scan_.angle_increment) *
             internal_image_.width() / 2,
-        internal_image_.height() / 2 + scan_.ranges[i] / msg_.maxRange *
+        internal_image_.height() / 2 + real_dist / msg_.maxRange *
             sin(scan_.angle_min + ((float)i) * scan_.angle_increment) *
             internal_image_.width() / 2
       );        

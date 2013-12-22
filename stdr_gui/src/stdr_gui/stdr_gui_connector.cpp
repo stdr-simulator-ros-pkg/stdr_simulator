@@ -82,7 +82,7 @@ namespace stdr_gui
       loader_.actionNewCo2,SIGNAL(triggered(bool)),
       this,SLOT(actionNewCo2Triggered()));
     
-    grid_enabled_=true;
+    grid_enabled_ = false;
   }
   
   void CGuiConnector::actionExitTriggered(void)
@@ -112,12 +112,12 @@ namespace stdr_gui
   {
     QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
     msg.setWindowTitle(QString("STDR Simulator - About"));
-    msg.setText(QString("Simple Two Dimentional Robot Simulator \
-    (STDR Simulator) is a multi-robot simulator created in QT4. Its goals \
-    are : \n1) to simulate easily a single robot or a swarm in a 2D \
-    environment, \n2) to be totally parameterizable \n3) to be ROS \
+    msg.setText(QString("Simple Two Dimentional Robot Simulator\
+    (STDR Simulator) is a multi-robot simulator created in QT4. Its goals\
+    are : \n1) to simulate easily a single robot or a swarm in a 2D\
+    environment, \n2) to be totally parameterizable \n3) to be ROS\
     compliant.\n\nDevelopers:\nManos Tsardoulias, etsardou@gmail.com\
-    \nAris Thallas, aris.thallas@gmail.com\nChris Zalidis, \
+    \nAris Thallas, aris.thallas@gmail.com\nChris Zalidis,\
     zalidis@gmail.com"));
     msg.exec();
   }
@@ -136,13 +136,13 @@ namespace stdr_gui
         stdr_gui_tools::getRosPackagePath("stdr_gui")), 
         tr("Yaml Files (*.yaml)"));
     
-    if (file_name.isEmpty()) { // Not a valid filename
+    if (file_name.isEmpty()) { //!< Not a valid filename
       return;
     }
     
     try {
       stdr_msgs::RobotMsg new_robot_msg_ = 
-      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg for painting
+      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
     }
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());

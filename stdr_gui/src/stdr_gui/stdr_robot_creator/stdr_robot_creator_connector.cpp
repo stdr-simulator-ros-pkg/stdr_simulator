@@ -1139,7 +1139,9 @@ namespace stdr_gui
   {
     QString file_name = QFileDialog::getSaveFileName(&loader_, 
       tr("Save File"),
-        "",
+        QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"),
         tr("Yaml files (*.yaml)"));
     
     Q_EMIT saveRobotPressed(
@@ -1152,7 +1154,8 @@ namespace stdr_gui
       &loader_,
       tr("Load robot"), 
       QString().fromStdString(
-        stdr_gui_tools::getRosPackagePath("stdr_gui")), 
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
         tr("Yaml Files (*.yaml)"));
     
     if (file_name.isEmpty()) { // Not a valid filename
