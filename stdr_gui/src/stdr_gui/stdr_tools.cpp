@@ -138,14 +138,6 @@ namespace stdr_gui_tools
     return rmsg;
   }
   
-  stdr_msgs::LaserSensorMsg fixLaserAnglesToRad(stdr_msgs::LaserSensorMsg rmsg)
-  {
-    rmsg.maxAngle = rmsg.maxAngle / 180.0 * STDR_PI;
-    rmsg.minAngle = rmsg.minAngle / 180.0 * STDR_PI;
-    rmsg.pose.theta = rmsg.pose.theta / 180.0 * STDR_PI;
-    return rmsg;
-  }
-  
   stdr_msgs::RobotMsg fixRobotAnglesToDegrees(stdr_msgs::RobotMsg rmsg)
   {
     rmsg.initialPose.theta = 
@@ -176,10 +168,33 @@ namespace stdr_gui_tools
     return rmsg;
   }
   
+  stdr_msgs::LaserSensorMsg fixLaserAnglesToRad(stdr_msgs::LaserSensorMsg rmsg)
+  {
+    rmsg.maxAngle = rmsg.maxAngle / 180.0 * STDR_PI;
+    rmsg.minAngle = rmsg.minAngle / 180.0 * STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta / 180.0 * STDR_PI;
+    return rmsg;
+  }
+  
   stdr_msgs::LaserSensorMsg fixLaserAnglesToDegrees(stdr_msgs::LaserSensorMsg rmsg)
   {
     rmsg.maxAngle = rmsg.maxAngle * 180.0 / STDR_PI;
     rmsg.minAngle = rmsg.minAngle * 180.0 / STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
+    return rmsg;
+  }
+  
+  stdr_msgs::SonarSensorMsg fixSonarAnglesToRad(stdr_msgs::SonarSensorMsg rmsg)
+  {
+    rmsg.coneAngle = rmsg.coneAngle / 180.0 * STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta / 180.0 * STDR_PI;
+    return rmsg;
+  }
+  
+  stdr_msgs::SonarSensorMsg fixSonarAnglesToDegrees(
+    stdr_msgs::SonarSensorMsg rmsg)
+  {
+    rmsg.coneAngle = rmsg.coneAngle * 180.0 / STDR_PI;
     rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
     return rmsg;
   }

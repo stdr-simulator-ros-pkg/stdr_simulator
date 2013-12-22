@@ -10,6 +10,18 @@
     <height>564</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>808</width>
+    <height>564</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>808</width>
+    <height>564</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>STDR Robot creator</string>
   </property>
@@ -20,23 +32,38 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QTreeWidget" name="robotTreeWidget">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
-           <width>280</width>
+           <width>300</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>280</width>
+           <width>300</width>
            <height>16777210</height>
           </size>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
          <property name="columnCount">
           <number>5</number>
          </property>
          <attribute name="headerDefaultSectionSize">
-          <number>170</number>
+          <number>20</number>
+         </attribute>
+         <attribute name="headerMinimumSectionSize">
+          <number>10</number>
          </attribute>
          <column>
           <property name="text">
@@ -50,17 +77,17 @@
          </column>
          <column>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </column>
          <column>
           <property name="text">
-           <string notr="true"> </string>
+           <string notr="true"/>
           </property>
          </column>
          <column>
           <property name="text">
-           <string notr="true"> </string>
+           <string notr="true"/>
           </property>
          </column>
         </widget>
@@ -77,14 +104,14 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>500</width>
-         <height>500</height>
+         <width>480</width>
+         <height>480</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>1600000</width>
-         <height>160000</height>
+         <width>480</width>
+         <height>480</height>
         </size>
        </property>
        <property name="text">
@@ -106,33 +133,7 @@
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
-     <item row="0" column="2">
-      <widget class="QPushButton" name="addButton">
-       <property name="maximumSize">
-        <size>
-         <width>150</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Load robot from file</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
-      <widget class="QPushButton" name="saveRobotButton">
-       <property name="maximumSize">
-        <size>
-         <width>150</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Save Robot to file</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
       <widget class="QPushButton" name="loadRobotButton">
        <property name="minimumSize">
         <size>

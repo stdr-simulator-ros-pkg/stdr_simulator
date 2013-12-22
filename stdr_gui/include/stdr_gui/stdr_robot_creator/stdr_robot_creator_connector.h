@@ -60,6 +60,7 @@ namespace stdr_gui
       void editRobot(void);
       
       void addLaser(void);
+      void addLaser(stdr_msgs::LaserSensorMsg lmsg);
       void eraseLaser(QTreeWidgetItem *item);
       void editLaser(QTreeWidgetItem *item);
       int searchLaser(QString frameId);
@@ -68,9 +69,13 @@ namespace stdr_gui
       void updateLaserTree(QTreeWidgetItem *item,stdr_msgs::LaserSensorMsg l);
       
       void addSonar(void);
+      void addSonar(stdr_msgs::SonarSensorMsg smsg);
       void eraseSonar(QTreeWidgetItem *item);
       void editSonar(QTreeWidgetItem *item);
       int searchSonar(QString frameId);
+      void saveSonar(QTreeWidgetItem *item);
+      void loadSonar(QTreeWidgetItem *item);
+      void updateSonarTree(QTreeWidgetItem *item,stdr_msgs::SonarSensorMsg l);
       
       void addRfidAntenna(void);
       void eraseRfid(QTreeWidgetItem *item);
@@ -85,6 +90,7 @@ namespace stdr_gui
       void drawRfidAntennas(void);
 
       void updateRobotPreview(void);
+      void updateRobotTree(void);
       
       void setInitialPose(float x, float y);
       

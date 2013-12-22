@@ -55,16 +55,8 @@ namespace stdr_gui
       this,SLOT(updateRfid()));
     
     QObject::connect(
-      loader_.saveRobotButton,SIGNAL(clicked(bool)),
-      this,SLOT(saveRobot()));
-    
-    QObject::connect(
       loader_.loadRobotButton,SIGNAL(clicked(bool)),
       this,SLOT(loadRobot()));
-    
-    QObject::connect(
-      loader_.addButton,SIGNAL(clicked(bool)),
-      this,SLOT(getRobotFromYaml()));
 
     climax_ = - 1;
   }
@@ -114,6 +106,16 @@ namespace stdr_gui
     {    
       editRobot();
     }  
+    //!< Robot save clicked
+    if(item == &loader_.robotNode && column == 3)
+    {    
+      saveRobot();
+    }  
+    //!< Robot load clicked
+    if(item == &loader_.robotNode && column == 4)
+    {    
+      getRobotFromYaml();
+    }  
     //!< Kinematic edit clicked  
     if(item == &loader_.kinematicNode && column == 2)
     {  
@@ -142,7 +144,7 @@ namespace stdr_gui
     //!< Add a rfid antenna
     if(item == &loader_.rfidAntennasNode && column == 2)
     {
-      addRfidAntenna();
+      //~ addRfidAntenna();
     }  
     //!< Erase a sonar
     if(item->parent() == &loader_.sonarsNode && column == 2)
@@ -152,7 +154,7 @@ namespace stdr_gui
     //!< Erase a rfid antenna
     if(item->parent() == &loader_.rfidAntennasNode && column == 2)
     {
-      eraseRfid(item);
+      //~ eraseRfid(item);
     }  
     //!< Edit a sonar
     if(item->parent() == &loader_.sonarsNode && column == 1)
@@ -162,7 +164,7 @@ namespace stdr_gui
     //!< Edit a rfid antenna  
     if(item->parent() == &loader_.rfidAntennasNode && column == 1)
     {
-      editRfid(item);
+      //~ editRfid(item);
     }
     //!< Save a laser  
     if(item->parent() == &loader_.lasersNode && column == 3)
@@ -174,8 +176,18 @@ namespace stdr_gui
     {
       loadLaser(item);
     }
+    //!< Save a sonar  
+    if(item->parent() == &loader_.sonarsNode && column == 3)
+    {
+      saveSonar(item);
+    }
+    //!< Load a sonar  
+    if(item->parent() == &loader_.sonarsNode && column == 4)
+    {
+      loadSonar(item);
+    }
   }
-  
+
   void CRobotCreatorConnector::addLaser(void)
   {
     QString laserFrameId=QString("laser_") + 
@@ -268,6 +280,81 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  void CRobotCreatorConnector::addLaser(stdr_msgs::LaserSensorMsg lmsg)
+  {
+    CRobotCreatorConnector::laser_number++;
+    QString laserFrameId=QString(lmsg.frame_id.c_str());
+    
+    QTreeWidgetItem  *lnode;
+    lnode = new QTreeWidgetItem();
+    lnode->setText(0,laserFrameId);
+    lnode->setIcon(1,loader_.editIcon);
+    lnode->setIcon(2,loader_.removeIcon);
+    lnode->setIcon(3,loader_.saveIcon);
+    lnode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      *angleSpan,
+      *orientation,
+      *maxRange,
+      *minRange,
+      *noiseMean,
+      *noiseStd,
+      *poseX,
+      *poseY,
+      *frequency,
+      *rays;
+      
+    rays = new QTreeWidgetItem();
+    angleSpan = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    minRange = new QTreeWidgetItem();
+    noiseMean = new QTreeWidgetItem();
+    noiseStd = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    rays->setText(0,QString("Number of rays"));
+    angleSpan->setText(0,QString("Angle span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    minRange->setText(0,QString("Min range"));
+    noiseMean->setText(0,QString("Noise mean"));
+    noiseStd->setText(0,QString("Noise std"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    frequency->setText(0,QString("Frequency"));
+    
+    rays->setText(1,QString().setNum(lmsg.numRays));
+    angleSpan->setText(1,QString().setNum(lmsg.maxAngle - lmsg.minAngle));
+    orientation->setText(1,QString().setNum(lmsg.maxAngle + lmsg.minAngle));
+    maxRange->setText(1,QString().setNum(lmsg.maxRange));
+    minRange->setText(1,QString().setNum(lmsg.minRange));
+    noiseMean->setText(1,QString().setNum(lmsg.noise.noiseMean));
+    noiseStd->setText(1,QString().setNum(lmsg.noise.noiseStd));
+    poseX->setText(1,QString().setNum(lmsg.pose.x));
+    poseY->setText(1,QString().setNum(lmsg.pose.y));
+    frequency->setText(1,QString().setNum(lmsg.frequency));
+    
+    lnode->addChild(rays);
+    lnode->addChild(angleSpan);
+    lnode->addChild(orientation);
+    lnode->addChild(maxRange);
+    lnode->addChild(minRange);
+    lnode->addChild(noiseMean);
+    lnode->addChild(noiseStd);
+    lnode->addChild(poseX);
+    lnode->addChild(poseY);
+    lnode->addChild(frequency);
+    
+    loader_.lasersNode.addChild(lnode);
+    
+    lnode->setExpanded(false);
+    loader_.lasersNode.setExpanded(true);
+  }
+  
   void CRobotCreatorConnector::addSonar(void)
   {
     QString sonarFrameId = 
@@ -352,6 +439,76 @@ namespace stdr_gui
     snode->setExpanded(false);
     loader_.sonarsNode.setExpanded(true);
     updateRobotPreview();
+  }
+  
+  void CRobotCreatorConnector::addSonar(stdr_msgs::SonarSensorMsg smsg)
+  {
+    CRobotCreatorConnector::sonar_number++;
+    QString sonarFrameId = QString(smsg.frame_id.c_str());
+
+    QTreeWidgetItem  *snode;
+    snode = new QTreeWidgetItem();
+    snode->setText(0,sonarFrameId);
+    snode->setIcon(1,loader_.editIcon);
+    snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      *coneAngle,
+      *orientation,
+      *maxRange,
+      *minRange,
+      *noiseMean,
+      *noiseStd,
+      *poseX,
+      *poseY,
+      *frequency;
+      
+    coneAngle = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    minRange = new QTreeWidgetItem();
+    noiseMean = new QTreeWidgetItem();
+    noiseStd = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    coneAngle->setText(0,QString("Cone span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    minRange->setText(0,QString("Min range"));
+    noiseMean->setText(0,QString("Noise mean"));
+    noiseStd->setText(0,QString("Noise std"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    frequency->setText(0,QString("Frequency"));
+    
+    coneAngle->setText(1,QString().setNum(smsg.coneAngle));
+    orientation->setText(1,QString().setNum(smsg.pose.theta));
+    maxRange->setText(1,QString().setNum(smsg.maxRange));
+    minRange->setText(1,QString().setNum(smsg.minRange));
+    noiseMean->setText(1,QString().setNum(smsg.noise.noiseMean));
+    noiseStd->setText(1,QString().setNum(smsg.noise.noiseStd));
+    poseX->setText(1,QString().setNum(smsg.pose.x));
+    poseY->setText(1,QString().setNum(smsg.pose.y));
+    frequency->setText(1,QString().setNum(smsg.frequency));
+    
+    snode->addChild(coneAngle);
+    snode->addChild(orientation);
+    snode->addChild(maxRange);
+    snode->addChild(minRange);
+    snode->addChild(noiseMean);
+    snode->addChild(noiseStd);
+    snode->addChild(poseX);
+    snode->addChild(poseY);
+    snode->addChild(frequency);
+    
+    loader_.sonarsNode.addChild(snode);
+    
+    snode->setExpanded(false);
+    loader_.sonarsNode.setExpanded(true);
   }
   
   void CRobotCreatorConnector::addRfidAntenna(void)
@@ -545,6 +702,32 @@ namespace stdr_gui
     }
   }
   
+  void CRobotCreatorConnector::saveSonar(QTreeWidgetItem *item)
+  {
+    unsigned int sonarFrameId = searchSonar(item->text(0));
+    if(sonarFrameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getSaveFileName(&loader_, 
+      tr("Save sonar sensor"),
+        QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"),
+        tr("Yaml files (*.yaml)"));
+    
+    std::string file_name_str=file_name.toStdString();
+    stdr_msgs::SonarSensorMsg smsg = new_robot_msg_.sonarSensors[sonarFrameId];
+    try {
+      stdr_robot::parser::sonarSensorMsgToYaml(file_name_str,
+        stdr_gui_tools::fixSonarAnglesToRad(smsg));
+    }
+    catch(YAML::RepresentationException& e) {
+      ROS_ERROR("%s", e.what());
+      return;
+    }
+  }
+  
   void CRobotCreatorConnector::loadLaser(QTreeWidgetItem *item)
   {
     unsigned int laserFrameId = searchLaser(item->text(0));
@@ -564,12 +747,53 @@ namespace stdr_gui
       return;
     }
     try {
+      std::string old_frame_id = item->text(0).toStdString();
+      
       stdr_msgs::LaserSensorMsg lmsg = 
       stdr_robot::parser::yamlToLaserSensorMsg(file_name.toStdString());
 
       lmsg = stdr_gui_tools::fixLaserAnglesToDegrees(lmsg);
+      lmsg.frame_id = old_frame_id;
       new_robot_msg_.laserSensors[laserFrameId]=lmsg;
       updateLaserTree(item,lmsg);
+    }
+    catch(YAML::RepresentationException& e) {
+      ROS_ERROR("%s", e.what());
+      return;
+    }
+    updateRobotPreview(); 
+  }
+  
+  void CRobotCreatorConnector::loadSonar(QTreeWidgetItem *item)
+  {
+    unsigned int sonarFrameId = searchSonar(item->text(0));
+    if(sonarFrameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load sonar sensor"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
+        tr("Yaml Files (*.yaml)"));
+    
+    if (file_name.isEmpty()) {
+      return;
+    }
+    try {
+      std::string old_frame_id = item->text(0).toStdString();
+      
+      stdr_msgs::SonarSensorMsg smsg = 
+      stdr_robot::parser::yamlToSonarSensorMsg(file_name.toStdString());
+
+      smsg = stdr_gui_tools::fixSonarAnglesToDegrees(smsg);
+      
+      smsg.frame_id = old_frame_id;
+      
+      new_robot_msg_.sonarSensors[sonarFrameId]=smsg;
+      updateSonarTree(item,smsg);
     }
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());
@@ -700,6 +924,26 @@ namespace stdr_gui
       }
     }
     return -1;
+  }
+  
+  void CRobotCreatorConnector::updateRobotTree(void)
+  {
+    for(unsigned int i = 0 ; i < loader_.robotNode.childCount() ; i++)
+    {
+      if(loader_.robotNode.child(i)->text(0) == QString("Orientation"))
+      {
+        loader_.robotNode.child(i)->
+          setText(1,QString().setNum(new_robot_msg_.initialPose.theta));
+      }
+    }
+    for(unsigned int i = 0 ; i < new_robot_msg_.laserSensors.size() ; i++)
+    {
+      addLaser(new_robot_msg_.laserSensors[i]);
+    }
+    for(unsigned int i = 0 ; i < new_robot_msg_.sonarSensors.size() ; i++)
+    {
+      addSonar(new_robot_msg_.sonarSensors[i]);
+    }
   }
   
   void CRobotCreatorConnector::updateLaserTree(
@@ -925,6 +1169,56 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  void CRobotCreatorConnector::updateSonarTree(
+    QTreeWidgetItem *item,
+    stdr_msgs::SonarSensorMsg l)
+  {
+    unsigned int frameId=searchSonar(item->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < item->childCount() ; i++)
+    {
+      if(item->child(i)->text(0) == QString("Cone span"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.coneAngle));
+      }
+      else if(item->child(i)->text(0) == QString("Orientation"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.theta));
+      }
+      else if(item->child(i)->text(0) == QString("Max range"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.maxRange));
+      }
+      else if(item->child(i)->text(0) == QString("Min range"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.minRange));
+      }
+      else if(item->child(i)->text(0) == QString("Noise mean"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.noise.noiseMean));
+      }
+      else if(item->child(i)->text(0) == QString("Noise std"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.noise.noiseStd));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - x"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.x));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - y"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.y));
+      }
+      else if(item->child(i)->text(0) == QString("Frequency"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.frequency));
+      }
+    }
+  }
+  
   void CRobotCreatorConnector::updateRfid(void)
   {
     unsigned int frameId = searchRfid(current_rfid_->text(0));
@@ -1126,6 +1420,12 @@ namespace stdr_gui
     drawLasers();
     drawSonars();
     drawRfidAntennas();
+    
+    loader_.robotTreeWidget->resizeColumnToContents(0);
+    loader_.robotTreeWidget->resizeColumnToContents(1);
+    loader_.robotTreeWidget->resizeColumnToContents(2);
+    loader_.robotTreeWidget->resizeColumnToContents(3);
+    loader_.robotTreeWidget->resizeColumnToContents(4);
   }
   
   void CRobotCreatorConnector::drawRobot(float radius)
@@ -1291,7 +1591,11 @@ namespace stdr_gui
       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg
 
       new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
-
+      
+      CRobotCreatorConnector::laser_number = 0;
+      CRobotCreatorConnector::sonar_number = 0;
+      updateRobotTree();
+      
     }
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());

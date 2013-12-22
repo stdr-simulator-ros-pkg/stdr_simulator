@@ -54,6 +54,8 @@ namespace stdr_gui
       void deleteTreeNode(QTreeWidgetItem *item);
       void updateMapInfo(float width,float height,float ocgd);
       void updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
+      
+      void autoResizeColumns(void);
   };  
 }
 
