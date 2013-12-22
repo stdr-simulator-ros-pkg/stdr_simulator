@@ -83,8 +83,18 @@ namespace stdr_gui
   
   void CSonarVisualisation::paint(void)
   {
-    sonarDist->setText(QString().setNum(range_.range) + QString(" m"));
-    sonarDistBar->setValue(
-      sonarDistBar->maximum() * range_.range/msg_.maxRange);
+	  
+	float real_dist = range_.range;
+    if(real_dist > msg_.maxRange)
+    {
+      real_dist = msg_.maxRange;
+    }
+    else if(real_dist < msg_.minRange)
+    {
+      real_dist = msg_.minRange;
+    }
+      
+    sonarDist->setText(QString().setNum(real_dist) + QString(" m"));
+    sonarDistBar->setValue(sonarDistBar->maximum() * real_dist / msg_.maxRange);
   }
 }
