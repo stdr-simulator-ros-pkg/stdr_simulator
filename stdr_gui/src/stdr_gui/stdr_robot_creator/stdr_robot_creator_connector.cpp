@@ -1206,13 +1206,10 @@ namespace stdr_gui
   {
     QString file_name = QFileDialog::getSaveFileName(&loader_, 
       tr("Save File"),
-        QString().fromStdString(
-        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
-        QString("/resources/"),
+        "",
         tr("Yaml files (*.yaml)"));
-    
-    Q_EMIT saveRobotPressed(
-      stdr_gui_tools::fixRobotAnglesToRad(new_robot_msg_),file_name);
+    fixRobotMsgAngles();
+    Q_EMIT saveRobotPressed(new_robot_msg_,file_name);
   }
   
   void CRobotCreatorConnector::getRobotFromYaml(void)
@@ -1221,8 +1218,7 @@ namespace stdr_gui
       &loader_,
       tr("Load robot"), 
       QString().fromStdString(
-        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
-        QString("/resources/"), 
+        stdr_gui_tools::getRosPackagePath("stdr_gui")), 
         tr("Yaml Files (*.yaml)"));
     
     if (file_name.isEmpty()) { // Not a valid filename
@@ -1232,7 +1228,6 @@ namespace stdr_gui
     try {
       new_robot_msg_ = 
       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg
-      new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
     }
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());

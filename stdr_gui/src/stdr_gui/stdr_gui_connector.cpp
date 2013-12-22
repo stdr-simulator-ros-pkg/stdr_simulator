@@ -136,13 +136,13 @@ namespace stdr_gui
         stdr_gui_tools::getRosPackagePath("stdr_gui")), 
         tr("Yaml Files (*.yaml)"));
     
-    if (file_name.isEmpty()) { //!< Not a valid filename
+    if (file_name.isEmpty()) { // Not a valid filename
       return;
     }
     
     try {
       stdr_msgs::RobotMsg new_robot_msg_ = 
-      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
+      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg for painting
     }
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());
