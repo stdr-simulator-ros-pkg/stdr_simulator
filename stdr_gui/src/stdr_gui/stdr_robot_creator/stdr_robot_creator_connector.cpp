@@ -1620,4 +1620,9 @@ namespace stdr_gui
   {
     return new_robot_msg_;
   }
+  
+  void CRobotCreatorConnector::setNewRobot(stdr_msgs::RobotMsg msg)
+  {
+    new_robot_msg_=msg;
+  }
 }

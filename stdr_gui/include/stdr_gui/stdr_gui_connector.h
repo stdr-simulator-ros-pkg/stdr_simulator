@@ -158,6 +158,8 @@ namespace stdr_gui
       void loadThermalPressed(void);
       void loadCo2Pressed(void);
       
+      void robotFromFile(stdr_msgs::RobotMsg msg);
+      
       
   };
 }

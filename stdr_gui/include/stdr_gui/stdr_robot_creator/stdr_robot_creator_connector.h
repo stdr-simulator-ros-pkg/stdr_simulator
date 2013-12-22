@@ -96,6 +96,7 @@ namespace stdr_gui
       
       
       stdr_msgs::RobotMsg getNewRobot(void);
+      void setNewRobot(stdr_msgs::RobotMsg);
       
     public Q_SLOTS:
       void treeItemClicked ( QTreeWidgetItem * item, int column ); 
