@@ -164,6 +164,16 @@ namespace stdr_gui
     {
       editRfid(item);
     }
+    //!< Save a laser  
+    if(item->parent() == &loader_.lasersNode && column == 3)
+    {
+      saveLaser(item);
+    }
+    //!< Load a laser  
+    if(item->parent() == &loader_.lasersNode && column == 4)
+    {
+      loadLaser(item);
+    }
   }
   
   void CRobotCreatorConnector::addLaser(void)
@@ -192,6 +202,8 @@ namespace stdr_gui
     lnode->setText(0,laserFrameId);
     lnode->setIcon(1,loader_.editIcon);
     lnode->setIcon(2,loader_.removeIcon);
+    lnode->setIcon(3,loader_.saveIcon);
+    lnode->setIcon(4,loader_.loadIcon);
 
     QTreeWidgetItem 
       *angleSpan,
@@ -252,7 +264,7 @@ namespace stdr_gui
     loader_.lasersNode.addChild(lnode);
     
     lnode->setExpanded(false);
-    
+    loader_.lasersNode.setExpanded(true);
     updateRobotPreview();
   }
   
@@ -281,6 +293,8 @@ namespace stdr_gui
     snode->setText(0,sonarFrameId);
     snode->setIcon(1,loader_.editIcon);
     snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
 
     QTreeWidgetItem 
       *coneAngle,
@@ -336,7 +350,7 @@ namespace stdr_gui
     loader_.sonarsNode.addChild(snode);
     
     snode->setExpanded(false);
-    
+    loader_.sonarsNode.setExpanded(true);
     updateRobotPreview();
   }
   
@@ -362,6 +376,8 @@ namespace stdr_gui
     snode->setText(0,rfidFrameId);
     snode->setIcon(1,loader_.editIcon);
     snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
 
     QTreeWidgetItem 
       *angleSpan,
@@ -407,7 +423,7 @@ namespace stdr_gui
     loader_.rfidAntennasNode.addChild(snode);
     
     snode->setExpanded(false);
-    
+    loader_.rfidAntennasNode.setExpanded(true);
     updateRobotPreview();
   }
   
@@ -501,6 +517,57 @@ namespace stdr_gui
     current_laser_ = item;
     
     loader_.laserPropLoader.show();
+  }
+  
+  void CRobotCreatorConnector::saveLaser(QTreeWidgetItem *item)
+  {
+    unsigned int laserFrameId = searchLaser(item->text(0));
+    if(laserFrameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getSaveFileName(&loader_, 
+      tr("Save laser sensor"),
+        QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"),
+        tr("Yaml files (*.yaml)"));
+    
+    std::string file_name_str=file_name.toStdString();
+   
+    try {
+      //~ stdr_robot::parser::laserMsgToYaml(file_name_str,newRobotMsg);
+    }
+    catch(YAML::RepresentationException& e) {
+      ROS_ERROR("%s", e.what());
+      return;
+    }
+  }
+  
+  void CRobotCreatorConnector::loadLaser(QTreeWidgetItem *item)
+  {
+    //~ unsigned int laserFrameId = searchLaser(item->text(0));
+    //~ if(laserFrameId == -1) 
+    //~ {
+      //~ return;
+    //~ }  
+    //~ QString file_name = QFileDialog::getSaveFileName(&loader_, 
+      //~ tr("Save laser sensor"),
+        //~ QString().fromStdString(
+        //~ stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        //~ QString("/resources/"),
+        //~ tr("Yaml files (*.yaml)"));
+    //~ 
+    //~ std::string file_name_str=file_name.toStdString();
+   //~ 
+    //~ try {
+      //~ stdr_robot::parser::laserMsgToYaml(file_name_str,newRobotMsg);
+    //~ }
+    //~ catch(YAML::RepresentationException& e) {
+      //~ ROS_ERROR("%s", e.what());
+      //~ return;
+    //~ }
+    //~ updateRobotPreview(); 
   }
   
   void CRobotCreatorConnector::editSonar(QTreeWidgetItem *item)

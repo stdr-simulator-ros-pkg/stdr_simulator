@@ -53,10 +53,18 @@ namespace stdr_gui
     removeIcon = QIcon(QString::fromUtf8((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
       std::string("/resources/images/remove_icon.png")).c_str()));
+    saveIcon = QIcon(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+      std::string("/resources/images/save_icon.png")).c_str()));
+    loadIcon = QIcon(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+      std::string("/resources/images/load_icon.png")).c_str()));
     
     robotTreeWidget->setColumnWidth(0,150);
     robotTreeWidget->setColumnWidth(1,60);
     robotTreeWidget->setColumnWidth(2,20);
+    robotTreeWidget->setColumnWidth(3,20);
+    robotTreeWidget->setColumnWidth(4,20);
     
     robotNode.setText(0,"Robot");
     lasersNode.setText(0,"Lasers");
