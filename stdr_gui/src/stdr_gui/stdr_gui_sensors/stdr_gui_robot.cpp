@@ -70,7 +70,7 @@ namespace stdr_gui
     current_pose_.y = transform.getOrigin().y();
     transform.getBasis().getRPY(roll,pitch,yaw);
     current_pose_.theta = yaw;
-    drawSelf(m);
+    
     for(unsigned int i = 0 ; i < lasers_.size() ; i++)
     {
       lasers_[i]->paint(m,resolution_,current_pose_);
@@ -79,6 +79,8 @@ namespace stdr_gui
     {
       sonars_[i]->paint(m,resolution_,current_pose_);
     }
+    
+    drawSelf(m);
   }
   
   void CGuiRobot::drawSelf(QImage *m)
@@ -87,10 +89,10 @@ namespace stdr_gui
     painter.setPen(Qt::blue);
     
     painter.drawEllipse(
-      (current_pose_.x - radius_/2) / resolution_,
-      (current_pose_.y - radius_/2) / resolution_,
-      radius_ / resolution_,
-      radius_ / resolution_);
+      (current_pose_.x - radius_) / resolution_,
+      (current_pose_.y - radius_) / resolution_,
+      radius_ * 2.0 / resolution_,
+      radius_ * 2.0 / resolution_);
     
     painter.drawLine(	
       current_pose_.x / resolution_,

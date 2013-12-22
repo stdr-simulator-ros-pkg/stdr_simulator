@@ -118,6 +118,7 @@ namespace stdr_gui
       void actionNewRfidTriggered(void);
       void actionNewCo2Triggered(void);
       void actionNewThermalTriggered(void);
+      void actionAddRobotTriggered(void);
       
       /**
       @brief Qt slot that is called when the zoom in tool button is pressed
@@ -156,6 +157,8 @@ namespace stdr_gui
       void loadRfidPressed(void);
       void loadThermalPressed(void);
       void loadCo2Pressed(void);
+      
+      void robotFromFile(stdr_msgs::RobotMsg msg);
       
       
   };

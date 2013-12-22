@@ -56,6 +56,8 @@ namespace stdr_gui
       QIcon   addIcon;
       QIcon  editIcon;
       QIcon  removeIcon;
+      QIcon  saveIcon;
+      QIcon  loadIcon;
           
       CRobotPropertiesLoader robotPropLoader;
       CLaserPropertiesLoader laserPropLoader;

@@ -28,13 +28,21 @@ namespace stdr_gui{
   {
     setupUi(this);
     
+    stdrInformationTree->header()->setDefaultSectionSize(20);
+    stdrInformationTree->header()->setMinimumSectionSize(10);
+    
     stdrInformationTree->setColumnCount(4);
     stdrInformationTree->setColumnWidth(0,200);
     stdrInformationTree->setColumnWidth(1,100);
     stdrInformationTree->setColumnWidth(2,20);
     stdrInformationTree->setColumnWidth(3,20);
     
-    generalInfo.setText(0,"Simulation information");
+    QStringList ColumnNames;
+    ColumnNames << "" << "" << "" << "" << "";
+ 
+    stdrInformationTree->setHeaderLabels(ColumnNames);
+    
+    generalInfo.setText(0,"Information");
     robotsInfo.setText(0,"Robots");
     
     mapWidth.setText(0,"Map width");
@@ -52,7 +60,7 @@ namespace stdr_gui{
     
     generalInfo.setExpanded(true);
     robotsInfo.setExpanded(true);
-    
+
     visible_icon_.addFile(QString((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
         std::string("/resources/images/visible.png")).c_str()));
@@ -253,6 +261,6 @@ namespace stdr_gui{
       rnode->addChild(kinematics);
       
       robotsInfo.addChild(rnode);
-    }
+    }    
   }
 }
