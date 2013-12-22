@@ -31,10 +31,21 @@ namespace stdr_gui
     ros::NodeHandle n;
     lock_ = false;
     subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiLaser::callback,this);
+    visualization_status_ = 0;
   }
   
   CGuiLaser::~CGuiLaser(void)
   { 
+  }
+  
+  char CGuiLaser::getVisualizationStatus(void)
+  {
+    return visualization_status_;
+  }
+  
+  void CGuiLaser::toggleVisualizationStatus(void)
+  {
+    visualization_status_ = (visualization_status_ + 1) % 3;
   }
   
   void CGuiLaser::callback(const sensor_msgs::LaserScan& msg)
@@ -138,6 +149,11 @@ namespace stdr_gui
   float CGuiLaser::getMaxRange(void)
   {
     return msg_.maxRange;
+  }
+  
+  std::string CGuiLaser::getFrameId(void)
+  {
+    return msg_.frame_id;
   }
 }
 

@@ -238,4 +238,26 @@ namespace stdr_gui
     }
     return visualization;
   }
+  
+  char CGuiRobot::getLaserVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < lasers_.size() ; i++)
+    {
+      if(lasers_[i]->getFrameId() == frame_id)
+      {
+        return lasers_[i]->getVisualizationStatus();
+      }
+    }
+  }
+    
+  void CGuiRobot::toggleLaserVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < lasers_.size() ; i++)
+    {
+      if(lasers_[i]->getFrameId() == frame_id)
+      {
+        lasers_[i]->toggleVisualizationStatus();
+      }
+    }
+  }
 }

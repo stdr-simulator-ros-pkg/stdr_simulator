@@ -105,14 +105,29 @@ namespace stdr_gui
       Q_EMIT laserVisualizerClicked(
         item->parent()->parent()->text(0), item->text(0));
     }
+    else if(item->parent()->text(0) == QString("Lasers") && column == 2)
+    {
+      Q_EMIT laserVisibilityClicked(
+        item->parent()->parent()->text(0), item->text(0));
+    }
     else if(item->parent()->text(0) == QString("Sonars") && column == 3)
     {
       Q_EMIT sonarVisualizerClicked(
         item->parent()->parent()->text(0),item->text(0));
     }
+    else if(item->parent()->text(0) == QString("Sonars") && column == 2)
+    {
+      Q_EMIT sonarVisibilityClicked(
+        item->parent()->parent()->text(0),item->text(0));
+    }
     else if(item->parent() == &loader.robotsInfo && column == 3)
     {
       Q_EMIT robotVisualizerClicked(
+        item->text(0));
+    }
+    else if(item->parent() == &loader.robotsInfo && column == 2)
+    {
+      Q_EMIT robotVisibilityClicked(
         item->text(0));
     }
   }

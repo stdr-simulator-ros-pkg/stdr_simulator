@@ -115,6 +115,9 @@ namespace stdr_gui
         
       std::string robot_following_;
       
+      char getLaserVisualizationStatus(QString robotName,QString laserName);
+      void toggleLaserVisualizationStatus(QString robotName,QString laserName);
+      
     public:
       CGuiController(int argc,char **argv);
       ~CGuiController(void);
@@ -145,6 +148,10 @@ namespace stdr_gui
       void robotVisualizerClicked(QString robotName);
       void itemClicked(QPoint p,Qt::MouseButton b);
       void robotReplaceSet(QPoint p,std::string robotName);
+      
+      void laserVisibilityClicked(QString robotName,QString laserName);
+      void sonarVisibilityClicked(QString robotName,QString sonarName);
+      void robotVisibilityClicked(QString robotName);
       
     Q_SIGNALS:
       void waitForRobotPose(void);

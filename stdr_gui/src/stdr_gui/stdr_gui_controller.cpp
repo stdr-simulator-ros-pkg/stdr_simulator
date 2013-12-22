@@ -776,6 +776,35 @@ namespace stdr_gui
     
     robot_handler_.moveRobot(robotName,newPose);
   }
+  
+  void CGuiController::laserVisibilityClicked(
+    QString robotName,QString laserName)
+  {
+    
+  }
+  
+  void CGuiController::sonarVisibilityClicked(
+    QString robotName,QString sonarName)
+  {
+    
+  }
+  
+  void CGuiController::robotVisibilityClicked(QString robotName)
+  {
+    
+  }
+  
+  char CGuiController::getLaserVisualizationStatus(
+    QString robotName,QString laserName)
+  {
+    
+  }
+  
+  void CGuiController::toggleLaserVisualizationStatus(
+    QString robotName,QString laserName)
+  {
+    
+  }
 }
 
 

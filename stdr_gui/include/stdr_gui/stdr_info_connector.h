@@ -52,6 +52,9 @@ namespace stdr_gui
       void laserVisualizerClicked(QString robotName,QString laserName);
       void sonarVisualizerClicked(QString robotName,QString sonarName);
       void robotVisualizerClicked(QString robotName);
+      void laserVisibilityClicked(QString robotName,QString laserName);
+      void sonarVisibilityClicked(QString robotName,QString sonarName);
+      void robotVisibilityClicked(QString robotName);
       void adaptSignal(void);
   };
 }
