@@ -45,10 +45,14 @@ namespace stdr_gui
 
     public Q_SLOTS:
       void treeItemClicked ( QTreeWidgetItem * item, int column ); 
+      void adaptColumns(QTreeWidgetItem *item, int column);
+      void adaptColumns(QTreeWidgetItem *item);
+      void adaptSlot(void);
     Q_SIGNALS:
       void laserVisualizerClicked(QString robotName,QString laserName);
       void sonarVisualizerClicked(QString robotName,QString sonarName);
       void robotVisualizerClicked(QString robotName);
+      void adaptSignal(void);
   };
 }
 

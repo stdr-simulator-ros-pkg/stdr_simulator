@@ -100,6 +100,11 @@ namespace stdr_gui_tools
   
   stdr_msgs::LaserSensorMsg fixLaserAnglesToDegrees(
     stdr_msgs::LaserSensorMsg rmsg);
+    
+  stdr_msgs::SonarSensorMsg fixSonarAnglesToRad(stdr_msgs::SonarSensorMsg rmsg);
+  
+  stdr_msgs::SonarSensorMsg fixSonarAnglesToDegrees(
+    stdr_msgs::SonarSensorMsg rmsg);
 }
 
 #endif
