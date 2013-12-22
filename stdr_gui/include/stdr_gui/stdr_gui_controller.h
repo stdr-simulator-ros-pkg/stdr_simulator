@@ -129,6 +129,7 @@ namespace stdr_gui
     public Q_SLOTS:
       void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg,QString file_name);
       void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+      void loadRobotFromFilePressed(stdr_msgs::RobotMsg newRobotMsg);
       void loadRfidPressed(void);
       void loadCo2Pressed(void);
       void loadThermalPressed(void);

@@ -121,6 +121,11 @@ namespace stdr_gui
       
     QObject::connect(
       &(gui_connector_),
+        SIGNAL(robotFromFile(stdr_msgs::RobotMsg)),
+      this, SLOT(loadRobotFromFilePressed(stdr_msgs::RobotMsg)));  
+      
+    QObject::connect(
+      &(gui_connector_),
         SIGNAL(loadRfidPressed()),
       this, SLOT(loadRfidPressed()));
     
@@ -275,6 +280,13 @@ namespace stdr_gui
   
   void CGuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
   {
+    Q_EMIT waitForRobotPose();
+  }
+  
+  void CGuiController::loadRobotFromFilePressed(stdr_msgs::RobotMsg newRobotMsg)
+  {
+    gui_connector_.robotCreatorConn.setNewRobot(
+      stdr_gui_tools::fixRobotAnglesToDegrees(newRobotMsg));
     Q_EMIT waitForRobotPose();
   }
   

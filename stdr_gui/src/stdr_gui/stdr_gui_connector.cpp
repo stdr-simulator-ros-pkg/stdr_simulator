@@ -133,7 +133,8 @@ namespace stdr_gui
       &loader_,
       tr("Load robot"), 
       QString().fromStdString(
-        stdr_gui_tools::getRosPackagePath("stdr_gui")), 
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
         tr("Yaml Files (*.yaml)"));
 
     if (file_name.isEmpty()) { //!< Not a valid filename
@@ -141,8 +142,9 @@ namespace stdr_gui
     }
     
     try {
-      stdr_msgs::RobotMsg new_robot_msg_ = 
+      stdr_msgs::RobotMsg new_robot_msg = 
       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
+      Q_EMIT robotFromFile(new_robot_msg);
     }
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());
