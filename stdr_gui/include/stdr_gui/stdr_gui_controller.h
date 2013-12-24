@@ -41,6 +41,8 @@
 
 #include <stdr_robot/handle_robot.h>
 
+
+
 namespace stdr_gui
 {
 
@@ -113,6 +115,9 @@ namespace stdr_gui
         
       std::string robot_following_;
       
+      char getLaserVisualizationStatus(QString robotName,QString laserName);
+      void toggleLaserVisualizationStatus(QString robotName,QString laserName);
+      
     public:
       CGuiController(int argc,char **argv);
       ~CGuiController(void);
@@ -125,8 +130,9 @@ namespace stdr_gui
       void cleanupVisualizers(const stdr_msgs::RobotIndexedVectorMsg& msg);
     
     public Q_SLOTS:
-      void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+      void saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg,QString file_name);
       void loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg);
+      void loadRobotFromFilePressed(stdr_msgs::RobotMsg newRobotMsg);
       void loadRfidPressed(void);
       void loadCo2Pressed(void);
       void loadThermalPressed(void);
@@ -142,6 +148,10 @@ namespace stdr_gui
       void robotVisualizerClicked(QString robotName);
       void itemClicked(QPoint p,Qt::MouseButton b);
       void robotReplaceSet(QPoint p,std::string robotName);
+      
+      void laserVisibilityClicked(QString robotName,QString laserName);
+      void sonarVisibilityClicked(QString robotName,QString sonarName);
+      void robotVisibilityClicked(QString robotName);
       
     Q_SIGNALS:
       void waitForRobotPose(void);

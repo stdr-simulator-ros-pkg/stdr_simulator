@@ -31,10 +31,21 @@ namespace stdr_gui
     ros::NodeHandle n;
     lock_ = false;
     subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiLaser::callback,this);
+    visualization_status_ = 0;
   }
   
   CGuiLaser::~CGuiLaser(void)
   { 
+  }
+  
+  char CGuiLaser::getVisualizationStatus(void)
+  {
+    return visualization_status_;
+  }
+  
+  void CGuiLaser::toggleVisualizationStatus(void)
+  {
+    visualization_status_ = (visualization_status_ + 1) % 3;
   }
   
   void CGuiLaser::callback(const sensor_msgs::LaserScan& msg)
@@ -53,9 +64,24 @@ namespace stdr_gui
   {
     lock_ = true;
     QPainter painter(m);
-    painter.setPen(QColor(255,0,0,100));
+    
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
     {
+      float real_dist = scan_.ranges[i];
+      if(real_dist > msg_.maxRange)
+      {
+        real_dist = msg_.maxRange;
+        painter.setPen(QColor(255,0,0,100));
+      }
+      else if(real_dist < msg_.minRange)
+      {
+        real_dist = msg_.minRange;
+        painter.setPen(QColor(100,100,100,100));
+      }
+      else
+      {
+        painter.setPen(QColor(255,0,0,100));
+      }
       painter.drawLine(
         robotPose.x / ocgd + (msg_.pose.x / ocgd * cos(robotPose.theta) - 
           msg_.pose.y / ocgd * sin(robotPose.theta)),
@@ -64,12 +90,12 @@ namespace stdr_gui
           msg_.pose.y / ocgd * cos(robotPose.theta)),
           
         robotPose.x / ocgd + (msg_.pose.x / ocgd * cos(robotPose.theta) - 
-          msg_.pose.y /ocgd * sin(robotPose.theta)) + scan_.ranges[i] * 
+          msg_.pose.y /ocgd * sin(robotPose.theta)) + real_dist * 
           cos(robotPose.theta + scan_.angle_min + i * scan_.angle_increment)
            / ocgd,
           
         robotPose.y / ocgd + (msg_.pose.x / ocgd * sin(robotPose.theta) + 
-          msg_.pose.y / ocgd * cos(robotPose.theta)) + scan_.ranges[i] *
+          msg_.pose.y / ocgd * cos(robotPose.theta)) + real_dist *
           sin(robotPose.theta + scan_.angle_min + i * scan_.angle_increment)
            / ocgd
       );
@@ -84,18 +110,36 @@ namespace stdr_gui
   {
     lock_ = true;
     QPainter painter(m);
-    painter.setPen(QColor(255,0,0,100));
     float size = m->width();
     float climax = size / maxRange * ocgd / 2.1;
+    
+    
+    
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
     {
+	  float real_dist = scan_.ranges[i];
+      if(real_dist > msg_.maxRange)
+      {
+        real_dist = msg_.maxRange;
+        painter.setPen(QColor(255,0,0,100));
+      }
+      else if(real_dist < msg_.minRange)
+      {
+        real_dist = msg_.minRange;
+        painter.setPen(QColor(100,100,100,100));
+      }
+      else
+      {
+        painter.setPen(QColor(255,0,0,100));
+      }
+		
       painter.drawLine(
         size / 2 + (msg_.pose.x / ocgd) * climax,
         size / 2 + (msg_.pose.y / ocgd) * climax,
 
-        size / 2 + ((msg_.pose.x / ocgd) + scan_.ranges[i] *
+        size / 2 + ((msg_.pose.x / ocgd) + real_dist *
           cos(scan_.angle_min + i * scan_.angle_increment) / ocgd) * climax,
-        size / 2 + ((msg_.pose.y / ocgd) + scan_.ranges[i] * 
+        size / 2 + ((msg_.pose.y / ocgd) + real_dist * 
           sin(scan_.angle_min + i * scan_.angle_increment) / ocgd) * climax
       );
     }
@@ -105,6 +149,11 @@ namespace stdr_gui
   float CGuiLaser::getMaxRange(void)
   {
     return msg_.maxRange;
+  }
+  
+  std::string CGuiLaser::getFrameId(void)
+  {
+    return msg_.frame_id;
   }
 }
 

@@ -28,13 +28,21 @@ namespace stdr_gui{
   {
     setupUi(this);
     
+    stdrInformationTree->header()->setDefaultSectionSize(20);
+    stdrInformationTree->header()->setMinimumSectionSize(10);
+    
     stdrInformationTree->setColumnCount(4);
     stdrInformationTree->setColumnWidth(0,200);
     stdrInformationTree->setColumnWidth(1,100);
     stdrInformationTree->setColumnWidth(2,20);
     stdrInformationTree->setColumnWidth(3,20);
     
-    generalInfo.setText(0,"Simulation information");
+    QStringList ColumnNames;
+    ColumnNames << "" << "" << "" << "" << "";
+ 
+    stdrInformationTree->setHeaderLabels(ColumnNames);
+    
+    generalInfo.setText(0,"Information");
     robotsInfo.setText(0,"Robots");
     
     mapWidth.setText(0,"Map width");
@@ -52,10 +60,20 @@ namespace stdr_gui{
     
     generalInfo.setExpanded(true);
     robotsInfo.setExpanded(true);
-    
+
     visible_icon_.addFile(QString((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
         std::string("/resources/images/visible.png")).c_str()));
+        
+    visible_icon_on_.addFile(QString((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+        std::string("/resources/images/visible_on.png")).c_str()));
+    visible_icon_off_.addFile(QString((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+        std::string("/resources/images/visible_off.png")).c_str()));
+    visible_icon_trans_.addFile(QString((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+        std::string("/resources/images/visible_transparent.png")).c_str()));
   }
   
   CInfoLoader::~CInfoLoader(void)
@@ -96,6 +114,7 @@ namespace stdr_gui{
     {
       QTreeWidgetItem  *rnode = new QTreeWidgetItem();
       rnode->setText(0,QString(msg.robots[i].name.c_str()));
+      rnode->setIcon(2,visible_icon_on_);
       rnode->setIcon(3,visible_icon_);
       
       QTreeWidgetItem *radius = new QTreeWidgetItem();
@@ -121,6 +140,7 @@ namespace stdr_gui{
         lname=new QTreeWidgetItem();
         lname->setText(0,
           msg.robots[i].robot.laserSensors[l].frame_id.c_str());
+        lname->setIcon(2,visible_icon_on_);
         lname->setIcon(3,visible_icon_);
 
         QTreeWidgetItem *lrays = new QTreeWidgetItem();
@@ -192,6 +212,7 @@ namespace stdr_gui{
         sname = new QTreeWidgetItem();
         sname->setText(0,
           msg.robots[i].robot.sonarSensors[l].frame_id.c_str());
+        sname->setIcon(2,visible_icon_on_);
         sname->setIcon(3,visible_icon_);
 
         QTreeWidgetItem *smaxrange = new QTreeWidgetItem();
@@ -253,6 +274,6 @@ namespace stdr_gui{
       rnode->addChild(kinematics);
       
       robotsInfo.addChild(rnode);
-    }
+    }    
   }
 }

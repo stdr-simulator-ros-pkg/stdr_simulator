@@ -51,6 +51,10 @@ namespace stdr_gui
       this,SLOT(actionNewRobotTriggered()));
       
     QObject::connect(
+      loader_.actionAddRobot,SIGNAL(triggered(bool)),
+      this,SLOT(actionAddRobotTriggered()));
+      
+    QObject::connect(
       loader_.actionZoomIn,SIGNAL(triggered(bool)),
       this,SLOT(actionZoomInTriggered()));
     
@@ -78,7 +82,7 @@ namespace stdr_gui
       loader_.actionNewCo2,SIGNAL(triggered(bool)),
       this,SLOT(actionNewCo2Triggered()));
     
-    grid_enabled_=true;
+    grid_enabled_ = false;
   }
   
   void CGuiConnector::actionExitTriggered(void)
@@ -108,12 +112,12 @@ namespace stdr_gui
   {
     QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
     msg.setWindowTitle(QString("STDR Simulator - About"));
-    msg.setText(QString("Simple Two Dimentional Robot Simulator \
-    (STDR Simulator) is a multi-robot simulator created in QT4. Its goals \
-    are : \n1) to simulate easily a single robot or a swarm in a 2D \
-    environment, \n2) to be totally parameterizable \n3) to be ROS \
+    msg.setText(QString("Simple Two Dimentional Robot Simulator\
+    (STDR Simulator) is a multi-robot simulator created in QT4. Its goals\
+    are : \n1) to simulate easily a single robot or a swarm in a 2D\
+    environment, \n2) to be totally parameterizable \n3) to be ROS\
     compliant.\n\nDevelopers:\nManos Tsardoulias, etsardou@gmail.com\
-    \nAris Thallas, aris.thallas@gmail.com\nChris Zalidis, \
+    \nAris Thallas, aris.thallas@gmail.com\nChris Zalidis,\
     zalidis@gmail.com"));
     msg.exec();
   }
@@ -121,6 +125,32 @@ namespace stdr_gui
   void CGuiConnector::actionNewRobotTriggered(void)
   {
     robotCreatorConn.initialise();
+  }
+  
+  void CGuiConnector::actionAddRobotTriggered(void)
+  {
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load robot"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
+        tr("Yaml Files (*.yaml)"));
+    
+    if (file_name.isEmpty()) { //!< Not a valid filename
+      return;
+    }
+    
+    try {
+      stdr_msgs::RobotMsg new_robot_msg = 
+      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
+      Q_EMIT robotFromFile(new_robot_msg);
+    }
+    catch(YAML::RepresentationException& e) {
+      ROS_ERROR("%s", e.what());
+      return;
+    }
+    
   }
   
   void CGuiConnector::actionNewRfidTriggered(void)
