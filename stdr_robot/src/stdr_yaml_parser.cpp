@@ -237,6 +237,9 @@ namespace stdr_robot {
     node["frequency"] >> msg.frequency;
     if (msg.frequency <= 0)
       throw YAML::RepresentationException(node["frequency"].GetMark(), "negative or zero value");
+    if(const YAML::Node *noise = node.FindValue("noise")) {
+      *noise >> msg.noise;
+    }
     node["frame_id"] >> msg.frame_id;
     node["pose"] >> msg.pose;
   }
