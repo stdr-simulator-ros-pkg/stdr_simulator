@@ -187,6 +187,30 @@ namespace stdr_gui
     QObject::connect(
       &map_connector_,SIGNAL(co2PlaceSet(QPoint)),
       this, SLOT(co2PlaceSet(QPoint)));
+      
+    QObject::connect(
+      &info_connector_,SIGNAL(laserVisibilityClicked(QString,QString)),
+      this, SLOT(laserVisibilityClicked(QString,QString)));
+      
+    QObject::connect(
+      &info_connector_,SIGNAL(sonarVisibilityClicked(QString,QString)),
+      this, SLOT(sonarVisibilityClicked(QString,QString)));
+      
+    QObject::connect(
+      &info_connector_,SIGNAL(robotVisibilityClicked(QString)),
+      this, SLOT(robotVisibilityClicked(QString)));
+    
+    QObject::connect(
+      this, SIGNAL(setRobotVisibility(QString,char)),
+      &info_connector_, SLOT(setRobotVisibility(QString,char)));
+    
+    QObject::connect(
+      this, SIGNAL(setLaserVisibility(QString,QString,char)),
+      &info_connector_, SLOT(setLaserVisibility(QString,QString,char)));
+    
+    QObject::connect(
+      this, SIGNAL(setSonarVisibility(QString,QString,char)),
+      &info_connector_, SLOT(setSonarVisibility(QString,QString,char)));
   }
   
   void CGuiController::setupWidgets(void)
@@ -780,30 +804,48 @@ namespace stdr_gui
   void CGuiController::laserVisibilityClicked(
     QString robotName,QString laserName)
   {
-    
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      if(registered_robots_[i].getFrameId() == robotName.toStdString())
+      {
+        char vs = registered_robots_[i].getLaserVisualizationStatus(
+          laserName.toStdString());
+        Q_EMIT setLaserVisibility(robotName,laserName,(vs + 1) % 3);
+        registered_robots_[i].toggleLaserVisualizationStatus(
+          laserName.toStdString());
+        break;
+      }
+    }
   }
   
   void CGuiController::sonarVisibilityClicked(
     QString robotName,QString sonarName)
   {
-    
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      if(registered_robots_[i].getFrameId() == robotName.toStdString())
+      {
+        char vs = registered_robots_[i].getSonarVisualizationStatus(
+          sonarName.toStdString());
+        Q_EMIT setSonarVisibility(robotName,sonarName,(vs + 1) % 3);
+        registered_robots_[i].toggleSonarVisualizationStatus(
+          sonarName.toStdString());
+        break;
+      }
+    }
   }
   
   void CGuiController::robotVisibilityClicked(QString robotName)
   {
-    
-  }
-  
-  char CGuiController::getLaserVisualizationStatus(
-    QString robotName,QString laserName)
-  {
-    
-  }
-  
-  void CGuiController::toggleLaserVisualizationStatus(
-    QString robotName,QString laserName)
-  {
-    
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      if(registered_robots_[i].getFrameId() == robotName.toStdString())
+      {
+        char vs = registered_robots_[i].getVisualizationStatus();
+        Q_EMIT setRobotVisibility(robotName,(vs + 1) % 3);
+        registered_robots_[i].toggleVisualizationStatus();
+      }
+    }
   }
 }
 

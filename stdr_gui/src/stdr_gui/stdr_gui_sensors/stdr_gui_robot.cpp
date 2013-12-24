@@ -34,6 +34,7 @@ namespace stdr_gui
     frame_id_ = msg.name;
     show_label_ = true;
     show_circles_ = false;
+    visualization_status_ = 0;
     for(unsigned int i = 0 ; i < msg.robot.laserSensors.size() ; i++)
     {
       CGuiLaser *l = new CGuiLaser(msg.robot.laserSensors[i], frame_id_);
@@ -86,7 +87,7 @@ namespace stdr_gui
   void CGuiRobot::drawSelf(QImage *m)
   {
     QPainter painter(m);
-    painter.setPen(Qt::blue);
+    painter.setPen(QColor(0,0,200,10 + 100 * (2 - visualization_status_)));
     
     painter.drawEllipse(
       (current_pose_.x - radius_) / resolution_,
@@ -104,7 +105,7 @@ namespace stdr_gui
   
     if(show_circles_)
     {
-      painter.setPen(QColor(255,0,0,150));
+      painter.setPen(QColor(255,0,0,10 + 100 * (2 - visualization_status_)));
       for(unsigned int i = 0 ; i < 5 ; i++)
       {
         painter.drawEllipse(
@@ -149,22 +150,22 @@ namespace stdr_gui
   {
     QPainter painter(m);
     
-    painter.setPen(Qt::black);
+    painter.setPen(QColor(0,0,0,10 + 100 * (2 - visualization_status_)));
     
     painter.drawRect(
       current_pose_.x / ocgd + 10,
       m->height() - (current_pose_.y / ocgd) - 30,
       100,
       20);
-      
-    painter.setPen(Qt::white);
+    
+    painter.setPen(QColor(255,255,255,10 + 100 * (2 - visualization_status_)));
     
     painter.fillRect(
       current_pose_.x / ocgd + 10,
       m->height() - (current_pose_.y / ocgd) - 30,
       100,
       20,
-      QBrush(QColor(0,0,0,140)));
+      QBrush(QColor(0,0,0,10 + 100 * (2 - visualization_status_))));
     
     painter.drawText(
       current_pose_.x / ocgd + 12,
@@ -258,6 +259,46 @@ namespace stdr_gui
       {
         lasers_[i]->toggleVisualizationStatus();
       }
+    }
+  }
+  
+  char CGuiRobot::getSonarVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < sonars_.size() ; i++)
+    {
+      if(sonars_[i]->getFrameId() == frame_id)
+      {
+        return sonars_[i]->getVisualizationStatus();
+      }
+    }
+  }
+    
+  void CGuiRobot::toggleSonarVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < sonars_.size() ; i++)
+    {
+      if(sonars_[i]->getFrameId() == frame_id)
+      {
+        sonars_[i]->toggleVisualizationStatus();
+      }
+    }
+  }
+  
+  char CGuiRobot::getVisualizationStatus(void)
+  {
+    return visualization_status_;
+  }
+  
+  void CGuiRobot::toggleVisualizationStatus(void)
+  {
+    visualization_status_ = (visualization_status_ + 1) % 3;
+    for(unsigned int i = 0 ; i < lasers_.size() ; i++)
+    {
+      lasers_[i]->setVisualizationStatus(visualization_status_);
+    }
+    for(unsigned int i = 0 ; i < sonars_.size() ; i++)
+    {
+      sonars_[i]->setVisualizationStatus(visualization_status_);
     }
   }
 }

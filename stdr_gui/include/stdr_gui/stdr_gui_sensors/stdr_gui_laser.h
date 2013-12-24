@@ -53,6 +53,7 @@ namespace stdr_gui
       float getMaxRange(void);
       char getVisualizationStatus(void);
       void toggleVisualizationStatus(void);
+      void setVisualizationStatus(char vs);
       
       std::string getFrameId(void);
   };  

@@ -48,6 +48,9 @@ namespace stdr_gui
       void adaptColumns(QTreeWidgetItem *item, int column);
       void adaptColumns(QTreeWidgetItem *item);
       void adaptSlot(void);
+      void setLaserVisibility(QString robotName,QString laserName,char vs);
+      void setSonarVisibility(QString robotName,QString sonarName,char vs);
+      void setRobotVisibility(QString robotName,char vs);
     Q_SIGNALS:
       void laserVisualizerClicked(QString robotName,QString laserName);
       void sonarVisualizerClicked(QString robotName,QString sonarName);
