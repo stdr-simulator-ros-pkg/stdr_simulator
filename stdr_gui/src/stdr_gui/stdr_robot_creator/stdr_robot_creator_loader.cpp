@@ -44,36 +44,66 @@ namespace stdr_gui
   
   void CRobotCreatorLoader::setupInitialTree(void)
   {
-    addIcon = QIcon(QString::fromUtf8((
+    addIcon.addFile(QString::fromUtf8((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
-      std::string("/resources/images/add_icon.png")).c_str()));
-    editIcon = QIcon(QString::fromUtf8((
+      std::string("/resources/images/add_icon.png")).c_str()), 
+      QSize(16,16), 
+      QIcon::Normal, 
+      QIcon::Off);
+    editIcon.addFile(QString::fromUtf8((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
-      std::string("/resources/images/edit_icon.png")).c_str()));
-    removeIcon = QIcon(QString::fromUtf8((
+      std::string("/resources/images/edit_icon.png")).c_str()), 
+      QSize(16,16), 
+      QIcon::Normal, 
+      QIcon::Off);
+    removeIcon.addFile(QString::fromUtf8((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
-      std::string("/resources/images/remove_icon.png")).c_str()));
+      std::string("/resources/images/remove_icon.png")).c_str()), 
+      QSize(16,16), 
+      QIcon::Normal, 
+      QIcon::Off);
+    saveIcon.addFile(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+      std::string("/resources/images/save_icon.png")).c_str()), 
+      QSize(16,16), 
+      QIcon::Normal, 
+      QIcon::Off);
+    loadIcon.addFile(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+      std::string("/resources/images/load_icon.png")).c_str()), 
+      QSize(16,16), 
+      QIcon::Normal, 
+      QIcon::Off);
     
     robotTreeWidget->setColumnWidth(0,150);
     robotTreeWidget->setColumnWidth(1,60);
     robotTreeWidget->setColumnWidth(2,20);
+    robotTreeWidget->setColumnWidth(3,20);
+    robotTreeWidget->setColumnWidth(4,20);
+
+    QStringList ColumnNames;
+    ColumnNames << "Robot parts" << "Info" << "" << "" << "";
+ 
+    robotTreeWidget->setHeaderLabels(ColumnNames);
     
     robotNode.setText(0,"Robot");
     lasersNode.setText(0,"Lasers");
     sonarsNode.setText(0,"Sonars");
-    rfidAntennasNode.setText(0,"Rfid Antennas");
+    //~ rfidAntennasNode.setText(0,"Rfid Antennas");
     kinematicNode.setText(0,"Kinematic");
     
     robotNode.setIcon(2,editIcon);
+    robotNode.setIcon(3,saveIcon);
+    robotNode.setIcon(4,loadIcon);
     lasersNode.setIcon(2,addIcon);
     sonarsNode.setIcon(2,addIcon);
-    rfidAntennasNode.setIcon(2,addIcon);
+    //~ rfidAntennasNode.setIcon(2,addIcon);
     kinematicNode.setIcon(2,editIcon);
     
     robotTreeWidget->addTopLevelItem(&robotNode);
     robotTreeWidget->addTopLevelItem(&lasersNode);
     robotTreeWidget->addTopLevelItem(&sonarsNode);
-    robotTreeWidget->addTopLevelItem(&rfidAntennasNode);
+    //~ robotTreeWidget->addTopLevelItem(&rfidAntennasNode);
     robotTreeWidget->addTopLevelItem(&kinematicNode);
     
     robotInfoShape.setText(0,"Shape");
@@ -88,7 +118,13 @@ namespace stdr_gui
     robotNode.setExpanded(true);
     lasersNode.setExpanded(true);
     sonarsNode.setExpanded(true);
-    rfidAntennasNode.setExpanded(true);
+    //~ rfidAntennasNode.setExpanded(true);
     kinematicNode.setExpanded(true);
+    
+    robotTreeWidget->resizeColumnToContents(0);
+    robotTreeWidget->resizeColumnToContents(1);
+    robotTreeWidget->resizeColumnToContents(2);
+    robotTreeWidget->resizeColumnToContents(3);
+    robotTreeWidget->resizeColumnToContents(4);
   }
 }

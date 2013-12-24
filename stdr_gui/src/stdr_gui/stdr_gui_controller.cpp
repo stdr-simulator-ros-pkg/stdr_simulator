@@ -111,13 +111,18 @@ namespace stdr_gui
     
     QObject::connect(
       &(gui_connector_.robotCreatorConn),
-        SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg)),
-      this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg)));
+        SIGNAL(saveRobotPressed(stdr_msgs::RobotMsg,QString)),
+      this, SLOT(saveRobotPressed(stdr_msgs::RobotMsg,QString)));
     
     QObject::connect(
       &(gui_connector_.robotCreatorConn),
         SIGNAL(loadRobotPressed(stdr_msgs::RobotMsg)),
       this, SLOT(loadRobotPressed(stdr_msgs::RobotMsg)));
+      
+    QObject::connect(
+      &(gui_connector_),
+        SIGNAL(robotFromFile(stdr_msgs::RobotMsg)),
+      this, SLOT(loadRobotFromFilePressed(stdr_msgs::RobotMsg)));  
       
     QObject::connect(
       &(gui_connector_),
@@ -264,13 +269,24 @@ namespace stdr_gui
     timer_->start(50);
   }
   
-  void CGuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
+  void CGuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg,
+    QString file_name)
   {
-    ROS_ERROR("Save Signal ok");
+    std::string file_name_str=file_name.toStdString();
+    
+    stdr_robot::parser::robotMsgToYaml(file_name_str,newRobotMsg);
+    
   }
   
   void CGuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
   {
+    Q_EMIT waitForRobotPose();
+  }
+  
+  void CGuiController::loadRobotFromFilePressed(stdr_msgs::RobotMsg newRobotMsg)
+  {
+    gui_connector_.robotCreatorConn.setNewRobot(
+      stdr_gui_tools::fixRobotAnglesToDegrees(newRobotMsg));
     Q_EMIT waitForRobotPose();
   }
   
@@ -394,11 +410,11 @@ namespace stdr_gui
       pnew.y() * map_msg_.info.resolution);
       
     stdr_msgs::RobotIndexedMsg newRobot;
-    gui_connector_.robotCreatorConn.fixRobotMsgAngles();
     try 
     {
       newRobot = robot_handler_.spawnNewRobot(
-        gui_connector_.robotCreatorConn.getNewRobot());
+        stdr_gui_tools::fixRobotAnglesToRad(
+          gui_connector_.robotCreatorConn.getNewRobot()));
         
     }
     catch (ConnectionException& ex) 
@@ -759,6 +775,35 @@ namespace stdr_gui
     newPose.y = pnew.y() * map_msg_.info.resolution;
     
     robot_handler_.moveRobot(robotName,newPose);
+  }
+  
+  void CGuiController::laserVisibilityClicked(
+    QString robotName,QString laserName)
+  {
+    
+  }
+  
+  void CGuiController::sonarVisibilityClicked(
+    QString robotName,QString sonarName)
+  {
+    
+  }
+  
+  void CGuiController::robotVisibilityClicked(QString robotName)
+  {
+    
+  }
+  
+  char CGuiController::getLaserVisualizationStatus(
+    QString robotName,QString laserName)
+  {
+    
+  }
+  
+  void CGuiController::toggleLaserVisualizationStatus(
+    QString robotName,QString laserName)
+  {
+    
   }
 }
 

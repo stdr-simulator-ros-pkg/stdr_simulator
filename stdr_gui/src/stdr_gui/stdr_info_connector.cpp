@@ -35,11 +35,54 @@ namespace stdr_gui
         SIGNAL(itemClicked(QTreeWidgetItem*, int)),
       this,
         SLOT(treeItemClicked(QTreeWidgetItem*, int)));
+        
+    QObject::connect(
+      this,
+        SIGNAL(adaptSignal()),
+      this,
+        SLOT(adaptSlot()));
+        
+    QObject::connect(
+      loader.stdrInformationTree, 
+        SIGNAL(itemCollapsed(QTreeWidgetItem *)),
+      this, 
+        SLOT(adaptColumns(QTreeWidgetItem *)));
+        
+    QObject::connect(
+      loader.stdrInformationTree, 
+        SIGNAL(itemExpanded(QTreeWidgetItem *)),
+      this, 
+        SLOT(adaptColumns(QTreeWidgetItem *)));
+  }
+
+  void CInfoConnector::adaptColumns(QTreeWidgetItem *item, int column)
+  {
+    loader.stdrInformationTree->resizeColumnToContents(0);
+    loader.stdrInformationTree->resizeColumnToContents(1);
+    loader.stdrInformationTree->resizeColumnToContents(2);
+    loader.stdrInformationTree->resizeColumnToContents(3);
+  }
+  
+  void CInfoConnector::adaptColumns(QTreeWidgetItem *item)
+  {
+    loader.stdrInformationTree->resizeColumnToContents(0);
+    loader.stdrInformationTree->resizeColumnToContents(1);
+    loader.stdrInformationTree->resizeColumnToContents(2);
+    loader.stdrInformationTree->resizeColumnToContents(3);
+  }
+  
+  void CInfoConnector::adaptSlot(void)
+  {
+    loader.stdrInformationTree->resizeColumnToContents(0);
+    loader.stdrInformationTree->resizeColumnToContents(1);
+    loader.stdrInformationTree->resizeColumnToContents(2);
+    loader.stdrInformationTree->resizeColumnToContents(3);
   }
 
   void CInfoConnector::updateMapInfo(float width,float height,float ocgd)
   {
     loader.updateMapInfo(width,height,ocgd);
+    Q_EMIT adaptSignal();
   }
   
   void CInfoConnector::updateTree(
@@ -47,11 +90,13 @@ namespace stdr_gui
   {
     loader.deleteTree();
     loader.updateRobots(msg);
+    Q_EMIT adaptSignal();
   }
   
   void CInfoConnector::treeItemClicked ( QTreeWidgetItem * item, int column )
   {
-    if(item == &loader.robotsInfo)
+    adaptColumns(item, column);
+    if(item == &loader.robotsInfo || item == &loader.generalInfo)
     {
       return;
     }
@@ -60,14 +105,30 @@ namespace stdr_gui
       Q_EMIT laserVisualizerClicked(
         item->parent()->parent()->text(0), item->text(0));
     }
+    else if(item->parent()->text(0) == QString("Lasers") && column == 2)
+    {
+      Q_EMIT laserVisibilityClicked(
+        item->parent()->parent()->text(0), item->text(0));
+    }
     else if(item->parent()->text(0) == QString("Sonars") && column == 3)
     {
       Q_EMIT sonarVisualizerClicked(
         item->parent()->parent()->text(0),item->text(0));
     }
-    else if(item->parent() == &loader.robotsInfo)
+    else if(item->parent()->text(0) == QString("Sonars") && column == 2)
     {
-      Q_EMIT robotVisualizerClicked(item->text(0));
+      Q_EMIT sonarVisibilityClicked(
+        item->parent()->parent()->text(0),item->text(0));
+    }
+    else if(item->parent() == &loader.robotsInfo && column == 3)
+    {
+      Q_EMIT robotVisualizerClicked(
+        item->text(0));
+    }
+    else if(item->parent() == &loader.robotsInfo && column == 2)
+    {
+      Q_EMIT robotVisibilityClicked(
+        item->text(0));
     }
   }
   
