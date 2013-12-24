@@ -39,8 +39,12 @@ namespace stdr_gui
       std::vector<QTreeWidgetItem> robot_nodes_;
       
       QIcon visible_icon_;
-      
     public:
+    
+      QIcon visible_icon_on_;
+      QIcon visible_icon_off_;
+      QIcon visible_icon_trans_;
+      
       QTreeWidgetItem  generalInfo,
               robotsInfo,
               mapHeight,
@@ -54,6 +58,8 @@ namespace stdr_gui
       void deleteTreeNode(QTreeWidgetItem *item);
       void updateMapInfo(float width,float height,float ocgd);
       void updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg);
+      
+      void autoResizeColumns(void);
   };  
 }
 

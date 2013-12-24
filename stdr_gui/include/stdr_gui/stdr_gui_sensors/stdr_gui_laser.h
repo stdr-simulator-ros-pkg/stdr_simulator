@@ -40,6 +40,8 @@ namespace stdr_gui
       
       ros::Subscriber subscriber_;
       sensor_msgs::LaserScan scan_;
+      
+      char visualization_status_;
     
     public:
       CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic);
@@ -49,6 +51,10 @@ namespace stdr_gui
       void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
       void visualizerPaint(QImage *m,float ocgd,float maxRange);
       float getMaxRange(void);
+      char getVisualizationStatus(void);
+      void toggleVisualizationStatus(void);
+      
+      std::string getFrameId(void);
   };  
 }
 

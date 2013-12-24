@@ -72,6 +72,9 @@ namespace stdr_gui
       int getLasersNumber(void);
       int getSonarsNumber(void);
       
+      char getLaserVisualizationStatus(std::string frame_id);
+      void toggleLaserVisualizationStatus(std::string frame_id);
+      
       QImage getVisualization(float ocgd);
   };  
 }

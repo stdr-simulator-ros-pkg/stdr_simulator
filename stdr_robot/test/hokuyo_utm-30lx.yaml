@@ -1,0 +1,15 @@
+max_angle: 1
+min_angle: 1
+max_range: 30
+min_range: 0.1
+num_rays: 270
+frequency: 50
+frame_id: front_laser
+pose:
+  x: 0.1
+  y: 0
+  theta: 0
+noise:
+  filename: gauss.yaml
+  mean: 0.1
+  std: 0.01

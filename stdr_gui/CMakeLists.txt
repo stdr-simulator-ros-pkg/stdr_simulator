@@ -94,7 +94,8 @@ add_executable(stdr_gui_node
 	${QT_SOURCES} ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
 )
 add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)	# Wait for std messages to build
-target_link_libraries(stdr_gui_node 
+target_link_libraries(stdr_gui_node
+  stdr_parser
 	${catkin_LIBRARIES} 
 	${QT_LIBRARIES}
 )
