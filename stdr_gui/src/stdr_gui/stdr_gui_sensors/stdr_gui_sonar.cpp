@@ -29,6 +29,7 @@ namespace stdr_gui{
     ros::NodeHandle n;
     lock_ = false;
     subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiSonar::callback,this);
+    visualization_status_ = 0;
   }
   
   CGuiSonar::~CGuiSonar(void)
@@ -58,19 +59,25 @@ namespace stdr_gui{
     if(real_dist > msg_.maxRange)
     {
       real_dist = msg_.maxRange;
-      QBrush brush(QColor(100,100,100,100));
+      QBrush brush(QColor(100,100,100,10 + 50 * (2 - visualization_status_)));
       painter.setBrush(brush);
+      QPen pen(QColor(0,0,0,0));
+      painter.setPen(pen);
     }
     else if(real_dist < msg_.minRange)
     {
       real_dist = msg_.minRange;
-      QBrush brush(QColor(100,100,100,100));
+      QBrush brush(QColor(100,100,100,10 + 50 * (2 - visualization_status_)));
       painter.setBrush(brush);
+      QPen pen(QColor(0,0,0,0));
+      painter.setPen(pen);
     }
     else
     {
-      QBrush brush(QColor(0,200,0,100));
+      QBrush brush(QColor(0,200,0,10 + 50 * (2 - visualization_status_)));
       painter.setBrush(brush);
+      QPen pen(QColor(0,0,0,0));
+      painter.setPen(pen);
     }
     
     painter.drawPie(
@@ -141,6 +148,26 @@ namespace stdr_gui{
   float CGuiSonar::getMaxRange(void)
   {
     return msg_.maxRange;
+  }
+  
+  char CGuiSonar::getVisualizationStatus(void)
+  {
+    return visualization_status_;
+  }
+  
+  void CGuiSonar::toggleVisualizationStatus(void)
+  {
+    visualization_status_ = (visualization_status_ + 1) % 3;
+  }
+  
+  std::string CGuiSonar::getFrameId(void)
+  {
+    return msg_.frame_id;
+  }
+  
+  void CGuiSonar::setVisualizationStatus(char vs)
+  {
+    visualization_status_ = vs;
   }
 }
 

@@ -55,6 +55,8 @@ namespace stdr_gui
       
       void drawSelf(QImage *m);
       
+      char visualization_status_;
+      
     public:
       CGuiRobot(const stdr_msgs::RobotIndexedMsg& msg);
       ~CGuiRobot(void);
@@ -72,8 +74,12 @@ namespace stdr_gui
       int getLasersNumber(void);
       int getSonarsNumber(void);
       
+      char getVisualizationStatus(void);
+      void toggleVisualizationStatus(void);
       char getLaserVisualizationStatus(std::string frame_id);
       void toggleLaserVisualizationStatus(std::string frame_id);
+      char getSonarVisualizationStatus(std::string frame_id);
+      void toggleSonarVisualizationStatus(std::string frame_id);
       
       QImage getVisualization(float ocgd);
   };  

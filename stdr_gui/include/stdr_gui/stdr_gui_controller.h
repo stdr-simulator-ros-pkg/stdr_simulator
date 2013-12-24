@@ -115,8 +115,8 @@ namespace stdr_gui
         
       std::string robot_following_;
       
-      char getLaserVisualizationStatus(QString robotName,QString laserName);
-      void toggleLaserVisualizationStatus(QString robotName,QString laserName);
+      //~ char getLaserVisualizationStatus(QString robotName,QString laserName);
+      //~ void toggleLaserVisualizationStatus(QString robotName,QString laserName);
       
     public:
       CGuiController(int argc,char **argv);
@@ -160,6 +160,10 @@ namespace stdr_gui
       void waitForRfidPose(void);
       void updateMap(void);
       void replaceRobot(std::string robotFrameId);
+      
+      void setLaserVisibility(QString robotName,QString laserName,char vs);
+      void setSonarVisibility(QString robotName,QString sonarName,char vs);
+      void setRobotVisibility(QString robotName,char vs);
   };
 }
 

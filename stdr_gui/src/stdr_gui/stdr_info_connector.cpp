@@ -136,4 +136,178 @@ namespace stdr_gui
   {
     return static_cast<QWidget *>(&loader);
   }
+  
+  void CInfoConnector::setLaserVisibility(
+    QString robotName,QString laserName,char vs)
+  {
+    for(int i = 0 ; i < loader.robotsInfo.childCount() ; i++)
+    {
+      QString text = loader.robotsInfo.child(i)->text(0);
+      if(text == robotName)
+      {
+        QTreeWidgetItem *it = loader.robotsInfo.child(i);
+        for(int j = 0 ; j < it->childCount() ; j++)
+        {
+          if(it->child(j)->text(0) == QString("Lasers"))
+          {
+            for(int k = 0 ; k < it->child(j)->childCount() ; k++)
+            {
+              if(it->child(j)->child(k)->text(0) == laserName)
+              {
+                QTreeWidgetItem *inIt = it->child(j)->child(k);
+                switch(vs)
+                {
+                  case 0:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_on_);
+                    break;
+                  }
+                  case 1:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_trans_);
+                    break;
+                  }
+                  case 2:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_off_);
+                    break;
+                  }
+                }
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  void CInfoConnector::setSonarVisibility(
+    QString robotName,QString sonarName,char vs)
+  {
+    for(int i = 0 ; i < loader.robotsInfo.childCount() ; i++)
+    {
+      QString text = loader.robotsInfo.child(i)->text(0);
+      if(text == robotName)
+      {
+        QTreeWidgetItem *it = loader.robotsInfo.child(i);
+        for(int j = 0 ; j < it->childCount() ; j++)
+        {
+          if(it->child(j)->text(0) == QString("Sonars"))
+          {
+            for(int k = 0 ; k < it->child(j)->childCount() ; k++)
+            {
+              if(it->child(j)->child(k)->text(0) == sonarName)
+              {
+                QTreeWidgetItem *inIt = it->child(j)->child(k);
+                switch(vs)
+                {
+                  case 0:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_on_);
+                    break;
+                  }
+                  case 1:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_trans_);
+                    break;
+                  }
+                  case 2:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_off_);
+                    break;
+                  }
+                }
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }  
+  
+  void CInfoConnector::setRobotVisibility(QString robotName,char vs)
+  {
+    for(int i = 0 ; i < loader.robotsInfo.childCount() ; i++)
+    {
+      QString text = loader.robotsInfo.child(i)->text(0);
+      if(text == robotName)
+      {
+        switch(vs)
+        {
+          case 0:
+          {
+            loader.robotsInfo.child(i)->setIcon(2,loader.visible_icon_on_);
+            break;
+          }
+          case 1:
+          {
+            loader.robotsInfo.child(i)->setIcon(2,loader.visible_icon_trans_);
+            break;
+          }
+          case 2:
+          {
+            loader.robotsInfo.child(i)->setIcon(2,loader.visible_icon_off_);
+            break;
+          }
+        }
+        QTreeWidgetItem *it = loader.robotsInfo.child(i);
+        for(int j = 0 ; j < it->childCount() ; j++)
+        {
+          if(it->child(j)->text(0) == QString("Sonars"))
+          {
+            for(int k = 0 ; k < it->child(j)->childCount() ; k++)
+            {
+              QTreeWidgetItem *inIt = it->child(j)->child(k);
+              switch(vs)
+              {
+                case 0:
+                {
+                  inIt->setIcon(2,loader.visible_icon_on_);
+                  break;
+                }
+                case 1:
+                {
+                  inIt->setIcon(2,loader.visible_icon_trans_);
+                  break;
+                }
+                case 2:
+                {
+                  inIt->setIcon(2,loader.visible_icon_off_);
+                  break;
+                }
+              }
+            }
+          }
+          if(it->child(j)->text(0) == QString("Lasers"))
+          {
+            for(int k = 0 ; k < it->child(j)->childCount() ; k++)
+            {
+              QTreeWidgetItem *inIt = it->child(j)->child(k);
+              switch(vs)
+              {
+                case 0:
+                {
+                  inIt->setIcon(2,loader.visible_icon_on_);
+                  break;
+                }
+                case 1:
+                {
+                  inIt->setIcon(2,loader.visible_icon_trans_);
+                  break;
+                }
+                case 2:
+                {
+                  inIt->setIcon(2,loader.visible_icon_off_);
+                  break;
+                }
+              }
+            }
+          }
+        }
+        return;
+      }
+    }
+  }
 }

@@ -41,6 +41,8 @@ namespace stdr_gui
       
       ros::Subscriber subscriber_;
       sensor_msgs::Range range_;
+      
+      char visualization_status_;
     
     public:
       CGuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic);
@@ -50,6 +52,11 @@ namespace stdr_gui
       void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
       void visualizerPaint(QImage *m,float ocgd,float maxRange);
       float getMaxRange(void);
+      std::string getFrameId(void);
+      
+      char getVisualizationStatus(void);
+      void toggleVisualizationStatus(void);
+      void setVisualizationStatus(char vs);
   };  
 }
 
