@@ -22,6 +22,12 @@
 #include "stdr_gui/stdr_gui_controller.h"
 #include "stdr_gui/stdr_gui_application.h"
 
+/**
+@brief The main node function
+@param argc [int] Number of input arguments
+@param argv [char] The input arguments
+@return int : 0 for success
+**/
 int main(int argc,char **argv)
 {
   stdr_gui::CStdrApplication app(argc, argv);

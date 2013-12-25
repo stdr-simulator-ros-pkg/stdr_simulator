@@ -23,6 +23,13 @@
 
 namespace stdr_gui
 {
+  
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char **] Input arguments
+  @return void
+  **/
   CGuiConnector::CGuiConnector(int argc, char **argv):
     QObject(),
     loader_(argc,argv),
@@ -88,12 +95,20 @@ namespace stdr_gui
     grid_enabled_ = false;
   }
   
+  /**
+  @brief Qt slot that is called when the Exit action is triggered
+  @return void
+  **/
   void CGuiConnector::actionExitTriggered(void)
   {
     ROS_INFO("Exiting GUI...");
     exit(0);
   }
 
+  /**
+  @brief Qt slot that is called when the Properties tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionPropertiesTriggered(void)
   {
     QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
@@ -101,6 +116,10 @@ namespace stdr_gui
     msg.exec();
   }
   
+  /**
+  @brief Qt slot that is called when the LoadMap tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionLoadMapTriggered(void)
   {
     QString fileName = QFileDialog::getOpenFileName(
@@ -111,6 +130,10 @@ namespace stdr_gui
         tr("Yaml Files (*.yaml)"));
   }
   
+  /**
+  @brief Qt slot that is called when the About tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionAboutTriggered(void)
   {
     QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
@@ -125,11 +148,19 @@ namespace stdr_gui
     msg.exec();
   }
   
+  /**
+  @brief Qt slot that is called when the NewRobot tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionNewRobotTriggered(void)
   {
     robotCreatorConn.initialise();
   }
   
+  /**
+  @brief Qt slot that is called when the AddRobot tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionAddRobotTriggered(void)
   {
     if ( ! map_initialized_ )
@@ -157,9 +188,12 @@ namespace stdr_gui
       ROS_ERROR("%s", e.what());
       return;
     }
-    
   }
   
+  /**
+  @brief Qt slot that is called when the NewRfid tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionNewRfidTriggered(void)
   {
     if ( ! map_initialized_ )
@@ -169,6 +203,10 @@ namespace stdr_gui
     Q_EMIT loadRfidPressed();
   }
   
+  /**
+  @brief Qt slot that is called when the NewThermal tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionNewThermalTriggered(void)
   {
     if ( ! map_initialized_ )
@@ -178,6 +216,10 @@ namespace stdr_gui
     Q_EMIT loadThermalPressed();
   }
   
+  /**
+  @brief Qt slot that is called when the NewCO2 tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionNewCo2Triggered(void)
   {
     if ( ! map_initialized_ )
@@ -187,6 +229,10 @@ namespace stdr_gui
     Q_EMIT loadCo2Pressed();
   }
   
+  /**
+  @brief Qt slot that is called when the zoom in tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionZoomInTriggered(void)
   {
     if ( ! map_initialized_ )
@@ -197,6 +243,11 @@ namespace stdr_gui
     loader_.actionZoomOut->setChecked(false);
     loader_.actionAdjusted->setChecked(false);
   }
+  
+  /**
+  @brief Qt slot that is called when the zoom out tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionZoomOutTriggered(void)
   {
     if ( ! map_initialized_ )
@@ -208,6 +259,10 @@ namespace stdr_gui
     loader_.actionAdjusted->setChecked(false);
   }
   
+  /**
+  @brief Qt slot that is called when the adjusted map visualization tool button is pressed
+  @return void
+  **/
   void CGuiConnector::actionAdjustedTriggered(void)
   {
     if ( ! map_initialized_ )
@@ -219,6 +274,10 @@ namespace stdr_gui
     loader_.actionZoomOut->setChecked(false);
   }
   
+  /**
+  @brief Qt slot that is called when the grid status has changed
+  @return void
+  **/
   void CGuiConnector::actionGridTriggered(void)
   {
     if ( ! map_initialized_ )
@@ -228,46 +287,89 @@ namespace stdr_gui
     grid_enabled_ =! grid_enabled_;
   }
   
+  /**
+  @brief Returns the grid enabled state
+  @return bool : True if grid is enabled
+  **/
   bool CGuiConnector::isGridEnabled(void)
   {
     return grid_enabled_;
   }
   
+  /**
+  @brief Adds a widget to the main window Qt grid
+  @param w [QWidget*] The widget to be placed
+  @param row [int] The row of the grid
+  @param column [int] The column of the grid
+  @return void
+  **/
   void CGuiConnector::addToGrid(QWidget *w,int row,int column)
   {
     loader_.gridLayout->addWidget(w,row,column,0);  
   }
   
+  /**
+  @brief Wraps the Qt gridColumnStretch function
+  @param cell [int] The specific column
+  @param stretch [int] The relative stretch coefficient
+  @return void
+  **/
   void CGuiConnector::setGridColumnStretch(int cell,int stretch)
   {
     loader_.gridLayout->setColumnStretch(cell,stretch);
   }
   
+  /**
+  @brief Shows the main window
+  @return void
+  **/
   void CGuiConnector::show(void)
   {
     loader_.show();
   }
   
+  /**
+  @brief Displays a message in the QMainWindow status bar
+  @param s [QString] The message
+  @return void
+  **/
   void CGuiConnector::setStatusBarMessage(QString s)
   {
     loader_.statusbar->showMessage(s,0);
   }
   
+  /**
+  @brief Returns the exit event captured
+  @return QEvent* The captured event
+  **/
   QEvent* CGuiConnector::getCloseEvent(void)
   {
     return loader_.getCloseEvent();
   }
     
+  /**
+  @brief Returns the exit triggered status
+  @return bool True if exit has been triggered
+  **/
   bool CGuiConnector::closeTriggered(void)
   {
     return loader_.closeTriggered();
   }
   
+  /**
+  @brief Shuts down the main window
+  @return void
+  **/
   void CGuiConnector::shutdown(void)
   {
     loader_.shutdown();
   }
   
+  /**
+  @brief Sets the map_initialized_ private variable
+  @param mi [bool] The new value
+  @return void
+  **/
   void CGuiConnector::setMapInitialized(bool mi)
   {
     map_initialized_ = mi;
