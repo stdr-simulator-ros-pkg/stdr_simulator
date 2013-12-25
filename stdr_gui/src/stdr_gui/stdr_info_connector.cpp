@@ -23,7 +23,12 @@
 
 namespace stdr_gui
 {
-
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char **] Input arguments
+  @return void
+  **/
   CInfoConnector::CInfoConnector(int argc, char **argv):
     QObject(),
     loader(argc,argv),
@@ -55,6 +60,12 @@ namespace stdr_gui
         SLOT(adaptColumns(QTreeWidgetItem *)));
   }
 
+  /**
+  @brief Adapts the columns width according to what is visible when an item is clicked
+  @param item [QTreeWidgetItem*] Item clicked
+  @param column [int] Column clicked
+  @return void
+  **/
   void CInfoConnector::adaptColumns(QTreeWidgetItem *item, int column)
   {
     loader.stdrInformationTree->resizeColumnToContents(0);
@@ -63,6 +74,11 @@ namespace stdr_gui
     loader.stdrInformationTree->resizeColumnToContents(3);
   }
   
+  /**
+  @brief Adapts the columns width according to what is visible when an item expands or collapses
+  @param item [QTreeWidgetItem*] Item expanded / collapsed
+  @return void
+  **/
   void CInfoConnector::adaptColumns(QTreeWidgetItem *item)
   {
     loader.stdrInformationTree->resizeColumnToContents(0);
@@ -71,6 +87,10 @@ namespace stdr_gui
     loader.stdrInformationTree->resizeColumnToContents(3);
   }
   
+  /**
+  @brief Adapts the columns width according to what is visible. Called when adaptSignal is emmited
+  @return void
+  **/
   void CInfoConnector::adaptSlot(void)
   {
     loader.stdrInformationTree->resizeColumnToContents(0);
@@ -79,12 +99,24 @@ namespace stdr_gui
     loader.stdrInformationTree->resizeColumnToContents(3);
   }
 
+  /**
+  @brief Updates the information tree according to the specific map
+  @param width [float] The map width
+  @param height [float] The map height
+  @param ocgd [float] The map resolution (m/pixel)
+  @return void
+  **/
   void CInfoConnector::updateMapInfo(float width,float height,float ocgd)
   {
     loader.updateMapInfo(width,height,ocgd);
     Q_EMIT adaptSignal();
   }
   
+  /**
+  @brief Updates the information tree according to the ensemble of robots
+  @param msg [const stdr_msgs::RobotIndexedVectorMsg&] The existent robots
+  @return void
+  **/
   void CInfoConnector::updateTree(
     const stdr_msgs::RobotIndexedVectorMsg& msg)
   {
@@ -93,6 +125,12 @@ namespace stdr_gui
     Q_EMIT adaptSignal();
   }
   
+  /**
+  @brief Called when a click occurs in the tree
+  @param item [QTreeWidgetItem*] Item clicked
+  @param column [int] Column clicked
+  @return void
+  **/
   void CInfoConnector::treeItemClicked ( QTreeWidgetItem * item, int column )
   {
     adaptColumns(item, column);
@@ -132,11 +170,22 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Returns the CInfoLoader object
+  @return QWidget*
+  **/
   QWidget* CInfoConnector::getLoader(void)
   {
     return static_cast<QWidget *>(&loader);
   }
   
+  /**
+  @brief Changes a laser visibility icon
+  @param robotName [QString] The robot frame id
+  @param laserName [QString] The laser frame id
+  @param vs [char] The visibility state
+  @return void
+  **/
   void CInfoConnector::setLaserVisibility(
     QString robotName,QString laserName,char vs)
   {
@@ -182,6 +231,13 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Changes a sonar visibility icon
+  @param robotName [QString] The robot frame id
+  @param sonarName [QString] The sonar frame id
+  @param vs [char] The visibility state
+  @return void
+  **/
   void CInfoConnector::setSonarVisibility(
     QString robotName,QString sonarName,char vs)
   {
@@ -227,6 +283,12 @@ namespace stdr_gui
     }
   }  
   
+  /**
+  @brief Changes a robot visibility icon
+  @param robotName [QString] The robot frame id
+  @param vs [char] The visibility state
+  @return void
+  **/
   void CInfoConnector::setRobotVisibility(QString robotName,char vs)
   {
     for(int i = 0 ; i < loader.robotsInfo.childCount() ; i++)
