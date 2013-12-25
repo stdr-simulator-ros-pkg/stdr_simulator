@@ -55,7 +55,7 @@ namespace stdr_gui
       CRobotCreatorConnector robotCreatorConn;    //!< Serves the Qt events of the RobotCreator Widget
       
       /**
-      @brief Deafault contructor
+      @brief Default contructor
       @param argc [int] Number of input arguments
       @param argv [char **] Input arguments
       @return void

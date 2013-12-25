@@ -24,12 +24,21 @@
 
 namespace stdr_gui
 {
-  
+  /**
+  @brief Thread that performs the ros::spin functionality
+  @return void
+  **/
   void spinThreadFunction(void)
   {
     ros::spin();
   }
   
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char **] Input arguments
+  @return void
+  **/
   CGuiController::CGuiController(int argc,char **argv):
     gui_connector_(argc,argv),
     info_connector_(argc,argv),
@@ -55,11 +64,19 @@ namespace stdr_gui
       QSize(20,20), QIcon::Normal, QIcon::Off);
   }
 
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CGuiController::~CGuiController(void)
   {
     
   }
   
+  /**
+  @brief Initializes the Qt event connections and ROS subscribers and publishers
+  @return void
+  **/
   void CGuiController::initializeCommunications(void)
   {
     map_subscriber_ = n_.subscribe(
@@ -155,10 +172,6 @@ namespace stdr_gui
     QObject::connect(
       &map_connector_,SIGNAL(robotReplaceSet(QPoint,std::string)),
       this, SLOT(robotReplaceSet(QPoint,std::string)));
-  
-    QObject::connect(
-      this,SIGNAL(updateMap()),
-      this, SLOT(updateMapInternal()));
     
     timer_ = new QTimer(this);
     connect(
@@ -214,6 +227,10 @@ namespace stdr_gui
       &info_connector_, SLOT(setSonarVisibility(QString,QString,char)));
   }
   
+  /**
+  @brief Sets up the main window widgets
+  @return void
+  **/
   void CGuiController::setupWidgets(void)
   {
     {
@@ -236,6 +253,10 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Initializes the ROS spin and Qt threads
+  @return bool
+  **/
   bool CGuiController::init(void)
   {
     if ( ! ros::master::check() ) 
@@ -249,6 +270,11 @@ namespace stdr_gui
     return true;
   }
 
+  /**
+  @brief Receives the occupancy grid map from stdr_server. Connects to "map" ROS topic
+  @param msg [const nav_msgs::OccupancyGrid&] The OGM message
+  @return void
+  **/
   void CGuiController::receiveMap(const nav_msgs::OccupancyGrid& msg)
   {
     map_msg_ = msg;
@@ -274,8 +300,8 @@ namespace stdr_gui
         painter.drawPoint(i,j);
       }
     }
-    int originx = msg.info.origin.position.x;
-    int originy = msg.info.origin.position.y;
+    int originx = msg.info.origin.position.x / msg.info.resolution;
+    int originy = msg.info.origin.position.y / msg.info.resolution;
     painter.setPen(Qt::blue);
     painter.drawLine(originx, originy - 20, originx, originy + 20);
     painter.drawLine(originx - 20, originy, originx + 20, originy);
@@ -297,6 +323,12 @@ namespace stdr_gui
     timer_->start(50);
   }
   
+  /**
+  @brief Saves the robot in a yaml file. Connects to the CGuiConnector::CRobotCreatorConnector::saveRobotPressed signal
+  @param newRobotMsg [stdr_msgs::RobotMsg] The robot to be saved
+  @param file_name [QString] The yaml file for the robot to be saved
+  @return void
+  **/
   void CGuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg,
     QString file_name)
   {
@@ -305,6 +337,11 @@ namespace stdr_gui
     stdr_robot::parser::robotMsgToYaml(file_name_str,newRobotMsg);
   }
   
+  /**
+  @brief Loads a robot from robot creator into map. Connects to the CGuiConnector::CRobotCreatorConnector::loadRobotPressed signal
+  @param newRobotMsg [stdr_msgs::RobotMsg] The robot to be put in the map
+  @return void
+  **/
   void CGuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
   {
     if ( ! map_initialized_ )
@@ -314,6 +351,11 @@ namespace stdr_gui
     Q_EMIT waitForRobotPose();
   }
   
+  /**
+  @brief Informs CGuiController that a robot is loaded from a yaml file. Connects to the CGuiConnector::robotFromFile signal
+  @param newRobotMsg [stdr_msgs::RobotMsg] The robot to be put in the map
+  @return void
+  **/
   void CGuiController::loadRobotFromFilePressed(stdr_msgs::RobotMsg newRobotMsg)
   {
     if ( ! map_initialized_ )
@@ -325,6 +367,10 @@ namespace stdr_gui
     Q_EMIT waitForRobotPose();
   }
   
+  /**
+  @brief Informs CGuiController that an RFID is going to be placed in the environment. Connects to the CGuiConnector::loadRfidPressed signal
+  @return void
+  **/
   void CGuiController::loadRfidPressed(void)
   {
     if ( ! map_initialized_ )
@@ -334,6 +380,10 @@ namespace stdr_gui
     Q_EMIT waitForRfidPose();
   }
   
+  /**
+  @brief Informs CGuiController that a thermal source is going to be placed in the environment. Connects to the CGuiConnector::loadThermalPressed signal
+  @return void
+  **/
   void CGuiController::loadThermalPressed(void)
   {
     if ( ! map_initialized_ )
@@ -343,6 +393,10 @@ namespace stdr_gui
     Q_EMIT waitForThermalPose();
   }
   
+  /**
+  @brief Informs CGuiController that a CO2 source is going to be placed in the environment. Connects to the CGuiConnector::loadCo2Pressed signal
+  @return void
+  **/
   void CGuiController::loadCo2Pressed(void)
   {
     if ( ! map_initialized_ )
@@ -352,6 +406,11 @@ namespace stdr_gui
     Q_EMIT waitForCo2Pose();
   }
   
+  /**
+  @brief Performs zoom in when the button is pressed. Connects to the CMapConnector::zoomInPressed signal
+  @param p [QPoint] The event point in the OGM
+  @return void
+  **/
   void CGuiController::zoomInPressed(QPoint p)
   {
     if ( ! map_initialized_ )
@@ -361,6 +420,11 @@ namespace stdr_gui
     map_connector_.updateZoom(p,true);
   }
 
+  /**
+  @brief Performs zoom out when the button is pressed. Connects to the CMapConnector::zoomOutPressed signal
+  @param p [QPoint] The event point in the OGM
+  @return void
+  **/
   void CGuiController::zoomOutPressed(QPoint p)
   {
     if ( ! map_initialized_ )
@@ -370,6 +434,11 @@ namespace stdr_gui
     map_connector_.updateZoom(p,false);
   }
 
+  /**
+  @brief Dumps all visualizers that connect to robots not existent in the input argument message
+  @param msg [const stdr_msgs::RobotIndexedVectorMsg&] The robots message
+  @return void
+  **/
   void CGuiController::cleanupVisualizers(
     const stdr_msgs::RobotIndexedVectorMsg& msg)
   {
@@ -427,6 +496,11 @@ namespace stdr_gui
       
   }
   
+  /**
+  @brief Receives the robots from stdr_server. Connects to "stdr_server/active_robots" ROS topic
+  @param msg [const stdr_msgs::RobotIndexedVectorMsg&] The robots message
+  @return void
+  **/
   void CGuiController::receiveRobots(
     const stdr_msgs::RobotIndexedVectorMsg& msg)
   {
@@ -447,14 +521,16 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < msg.robots.size() ; i++)
     {
       registered_robots_.push_back(CGuiRobot(msg.robots[i]));
-      //~ ROS_ERROR("Place got : %f %f",
-        //~ msg.robots[i].robot.initialPose.x,
-        //~ msg.robots[i].robot.initialPose.y);
     }
     info_connector_.updateTree(msg);
     map_lock_ = false;
   }
   
+  /**
+  @brief Gets the point at which the new robot is placed. Connects to the CMapConnector::robotPlaceSet signal
+  @param p [QPoint] The event point in the OGM
+  @return void
+  **/
   void CGuiController::robotPlaceSet(QPoint p)
   {
     if ( ! map_initialized_ )
@@ -489,6 +565,11 @@ namespace stdr_gui
     map_lock_ = false;
   }
   
+  /**
+  @brief Gets the point at which the new RFID tag is placed. Connects to the CMapConnector::robotPlaceSet signal
+  @param p [QPoint] The event point in the OGM
+  @return void
+  **/
   void CGuiController::rfidPlaceSet(QPoint p)
   {
     if ( ! map_initialized_ )
@@ -519,6 +600,11 @@ namespace stdr_gui
     map_lock_ = false;
   }
   
+  /**
+  @brief Gets the point at which the new CO2 source is placed. Connects to the CMapConnector::co2PlaceSet signal
+  @param p [QPoint] The event point in the OGM
+  @return void
+  **/
   void CGuiController::co2PlaceSet(QPoint p)
   {
     if ( ! map_initialized_ )
@@ -537,6 +623,11 @@ namespace stdr_gui
     map_lock_ = false;
   }
   
+  /**
+  @brief Gets the point at which the new thermal source is placed. Connects to the CMapConnector::thermalPlaceSet signal
+  @param p [QPoint] The event point in the OGM
+  @return void
+  **/
   void CGuiController::thermalPlaceSet(QPoint p)
   {
     if ( ! map_initialized_ )
@@ -555,6 +646,10 @@ namespace stdr_gui
     map_lock_ = false;
   }
   
+  /**
+  @brief Updates the map to be shown in GUI. Connects to the timeout signal of timer_
+  @return void
+  **/
   void CGuiController::updateMapInternal(void)
   {
     while(map_lock_)
@@ -680,7 +775,6 @@ namespace stdr_gui
     //!< -----------------------------------------Check for close event
     if(gui_connector_.closeTriggered())
     {
-      //~ ROS_ERROR("Exit triggered to controller");
       QEvent *e = gui_connector_.getCloseEvent();
       
       this->exit();
@@ -688,6 +782,12 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Returns a stdr_msgs::LaserSensorMsg message from robot and laser name
+  @param robotName [QString] Frame id of the robot
+  @param laserName [QString] Frame id of the laser
+  @return stdr_msgs::LaserSensorMsg
+  **/
   stdr_msgs::LaserSensorMsg CGuiController::getLaserDescription(
     QString robotName,
     QString laserName)
@@ -710,7 +810,13 @@ namespace stdr_gui
     }
     return stdr_msgs::LaserSensorMsg();
   }
-      
+  
+  /**
+  @brief Returns a stdr_msgs::SonarSensorMsg message from robot and sonar name
+  @param robotName [QString] Frame id of the robot
+  @param sonarName [QString] Frame id of the sonar
+  @return stdr_msgs::SonarSensorMsg
+  **/
   stdr_msgs::SonarSensorMsg CGuiController::getSonarDescription(
     QString robotName,
     QString sonarName)
@@ -734,6 +840,12 @@ namespace stdr_gui
     return stdr_msgs::SonarSensorMsg();
   }
   
+  /**
+  @brief Informs CGuiController that a laser visualizer has been clicked. Connects to the CInfoConnector::laserVisualizerClicked signal
+  @param robotName [QString] Frame id of the robot
+  @param laserName [QString] Frame id of the laser
+  @return void
+  **/
   void CGuiController::laserVisualizerClicked(
     QString robotName,
     QString laserName)
@@ -754,6 +866,12 @@ namespace stdr_gui
     lv->show();
   }
   
+  /**
+  @brief Informs CGuiController that a sonar visualizer has been clicked. Connects to the CInfoConnector::sonarVisualizerClicked signal
+  @param robotName [QString] Frame id of the robot
+  @param sonarName [QString] Frame id of the sonar
+  @return void
+  **/
   void CGuiController::sonarVisualizerClicked(
     QString robotName,
     QString sonarName)
@@ -774,6 +892,11 @@ namespace stdr_gui
     sv->show();
   }
   
+  /**
+  @brief Informs CGuiController that a robot visualizer has been clicked. Connects to the CInfoConnector::robotVisualizerClicked signal
+  @param robotName [QString] Frame id of the robot
+  @return void
+  **/
   void CGuiController::robotVisualizerClicked(QString robotName)
   {
     QString name = robotName;
@@ -790,6 +913,12 @@ namespace stdr_gui
     sv->show();
   }
   
+  /**
+  @brief Informs CGuiController that click has performed in the map. Connects to the CMapConnector::itemClicked signal
+  @param p [QPoint] The event point in map
+  @param b [Qt::MouseButton] The mouse button used to trigger the event
+  @return void
+  **/
   void CGuiController::itemClicked(QPoint p,Qt::MouseButton b)
   {
     QPoint pointClicked = map_connector_.getGlobalPoint(p);
@@ -841,6 +970,12 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Informs CGuiController about the new pose of a robot. Connects to the CMapConnector::robotReplaceSet signal
+  @param p [QPoint] The event point in map
+  @param robotName [std::string] The frame id of the re-placed robot
+  @return void
+  **/
   void CGuiController::robotReplaceSet(QPoint p,std::string robotName)
   {
     if ( ! map_initialized_ )
@@ -856,6 +991,12 @@ namespace stdr_gui
     robot_handler_.moveRobot(robotName,newPose);
   }
   
+  /**
+  @brief Informs CGuiController that a laser visibility status has been clicked. Connects to the CInfoConnector::laserVisibilityClicked signal
+  @param robotName [QString] Frame id of the robot
+  @param laserName [QString] Frame id of the laser
+  @return void
+  **/
   void CGuiController::laserVisibilityClicked(
     QString robotName,QString laserName)
   {
@@ -873,6 +1014,12 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Informs CGuiController that a sonar visibility status has been clicked. Connects to the CInfoConnector::sonarVisibilityClicked signal
+  @param robotName [QString] Frame id of the robot
+  @param sonarName [QString] Frame id of the sonar
+  @return void
+  **/
   void CGuiController::sonarVisibilityClicked(
     QString robotName,QString sonarName)
   {
@@ -890,6 +1037,11 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Informs CGuiController that a robot visibility status has been clicked. Connects to the CInfoConnector::robotVisibilityClicked signal
+  @param robotName [QString] Frame id of the robot
+  @return void
+  **/
   void CGuiController::robotVisibilityClicked(QString robotName)
   {
     for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
