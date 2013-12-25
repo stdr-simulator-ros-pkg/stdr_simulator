@@ -48,6 +48,8 @@ namespace stdr_gui{
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
       std::string("/resources/images/zoom_out.png")).c_str());
     zoom_out_cursor_ = QCursor(p.scaled(20,20));
+    
+    bool map_initialized_ = false;
   }
   
   CMapConnector::~CMapConnector(void)
@@ -62,10 +64,18 @@ namespace stdr_gui{
   
   void CMapConnector::updateZoom(QPoint p,bool z)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     loader_.updateZoom(p,z);
   }
   
   void CMapConnector::updateCenter(QPoint p){
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     loader_.updateCenter(p);
   }
   
@@ -76,11 +86,19 @@ namespace stdr_gui{
   
   void CMapConnector::drawGrid(QImage *img,float resolution)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     loader_.drawGrid(img,resolution);
   }
 
   bool CMapConnector::eventFilter( QObject* watched, QEvent* event ) 
   {
+    if ( ! map_initialized_ )
+    {
+      return false;
+    }
     if(watched == loader_.map)
     {
       if(event->type() == QEvent::MouseButtonPress)
@@ -162,6 +180,10 @@ namespace stdr_gui{
   
   void CMapConnector::setCursorZoomIn(bool state)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     if(state)
     {
       map_state_ = ZOOMIN;
@@ -176,6 +198,10 @@ namespace stdr_gui{
   
   void CMapConnector::setCursorZoomOut(bool state)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     if(state)
     {
       map_state_ = ZOOMOUT;
@@ -190,6 +216,10 @@ namespace stdr_gui{
   
   void CMapConnector::setCursorAdjusted(bool state)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     loader_.resetZoom();
     map_state_ = NORMAL;
     loader_.map->setCursor(QCursor(Qt::CrossCursor));
@@ -197,24 +227,40 @@ namespace stdr_gui{
   
   void CMapConnector::waitForPlace(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     map_state_ = SETPLACE;
     loader_.map->setCursor(Qt::PointingHandCursor);
   }
   
   void CMapConnector::waitForThermalPlace(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     map_state_ = SETPLACETHERMAL;
     loader_.map->setCursor(Qt::PointingHandCursor);
   }
   
   void CMapConnector::waitForRfidPlace(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     map_state_ = SETPLACERFID;
     loader_.map->setCursor(Qt::PointingHandCursor);
   }
   
   void CMapConnector::waitForCo2Place(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     map_state_ = SETPLACECO2;
     loader_.map->setCursor(Qt::PointingHandCursor);
   }
@@ -225,8 +271,17 @@ namespace stdr_gui{
   }
   
   void CMapConnector::waitForReplace(std::string robotFrameId){
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     current_robot_frame_id_ = robotFrameId;
     map_state_ = SETREPLACE;
     loader_.map->setCursor(Qt::PointingHandCursor);
+  }
+  
+  void CMapConnector::setMapInitialized(bool mi)
+  {
+    map_initialized_ = mi;
   }
 }

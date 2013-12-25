@@ -47,6 +47,8 @@ namespace stdr_gui
       
       CGuiLoader loader_;    //!< The loader of main GUI QWidget 
       
+      bool map_initialized_;
+      
     public:
     
                   
@@ -59,13 +61,6 @@ namespace stdr_gui
       @return void
       **/
       CGuiConnector(int argc, char **argv);
-      
-      /**
-      @brief Setter of _mapLoaded variable
-      @param mapLoaded [bool] 
-      @return void
-      **/
-      void setMapLoaded(bool mapLoaded);
       
       bool isGridEnabled(void);
       
@@ -82,6 +77,8 @@ namespace stdr_gui
       bool closeTriggered(void);
       
       void shutdown(void);
+      
+      void setMapInitialized(bool mi);
 
     public Q_SLOTS:
     

@@ -30,6 +30,9 @@ namespace stdr_gui
     argc_(argc),
     argv_(argv)
   {
+    
+    bool map_initialized_ = false;
+    
     QObject::connect(
       loader_.actionProperties,SIGNAL(triggered(bool)),
       this,SLOT(actionPropertiesTriggered()));
@@ -129,6 +132,10 @@ namespace stdr_gui
   
   void CGuiConnector::actionAddRobotTriggered(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     QString file_name = QFileDialog::getOpenFileName(
       &loader_,
       tr("Load robot"), 
@@ -155,34 +162,47 @@ namespace stdr_gui
   
   void CGuiConnector::actionNewRfidTriggered(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT loadRfidPressed();
   }
   
   void CGuiConnector::actionNewThermalTriggered(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT loadThermalPressed();
   }
   
   void CGuiConnector::actionNewCo2Triggered(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT loadCo2Pressed();
-  }
-  
-  void CGuiConnector::setMapLoaded(bool mapLoaded)
-  {
-    map_loaded_ = mapLoaded;
   }
   
   void CGuiConnector::actionZoomInTriggered(void)
   {
-    //~ if(!_mapLoaded) return;
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT setZoomInCursor(loader_.actionZoomIn->isChecked());
     loader_.actionZoomOut->setChecked(false);
     loader_.actionAdjusted->setChecked(false);
   }
   void CGuiConnector::actionZoomOutTriggered(void)
   {
-    //~ if(!_mapLoaded) return;
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT setZoomOutCursor(loader_.actionZoomOut->isChecked());
     loader_.actionZoomIn->setChecked(false);
     loader_.actionAdjusted->setChecked(false);
@@ -190,7 +210,10 @@ namespace stdr_gui
   
   void CGuiConnector::actionAdjustedTriggered(void)
   {
-    //~ if(!_mapLoaded) return;
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT setAdjustedCursor(loader_.actionAdjusted->isChecked());
     loader_.actionZoomIn->setChecked(false);
     loader_.actionZoomOut->setChecked(false);
@@ -198,6 +221,10 @@ namespace stdr_gui
   
   void CGuiConnector::actionGridTriggered(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     grid_enabled_ =! grid_enabled_;
   }
   
@@ -239,5 +266,10 @@ namespace stdr_gui
   void CGuiConnector::shutdown(void)
   {
     loader_.shutdown();
+  }
+  
+  void CGuiConnector::setMapInitialized(bool mi)
+  {
+    map_initialized_ = mi;
   }
 }

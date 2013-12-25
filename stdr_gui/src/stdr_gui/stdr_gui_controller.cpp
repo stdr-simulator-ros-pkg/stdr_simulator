@@ -42,6 +42,7 @@ namespace stdr_gui
     robot_following_ = "";
   
     map_lock_ = false;
+    map_initialized_ = false;
     
     icon_move_.addFile(QString::fromUtf8((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
@@ -281,7 +282,6 @@ namespace stdr_gui
     
     initial_map_ = running_map_;
 
-    gui_connector_.setMapLoaded(true);
     info_connector_.updateMapInfo( msg.info.width * msg.info.resolution,
                   msg.info.height * msg.info.resolution,
                   msg.info.resolution);
@@ -289,6 +289,10 @@ namespace stdr_gui
       QSize(initial_map_.width(),initial_map_.height()));
     
     elapsed_time_.start();
+    
+    map_initialized_ = true;
+    map_connector_.setMapInitialized(true);
+    gui_connector_.setMapInitialized(true);
     
     timer_->start(50);
   }
@@ -299,16 +303,23 @@ namespace stdr_gui
     std::string file_name_str=file_name.toStdString();
     
     stdr_robot::parser::robotMsgToYaml(file_name_str,newRobotMsg);
-    
   }
   
   void CGuiController::loadRobotPressed(stdr_msgs::RobotMsg newRobotMsg)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT waitForRobotPose();
   }
   
   void CGuiController::loadRobotFromFilePressed(stdr_msgs::RobotMsg newRobotMsg)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     gui_connector_.robotCreatorConn.setNewRobot(
       stdr_gui_tools::fixRobotAnglesToDegrees(newRobotMsg));
     Q_EMIT waitForRobotPose();
@@ -316,26 +327,46 @@ namespace stdr_gui
   
   void CGuiController::loadRfidPressed(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT waitForRfidPose();
   }
   
   void CGuiController::loadThermalPressed(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT waitForThermalPose();
   }
   
   void CGuiController::loadCo2Pressed(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     Q_EMIT waitForCo2Pose();
   }
   
   void CGuiController::zoomInPressed(QPoint p)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     map_connector_.updateZoom(p,true);
   }
 
   void CGuiController::zoomOutPressed(QPoint p)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     map_connector_.updateZoom(p,false);
   }
 
@@ -399,6 +430,10 @@ namespace stdr_gui
   void CGuiController::receiveRobots(
     const stdr_msgs::RobotIndexedVectorMsg& msg)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     while(map_lock_)	
     {
       usleep(100);
@@ -422,6 +457,10 @@ namespace stdr_gui
   
   void CGuiController::robotPlaceSet(QPoint p)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     while(map_lock_)
     { 
       usleep(100);
@@ -452,6 +491,10 @@ namespace stdr_gui
   
   void CGuiController::rfidPlaceSet(QPoint p)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     while(map_lock_)
     {	
       usleep(100);
@@ -478,6 +521,10 @@ namespace stdr_gui
   
   void CGuiController::co2PlaceSet(QPoint p)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     while(map_lock_)
     {	
       usleep(100);
@@ -492,6 +539,10 @@ namespace stdr_gui
   
   void CGuiController::thermalPlaceSet(QPoint p)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     while(map_lock_)
     {	
       usleep(100);
@@ -792,6 +843,10 @@ namespace stdr_gui
   
   void CGuiController::robotReplaceSet(QPoint p,std::string robotName)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
     QPoint pnew = map_connector_.getGlobalPoint(p);
     
     geometry_msgs::Pose2D newPose;

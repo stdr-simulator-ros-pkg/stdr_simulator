@@ -71,7 +71,8 @@ namespace stdr_gui
       int  argc_;
       char** argv_;
       
-      bool   map_lock_;
+      bool map_lock_;
+      bool map_initialized_;
       
       std::vector<CGuiRobot> registered_robots_;
       std::set<std::string> my_robots_;
@@ -114,9 +115,6 @@ namespace stdr_gui
         QString sonarName); 
         
       std::string robot_following_;
-      
-      //~ char getLaserVisualizationStatus(QString robotName,QString laserName);
-      //~ void toggleLaserVisualizationStatus(QString robotName,QString laserName);
       
     public:
       CGuiController(int argc,char **argv);

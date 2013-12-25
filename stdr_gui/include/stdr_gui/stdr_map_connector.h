@@ -54,6 +54,8 @@ namespace stdr_gui
       EStdrMapState   map_state_;
       CMapLoader     loader_;
       
+      bool map_initialized_;
+      
     public:
       CMapConnector(int argc, char **argv);
       ~CMapConnector(void);
@@ -66,6 +68,7 @@ namespace stdr_gui
       void drawGrid(QImage *img,float resolution);
       QPoint mapToGlobal(QPoint p);
       QWidget* getLoader(void);
+      void setMapInitialized(bool mi);
       
     public Q_SLOTS:
       bool eventFilter( QObject* watched, QEvent* event);
