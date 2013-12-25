@@ -33,7 +33,7 @@ namespace stdr_gui
 {
   
   /**
-  @class GuiConnector
+  @class CGuiConnector
   @brief Serves the Qt events of the main GUI window. Inherits from QObject
   **/ 
   class CGuiConnector:
