@@ -31,7 +31,7 @@
 namespace stdr_gui
 {
   /**
-  @class GuiConnector
+  @class CInfoConnector
   @brief Serves the Qt events of the tree-like information widget. Inherits from QObject
   **/ 
   class CInfoConnector : 
