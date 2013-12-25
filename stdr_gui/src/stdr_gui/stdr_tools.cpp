@@ -23,22 +23,41 @@
 
 namespace stdr_gui_tools
 {
-
+  /**
+  @brief Returns the global path of the ROS package provided
+  @param package [std::string] The ROS package
+  @return std::string : The global path of the specific package
+  **/
   std::string getRosPackagePath(std::string package)
   {
     return ros::package::getPath(package.c_str());
   }
   
+  /**
+  @brief Converts an angle from rads to degrees
+  @param angle [float] An angle in rads
+  @return float : The angle in degrees
+  **/
   float angleRadToDegrees(float angle)
   {
     return angle * 180.0 / STDR_PI;
   }
   
+  /**
+  @brief Converts an angle from degrees to rads
+  @param angle [float] An angle in degrees
+  @return float : The angle in rads
+  **/
   float angleDegreesToRad(float angle)
   {
     return angle / 180.0 * STDR_PI;
   }
   
+  /**
+  @brief Transforms the milliseconds in literal representation
+  @param ms [int] The time in ms
+  @return QString : The literal representation of time given
+  **/
   QString getLiteralTime(int ms)
   {
     QString str;
@@ -65,6 +84,11 @@ namespace stdr_gui_tools
     return str;
   }
   
+  /**
+  @brief Prints a sonar msg
+  @param msg [stdr_msgs::SonarSensorMsg &] The message
+  @return void
+  **/
   void printSonarMsg(stdr_msgs::SonarSensorMsg &msg)
   {
     ROS_ERROR("Sonar sensor msg :");
@@ -82,6 +106,11 @@ namespace stdr_gui_tools
     ROS_ERROR("\t\ttheta : %f",msg.pose.theta);
   }
   
+  /**
+  @brief Prints a laser msg
+  @param msg [stdr_msgs::LaserSensorMsg &] The message
+  @return void
+  **/
   void printLaserMsg(stdr_msgs::LaserSensorMsg &msg)
   {
     ROS_ERROR("Laser sensor msg :");
@@ -100,6 +129,11 @@ namespace stdr_gui_tools
     ROS_ERROR("\t\ttheta : %f",msg.pose.theta);
   }
   
+  /**
+  @brief Prints a ROS pose2d msg
+  @param msg [geometry_msgs::Pose2D &] The message
+  @return void
+  **/
   void printPose2D(geometry_msgs::Pose2D &msg)
   {
     ROS_ERROR("Pose 2D :");
@@ -108,6 +142,11 @@ namespace stdr_gui_tools
     ROS_ERROR("\ttheta : %f",msg.theta);
   }
   
+  /**
+  @brief Takes a stdr_msgs::RobotMsg and converts its angles to rads
+  @param robot [stdr_msgs::RobotMsg] The robot message
+  @return stdr_msgs::RobotMsg : The recreated robot message
+  **/
   stdr_msgs::RobotMsg fixRobotAnglesToRad(stdr_msgs::RobotMsg rmsg)
   {
     rmsg.initialPose.theta = 
@@ -138,6 +177,11 @@ namespace stdr_gui_tools
     return rmsg;
   }
   
+  /**
+  @brief Takes a stdr_msgs::RobotMsg and converts its angles to degrees
+  @param robot [stdr_msgs::RobotMsg] The robot message
+  @return stdr_msgs::RobotMsg : The recreated robot message
+  **/
   stdr_msgs::RobotMsg fixRobotAnglesToDegrees(stdr_msgs::RobotMsg rmsg)
   {
     rmsg.initialPose.theta = 
@@ -168,6 +212,11 @@ namespace stdr_gui_tools
     return rmsg;
   }
   
+  /**
+  @brief Takes a stdr_msgs::LaserSensorMsg and converts its angles to rads
+  @param rmsg [stdr_msgs::LaserSensorMsg] The laser message
+  @return stdr_msgs::LaserSensorMsg : The recreated laser message
+  **/
   stdr_msgs::LaserSensorMsg fixLaserAnglesToRad(stdr_msgs::LaserSensorMsg rmsg)
   {
     rmsg.maxAngle = rmsg.maxAngle / 180.0 * STDR_PI;
@@ -176,6 +225,11 @@ namespace stdr_gui_tools
     return rmsg;
   }
   
+  /**
+  @brief Takes a stdr_msgs::LaserSensorMsg and converts its angles to degrees
+  @param rmsg [stdr_msgs::LaserSensorMsg] The laser message
+  @return stdr_msgs::LaserSensorMsg : The recreated laser message
+  **/
   stdr_msgs::LaserSensorMsg fixLaserAnglesToDegrees(stdr_msgs::LaserSensorMsg rmsg)
   {
     rmsg.maxAngle = rmsg.maxAngle * 180.0 / STDR_PI;
@@ -184,6 +238,11 @@ namespace stdr_gui_tools
     return rmsg;
   }
   
+  /**
+  @brief Takes a stdr_msgs::SonarSensorMsg and converts its angles to rads
+  @param rmsg [stdr_msgs::SonarSensorMsg] The sonar message
+  @return stdr_msgs::SonarSensorMsg : The recreated sonar message
+  **/
   stdr_msgs::SonarSensorMsg fixSonarAnglesToRad(stdr_msgs::SonarSensorMsg rmsg)
   {
     rmsg.coneAngle = rmsg.coneAngle / 180.0 * STDR_PI;
@@ -191,6 +250,11 @@ namespace stdr_gui_tools
     return rmsg;
   }
   
+  /**
+  @brief Takes a stdr_msgs::SonarSensorMsg and converts its angles to degrees
+  @param rmsg [stdr_msgs::SonarSensorMsg] The sonar message
+  @return stdr_msgs::SonarSensorMsg : The recreated sonar message
+  **/
   stdr_msgs::SonarSensorMsg fixSonarAnglesToDegrees(
     stdr_msgs::SonarSensorMsg rmsg)
   {
