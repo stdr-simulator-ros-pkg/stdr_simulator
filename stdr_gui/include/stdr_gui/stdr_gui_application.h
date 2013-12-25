@@ -25,13 +25,34 @@
 #include <QDebug>
 #include <QApplication>
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
-
+  /**
+  @class CStdrApplication
+  @brief Inherits QApplications. Created to overload the notify function.
+  **/ 
   class CStdrApplication:public QApplication
   {
     public:
+    
+      /**
+      @brief Default contructor
+      @param argc [int&] Number of input arguments
+      @param argv [char **] Input arguments
+      @return void
+      **/
       CStdrApplication(int &argc,char **argv);
+      
+      /**
+      @brief Called at every Qt event 
+      @param receiver [QObject*] The event receiver
+      @param event [QEvent*] The event triggered
+      @return bool : True if receiver was notified about event
+      **/
       bool notify(QObject * receiver, QEvent * event);
   };
 
