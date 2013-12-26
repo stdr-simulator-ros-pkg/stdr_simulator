@@ -22,6 +22,13 @@
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.h"
 
 namespace stdr_gui{
+  
+  /**
+  @brief Default contructor
+  @param p [QPoint] The pose of the rfid tag
+  @param name [std::string] The "name" of the rfid tag
+  @return void
+  **/
   CGuiRfidTag::CGuiRfidTag(QPoint p,std::string name):
     position_(p),
     name_(name),
@@ -30,21 +37,39 @@ namespace stdr_gui{
   
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CGuiRfidTag::~CGuiRfidTag(void)
   {
 
   }
   
+  /**
+  @brief Returns the "name" of the rfid tag
+  @return std::string 
+  **/
   std::string CGuiRfidTag::getName(void)
   {
     return name_;
   }
   
+  /**
+  @brief Checks proximity to a point
+  @param p [QPoint] The proximity point to check
+  @return bool : True if tag is close to p
+  **/
   bool CGuiRfidTag::checkProximity(QPoint p)
   {
     return false;  // 2b changed
   }
   
+  /**
+  @brief Draws the tag in the map
+  @param img [QImage*] The image to draw to
+  @return void
+  **/
   void CGuiRfidTag::draw(QImage *img)
   {
     QPainter painter(img);
@@ -60,11 +85,20 @@ namespace stdr_gui{
     }
   }
   
+  /**
+  @brief Sets the tag message
+  @param msg [QString] The message to be set
+  @return void
+  **/
   void CGuiRfidTag::setMessage(QString msg)
   {
     message_ = msg;
   }
   
+  /**
+  @brief Returns the tag message
+  @return QString
+  **/
   QString CGuiRfidTag::getMessage(void)
   {
     return message_;
