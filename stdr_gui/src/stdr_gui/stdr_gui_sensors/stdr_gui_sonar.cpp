@@ -22,6 +22,13 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sonar.h"
 
 namespace stdr_gui{
+  
+  /**
+  @brief Default contructor
+  @param msg [stdr_msgs::SonarSensorMsg] The sonar description msg
+  @param baseTopic [std::string] The ros topic for subscription
+  @return void
+  **/
   CGuiSonar::CGuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic):
     msg_(msg)
   {
@@ -32,11 +39,20 @@ namespace stdr_gui{
     visualization_status_ = 0;
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CGuiSonar::~CGuiSonar(void)
   {
 
   }
   
+  /**
+  @brief Callback for the ros sonar message
+  @param msg [const sensor_msgs::Range&] The new sonar range message
+  @return void
+  **/
   void CGuiSonar::callback(const sensor_msgs::Range& msg)
   {
     if(lock_)
@@ -46,6 +62,13 @@ namespace stdr_gui{
     range_ = msg;
   }
   
+  /**
+  @brief Paints the sonar range in the map image
+  @param m [QImage*] The image to be drawn
+  @param ocgd [float] The map's resolution
+  @param robotPose [geometry_msgs::Pose2D] The robot's pose
+  @return void
+  **/
   void CGuiSonar::paint(
     QImage *m,
     float ocgd,
@@ -102,6 +125,13 @@ namespace stdr_gui{
     lock_ = false;
   }
   
+  /**
+  @brief Paints the sonar range in it's own visualizer
+  @param m [QImage*] The image to be drawn
+  @param ocgd [float] The map's resolution
+  @param maxRange [float] The maximum range of all the robot sensors. Used for the visualizer proportions 
+  @return void
+  **/
   void CGuiSonar::visualizerPaint(
     QImage *m,
     float ocgd,
@@ -145,26 +175,47 @@ namespace stdr_gui{
     lock_ = false;
   }
   
+  /**
+  @brief Returns the max range of the specific sonar sensor
+  @return float
+  **/
   float CGuiSonar::getMaxRange(void)
   {
     return msg_.maxRange;
   }
   
+  /**
+  @brief Returns the visibility status of the specific sonar sensor
+  @return char : The visibility status
+  **/
   char CGuiSonar::getVisualizationStatus(void)
   {
     return visualization_status_;
   }
   
+  /**
+  @brief Toggles the visibility status of the specific sonar sensor
+  @return void
+  **/
   void CGuiSonar::toggleVisualizationStatus(void)
   {
     visualization_status_ = (visualization_status_ + 1) % 3;
   }
   
+  /**
+  @brief Returns the frame id of the specific sonar sensor
+  @return std::string : The sonar frame id
+  **/
   std::string CGuiSonar::getFrameId(void)
   {
     return msg_.frame_id;
   }
   
+  /**
+  @brief Sets the visibility status of the specific sonar sensor
+  @param vs [char] The new visibility status
+  @return void
+  **/
   void CGuiSonar::setVisualizationStatus(char vs)
   {
     visualization_status_ = vs;

@@ -27,35 +27,105 @@
 #include "stdr_msgs/SonarSensorMsg.h"
 #include "sensor_msgs/Range.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
 
+  /**
+  @class CGuiSonar
+  @brief Implements the functionalities for a sonar sensor
+  **/ 
   class CGuiSonar
   {
+    //------------------------------------------------------------------------//
     private:
+      //!< Used to avoid drawing when a new sonar message arives
       bool lock_;
-      
+      //!< The ROS topic to which the subscription must be made for the new values to be taken
       std::string topic_;
-      
+      //!< A sonar sensor message : Depscription of a sonar sensor
       stdr_msgs::SonarSensorMsg msg_;
-      
+      //!< Subscriber for the ros sensor msg
       ros::Subscriber subscriber_;
+      //!< The ros sonar range msg
       sensor_msgs::Range range_;
-      
+      //!< Visualization status of the specific sonar
       char visualization_status_;
-    
+      
+    //------------------------------------------------------------------------//
     public:
+    
+      /**
+      @brief Default contructor
+      @param msg [stdr_msgs::SonarSensorMsg] The sonar description msg
+      @param baseTopic [std::string] The ros topic for subscription
+      @return void
+      **/
       CGuiSonar(stdr_msgs::SonarSensorMsg msg,std::string baseTopic);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CGuiSonar(void);
       
+      /**
+      @brief Callback for the ros sonar message
+      @param msg [const sensor_msgs::Range&] The new sonar range message
+      @return void
+      **/
       void callback(const sensor_msgs::Range& msg); 
+      
+      /**
+      @brief Paints the sonar range in the map image
+      @param m [QImage*] The image to be drawn
+      @param ocgd [float] The map's resolution
+      @param robotPose [geometry_msgs::Pose2D] The robot's pose
+      @return void
+      **/
       void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
+      
+      /**
+      @brief Paints the sonar range in it's own visualizer
+      @param m [QImage*] The image to be drawn
+      @param ocgd [float] The map's resolution
+      @param maxRange [float] The maximum range of all the robot sensors. Used for the visualizer proportions 
+      @return void
+      **/
       void visualizerPaint(QImage *m,float ocgd,float maxRange);
+      
+      /**
+      @brief Returns the max range of the specific sonar sensor
+      @return float
+      **/
       float getMaxRange(void);
+      
+      /**
+      @brief Returns the frame id of the specific sonar sensor
+      @return std::string : The sonar frame id
+      **/
       std::string getFrameId(void);
       
+      /**
+      @brief Returns the visibility status of the specific sonar sensor
+      @return char : The visibility status
+      **/
       char getVisualizationStatus(void);
+      
+      /**
+      @brief Toggles the visibility status of the specific sonar sensor
+      @return void
+      **/
       void toggleVisualizationStatus(void);
+      
+      /**
+      @brief Sets the visibility status of the specific sonar sensor
+      @param vs [char] The new visibility status
+      @return void
+      **/
       void setVisualizationStatus(char vs);
   };  
 }
