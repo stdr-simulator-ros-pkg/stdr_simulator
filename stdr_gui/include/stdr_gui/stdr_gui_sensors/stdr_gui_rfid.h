@@ -25,20 +25,45 @@
 #include "stdr_gui/stdr_tools.h"
 #include "stdr_msgs/RfidSensorMsg.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
+  /**
+  @class CGuiRfid
+  @brief Implements the functionalities for an RFID antenna sensor
+  **/ 
   class CGuiRfid
   {
+    //------------------------------------------------------------------------//
     private:
+    
+      //!< The topic from which the new RFID tags will be got
       std::string topic_;
+      
+      //!< The description for the rfid antenna message
       stdr_msgs::RfidSensorMsg msg_;
+      
+      //!< A ros subscriber
       ros::Subscriber subscriber_;
-      
+    //------------------------------------------------------------------------//
     public:
-      CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);
-      ~CGuiRfid(void);
       
-      void paint(QImage *m);
+      /**
+      @brief Default contructor
+      @param msg [stdr_msgs::RfidSensorMsg] The rfid antenna description msg
+      @param baseTopic [std::string] The ros topic for subscription
+      @return void
+      **/
+      CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
+      ~CGuiRfid(void);
   };  
 }
 

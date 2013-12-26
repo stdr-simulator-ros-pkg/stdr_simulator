@@ -23,13 +23,22 @@
 
 namespace stdr_gui
 {
-
+  /**
+  @brief Default contructor
+  @param msg [stdr_msgs::RfidSensorMsg] The rfid antenna description msg
+  @param baseTopic [std::string] The ros topic for subscription
+  @return void
+  **/
   CGuiRfid::CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic):
     msg_(msg)
   {
     
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CGuiRfid::~CGuiRfid(void)
   {
 
