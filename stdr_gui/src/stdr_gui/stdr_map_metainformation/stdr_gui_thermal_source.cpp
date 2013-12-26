@@ -22,6 +22,13 @@
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.h"
 
 namespace stdr_gui{
+  
+  /**
+  @brief Default contructor
+  @param p [QPoint] The pose of the thermal source
+  @param name [std::string] The "name" of the source
+  @return void
+  **/
   CGuiThermalSource::CGuiThermalSource(QPoint p,std::string name):
     position_(p),
     name_(name)
@@ -29,21 +36,39 @@ namespace stdr_gui{
 
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CGuiThermalSource::~CGuiThermalSource(void)
   {
 
   }
   
+  /**
+  @brief Returns the "name" of the thermal source
+  @return std::string 
+  **/
   std::string CGuiThermalSource::getName(void)
   {
     return name_;
   }
   
+  /**
+  @brief Checks proximity to a point
+  @param p [QPoint] The proximity point to check
+  @return bool : True if thermal source is close to p
+  **/
   bool CGuiThermalSource::checkProximity(QPoint p)
   {
     return false;  // 2b changed
   }
   
+  /**
+  @brief Draws the source in the map
+  @param img [QImage*] The image to draw to
+  @return void
+  **/
   void CGuiThermalSource::draw(QImage *img)
   {
     QPainter painter(img);

@@ -25,19 +25,58 @@
 
 #include "stdr_gui/stdr_tools.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
-
+  /**
+  @class CGuiThermalSource
+  @brief Implements the functionalities of a thermal source
+  **/ 
   class CGuiThermalSource
   {
+    //------------------------------------------------------------------------//
     private:
-      QPoint position_;    
+      //!< The position of the thermal source in the map
+      QPoint position_; 
+      //!< The "name" of the thermal source   
       std::string name_;  
+    //------------------------------------------------------------------------//
     public:
+      /**
+      @brief Default contructor
+      @param p [QPoint] The pose of the thermal source
+      @param name [std::string] The "name" of the source
+      @return void
+      **/
       CGuiThermalSource(QPoint p,std::string name);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CGuiThermalSource(void);
+      
+      /**
+      @brief Returns the "name" of the thermal source
+      @return std::string 
+      **/
       std::string getName(void);
+      
+      /**
+      @brief Checks proximity to a point
+      @param p [QPoint] The proximity point to check
+      @return bool : True if thermal source is close to p
+      **/
       bool checkProximity(QPoint p);
+      
+      /**
+      @brief Draws the source in the map
+      @param img [QImage*] The image to draw to
+      @return void
+      **/
       void draw(QImage *img);
   };  
 }
