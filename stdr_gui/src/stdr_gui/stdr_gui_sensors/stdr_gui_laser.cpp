@@ -23,7 +23,12 @@
 
 namespace stdr_gui
 {
-  
+  /**
+  @brief Default contructor
+  @param msg [stdr_msgs::LaserSensorMsg] The laser description msg
+  @param baseTopic [std::string] The ros topic for subscription
+  @return void
+  **/
   CGuiLaser::CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic):
     msg_(msg)
   {
@@ -34,20 +39,37 @@ namespace stdr_gui
     visualization_status_ = 0;
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CGuiLaser::~CGuiLaser(void)
   { 
   }
   
+  /**
+  @brief Returns the visibility status of the specific laser sensor
+  @return void
+  **/
   char CGuiLaser::getVisualizationStatus(void)
   {
     return visualization_status_;
   }
   
+  /**
+  @brief Toggles the visibility status of the specific laser sensor
+  @return void
+  **/
   void CGuiLaser::toggleVisualizationStatus(void)
   {
     visualization_status_ = (visualization_status_ + 1) % 3;
   }
   
+  /**
+  @brief Callback for the ros laser message
+  @param msg [const sensor_msgs::LaserScan&] The new laser scan message
+  @return void
+  **/
   void CGuiLaser::callback(const sensor_msgs::LaserScan& msg)
   {
     if(lock_)
@@ -57,6 +79,13 @@ namespace stdr_gui
     scan_ = msg;
   }
   
+  /**
+  @brief Paints the laser scan in the map image
+  @param m [QImage*] The image to be drawn
+  @param ocgd [float] The map's resolution
+  @param robotPose [geometry_msgs::Pose2D] The robot's pose
+  @return void
+  **/
   void CGuiLaser::paint(
     QImage *m,
     float ocgd,
@@ -104,6 +133,13 @@ namespace stdr_gui
     lock_ = false;
   }
   
+  /**
+  @brief Paints the laser scan in it's own visualizer
+  @param m [QImage*] The image to be drawn
+  @param ocgd [float] The map's resolution
+  @param maxRange [float] The maximum range of all the robot sensors. Used for the visualizer proportions 
+  @return void
+  **/
   void CGuiLaser::visualizerPaint(
     QImage *m,
     float ocgd,
@@ -113,9 +149,7 @@ namespace stdr_gui
     QPainter painter(m);
     float size = m->width();
     float climax = size / maxRange * ocgd / 2.1;
-    
-    
-    
+
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
     {
 	  float real_dist = scan_.ranges[i];
@@ -133,7 +167,7 @@ namespace stdr_gui
       {
         painter.setPen(QColor(255,0,0,100));
       }
-		
+
       painter.drawLine(
         size / 2 + (msg_.pose.x / ocgd) * climax,
         size / 2 + (msg_.pose.y / ocgd) * climax,
@@ -147,16 +181,29 @@ namespace stdr_gui
     lock_ = false;
   }
   
+  /**
+  @brief Returns the max range of the specific laser sensor
+  @return void
+  **/
   float CGuiLaser::getMaxRange(void)
   {
     return msg_.maxRange;
   }
   
+  /**
+  @brief Returns the frame id of the specific laser sensor
+  @return std::string : The laser frame id
+  **/
   std::string CGuiLaser::getFrameId(void)
   {
     return msg_.frame_id;
   }
   
+  /**
+  @brief Sets the visibility status of the specific laser sensor
+  @param vs [char] The new visibility status
+  @return void
+  **/
   void CGuiLaser::setVisualizationStatus(char vs)
   {
     visualization_status_ = vs;

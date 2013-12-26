@@ -26,35 +26,109 @@
 #include "stdr_msgs/LaserSensorMsg.h"
 #include "sensor_msgs/LaserScan.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
-
+  /**
+  @class CGuiLaser
+  @brief Implements the functionalities for a laser sensor
+  **/ 
   class CGuiLaser
   {
+    //------------------------------------------------------------------------//
     private:
-      bool lock_;
       
+      //!< Used to avoid drawing when a new laser message arives
+      bool lock_;
+      //!< The ROS topic to which the subscription must be made for the new values to be taken
       std::string topic_;
       
+      //!< A laser sensor message : Depscription of a laser sensor
       stdr_msgs::LaserSensorMsg msg_;
       
+      //!< Subscriber for the ros laser msg
       ros::Subscriber subscriber_;
+      
+      //!< The ros laser scan msg
       sensor_msgs::LaserScan scan_;
       
+      //!< Visualization status of the specific laser
       char visualization_status_;
-    
+      
+    //------------------------------------------------------------------------//
     public:
+    
+      /**
+      @brief Default contructor
+      @param msg [stdr_msgs::LaserSensorMsg] The laser description msg
+      @param baseTopic [std::string] The ros topic for subscription
+      @return void
+      **/
       CGuiLaser(stdr_msgs::LaserSensorMsg msg,std::string baseTopic);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CGuiLaser(void);
       
+      /**
+      @brief Callback for the ros laser message
+      @param msg [const sensor_msgs::LaserScan&] The new laser scan message
+      @return void
+      **/
       void callback(const sensor_msgs::LaserScan& msg); 
+      
+      /**
+      @brief Paints the laser scan in the map image
+      @param m [QImage*] The image to be drawn
+      @param ocgd [float] The map's resolution
+      @param robotPose [geometry_msgs::Pose2D] The robot's pose
+      @return void
+      **/
       void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
+      
+      /**
+      @brief Paints the laser scan in it's own visualizer
+      @param m [QImage*] The image to be drawn
+      @param ocgd [float] The map's resolution
+      @param maxRange [float] The maximum range of all the robot sensors. Used for the visualizer proportions 
+      @return void
+      **/
       void visualizerPaint(QImage *m,float ocgd,float maxRange);
+      
+      /**
+      @brief Returns the max range of the specific laser sensor
+      @return void
+      **/
       float getMaxRange(void);
+      
+      /**
+      @brief Returns the visibility status of the specific laser sensor
+      @return void
+      **/
       char getVisualizationStatus(void);
+      
+      /**
+      @brief Toggles the visibility status of the specific laser sensor
+      @return void
+      **/
       void toggleVisualizationStatus(void);
+      
+      /**
+      @brief Sets the visibility status of the specific laser sensor
+      @param vs [char] The new visibility status
+      @return void
+      **/
       void setVisualizationStatus(char vs);
       
+      /**
+      @brief Returns the frame id of the specific laser sensor
+      @return std::string : The laser frame id
+      **/
       std::string getFrameId(void);
   };  
 }
