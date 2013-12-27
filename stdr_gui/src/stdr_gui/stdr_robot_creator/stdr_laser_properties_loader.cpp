@@ -23,6 +23,12 @@
 
 namespace stdr_gui
 {
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char**] Input arguments
+  @return void
+  **/
   CLaserPropertiesLoader::CLaserPropertiesLoader(int argc, char **argv):
     argc_(argc),
     argv_(argv)
@@ -30,6 +36,10 @@ namespace stdr_gui
     setupUi(this);
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CLaserPropertiesLoader::~CLaserPropertiesLoader(void)
   {
     

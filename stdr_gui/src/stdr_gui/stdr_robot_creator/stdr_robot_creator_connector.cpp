@@ -28,6 +28,12 @@ namespace stdr_gui
   unsigned int CRobotCreatorConnector::sonar_number = 0;
   unsigned int CRobotCreatorConnector::rfid_number = 0;
   
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char**] Input arguments
+  @return void
+  **/
   CRobotCreatorConnector::CRobotCreatorConnector(int argc, char **argv):
     QObject(),
     loader_(argc,argv),
@@ -61,11 +67,19 @@ namespace stdr_gui
     climax_ = - 1;
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CRobotCreatorConnector::~CRobotCreatorConnector(void)
   {
     
   }
   
+  /**
+  @brief Initializes the robot creator
+  @return void
+  **/
   void CRobotCreatorConnector::initialise(void)
   {
     new_robot_msg_ = stdr_msgs::RobotMsg();
@@ -97,6 +111,12 @@ namespace stdr_gui
     loader_.show();
   }
 
+  /**
+  @brief Called when a tree item is clicked
+  @param item [QTreeWidgetItem *] The item clicked
+  @param column [int] The column clicked
+  @return void
+  **/
   void CRobotCreatorConnector::treeItemClicked( 
     QTreeWidgetItem * item, 
     int column)
@@ -188,6 +208,10 @@ namespace stdr_gui
     }
   }
 
+  /**
+  @brief Adds a laser sensor in the new robot 
+  @return void
+  **/
   void CRobotCreatorConnector::addLaser(void)
   {
     QString laserFrameId=QString("laser_") + 
@@ -280,6 +304,11 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  /**
+  @brief Adds a specific laser sensor in the new robot 
+  @param lmsg [stdr_msgs::LaserSensorMsg] The laser sensor to be added
+  @return void
+  **/
   void CRobotCreatorConnector::addLaser(stdr_msgs::LaserSensorMsg lmsg)
   {
     CRobotCreatorConnector::laser_number++;
@@ -355,6 +384,10 @@ namespace stdr_gui
     loader_.lasersNode.setExpanded(true);
   }
   
+  /**
+  @brief Adds a sonar sensor in the new robot 
+  @return void
+  **/
   void CRobotCreatorConnector::addSonar(void)
   {
     QString sonarFrameId = 
@@ -441,6 +474,11 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  /**
+  @brief Adds a specific sonar sensor in the new robot 
+  @param smsg [stdr_msgs::SonarSensorMsg] The sonar sensor to be added
+  @return void
+  **/
   void CRobotCreatorConnector::addSonar(stdr_msgs::SonarSensorMsg smsg)
   {
     CRobotCreatorConnector::sonar_number++;
@@ -511,6 +549,10 @@ namespace stdr_gui
     loader_.sonarsNode.setExpanded(true);
   }
   
+  /**
+  @brief Adds an rfid antenna sensor in the new robot 
+  @return void
+  **/
   void CRobotCreatorConnector::addRfidAntenna(void)
   {
     QString rfidFrameId=QString("rfid_antenna_") + 
@@ -584,6 +626,11 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  /**
+  @brief Erases a specific laser sensor based on a tree item
+  @param item [QTreeWidgetItem*] Tree item that holds the specific laser sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::eraseLaser(QTreeWidgetItem *item)
   {
     unsigned int laserFrameId = searchLaser(item->text(0));
@@ -597,6 +644,11 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  /**
+  @brief Erases a specific sonar sensor based on a tree item
+  @param item [QTreeWidgetItem*] Tree item that holds the specific sonar sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::eraseSonar(QTreeWidgetItem *item)
   {
     unsigned int sonarFrameId = searchSonar(item->text(0));
@@ -610,6 +662,11 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  /**
+  @brief Erases a specific rfid antenna sensor based on a tree item
+  @param item [QTreeWidgetItem*] Tree item that holds the specific rfid antenna sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::eraseRfid(QTreeWidgetItem *item)
   {
     unsigned int rfidFrameId = searchRfid(item->text(0));
@@ -623,6 +680,11 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  /**
+  @brief Edits a specific laser sensor based on a tree item. Initiates the laser sensor editor widget
+  @param item [QTreeWidgetItem*] Tree item that holds the specific laser sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::editLaser(QTreeWidgetItem *item)
   {
     unsigned int laserFrameId = searchLaser(item->text(0));
@@ -676,6 +738,11 @@ namespace stdr_gui
     loader_.laserPropLoader.show();
   }
   
+  /**
+  @brief Saves a specific laser sensor in a file
+  @param item [QTreeWidgetItem*] The tree item that holds the laser sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::saveLaser(QTreeWidgetItem *item)
   {
     unsigned int laserFrameId = searchLaser(item->text(0));
@@ -702,6 +769,11 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Saves a specific sonar sensor in a file
+  @param item [QTreeWidgetItem*] The tree item that holds the sonar sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::saveSonar(QTreeWidgetItem *item)
   {
     unsigned int sonarFrameId = searchSonar(item->text(0));
@@ -728,6 +800,11 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Loads a specific laser sensor from a file
+  @param item [QTreeWidgetItem*] The tree item that holds the laser sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::loadLaser(QTreeWidgetItem *item)
   {
     unsigned int laserFrameId = searchLaser(item->text(0));
@@ -764,6 +841,11 @@ namespace stdr_gui
     updateRobotPreview(); 
   }
   
+  /**
+  @brief Loads a specific sonar sensor from a file
+  @param item [QTreeWidgetItem*] The tree item that holds the sonar sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::loadSonar(QTreeWidgetItem *item)
   {
     unsigned int sonarFrameId = searchSonar(item->text(0));
@@ -802,6 +884,11 @@ namespace stdr_gui
     updateRobotPreview(); 
   }
   
+  /**
+  @brief Edits a specific sonar sensor based on a tree item. Initiates the sonar sensor editor widget
+  @param item [QTreeWidgetItem*] Tree item that holds the specific sonar sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::editSonar(QTreeWidgetItem *item)
   {
     unsigned int sonarFrameId = searchSonar(item->text(0));
@@ -850,6 +937,11 @@ namespace stdr_gui
     loader_.sonarPropLoader.show();
   }
   
+  /**
+  @brief Edits a specific rfid antenna sensor based on a tree item. Initiates the rfid antenna sensor editor widget
+  @param item [QTreeWidgetItem*] Tree item that holds the specific rfid antenna sensor 
+  @return void
+  **/
   void CRobotCreatorConnector::editRfid(QTreeWidgetItem *item)
   {
     unsigned int frameId = searchRfid(item->text(0));
@@ -890,6 +982,11 @@ namespace stdr_gui
     loader_.rfidAntennaPropLoader.show();
   }
   
+  /**
+  @brief Returns the ID of a laser sensor
+  @param frameId [QString] The frame id of the laser sensor 
+  @return int
+  **/
   int CRobotCreatorConnector::searchLaser(QString frameId)
   {
     for(unsigned int i = 0 ; i < new_robot_msg_.laserSensors.size() ; i++)
@@ -902,6 +999,11 @@ namespace stdr_gui
     return -1;
   }
   
+  /**
+  @brief Returns the ID of a sonar sensor
+  @param frameId [QString] The frame id of the sonar sensor 
+  @return int
+  **/
   int CRobotCreatorConnector::searchSonar(QString frameId)
   {
     for(unsigned int i = 0 ; i < new_robot_msg_.sonarSensors.size() ; i++)
@@ -914,6 +1016,11 @@ namespace stdr_gui
     return -1;
   }
   
+  /**
+  @brief Returns the ID of an rfid antenna sensor
+  @param frameId [QString] The frame id of the rfid antenna sensor 
+  @return int
+  **/
   int CRobotCreatorConnector::searchRfid(QString frameId)
   {
     for(unsigned int i = 0 ; i < new_robot_msg_.rfidSensors.size() ; i++)
@@ -926,6 +1033,10 @@ namespace stdr_gui
     return -1;
   }
   
+  /**
+  @brief Updates the robot's tree widget
+  @return void
+  **/
   void CRobotCreatorConnector::updateRobotTree(void)
   {
     for(unsigned int i = 0 ; i < loader_.robotNode.childCount() ; i++)
@@ -946,6 +1057,12 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Updates a tree item with a specific laser sensor
+  @param item [QTreeWidgetItem*] The tree item that will be updated
+  @param l [stdr_msgs::LaserSensorMsg] The laser sensor message
+  @return void
+  **/
   void CRobotCreatorConnector::updateLaserTree(
     QTreeWidgetItem *item,
     stdr_msgs::LaserSensorMsg l)
@@ -994,7 +1111,11 @@ namespace stdr_gui
       }
     }
   }
-      
+  
+  /**
+  @brief Called when the update button of the properties widget is clicked 
+  @return void
+  **/ 
   void CRobotCreatorConnector::updateLaser(void)
   {
     unsigned int laserFrameId = searchLaser(current_laser_->text(0));
@@ -1087,7 +1208,11 @@ namespace stdr_gui
     
     updateRobotPreview();
   }
-
+  
+  /**
+  @brief Called when the update button of the properties widget is clicked 
+  @return void
+  **/ 
   void CRobotCreatorConnector::updateSonar(void)
   {
     unsigned int frameId=searchSonar(current_sonar_->text(0));
@@ -1169,6 +1294,12 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  /**
+  @brief Updates a tree item with a specific sonar sensor
+  @param item [QTreeWidgetItem*] The tree item that will be updated
+  @param l [stdr_msgs::SonarSensorMsg] The sonar sensor message
+  @return void
+  **/
   void CRobotCreatorConnector::updateSonarTree(
     QTreeWidgetItem *item,
     stdr_msgs::SonarSensorMsg l)
@@ -1219,6 +1350,10 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Called when the update button of the properties widget is clicked 
+  @return void
+  **/ 
   void CRobotCreatorConnector::updateRfid(void)
   {
     unsigned int frameId = searchRfid(current_rfid_->text(0));
@@ -1288,6 +1423,10 @@ namespace stdr_gui
     updateRobotPreview();
   }
   
+  /**
+  @brief Shows the edit robot widget
+  @return void
+  **/
   void CRobotCreatorConnector::editRobot(void)
   {
     loader_.robotPropLoader.robotOrientation->
@@ -1295,6 +1434,10 @@ namespace stdr_gui
     loader_.robotPropLoader.show();
   }
   
+  /**
+  @brief Called when the update button of the properties widget is clicked 
+  @return void
+  **/ 
   void CRobotCreatorConnector::updateRobot(void)
   {
     for(unsigned int i = 0 ; i < loader_.robotNode.childCount() ; i++)
@@ -1313,6 +1456,11 @@ namespace stdr_gui
     updateRobotPreview();
   }
 
+  /**
+  @brief Deletes a specific tree item and it's children recursively
+  @param item [QTreeWidgetItem*] The item to be erased
+  @return void
+  **/
   void CRobotCreatorConnector::deleteTreeNode(QTreeWidgetItem *item)
   {
     int count = item->childCount();
@@ -1323,6 +1471,10 @@ namespace stdr_gui
     delete item;
   }
     
+  /**
+  @brief Updates the robot's preview
+  @return void
+  **/
   void CRobotCreatorConnector::updateRobotPreview(void)
   {
     
@@ -1428,6 +1580,11 @@ namespace stdr_gui
     loader_.robotTreeWidget->resizeColumnToContents(4);
   }
   
+  /**
+  @brief Draws a circular robot
+  @param radius [float] The robot radius 
+  @return void
+  **/
   void CRobotCreatorConnector::drawRobot(float radius)
   {
     QPainter painter(&loader_.robotPreviewImage);
@@ -1448,17 +1605,21 @@ namespace stdr_gui
       QPixmap().fromImage(loader_.robotPreviewImage));
   }
   
-  void CRobotCreatorConnector::drawRobot(float length,float width)
-  {
-    
-  }
-  
+  /**
+  @brief Draws a robot with a specific footprint
+  @param geometry [std::vector<std::pair<float,float> >] The robot footprint 
+  @return void
+  **/
   void CRobotCreatorConnector::drawRobot(
     std::vector<std::pair<float,float> > geometry)
   {
     
   }
 
+  /**
+  @brief Draws the robot's lasers
+  @return void
+  **/
   void CRobotCreatorConnector::drawLasers(void)
   {
     QPainter painter(&loader_.robotPreviewImage);
@@ -1493,6 +1654,10 @@ namespace stdr_gui
       QPixmap().fromImage(loader_.robotPreviewImage));
   }
   
+  /**
+  @brief Draws the robot's sonars
+  @return void
+  **/
   void CRobotCreatorConnector::drawSonars(void)
   {
     QPainter painter(&loader_.robotPreviewImage);
@@ -1527,6 +1692,10 @@ namespace stdr_gui
       QPixmap().fromImage(loader_.robotPreviewImage));
   }
   
+  /**
+  @brief Draws the robot's rfid antennas
+  @return void
+  **/
   void CRobotCreatorConnector::drawRfidAntennas(void)
   {
     QPainter painter(&loader_.robotPreviewImage);
@@ -1559,6 +1728,10 @@ namespace stdr_gui
       QPixmap().fromImage(loader_.robotPreviewImage));
   }
 
+  /**
+  @brief Called when the save robot button is clicked 
+  @return void
+  **/ 
   void CRobotCreatorConnector::saveRobot(void)
   {
     QString file_name = QFileDialog::getSaveFileName(&loader_, 
@@ -1572,6 +1745,10 @@ namespace stdr_gui
       stdr_gui_tools::fixRobotAnglesToRad(new_robot_msg_),file_name);
   }
   
+  /**
+  @brief Called when the load robot button 
+  @return void
+  **/ 
   void CRobotCreatorConnector::getRobotFromYaml(void)
   {
     QString file_name = QFileDialog::getOpenFileName(
@@ -1582,13 +1759,14 @@ namespace stdr_gui
         QString("/resources/"), 
         tr("Yaml Files (*.yaml)"));
     
-    if (file_name.isEmpty()) { // Not a valid filename
+    //!< Not a valid filename
+    if (file_name.isEmpty()) { 
       return;
     }
     
     try {
       new_robot_msg_ = 
-      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString()); // need to fix angles from rads to deg
+      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
       
       new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
 
@@ -1604,23 +1782,42 @@ namespace stdr_gui
     updateRobotPreview(); 
   }
   
+  /**
+  @brief Called when the load robot in map button is clicked 
+  @return void
+  **/ 
   void CRobotCreatorConnector::loadRobot(void)
   {
     Q_EMIT loadRobotPressed(new_robot_msg_);
     loader_.hide();
   }
   
+  /**
+  @brief Sets the robot's initial pose
+  @param x [float] x coordinate
+  @param y [float] y coordinate
+  @return void
+  **/
   void CRobotCreatorConnector::setInitialPose(float x, float y)
   {
     new_robot_msg_.initialPose.x = x;
     new_robot_msg_.initialPose.y = y;
   }
   
+  /**
+  @brief Returns the created robot
+  @return stdr_msgs::RobotMsg : The new robot
+  **/
   stdr_msgs::RobotMsg CRobotCreatorConnector::getNewRobot(void)
   {
     return new_robot_msg_;
   }
   
+  /**
+  @brief Sets the created robot
+  @param msg [stdr_msgs::RobotMsg] The new robot
+  @return void
+  **/
   void CRobotCreatorConnector::setNewRobot(stdr_msgs::RobotMsg msg)
   {
     new_robot_msg_=msg;

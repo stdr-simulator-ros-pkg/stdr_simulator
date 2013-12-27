@@ -25,17 +25,40 @@
 #include "ui_laserProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
+  /**
+  @class CLaserPropertiesLoader
+  @brief Implements the low level functionalities of the Laser properties widget. Inherits form QWidget and Ui_LaserProperties (auto created from ui file)
+  **/ 
   class CLaserPropertiesLoader : 
     public QWidget, 
     public Ui_LaserProperties
   {
+    //------------------------------------------------------------------------//
     private:
+      //!< Number of input arguments
       int   argc_;
+      //!< Input arguments
       char**  argv_;
+    //------------------------------------------------------------------------//
     public:
+      /**
+      @brief Default contructor
+      @param argc [int] Number of input arguments
+      @param argv [char**] Input arguments
+      @return void
+      **/
       CLaserPropertiesLoader(int argc, char **argv);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CLaserPropertiesLoader(void);
   };  
 }
