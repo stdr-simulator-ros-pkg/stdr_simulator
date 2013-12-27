@@ -25,17 +25,16 @@ namespace stdr_robot {
 
   Sonar::Sonar(const nav_msgs::OccupancyGrid& map,
       const geometry_msgs::Pose2DPtr& robotPosePtr,
-      tf::TransformBroadcaster& tf, 
       const stdr_msgs::SonarSensorMsg& msg, 
       const std::string& name,
       ros::NodeHandle& n)
-    : Sensor(map, robotPosePtr, tf, name)
+    : Sensor(map, robotPosePtr, name)
   {
     _description = msg;
 
     _timer = n.createTimer(ros::Duration(1/msg.frequency), &Sonar::updateSensorCallback, this);  
 
-    _publisher = n.advertise<sensor_msgs::Range>( name+"/"+msg.frame_id, 1 );
+    _publisher = n.advertise<sensor_msgs::Range>( _namespace+"/"+msg.frame_id, 1 );
   }
 
   void Sonar::updateSensorCallback(const ros::TimerEvent&) 
@@ -93,13 +92,18 @@ namespace stdr_robot {
       sonarRangeMsg.range = std::numeric_limits<float>::infinity();
 
     sonarRangeMsg.header.stamp = ros::Time::now();
-    sonarRangeMsg.header.frame_id = _description.frame_id;
+    sonarRangeMsg.header.frame_id = _namespace + "/" + _description.frame_id;
     _publisher.publish( sonarRangeMsg );
   }
 
-  void Sonar::tfCallback(const ros::TimerEvent&) 
+  geometry_msgs::Pose2D Sonar::getSensorPose()
   {
-    // publish laser tf
+    return _description.pose;
+  }
+  
+  std::string Sonar::getFrameId()
+  {
+    return _namespace + "/" + _description.frame_id;
   }
 
 }

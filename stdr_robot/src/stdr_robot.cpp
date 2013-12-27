@@ -41,7 +41,7 @@ void Robot::onInit() {
 	_mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
 	_moveRobotService = n.advertiseService(getName() + "/replace", &Robot::moveRobotCallback, this);
 	_collisionTimer = n.createTimer(ros::Duration(0.1), &Robot::checkCollision, this);
-	_tfTimer = n.createTimer(ros::Duration(0.1), &Robot::publishRobotTf, this);
+	_tfTimer = n.createTimer(ros::Duration(0.1), &Robot::publishTransforms, this);
 }
 
 void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const stdr_msgs::RegisterRobotResultConstPtr result) {
@@ -59,10 +59,10 @@ void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const
 	_currentPosePtr->theta = result->description.initialPose.theta;
 	
 	for ( unsigned int laserIter = 0; laserIter < result->description.laserSensors.size(); laserIter++ ){
-		_sensors.push_back( SensorPtr( new Laser( _map, _currentPosePtr, _tfBroadcaster, result->description.laserSensors[laserIter], getName(), n ) ) );
+		_sensors.push_back( SensorPtr( new Laser( _map, _currentPosePtr, result->description.laserSensors[laserIter], getName(), n ) ) );
 	}
 	for ( unsigned int sonarIter = 0; sonarIter < result->description.sonarSensors.size(); sonarIter++ ){
-		_sensors.push_back( SensorPtr( new Sonar( _map, _currentPosePtr, _tfBroadcaster, result->description.sonarSensors[sonarIter], getName(), n ) ) );
+		_sensors.push_back( SensorPtr( new Sonar( _map, _currentPosePtr, result->description.sonarSensors[sonarIter], getName(), n ) ) );
 	}
 	
 	_motionControllerPtr.reset( new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()) );
@@ -85,15 +85,37 @@ void Robot::checkCollision(const ros::TimerEvent&) {
 	// check if we have a collision and notify MotionController via stop() interface
 }
 
-void Robot::publishRobotTf(const ros::TimerEvent&) {
-		
-	tf::Vector3 translation(_currentPosePtr->x, _currentPosePtr->y, 0);
-	tf::Quaternion rotation;
-	rotation.setRPY(0, 0, _currentPosePtr->theta);
-	
-	tf::Transform transform(rotation, translation);
-	
-	_tfBroadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", getName()));	
+void Robot::publishTransforms(const ros::TimerEvent&) {
+  
+  // Robot tf
+  tf::Vector3 translation(_currentPosePtr->x, _currentPosePtr->y, 0);
+  tf::Quaternion rotation;
+  rotation.setRPY(0, 0, _currentPosePtr->theta);
+
+  tf::Transform transform(rotation, translation);
+
+  _tfBroadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", getName()));
+  
+  // sensors
+  for (int i = 0; i < _sensors.size(); i++) {
+    geometry_msgs::Pose2D sensorPose = _sensors[i]->getSensorPose();
+    
+    tf::Vector3 translation(sensorPose.x, sensorPose.y, 0);
+    tf::Quaternion rotation;
+    rotation.setRPY(0, 0, sensorPose.theta);
+    
+    tf::Transform transform(rotation, translation);
+    
+    _tfBroadcaster.sendTransform(tf::StampedTransform(
+                                                      transform, 
+                                                      ros::Time::now(), 
+                                                      getName(), 
+                                                     _sensors[i]->getFrameId()
+                                                      )
+                                );
+  
+  }
+  
 }
 
 Robot::~Robot() {
