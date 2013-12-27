@@ -23,7 +23,12 @@
 
 namespace stdr_gui
 {
-
+  /**
+  @brief Default contructor
+  @param name [QString] Sonar frame id
+  @param resolution [float] Map resolution
+  @return void
+  **/
   CSonarVisualisation::CSonarVisualisation(QString name,float resolution):
     name_(name),
     resolution_(resolution)
@@ -43,11 +48,19 @@ namespace stdr_gui
     
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CSonarVisualisation::~CSonarVisualisation(void)
   {
     
   }
   
+  /**
+  @brief Destroys the visualizer
+  @return void
+  **/
   void CSonarVisualisation::destruct(void)
   {
     hide();
@@ -57,6 +70,11 @@ namespace stdr_gui
     delete sonarMinDist;
   }
   
+  /**
+  @brief Called when the close event is triggered
+  @param event [QCloseEvent*] The close event
+  @return void
+  **/
   void CSonarVisualisation::closeEvent(QCloseEvent *event)
   {
     destruct();
@@ -64,11 +82,20 @@ namespace stdr_gui
     subscriber_.shutdown();
   }
   
+  /**
+  @brief Returns true if the visualizer is active
+  @return bool
+  **/
   bool CSonarVisualisation::getActive(void)
   {
     return active_;
   }
   
+  /**
+  @brief Sets the sonar description message
+  @param msg [stdr_msgs::SonarSensorMsg] The sonar description
+  @return void
+  **/
   void CSonarVisualisation::setSonar(stdr_msgs::SonarSensorMsg msg)
   {
     msg_ = msg;
@@ -76,11 +103,20 @@ namespace stdr_gui
     sonarMinDist->setText(QString().setNum(msg.minRange) + QString(" m"));
   }
   
+  /**
+  @brief Called when new laser data are available
+  @param msg [const sensor_msgs::Range&] The new sonar data
+  @return void
+  **/
   void CSonarVisualisation::callback(const sensor_msgs::Range& msg)
   {
     range_ = msg;
   }
   
+  /**
+  @brief Paints the visualizer
+  @return void
+  **/
   void CSonarVisualisation::paint(void)
   {
 	  
