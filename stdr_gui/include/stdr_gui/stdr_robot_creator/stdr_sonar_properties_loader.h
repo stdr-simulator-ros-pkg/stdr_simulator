@@ -25,15 +25,34 @@
 #include "ui_sonarProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
+  /**
+  @class CSonarPropertiesLoader
+  @brief Implements the low level functionalities of the sonar properties widget. Inherits form QWidget and Ui_RobotProperties (auto created from ui file)
+  **/ 
   class CSonarPropertiesLoader : 
     public QWidget, 
     public Ui_SonarProperties
   {
+    //------------------------------------------------------------------------//
+    private:
+      //!< Number of input arguments
       int   argc_;
+      //!< Input arguments
       char**  argv_;
+    //------------------------------------------------------------------------//
     public:
+      /**
+      @brief Default contructor
+      @param argc [int] Number of input arguments
+      @param argv [char**] Input arguments
+      @return void
+      **/
       CSonarPropertiesLoader(int argc, char **argv);
   };  
 }

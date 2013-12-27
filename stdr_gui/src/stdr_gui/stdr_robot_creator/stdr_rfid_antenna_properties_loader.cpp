@@ -23,6 +23,12 @@
 
 namespace stdr_gui
 {
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char**] Input arguments
+  @return void
+  **/
   CRfidAntennaPropertiesLoader::CRfidAntennaPropertiesLoader(
     int argc, char **argv):
     argc_(argc),
@@ -31,6 +37,10 @@ namespace stdr_gui
     setupUi(this);
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CRfidAntennaPropertiesLoader::~CRfidAntennaPropertiesLoader(void)
   {
     

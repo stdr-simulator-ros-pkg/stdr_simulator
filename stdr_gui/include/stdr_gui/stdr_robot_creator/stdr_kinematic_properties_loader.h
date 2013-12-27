@@ -25,18 +25,40 @@
 #include "ui_kinematicProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
+  /**
+  @class CKinematicPropertiesLoader
+  @brief Implements the low level functionalities of the Kinematic properties widget. Inherits form QWidget and Ui_KinematicProperties (auto created from ui file)
+  **/ 
   class CKinematicPropertiesLoader : 
     public QWidget, 
     public Ui_KinematicProperties
   {
+    //------------------------------------------------------------------------//
     private:
+      //!< Number of input arguments
       int   argc_;
+      //!< Input arguments
       char**   argv_;
-    
+    //------------------------------------------------------------------------//
     public:
+      /**
+      @brief Default contructor
+      @param argc [int] Number of input arguments
+      @param argv [char**] Input arguments
+      @return void
+      **/
       CKinematicPropertiesLoader(int argc, char **argv);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CKinematicPropertiesLoader(void);
   };  
 }

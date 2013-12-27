@@ -30,43 +30,85 @@
 #include "stdr_gui/stdr_robot_creator/stdr_laser_properties_loader.h"
 #include "stdr_gui/stdr_tools.h"
 
-
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
+  /**
+  @class CRobotCreatorLoader
+  @brief Implements the low level functionalities of the robot creator. Inherits form QWidget and Ui_RobotCreator (auto created from ui file)
+  **/ 
   class CRobotCreatorLoader : public QWidget, public Ui_RobotCreator
   {  
+    //------------------------------------------------------------------------//
     private:
+      //!< Number of input arguments
       int   argc_;
+      //!< Input arguments
       char **  argv_;
-    
+    //------------------------------------------------------------------------//
     public:
-      
+      //!< Holds the tree items that contain laser sensors
       std::vector<QTreeWidgetItem> lasers;
+      //!< Holds the tree items that contain sonar sensors
       std::vector<QTreeWidgetItem> sonars;
+      //!< Holds the tree items that contain rfid antenna sensors
       std::vector<QTreeWidgetItem> rfids;
       
-      QTreeWidgetItem  robotNode,
-              lasersNode,
-              sonarsNode,
-              rfidAntennasNode,
-              kinematicNode;
+      //!< Tree item for the robot
+      QTreeWidgetItem robotNode;
+      //!< Tree item for the lasers root
+      QTreeWidgetItem lasersNode;
+      //!< Tree item for the sonars root
+      QTreeWidgetItem sonarsNode;
+      //!< Tree item for the rfid antennas root
+      QTreeWidgetItem rfidAntennasNode;
+      //!< Tree item for the kinematic
+      QTreeWidgetItem kinematicNode;
+      //!< Tree item for the robot shape
       QTreeWidgetItem robotInfoShape;
+      //!< Tree item for the robot orientation
       QTreeWidgetItem robotInfoOrientation;
+      
+      //!< Holds the robot preview image
       QImage robotPreviewImage;
+      
+      //!< Add icon
       QIcon   addIcon;
+      //!< Edit icon
       QIcon  editIcon;
+      //!< Remove icon
       QIcon  removeIcon;
+      //!< Save icon
       QIcon  saveIcon;
+      //!< Load icon
       QIcon  loadIcon;
           
+      //!< Object of robot properties widget
       CRobotPropertiesLoader robotPropLoader;
+      //!< Object of laser properties widget
       CLaserPropertiesLoader laserPropLoader;
+      //!< Object of sonar properties widget
       CSonarPropertiesLoader sonarPropLoader;
+      //!< Object of robot kinematic properties widget
       CKinematicPropertiesLoader kinematicPropLoader;
+      //!< Object of rfid antenna properties widget
       CRfidAntennaPropertiesLoader rfidAntennaPropLoader;
       
+      /**
+      @brief Default contructor
+      @param argc [int] Number of input arguments
+      @param argv [char**] Input arguments
+      @return void
+      **/
       CRobotCreatorLoader(int argc, char **argv);
       
+      /**
+      @brief Sets up the information tree in robot creator widget
+      @return void
+      **/
       void setupInitialTree(void);
   };  
 }
