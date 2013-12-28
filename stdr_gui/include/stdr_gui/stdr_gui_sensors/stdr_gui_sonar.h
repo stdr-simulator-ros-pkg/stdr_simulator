@@ -46,6 +46,8 @@ namespace stdr_gui
       bool lock_;
       //!< The ROS topic to which the subscription must be made for the new values to be taken
       std::string topic_;
+      //!< The ROS tf frame
+      std::string tf_frame_;
       //!< A sonar sensor message : Depscription of a sonar sensor
       stdr_msgs::SonarSensorMsg msg_;
       //!< Subscriber for the ros sensor msg
@@ -83,10 +85,10 @@ namespace stdr_gui
       @brief Paints the sonar range in the map image
       @param m [QImage*] The image to be drawn
       @param ocgd [float] The map's resolution
-      @param robotPose [geometry_msgs::Pose2D] The robot's pose
+      @param listener [tf::TransformListener *] ROS tf transform listener
       @return void
       **/
-      void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
+      void paint(QImage *m,float ocgd,tf::TransformListener *listener);
       
       /**
       @brief Paints the sonar range in it's own visualizer

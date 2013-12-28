@@ -89,7 +89,7 @@ namespace stdr_gui
       @brief Paints the laser scan in the map image
       @param m [QImage*] The image to be drawn
       @param ocgd [float] The map's resolution
-      @param robotPose [geometry_msgs::Pose2D] The robot's pose
+      @param listener [tf::TransformListener *] ROS tf transform listener
       @return void
       **/
       void paint(QImage *m,float ocgd,tf::TransformListener *listener);
