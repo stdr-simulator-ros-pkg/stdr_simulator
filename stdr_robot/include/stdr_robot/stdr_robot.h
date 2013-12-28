@@ -57,7 +57,7 @@ class Robot : public nodelet::Nodelet {
 	private:
 		
 		void checkCollision(const ros::TimerEvent&);
-		void publishRobotTf(const ros::TimerEvent&);
+		void publishTransforms(const ros::TimerEvent&);
 	
 	private:
 	

@@ -24,26 +24,25 @@
 namespace stdr_robot {
 
   Laser::Laser(const nav_msgs::OccupancyGrid& map,
-      const geometry_msgs::Pose2DPtr& robotPosePtr,
-      tf::TransformBroadcaster& tf, 
       const stdr_msgs::LaserSensorMsg& msg, 
       const std::string& name,
       ros::NodeHandle& n)
-    : Sensor(map, robotPosePtr, tf, name)
+    : Sensor(map, name)
   {
     _description = msg;
 
     _timer = n.createTimer(ros::Duration(1/msg.frequency), &Laser::updateSensorCallback, this);	
+    _tfTimer = n.createTimer(ros::Duration(1/(2*msg.frequency)), &Laser::updateTransform, this);	
 
-    _publisher = n.advertise<sensor_msgs::LaserScan>( name+"/"+msg.frame_id, 1 );
+    _publisher = n.advertise<sensor_msgs::LaserScan>( _namespace+"/"+msg.frame_id, 1 );
   }
 
   void Laser::updateSensorCallback(const ros::TimerEvent&) {
-    if (!_robotPosePtr)
-    {
-      ROS_DEBUG("Pointer not initialized\n");
+    
+    if (!_gotTransform) { // wait for transform 
       return;
     }
+    
     float angle;
     int distance;
     int xMap, yMap;
@@ -64,13 +63,15 @@ namespace stdr_robot {
     for ( int laserScanIter = 0; laserScanIter < _description.numRays; laserScanIter++ )
     {
 
-      angle = _robotPosePtr->theta + _description.minAngle + laserScanIter * ( _description.maxAngle - _description.minAngle ) / _description.numRays;
+      angle = tf::getYaw(_sensorTransform.getRotation()) + _description.minAngle + laserScanIter * ( _description.maxAngle - _description.minAngle ) / _description.numRays;
       distance = 1;
 
       while ( distance <= _description.maxRange / _map.info.resolution )
       {
-        xMap = (_robotPosePtr->x + _description.pose.x * cos(_robotPosePtr->theta) - _description.pose.y * sin(_robotPosePtr->theta)) / _map.info.resolution + cos( angle ) * distance;
-        yMap = (_robotPosePtr->y + _description.pose.x * sin(_robotPosePtr->theta) + _description.pose.y * cos(_robotPosePtr->theta)) / _map.info.resolution + sin( angle ) * distance;
+        xMap = _sensorTransform.getOrigin().x() / _map.info.resolution + cos( angle ) * distance;
+        
+        yMap = _sensorTransform.getOrigin().y() / _map.info.resolution + sin( angle ) * distance;
+        
         if ( _map.data[ yMap * _map.info.width + xMap ] > 70 ) break;
         distance ++;
       }
@@ -82,15 +83,38 @@ namespace stdr_robot {
       else
         _laserScan.ranges.push_back( distance * _map.info.resolution );
     }
-
+    
     _laserScan.header.stamp = ros::Time::now();
-    _laserScan.header.frame_id = _description.frame_id;
+    _laserScan.header.frame_id = _namespace + "_" + _description.frame_id;
     _publisher.publish( _laserScan );
   }
 
-  void Laser::tfCallback(const ros::TimerEvent&)
+  geometry_msgs::Pose2D Laser::getSensorPose() 
   {
-    // publish laser tf
+    return _description.pose;
+  }
+  
+  std::string Laser::getFrameId()
+  {
+    return _namespace + "_" + _description.frame_id;
+  }
+  
+  void Laser::updateTransform(const ros::TimerEvent&)
+  {
+    try {
+      _tfListener.waitForTransform("map",
+                                  _namespace + "_" + _description.frame_id,
+                                  ros::Time(0),
+                                  ros::Duration(0.2));
+      _tfListener.lookupTransform("map",
+                                  _namespace + "_" + _description.frame_id,
+                                  ros::Time(0), _sensorTransform);
+      _gotTransform = true;
+    }
+    catch (tf::TransformException ex) {
+      ROS_WARN("%s",ex.what());
+    }
+    
   }
 
 }

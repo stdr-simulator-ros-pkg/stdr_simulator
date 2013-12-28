@@ -24,27 +24,25 @@
 namespace stdr_robot {
 
   Sonar::Sonar(const nav_msgs::OccupancyGrid& map,
-      const geometry_msgs::Pose2DPtr& robotPosePtr,
-      tf::TransformBroadcaster& tf, 
       const stdr_msgs::SonarSensorMsg& msg, 
       const std::string& name,
       ros::NodeHandle& n)
-    : Sensor(map, robotPosePtr, tf, name)
+    : Sensor(map, name)
   {
     _description = msg;
 
     _timer = n.createTimer(ros::Duration(1/msg.frequency), &Sonar::updateSensorCallback, this);  
+    _tfTimer = n.createTimer(ros::Duration(1/(2*msg.frequency)), &Sonar::updateTransform, this);
 
-    _publisher = n.advertise<sensor_msgs::Range>( name+"/"+msg.frame_id, 1 );
+    _publisher = n.advertise<sensor_msgs::Range>( _namespace+"/"+msg.frame_id, 1 );
   }
 
   void Sonar::updateSensorCallback(const ros::TimerEvent&) 
   {
-    if (!_robotPosePtr)
-    {
-      ROS_DEBUG("Pointer not initialized\n");
+    if (!_gotTransform) { // wait for transform 
       return;
     }
+    
     float angle;
     int distance;
     int xMap, yMap;
@@ -77,8 +75,9 @@ namespace stdr_robot {
 
       while ( distance <= _description.maxRange / _map.info.resolution )
       {
-        xMap = (_robotPosePtr->x + _description.pose.x * cos(_robotPosePtr->theta) - _description.pose.y * sin(_robotPosePtr->theta)) / _map.info.resolution + cos( sonarIter + _description.pose.theta + _robotPosePtr->theta ) * distance;
-        yMap = (_robotPosePtr->y + _description.pose.x * sin(_robotPosePtr->theta) + _description.pose.y * cos(_robotPosePtr->theta)) / _map.info.resolution + sin( sonarIter + _description.pose.theta + _robotPosePtr->theta ) * distance;
+        xMap = _sensorTransform.getOrigin().x() / _map.info.resolution + cos( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) * distance;
+        yMap = _sensorTransform.getOrigin().y() / _map.info.resolution + sin( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) * distance;
+        
         if ( _map.data[ yMap * _map.info.width + xMap ] > 70 ) break;
         distance ++;
       }
@@ -86,20 +85,43 @@ namespace stdr_robot {
       if ( distance * _map.info.resolution < sonarRangeMsg.range )
         sonarRangeMsg.range = distance * _map.info.resolution;
     }
-
+    
     if ( sonarRangeMsg.range < _description.minRange )
       sonarRangeMsg.range = -std::numeric_limits<float>::infinity();
     else if ( sonarRangeMsg.range >= _description.maxRange )
       sonarRangeMsg.range = std::numeric_limits<float>::infinity();
 
     sonarRangeMsg.header.stamp = ros::Time::now();
-    sonarRangeMsg.header.frame_id = _description.frame_id;
+    sonarRangeMsg.header.frame_id = _namespace + "_" + _description.frame_id;
     _publisher.publish( sonarRangeMsg );
   }
 
-  void Sonar::tfCallback(const ros::TimerEvent&) 
+  geometry_msgs::Pose2D Sonar::getSensorPose()
   {
-    // publish laser tf
+    return _description.pose;
+  }
+  
+  std::string Sonar::getFrameId()
+  {
+    return _namespace + "_" + _description.frame_id;
+  }
+  
+  void Sonar::updateTransform(const ros::TimerEvent&)
+  {
+    try {
+      _tfListener.waitForTransform("map",
+                                  _namespace + "_" + _description.frame_id,
+                                  ros::Time(0),
+                                  ros::Duration(0.2));
+      _tfListener.lookupTransform("map",
+                                  _namespace + "_" + _description.frame_id,
+                                  ros::Time(0), _sensorTransform);
+      _gotTransform = true;
+    }
+    catch (tf::TransformException ex) {
+      ROS_WARN("%s", ex.what());
+    }
+    
   }
 
 }

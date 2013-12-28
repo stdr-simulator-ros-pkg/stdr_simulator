@@ -33,14 +33,13 @@ namespace stdr_robot {
     public:
 
       Laser(const nav_msgs::OccupancyGrid& map,
-          const geometry_msgs::Pose2DPtr& robotPosePtr,
-          tf::TransformBroadcaster& tf,
           const stdr_msgs::LaserSensorMsg& msg, 
           const std::string& name, 
           ros::NodeHandle& n);
       virtual void updateSensorCallback(const ros::TimerEvent&);
-      virtual void tfCallback(const ros::TimerEvent&);
-
+      virtual geometry_msgs::Pose2D getSensorPose();
+      virtual std::string getFrameId();
+      virtual void updateTransform(const ros::TimerEvent&);
       ~Laser() {}
 
     private:
