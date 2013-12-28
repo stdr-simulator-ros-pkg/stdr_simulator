@@ -60,6 +60,13 @@ namespace stdr_gui
       QTreeWidgetItem* current_sonar_;
       //!< Tree item of the currently clicked rfid
       QTreeWidgetItem* current_rfid_;
+      
+      /**
+      @brief Pops up a message box with a specific message
+      @param msg [QString] Message to be shown
+      @return void
+      **/
+      void showMessage(QString msg);
     
     //------------------------------------------------------------------------//
     public:

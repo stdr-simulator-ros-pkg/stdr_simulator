@@ -1123,17 +1123,29 @@ namespace stdr_gui
     {
       return;
     }
+    float max_range = 1000.0;
+    float min_range = 0.0;
     for(unsigned int i = 0 ; i < current_laser_->childCount() ; i++)
     {
+      
+      //!< Laser angle span
       if(current_laser_->child(i)->text(0) == QString("Angle span"))
       {
         current_laser_->child(i)->setText(
           1,loader_.laserPropLoader.laserAngleSpan->text());
         float angleSpan = loader_.laserPropLoader.laserAngleSpan->
           text().toFloat() / 2.0;
+        if( angleSpan <= 0 )
+        {
+          showMessage(QString("Laser angle span invalid :") + 
+            QString().setNum(angleSpan * 2.0));
+          return;
+        }
         new_robot_msg_.laserSensors[laserFrameId].minAngle = - angleSpan;
         new_robot_msg_.laserSensors[laserFrameId].maxAngle = angleSpan;
       }
+      
+      //!< Laser orientation
       else if(current_laser_->child(i)->text(0) == QString("Orientation"))
       {
         float orientation = loader_.laserPropLoader.laserOrientation->
@@ -1145,26 +1157,62 @@ namespace stdr_gui
         new_robot_msg_.laserSensors[laserFrameId].pose.theta = 
           orientation;
       }
+      
+      //!< Laser max range
       else if(current_laser_->child(i)->text(0) == QString("Max range"))
       {
-        float maxRange = loader_.laserPropLoader.laserMaxDistance->
+        max_range = loader_.laserPropLoader.laserMaxDistance->
           text().toFloat();
-        current_laser_->child(i)->setText(1,QString().setNum(maxRange));
-        new_robot_msg_.laserSensors[laserFrameId].maxRange = maxRange;
+        if( max_range <= 0 )
+        {
+          showMessage(QString("Laser maximum range invalid :") + 
+            QString().setNum(max_range));
+          return;
+        }
+        if( max_range < min_range )
+        {
+          showMessage(QString("Laser maximum range lower than minimum range"));
+          return;
+        }
+        current_laser_->child(i)->setText(1,QString().setNum(max_range));
+        new_robot_msg_.laserSensors[laserFrameId].maxRange = max_range;
       }
+      
+      //!< Laser number of rays
       else if(current_laser_->child(i)->text(0) == QString("Number of rays"))
       {
         int rays = loader_.laserPropLoader.laserRays->text().toFloat();
+        if( rays <= 0 )
+        {
+          showMessage(QString("Laser rays number invalid :") + 
+            QString().setNum(rays));
+          return;
+        }
         current_laser_->child(i)->setText(1,QString().setNum(rays));
         new_robot_msg_.laserSensors[laserFrameId].numRays = rays;
       }
+      
+      //!< Laser minimum range
       else if(current_laser_->child(i)->text(0) == QString("Min range"))
       {
-        float minRange = loader_.laserPropLoader.laserMinDistance->
+        min_range = loader_.laserPropLoader.laserMinDistance->
           text().toFloat();
-        current_laser_->child(i)->setText(1,QString().setNum(minRange));
-        new_robot_msg_.laserSensors[laserFrameId].minRange = minRange;
+        if( min_range < 0 )
+        {
+          showMessage(QString("Laser minimum range invalid :") + 
+            QString().setNum(min_range));
+          return;
+        }
+        if( min_range > max_range )
+        {
+          showMessage(QString("Laser minimum range higher than maximum range"));
+          return;
+        }
+        current_laser_->child(i)->setText(1,QString().setNum(min_range));
+        new_robot_msg_.laserSensors[laserFrameId].minRange = min_range;
       }
+      
+      //!< Laser mean noise
       else if(current_laser_->child(i)->text(0) == QString("Noise mean"))
       {
         float noiseMean = loader_.laserPropLoader.laserNoiseMean->
@@ -1173,14 +1221,24 @@ namespace stdr_gui
         new_robot_msg_.laserSensors[laserFrameId].noise.noiseMean = 
           noiseMean;
       }
+      
+      //!< Laser std noise
       else if(current_laser_->child(i)->text(0) == QString("Noise std"))
       {
         float noiseStd = 
           loader_.laserPropLoader.laserNoiseStd->text().toFloat();
+        if( noiseStd < 0 )
+        {
+          showMessage(QString("Laser standard deviation of noise invalid :") + 
+            QString().setNum(noiseStd));
+          return;
+        }
         current_laser_->child(i)->setText(1,QString().setNum(noiseStd));
         new_robot_msg_.laserSensors[laserFrameId].noise.noiseStd = 
           noiseStd;
       }
+      
+      //!< Laser pose - x coordinate
       else if(current_laser_->child(i)->text(0) == QString("Pose - x"))
       {
         float dx = loader_.laserPropLoader.laserTranslationX->
@@ -1188,6 +1246,8 @@ namespace stdr_gui
         current_laser_->child(i)->setText(1,QString().setNum(dx));
         new_robot_msg_.laserSensors[laserFrameId].pose.x = dx;
       }
+      
+      //!< Laser pose - y coordinate
       else if(current_laser_->child(i)->text(0) == QString("Pose - y"))
       {
         float dy = loader_.laserPropLoader.laserTranslationY->
@@ -1195,12 +1255,20 @@ namespace stdr_gui
         current_laser_->child(i)->setText(1,QString().setNum(dy));
         new_robot_msg_.laserSensors[laserFrameId].pose.y = dy;
       }
+      
+      //!< Laser publishing frequency
       else if(current_laser_->child(i)->text(0) == QString("Frequency"))
       {
-        float dy = loader_.laserPropLoader.laserFrequency->
+        float frequency = loader_.laserPropLoader.laserFrequency->
           text().toFloat();
-        current_laser_->child(i)->setText(1,QString().setNum(dy));
-        new_robot_msg_.laserSensors[laserFrameId].frequency = dy;
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Laser publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_laser_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.laserSensors[laserFrameId].frequency = frequency;
       }
     }
 
@@ -1220,15 +1288,26 @@ namespace stdr_gui
     {
       return;
     }
+    float min_range = 0;
+    float max_range = 10000.0;
     for(unsigned int i = 0 ; i < current_sonar_->childCount() ; i++)
     {
+      //!< Sonar cone span
       if(current_sonar_->child(i)->text(0) == QString("Cone span"))
       {
-        current_sonar_->child(i)->
-          setText(1,loader_.sonarPropLoader.sonarConeSpan->text());
-        new_robot_msg_.sonarSensors[frameId].coneAngle = 
+        float cone_span = 
           loader_.sonarPropLoader.sonarConeSpan->text().toFloat();
+        if( cone_span <= 0 )
+        {
+          showMessage(QString("Sonar cone span invalid :") + 
+            QString().setNum(cone_span));
+          return;
+        }
+        current_sonar_->child(i)->setText(1,QString().setNum(cone_span));
+        new_robot_msg_.sonarSensors[frameId].coneAngle = cone_span;
       }
+      
+      //!< Sonar orientation
       else if(current_sonar_->child(i)->text(0) == QString("Orientation"))
       {
         float orientation = 
@@ -1237,21 +1316,48 @@ namespace stdr_gui
           setText(1,QString().setNum(orientation));
         new_robot_msg_.sonarSensors[frameId].pose.theta = orientation;
       }
+      
+      //!< Sonar max range
       else if(current_sonar_->child(i)->text(0) == QString("Max range"))
       {
-        float maxRange = 
-          loader_.sonarPropLoader.sonarMaxDistance->text().toFloat();
+        max_range = loader_.sonarPropLoader.sonarMaxDistance->text().toFloat();
+        if( max_range <= 0 )
+        {
+          showMessage(QString("Sonar maximum range invalid :") + 
+            QString().setNum(max_range));
+          return;
+        }
+        if( max_range < min_range )
+        {
+          showMessage(QString("Sonar maximum range lower than minimum range."));
+          return;
+        }
         current_sonar_->child(i)->
-          setText(1,QString().setNum(maxRange));
-        new_robot_msg_.sonarSensors[frameId].maxRange = maxRange;
+          setText(1,QString().setNum(max_range));
+        new_robot_msg_.sonarSensors[frameId].maxRange = max_range;
       }
+      
+      //!< Sonar min range
       else if(current_sonar_->child(i)->text(0) == QString("Min range"))
       {
-        float minRange = 
-          loader_.sonarPropLoader.sonarMinDistance->text().toFloat();
-        current_sonar_->child(i)->setText(1,QString().setNum(minRange));
-        new_robot_msg_.sonarSensors[frameId].minRange = minRange;
+        min_range = loader_.sonarPropLoader.sonarMinDistance->text().toFloat();
+        if( min_range < 0 )
+        {
+          showMessage(QString("Sonar minimum range invalid :") + 
+            QString().setNum(min_range));
+          return;
+        }
+        if( max_range < min_range )
+        {
+          showMessage(
+            QString("Sonar minimum range higher than maximum range."));
+          return;
+        }
+        current_sonar_->child(i)->setText(1,QString().setNum(min_range));
+        new_robot_msg_.sonarSensors[frameId].minRange = min_range;
       }
+      
+      //!< Sonar noise mean
       else if(current_sonar_->child(i)->text(0) == QString("Noise mean"))
       {
         float noiseMean = 
@@ -1260,32 +1366,52 @@ namespace stdr_gui
           setText(1,QString().setNum(noiseMean));
         new_robot_msg_.sonarSensors[frameId].noise.noiseMean = noiseMean;
       }
+      
+      //!< Sonar noise standard deviation
       else if(current_sonar_->child(i)->text(0) == QString("Noise std"))
       {
         float noiseStd = 
           loader_.sonarPropLoader.sonarNoiseStd->text().toFloat();
+        if( noiseStd < 0 )
+        {
+          showMessage(QString("Sonar noise standard deviation invalid :") + 
+            QString().setNum(noiseStd));
+          return;
+        }
         current_sonar_->
           child(i)->setText(1,QString().setNum(noiseStd));
         new_robot_msg_.sonarSensors[frameId].noise.noiseStd = noiseStd;
       }
+      
+      //!< Sonar pose - x coordinate
       else if(current_sonar_->child(i)->text(0) == QString("Pose - x"))
       {
         float dx = loader_.sonarPropLoader.sonarX->text().toFloat();
         current_sonar_->child(i)->setText(1,QString().setNum(dx));
         new_robot_msg_.sonarSensors[frameId].pose.x = dx;
       }
+      
+      //!< Sonar pose - y coordinate
       else if(current_sonar_->child(i)->text(0) == QString("Pose - y"))
       {
         float dy = loader_.sonarPropLoader.sonarY->text().toFloat();
         current_sonar_->child(i)->setText(1,QString().setNum(dy));
         new_robot_msg_.sonarSensors[frameId].pose.y = dy;
       }
+      
+      //!< Sonar publishing frequency
       else if(current_sonar_->child(i)->text(0) == QString("Frequency"))
       {
-        float dy = 
+        float frequency = 
           loader_.sonarPropLoader.sonarFrequency->text().toFloat();
-        current_sonar_->child(i)->setText(1,QString().setNum(dy));
-        new_robot_msg_.sonarSensors[frameId].frequency = dy;
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Sonar publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_sonar_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.sonarSensors[frameId].frequency = frequency;
       }
     }
 
@@ -1363,14 +1489,23 @@ namespace stdr_gui
     }
     for(unsigned int i = 0 ; i < current_rfid_->childCount() ; i++)
     {
+      
+      //!< Rfid antenna angle span
       if(current_rfid_->child(i)->text(0) == QString("Angle span"))
       {
-        current_rfid_->child(i)->setText(1,
-          loader_.rfidAntennaPropLoader.rfidAngleSpan->text());
-        new_robot_msg_.rfidSensors[frameId].angleSpan = 
-          loader_.rfidAntennaPropLoader.rfidAngleSpan->
-            text().toFloat();
+        float angle_span = 
+          loader_.rfidAntennaPropLoader.rfidAngleSpan->text().toFloat();
+        if( angle_span <= 0 )
+        {
+          showMessage(QString("Rfid antenna angle span invalid :") + 
+            QString().setNum(angle_span));
+          return;
+        }
+        current_rfid_->child(i)->setText(1,QString().setNum(angle_span));
+        new_robot_msg_.rfidSensors[frameId].angleSpan = angle_span;
       }
+      
+      //!< Rfid antenna orientation
       else if(current_rfid_->child(i)->text(0) == QString("Orientation"))
       {
         float orientation = 
@@ -1380,26 +1515,40 @@ namespace stdr_gui
           setText(1,QString().setNum(orientation));
         new_robot_msg_.rfidSensors[frameId].pose.theta = orientation;
       }
+      
+      //!< Rfid antenna max range
       else if(current_rfid_->child(i)->text(0) == QString("Max range"))
       {
         float maxRange = 
           loader_.rfidAntennaPropLoader.rfidMaxDistance->
             text().toFloat();
+        if( maxRange <= 0 )
+        {
+          showMessage(QString("Rfid antenna maximum range invalid :") + 
+            QString().setNum(maxRange));
+          return;
+        }
         current_rfid_->child(i)->setText(1,QString().setNum(maxRange));
         new_robot_msg_.rfidSensors[frameId].maxRange = maxRange;
       }
+      
+      //!< Rfid antenna pose - x coordinate
       else if(current_rfid_->child(i)->text(0) == QString("Pose - x"))
       {
         float dx = loader_.rfidAntennaPropLoader.rfidX->text().toFloat();
         current_rfid_->child(i)->setText(1,QString().setNum(dx));
         new_robot_msg_.rfidSensors[frameId].pose.x = dx;
       }
+      
+      //!< Rfid antenna pose - y coordinate
       else if(current_rfid_->child(i)->text(0) == QString("Pose - y"))
       {
         float dy = loader_.rfidAntennaPropLoader.rfidY->text().toFloat();
         current_rfid_->child(i)->setText(1,QString().setNum(dy));
         new_robot_msg_.rfidSensors[frameId].pose.y = dy;
       }
+      
+      //!< Rfid antenna signal cutoff
       else if(current_rfid_->child(i)->text(0) == QString("Signal cutoff"))
       {
         float signal = 
@@ -1408,13 +1557,21 @@ namespace stdr_gui
         current_rfid_->child(i)->setText(1,QString().setNum(signal));
         new_robot_msg_.rfidSensors[frameId].signalCutoff = signal;
       }
+      
+      //!< Rfid antenna publishing frequency
       else if(current_rfid_->child(i)->text(0) == QString("Frequency"))
       {
-        float signal = 
+        float frequency = 
           loader_.rfidAntennaPropLoader.rfidFrequency->
             text().toFloat();
-        current_rfid_->child(i)->setText(1,QString().setNum(signal));
-        new_robot_msg_.rfidSensors[frameId].frequency = signal;
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Rfid antenna publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_rfid_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.rfidSensors[frameId].frequency = frequency;
       }
     }
 
@@ -1821,5 +1978,17 @@ namespace stdr_gui
   void CRobotCreatorConnector::setNewRobot(stdr_msgs::RobotMsg msg)
   {
     new_robot_msg_=msg;
+  }
+  
+  /**
+  @brief Pops up a message box with a specific message
+  @param msg [QString] Message to be shown
+  @return void
+  **/
+  void CRobotCreatorConnector::showMessage(QString msg)
+  {
+    QMessageBox msgBox;
+    msgBox.setText(msg);
+    msgBox.exec();
   }
 }
