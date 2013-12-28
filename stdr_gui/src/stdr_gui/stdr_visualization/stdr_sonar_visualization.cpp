@@ -23,7 +23,7 @@
 
 namespace stdr_gui
 {
-  /**
+  /** 
   @brief Default contructor
   @param name [QString] Sonar frame id
   @param resolution [float] Map resolution
