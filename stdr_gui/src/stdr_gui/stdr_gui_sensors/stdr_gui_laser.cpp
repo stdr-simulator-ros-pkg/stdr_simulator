@@ -121,12 +121,14 @@ namespace stdr_gui
           
         robotPose.x / ocgd + (msg_.pose.x / ocgd * cos(robotPose.theta) - 
           msg_.pose.y /ocgd * sin(robotPose.theta)) + real_dist * 
-          cos(robotPose.theta + scan_.angle_min + i * scan_.angle_increment)
+          cos(robotPose.theta + msg_.pose.theta + 
+          scan_.angle_min + i * scan_.angle_increment)
            / ocgd,
           
         robotPose.y / ocgd + (msg_.pose.x / ocgd * sin(robotPose.theta) + 
           msg_.pose.y / ocgd * cos(robotPose.theta)) + real_dist *
-          sin(robotPose.theta + scan_.angle_min + i * scan_.angle_increment)
+          sin(robotPose.theta + msg_.pose.theta + 
+          scan_.angle_min + i * scan_.angle_increment)
            / ocgd
       );
     }
@@ -173,9 +175,11 @@ namespace stdr_gui
         size / 2 + (msg_.pose.y / ocgd) * climax,
 
         size / 2 + ((msg_.pose.x / ocgd) + real_dist *
-          cos(scan_.angle_min + i * scan_.angle_increment) / ocgd) * climax,
+          cos(scan_.angle_min + i * scan_.angle_increment + msg_.pose.theta)
+          / ocgd) * climax,
         size / 2 + ((msg_.pose.y / ocgd) + real_dist * 
-          sin(scan_.angle_min + i * scan_.angle_increment) / ocgd) * climax
+          sin(scan_.angle_min + i * scan_.angle_increment + msg_.pose.theta) 
+          / ocgd) * climax
       );
     }
     lock_ = false;
