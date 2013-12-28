@@ -64,3 +64,9 @@ target_link_libraries(stdr_server_node
 	${catkin_LIBRARIES}
 )
 
+add_executable(load_map src/map_loader_node.cpp)
+target_link_libraries(load_map
+	map_loader
+	${catkin_LIBRARIES}
+)
+
