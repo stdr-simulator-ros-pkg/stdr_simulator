@@ -67,6 +67,8 @@
 #include <stdr_msgs/RobotIndexedVectorMsg.h>
 #include <stdr_msgs/RobotIndexedMsg.h>
 #include <stdr_msgs/RobotMsg.h>
+#include <stdr_msgs/Noise.h>
+
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/LaserScan.h>
