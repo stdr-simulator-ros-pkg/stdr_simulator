@@ -89,7 +89,7 @@ namespace stdr_gui
     }
     for(unsigned int i = 0 ; i < sonars_.size() ; i++)
     {
-      sonars_[i]->paint(m,resolution_,current_pose_);
+      sonars_[i]->paint(m,resolution_,listener);
     }
     
     drawSelf(m);

@@ -33,6 +33,7 @@ namespace stdr_gui{
     msg_(msg)
   {
     topic_ = baseTopic + "/" + msg_.frame_id;
+    tf_frame_ = baseTopic + "_" + msg_.frame_id;
     ros::NodeHandle n;
     lock_ = false;
     subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiSonar::callback,this);
@@ -66,17 +67,36 @@ namespace stdr_gui{
   @brief Paints the sonar range in the map image
   @param m [QImage*] The image to be drawn
   @param ocgd [float] The map's resolution
-  @param robotPose [geometry_msgs::Pose2D] The robot's pose
+  @param listener [tf::TransformListener *] ROS tf transform listener
   @return void
   **/
   void CGuiSonar::paint(
     QImage *m,
     float ocgd,
-    geometry_msgs::Pose2D robotPose)
+    tf::TransformListener *listener)
   {
     lock_ = true;
     QPainter painter(m);
     
+    //!< Find transformation
+    tf::StampedTransform transform;
+      
+    try
+    {
+      listener->lookupTransform("map", 
+        tf_frame_.c_str(), ros::Time(0), transform);
+    }
+    catch (tf::TransformException ex)
+    {
+      ROS_DEBUG("%s",ex.what());
+    }
+    tfScalar roll,pitch,yaw;
+    float pose_x = transform.getOrigin().x();
+    float pose_y = transform.getOrigin().y();
+    transform.getBasis().getRPY(roll,pitch,yaw);
+    float pose_theta = yaw;
+    
+    //!< Draw laser stuff
     
     float real_dist = range_.range;
     if(real_dist > msg_.maxRange)
@@ -104,20 +124,14 @@ namespace stdr_gui{
     }
     
     painter.drawPie(
-      robotPose.x / ocgd +
-        (msg_.pose.x / ocgd * cos(robotPose.theta) - 
-        msg_.pose.y / ocgd * sin(robotPose.theta)) - 
-        real_dist / ocgd,
+      pose_x / ocgd - real_dist / ocgd,
         
-      robotPose.y / ocgd +
-        (msg_.pose.x / ocgd * sin(robotPose.theta) + 
-        msg_.pose.y / ocgd * cos(robotPose.theta)) -
-        real_dist / ocgd,
+      pose_y / ocgd - real_dist / ocgd,
       
       real_dist / ocgd * 2,
       real_dist / ocgd * 2,
       
-      - (robotPose.theta + msg_.pose.theta - msg_.coneAngle / 2.0)
+      - (pose_theta - msg_.coneAngle / 2.0)
         * 180.0 / STDR_PI * 16,
         
       - msg_.coneAngle * 180.0 / STDR_PI * 16);
