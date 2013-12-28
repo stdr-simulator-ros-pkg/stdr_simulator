@@ -72,6 +72,20 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 	return true;	
 }
 
+bool Server::loadExternalMapCallback(stdr_msgs::LoadExternalMap::Request& req,
+							stdr_msgs::LoadExternalMap& res)
+{
+	if (_mapServer) {
+		ROS_WARN("Map already loaded!");
+		return false;
+	}
+	_mapServer.reset(new MapServer(req.map));
+	// if we don't have map, no point to start servers
+	activateActionServers();
+
+	return true;	
+}
+
 void Server::spawnRobotCallback(const stdr_msgs::SpawnRobotGoalConstPtr& goal) {
 	
 	stdr_msgs::SpawnRobotResult result;

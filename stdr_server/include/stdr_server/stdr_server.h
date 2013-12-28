@@ -30,6 +30,7 @@
 #include <actionlib/server/simple_action_server.h>
 #include <stdr_server/map_server.h>
 #include <stdr_msgs/LoadMap.h>
+#include <stdr_msgs/LoadExternalMap.h>
 #include <stdr_msgs/RegisterGui.h>
 #include <stdr_msgs/RegisterRobotAction.h>
 #include <stdr_msgs/SpawnRobotAction.h>
@@ -56,6 +57,8 @@ class Server {
 		// Services
 		bool loadMapCallback(stdr_msgs::LoadMap::Request& req,
 							stdr_msgs::LoadMap::Response& res);
+		bool loadExternalMapCallback(stdr_msgs::LoadExternalMap::Request& req,
+							stdr_msgs::LoadExternalMap& res);
 		bool registerGuiCallback(stdr_msgs::RegisterGui::Request& req,
 							stdr_msgs::RegisterGui::Response& res);
 		// Actions
