@@ -44,6 +44,7 @@ Server::Server(int argc, char** argv)
 	}
 		
 	_loadMapService = _nh.advertiseService("/stdr_server/load_static_map", &Server::loadMapCallback, this);
+	_loadExternalMapService = _nh.advertiseService("/stdr_server/load_static_map_external", &Server::loadExternalMapCallback, this);
 	
 	while (!ros::service::waitForService("robot_manager/load_nodelet", ros::Duration(.1)) && ros::ok()) {
 		ROS_WARN("Trying to register to robot_manager/load_nodelet...");
@@ -73,7 +74,7 @@ bool Server::loadMapCallback(stdr_msgs::LoadMap::Request& req,
 }
 
 bool Server::loadExternalMapCallback(stdr_msgs::LoadExternalMap::Request& req,
-							stdr_msgs::LoadExternalMap& res)
+							stdr_msgs::LoadExternalMap::Response& res)
 {
 	if (_mapServer) {
 		ROS_WARN("Map already loaded!");
