@@ -82,7 +82,7 @@ namespace stdr_gui{
     if(real_dist > msg_.maxRange)
     {
       real_dist = msg_.maxRange;
-      QBrush brush(QColor(100,100,100,10 + 50 * (2 - visualization_status_)));
+      QBrush brush(QColor(100,100,100,75 * (2 - visualization_status_)));
       painter.setBrush(brush);
       QPen pen(QColor(0,0,0,0));
       painter.setPen(pen);
@@ -90,14 +90,14 @@ namespace stdr_gui{
     else if(real_dist < msg_.minRange)
     {
       real_dist = msg_.minRange;
-      QBrush brush(QColor(100,100,100,10 + 50 * (2 - visualization_status_)));
+      QBrush brush(QColor(100,100,100,75 * (2 - visualization_status_)));
       painter.setBrush(brush);
       QPen pen(QColor(0,0,0,0));
       painter.setPen(pen);
     }
     else
     {
-      QBrush brush(QColor(0,200,0,10 + 50 * (2 - visualization_status_)));
+      QBrush brush(QColor(0,200,0,75 * (2 - visualization_status_)));
       painter.setBrush(brush);
       QPen pen(QColor(0,0,0,0));
       painter.setPen(pen);

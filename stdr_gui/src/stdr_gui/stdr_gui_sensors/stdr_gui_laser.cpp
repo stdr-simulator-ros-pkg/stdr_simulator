@@ -100,17 +100,17 @@ namespace stdr_gui
       if(real_dist > msg_.maxRange)
       {
         real_dist = msg_.maxRange;
-        painter.setPen(QColor(255,0,0,10 + 50 * (2 - visualization_status_)));
+        painter.setPen(QColor(255,0,0,75 * (2 - visualization_status_)));
       }
       else if(real_dist < msg_.minRange)
       {
         real_dist = msg_.minRange;
         painter.setPen(QColor(100,100,100,
-          10 + 50 * (2 - visualization_status_)));
+          75 * (2 - visualization_status_)));
       }
       else
       {
-        painter.setPen(QColor(255,0,0,10 + 50 * (2 - visualization_status_)));
+        painter.setPen(QColor(255,0,0,75 * (2 - visualization_status_)));
       }
       painter.drawLine(
         robotPose.x / ocgd + (msg_.pose.x / ocgd * cos(robotPose.theta) - 
