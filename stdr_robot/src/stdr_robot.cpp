@@ -59,10 +59,10 @@ void Robot::initializeRobot(const actionlib::SimpleClientGoalState& state, const
 	_currentPosePtr->theta = result->description.initialPose.theta;
 	
 	for ( unsigned int laserIter = 0; laserIter < result->description.laserSensors.size(); laserIter++ ){
-		_sensors.push_back( SensorPtr( new Laser( _map, _currentPosePtr, result->description.laserSensors[laserIter], getName(), n ) ) );
+		_sensors.push_back( SensorPtr( new Laser( _map, result->description.laserSensors[laserIter], getName(), n ) ) );
 	}
 	for ( unsigned int sonarIter = 0; sonarIter < result->description.sonarSensors.size(); sonarIter++ ){
-		_sensors.push_back( SensorPtr( new Sonar( _map, _currentPosePtr, result->description.sonarSensors[sonarIter], getName(), n ) ) );
+		_sensors.push_back( SensorPtr( new Sonar( _map, result->description.sonarSensors[sonarIter], getName(), n ) ) );
 	}
 	
 	_motionControllerPtr.reset( new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()) );
@@ -92,22 +92,22 @@ void Robot::publishTransforms(const ros::TimerEvent&) {
   tf::Quaternion rotation;
   rotation.setRPY(0, 0, _currentPosePtr->theta);
 
-  tf::Transform transform(rotation, translation);
+  tf::Transform mapToRobot(rotation, translation);
 
-  _tfBroadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", getName()));
+  _tfBroadcaster.sendTransform(tf::StampedTransform(mapToRobot, ros::Time::now(), "map", getName()));
   
   // sensors
   for (int i = 0; i < _sensors.size(); i++) {
     geometry_msgs::Pose2D sensorPose = _sensors[i]->getSensorPose();
     
-    tf::Vector3 translation(sensorPose.x, sensorPose.y, 0);
-    tf::Quaternion rotation;
-    rotation.setRPY(0, 0, sensorPose.theta);
+    tf::Vector3 trans(sensorPose.x, sensorPose.y, 0);
+    tf::Quaternion rot;
+    rot.setRPY(0, 0, sensorPose.theta);
     
-    tf::Transform transform(rotation, translation);
+    tf::Transform robotToSensor(rot, trans);
     
     _tfBroadcaster.sendTransform(tf::StampedTransform(
-                                                      transform, 
+                                                      robotToSensor, 
                                                       ros::Time::now(), 
                                                       getName(), 
                                                      _sensors[i]->getFrameId()

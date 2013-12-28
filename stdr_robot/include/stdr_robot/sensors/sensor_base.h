@@ -36,24 +36,25 @@ class Sensor {
     virtual void updateSensorCallback(const ros::TimerEvent&) = 0;
     virtual geometry_msgs::Pose2D getSensorPose() = 0;
     virtual std::string getFrameId() = 0; 
+    virtual void updateTransform(const ros::TimerEvent&) = 0;
     virtual ~Sensor() {}
   
   protected:
     
     Sensor(const nav_msgs::OccupancyGrid& map,
-        const geometry_msgs::Pose2DPtr& robotPosePtr,
         const std::string& name) 
-    : _map(map), _namespace(name), _robotPosePtr(robotPosePtr) {}
+    : _map(map), _namespace(name), _gotTransform(false) {}
     
   protected:
   
     const std::string& _namespace;
     const nav_msgs::OccupancyGrid& _map;
-    const geometry_msgs::Pose2DPtr& _robotPosePtr;
     ros::Timer _timer;
     ros::Timer _tfTimer;
     ros::Publisher _publisher;
     tf::TransformListener _tfListener;
+    tf::StampedTransform _sensorTransform;
+    bool _gotTransform;
 };
 
 typedef boost::shared_ptr<Sensor> SensorPtr;
