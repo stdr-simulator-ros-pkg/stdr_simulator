@@ -33,6 +33,7 @@ namespace stdr_gui
     msg_(msg)
   {
     topic_ = baseTopic + "/" + msg_.frame_id;
+    tf_frame_ = baseTopic + "_" + msg_.frame_id;
     ros::NodeHandle n;
     lock_ = false;
     subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiLaser::callback,this);
@@ -89,10 +90,30 @@ namespace stdr_gui
   void CGuiLaser::paint(
     QImage *m,
     float ocgd,
-    geometry_msgs::Pose2D robotPose)
+    tf::TransformListener *listener)
   {
     lock_ = true;
     QPainter painter(m);
+    
+    //!< Find transformation
+    tf::StampedTransform transform;
+      
+    try
+    {
+      listener->lookupTransform("map_static", 
+        tf_frame_.c_str(), ros::Time(0), transform);
+    }
+    catch (tf::TransformException ex)
+    {
+      ROS_DEBUG("%s",ex.what());
+    }
+    tfScalar roll,pitch,yaw;
+    float pose_x = transform.getOrigin().x();
+    float pose_y = transform.getOrigin().y();
+    transform.getBasis().getRPY(roll,pitch,yaw);
+    float pose_theta = yaw;
+    
+    //!< Draw laser stuff
     
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
     {
@@ -113,22 +134,16 @@ namespace stdr_gui
         painter.setPen(QColor(255,0,0,75 * (2 - visualization_status_)));
       }
       painter.drawLine(
-        robotPose.x / ocgd + (msg_.pose.x / ocgd * cos(robotPose.theta) - 
-          msg_.pose.y / ocgd * sin(robotPose.theta)),
+        pose_x / ocgd,
         
-        robotPose.y / ocgd + (msg_.pose.x / ocgd * sin(robotPose.theta) + 
-          msg_.pose.y / ocgd * cos(robotPose.theta)),
+        pose_y / ocgd,
           
-        robotPose.x / ocgd + (msg_.pose.x / ocgd * cos(robotPose.theta) - 
-          msg_.pose.y /ocgd * sin(robotPose.theta)) + real_dist * 
-          cos(robotPose.theta + msg_.pose.theta + 
-          scan_.angle_min + i * scan_.angle_increment)
+        pose_x / ocgd + real_dist * 
+          cos(pose_theta + scan_.angle_min + i * scan_.angle_increment)
            / ocgd,
           
-        robotPose.y / ocgd + (msg_.pose.x / ocgd * sin(robotPose.theta) + 
-          msg_.pose.y / ocgd * cos(robotPose.theta)) + real_dist *
-          sin(robotPose.theta + msg_.pose.theta + 
-          scan_.angle_min + i * scan_.angle_increment)
+        pose_y / ocgd + real_dist * 
+          sin(pose_theta + scan_.angle_min + i * scan_.angle_increment)
            / ocgd
       );
     }

@@ -70,7 +70,7 @@ namespace stdr_gui
       
     try
     {
-      listener->lookupTransform("map", 
+      listener->lookupTransform("map_static", 
         frame_id_.c_str(), ros::Time(0), transform);
     }
     catch (tf::TransformException ex)
@@ -85,7 +85,7 @@ namespace stdr_gui
     
     for(unsigned int i = 0 ; i < lasers_.size() ; i++)
     {
-      lasers_[i]->paint(m,resolution_,current_pose_);
+      lasers_[i]->paint(m,resolution_,listener);
     }
     for(unsigned int i = 0 ; i < sonars_.size() ; i++)
     {
