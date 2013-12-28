@@ -29,56 +29,31 @@
 
 /* Author: Brian Gerkey */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <libgen.h>
-#include <fstream>
-
 #include "ros/ros.h"
-#include "ros/console.h"
-#include "map_server/image_loader.h"
 #include "nav_msgs/MapMetaData.h"
-#include "yaml-cpp/yaml.h"
-
-#ifdef HAVE_NEW_YAMLCPP
-// The >> operator disappeared in yaml-cpp 0.5, so this function is
-// added to provide support for code written under the yaml-cpp 0.3 API.
-template<typename T>
-void operator >> (const YAML::Node& node, T& i)
-{
-  i = node.as<T>();
-}
-#endif
+#include "nav_msgs/OccupancyGrid.h"
+#include "stdr_server/map_loader.h"
 
 namespace stdr_server {
 
 class MapServer
 {
   public:
-    /** Trivial constructor */
-    MapServer(const std::string& fname);
-
+    
+    explicit MapServer(const std::string& fname);
+    explicit MapServer(const nav_msgs::OccupancyGrid& map);
+    
+  private:
+    
+    void publishData();
+  
   private:
     ros::NodeHandle n;
     ros::Publisher map_pub;
     ros::Publisher metadata_pub;
-    ros::ServiceServer service;
-
-    /** Callback invoked when someone requests our service */
-    bool mapCallback(nav_msgs::GetMap::Request  &req,
-                     nav_msgs::GetMap::Response &res );
-
-    /** The map data is cached here, to be sent out to service callers
-     */
+    
     nav_msgs::MapMetaData meta_data_message_;
-    nav_msgs::GetMap::Response map_resp_;
-
-    /*
-    void metadataSubscriptionCallback(const ros::SingleSubscriberPublisher& pub)
-    {
-      pub.publish( meta_data_message_ );
-    }
-    */
+    nav_msgs::OccupancyGrid map_;
 
 };
 }
