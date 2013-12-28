@@ -85,7 +85,7 @@ namespace stdr_gui
     
     for(unsigned int i = 0 ; i < lasers_.size() ; i++)
     {
-      lasers_[i]->paint(m,resolution_,current_pose_);
+      lasers_[i]->paint(m,resolution_,listener);
     }
     for(unsigned int i = 0 ; i < sonars_.size() ; i++)
     {

@@ -46,6 +46,9 @@ namespace stdr_gui
       //!< The ROS topic to which the subscription must be made for the new values to be taken
       std::string topic_;
       
+      //!< The ROS tf frame
+      std::string tf_frame_;
+      
       //!< A laser sensor message : Depscription of a laser sensor
       stdr_msgs::LaserSensorMsg msg_;
       
@@ -89,7 +92,7 @@ namespace stdr_gui
       @param robotPose [geometry_msgs::Pose2D] The robot's pose
       @return void
       **/
-      void paint(QImage *m,float ocgd,geometry_msgs::Pose2D robotPose);
+      void paint(QImage *m,float ocgd,tf::TransformListener *listener);
       
       /**
       @brief Paints the laser scan in it's own visualizer
