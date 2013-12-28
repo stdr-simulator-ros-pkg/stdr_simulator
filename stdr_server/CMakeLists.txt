@@ -24,24 +24,30 @@ endif(NEW_YAMLCPP_FOUND)
 
 catkin_package(
     INCLUDE_DIRS
-        include
+      include
     LIBRARIES
+      map_loader
     CATKIN_DEPENDS
-        roscpp
-        tf
-        nav_msgs
-        nodelet
-        actionlib
+      roscpp
+      tf
+      nav_msgs
+      nodelet
+      actionlib
 )
 
 link_directories(${catkin_LIBRARY_DIRS})
 include_directories( include ${catkin_INCLUDE_DIRS})
 
+add_library(map_loader src/map_loader.cpp)
+target_link_libraries(map_loader
+    image_loader
+    yaml-cpp
+    ${catkin_LIBRARIES}
+)
 
 add_library(map_server src/map_server.cpp)
 target_link_libraries(map_server
-    image_loader
-    yaml-cpp
+    map_loader
     ${catkin_LIBRARIES}
 )
 

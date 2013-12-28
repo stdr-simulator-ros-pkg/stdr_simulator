@@ -19,36 +19,40 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdr_server/map_server.h>
+#ifndef STDR_MAP_LOADER_H
+#define STDR_MAP_LOADER_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <libgen.h>
+#include <fstream>
+
+#include <string>
+#include "ros/ros.h"
+#include "map_server/image_loader.h"
+#include "nav_msgs/MapMetaData.h"
+#include "yaml-cpp/yaml.h"
+
+
+#ifdef HAVE_NEW_YAMLCPP
+// The >> operator disappeared in yaml-cpp 0.5, so this function is
+// added to provide support for code written under the yaml-cpp 0.3 API.
+template<typename T>
+void operator >> (const YAML::Node& node, T& i)
+{
+  i = node.as<T>();
+}
+#endif
 
 namespace stdr_server {
 
-MapServer::MapServer(const std::string& fname) {
-  
-  map_ = map_loader::loadMap(fname);
-
-  meta_data_message_ = map_.info;
-  
-  publishData();  
-}
-
-MapServer::MapServer(const nav_msgs::OccupancyGrid& map) {
-  
-  map_ = map;
-  meta_data_message_ = map_.info;
-  
-  publishData();
-}
-
-void MapServer::publishData() {
-  // Latched publisher for metadata
-  metadata_pub= n.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
-  metadata_pub.publish( meta_data_message_ );
-  
-  // Latched publisher for data
-  map_pub = n.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
-  map_pub.publish( map_ );
-}
+  namespace map_loader {
+    
+    nav_msgs::OccupancyGrid loadMap(const std::string& fname); 
+    
+  } // end of namespace map_loader
 
 } // end of namespace stdr_server
 
+
+#endif
