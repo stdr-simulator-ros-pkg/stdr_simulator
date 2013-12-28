@@ -58,7 +58,7 @@ class Server {
 		bool loadMapCallback(stdr_msgs::LoadMap::Request& req,
 							stdr_msgs::LoadMap::Response& res);
 		bool loadExternalMapCallback(stdr_msgs::LoadExternalMap::Request& req,
-							stdr_msgs::LoadExternalMap& res);
+							stdr_msgs::LoadExternalMap::Response& res);
 		bool registerGuiCallback(stdr_msgs::RegisterGui::Request& req,
 							stdr_msgs::RegisterGui::Response& res);
 		// Actions
@@ -82,6 +82,7 @@ class Server {
 		ros::ServiceClient _spawnRobotClient;
 		ros::ServiceClient _unloadRobotClient;
 		ros::ServiceServer _loadMapService;
+		ros::ServiceServer _loadExternalMapService;
 		ros::ServiceServer _moveRobotService;
 		
 		RegisterRobotServer _registerRobotServer;
