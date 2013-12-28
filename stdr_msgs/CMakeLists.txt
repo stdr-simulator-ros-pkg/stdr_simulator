@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   actionlib_msgs
+  nav_msgs
 )
 
 
@@ -29,6 +30,7 @@ add_message_files(
 add_service_files( 
 	FILES
 	LoadMap.srv
+	LoadExternalMap.srv
 	RegisterGui.srv
 	MoveRobot.srv
 )
@@ -45,6 +47,7 @@ generate_messages(
   DEPENDENCIES
   std_msgs 
   geometry_msgs
+  nav_msgs
   actionlib_msgs # Or other packages containing msgs
 )
 
@@ -57,6 +60,7 @@ catkin_package(
 	std_msgs 
 	geometry_msgs 
 	actionlib_msgs
+  nav_msgs
 #  DEPENDS system_lib
 )
 
