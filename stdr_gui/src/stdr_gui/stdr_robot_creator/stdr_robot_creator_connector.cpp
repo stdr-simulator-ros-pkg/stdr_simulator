@@ -358,7 +358,7 @@ namespace stdr_gui
     
     rays->setText(1,QString().setNum(lmsg.numRays));
     angleSpan->setText(1,QString().setNum(lmsg.maxAngle - lmsg.minAngle));
-    orientation->setText(1,QString().setNum(lmsg.maxAngle + lmsg.minAngle));
+    orientation->setText(1,QString().setNum(lmsg.pose.theta));
     maxRange->setText(1,QString().setNum(lmsg.maxRange));
     minRange->setText(1,QString().setNum(lmsg.minRange));
     noiseMean->setText(1,QString().setNum(lmsg.noise.noiseMean));
@@ -1152,10 +1152,9 @@ namespace stdr_gui
           text().toFloat();
         current_laser_->child(i)->setText(
           1,QString().setNum(orientation));
-        new_robot_msg_.laserSensors[laserFrameId].minAngle += orientation;
-        new_robot_msg_.laserSensors[laserFrameId].maxAngle += orientation;
-        new_robot_msg_.laserSensors[laserFrameId].pose.theta = 
-          orientation;
+        //~ new_robot_msg_.laserSensors[laserFrameId].minAngle += orientation;
+        //~ new_robot_msg_.laserSensors[laserFrameId].maxAngle += orientation;
+        new_robot_msg_.laserSensors[laserFrameId].pose.theta = orientation;
       }
       
       //!< Laser max range
@@ -1798,12 +1797,17 @@ namespace stdr_gui
       painter.drawPie(
         250 - new_robot_msg_.laserSensors[i].maxRange * climax_ +   
           newx * climax_,
+          
         250 - new_robot_msg_.laserSensors[i].maxRange * climax_ - 
           newy * climax_,
+          
         new_robot_msg_.laserSensors[i].maxRange * climax_ * 2,
         new_robot_msg_.laserSensors[i].maxRange * climax_ * 2,
+        
         (new_robot_msg_.laserSensors[i].minAngle + 
-          new_robot_msg_.initialPose.theta) * 16,
+          new_robot_msg_.initialPose.theta + 
+          new_robot_msg_.laserSensors[i].pose.theta) * 16,
+        
         new_robot_msg_.laserSensors[i].maxAngle * 16 - 
           new_robot_msg_.laserSensors[i].minAngle * 16);
     }
