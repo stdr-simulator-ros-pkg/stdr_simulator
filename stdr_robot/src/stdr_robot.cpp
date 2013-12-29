@@ -94,7 +94,7 @@ void Robot::publishTransforms(const ros::TimerEvent&) {
 
   tf::Transform mapToRobot(rotation, translation);
 
-  _tfBroadcaster.sendTransform(tf::StampedTransform(mapToRobot, ros::Time::now(), "map", getName()));
+  _tfBroadcaster.sendTransform(tf::StampedTransform(mapToRobot, ros::Time::now(), "map_static", getName()));
   
   // sensors
   for (int i = 0; i < _sensors.size(); i++) {

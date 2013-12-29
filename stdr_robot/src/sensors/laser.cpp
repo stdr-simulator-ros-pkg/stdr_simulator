@@ -102,11 +102,11 @@ namespace stdr_robot {
   void Laser::updateTransform(const ros::TimerEvent&)
   {
     try {
-      _tfListener.waitForTransform("map",
+      _tfListener.waitForTransform("map_static",
                                   _namespace + "_" + _description.frame_id,
                                   ros::Time(0),
                                   ros::Duration(0.2));
-      _tfListener.lookupTransform("map",
+      _tfListener.lookupTransform("map_static",
                                   _namespace + "_" + _description.frame_id,
                                   ros::Time(0), _sensorTransform);
       _gotTransform = true;
