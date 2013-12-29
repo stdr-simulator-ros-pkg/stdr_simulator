@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
 	tf
 	stdr_msgs
 	stdr_robot
+	stdr_server
 	sensor_msgs
 	nav_msgs
 )
@@ -40,6 +41,7 @@ catkin_package(
 		tf
 		stdr_msgs
 		stdr_robot
+		stdr_server
 		sensor_msgs
 		nav_msgs
     INCLUDE_DIRS # TODO include
@@ -96,6 +98,7 @@ add_executable(stdr_gui_node
 add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)	# Wait for std messages to build
 target_link_libraries(stdr_gui_node
   stdr_parser
+  map_loader
 	${catkin_LIBRARIES} 
 	${QT_LIBRARIES}
 )

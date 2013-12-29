@@ -122,12 +122,47 @@ namespace stdr_gui
   **/
   void CGuiConnector::actionLoadMapTriggered(void)
   {
-    QString fileName = QFileDialog::getOpenFileName(
+    QString file_name = QFileDialog::getOpenFileName(
       &loader_,
       tr("Load map"), 
       QString().fromStdString(
-        stdr_gui_tools::getRosPackagePath("stdr_gui")), 
-        tr("Yaml Files (*.yaml)"));
+        stdr_gui_tools::getRosPackagePath("stdr_resources") + 
+          std::string("/maps")), 
+        tr("Yaml map files (*.yaml)"));
+    if(file_name.isEmpty() || file_name.isNull())
+    {
+      return;
+    }
+    
+    ros::NodeHandle nh;
+    
+    nav_msgs::OccupancyGrid map;
+    
+    map = stdr_server::map_loader::loadMap(file_name.toStdString().c_str());
+    
+    ros::ServiceClient client;
+    
+    while (!ros::service::waitForService
+      ("/stdr_server/load_static_map_external", ros::Duration(.1)) && 
+        ros::ok()) 
+    {
+      ROS_WARN
+        ("Trying to register to /stdr_server/load_static_map_external...");
+    }
+    
+    client = nh.serviceClient<stdr_msgs::LoadExternalMap>
+      ("/stdr_server/load_static_map_external", true);
+    
+    stdr_msgs::LoadExternalMap srv;
+    
+    srv.request.map = map;
+    
+    if (client.call(srv)) {
+      ROS_INFO("Map successfully loaded");
+    }
+    else {
+      ROS_ERROR("Could not load map, maybe already loaded...");
+    }
   }
   
   /**
