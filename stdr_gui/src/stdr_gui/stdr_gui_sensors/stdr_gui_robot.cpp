@@ -23,7 +23,11 @@
 
 namespace stdr_gui
 {
-
+  /**
+  @brief Default contructor
+  @param msg [const stdr_msgs::RobotIndexedMsg&] The robot description msg
+  @return void
+  **/
   CGuiRobot::CGuiRobot(const stdr_msgs::RobotIndexedMsg& msg)
   {
     robot_initialized_ = false;
@@ -34,6 +38,7 @@ namespace stdr_gui
     frame_id_ = msg.name;
     show_label_ = true;
     show_circles_ = false;
+    visualization_status_ = 0;
     for(unsigned int i = 0 ; i < msg.robot.laserSensors.size() ; i++)
     {
       CGuiLaser *l = new CGuiLaser(msg.robot.laserSensors[i], frame_id_);
@@ -46,7 +51,14 @@ namespace stdr_gui
     }
     robot_initialized_ = true;
   }
-
+  
+  /**
+  @brief Paints the robot and it's sensors to the image
+  @param m [QImage*] The image to be drawn
+  @param ocgd [float] The map's resolution
+  @param listener [tf::TransformListener *] ROS tf listener to get the robot's current pose
+  @return void
+  **/
   void CGuiRobot::draw(QImage *m,float ocgd,tf::TransformListener *listener)
   {
     if(!robot_initialized_)
@@ -58,7 +70,7 @@ namespace stdr_gui
       
     try
     {
-      listener->lookupTransform("map", 
+      listener->lookupTransform("map_static", 
         frame_id_.c_str(), ros::Time(0), transform);
     }
     catch (tf::TransformException ex)
@@ -73,20 +85,25 @@ namespace stdr_gui
     
     for(unsigned int i = 0 ; i < lasers_.size() ; i++)
     {
-      lasers_[i]->paint(m,resolution_,current_pose_);
+      lasers_[i]->paint(m,resolution_,listener);
     }
     for(unsigned int i = 0 ; i < sonars_.size() ; i++)
     {
-      sonars_[i]->paint(m,resolution_,current_pose_);
+      sonars_[i]->paint(m,resolution_,listener);
     }
     
     drawSelf(m);
   }
   
+  /**
+  @brief Draws the robot body 
+  @param m [QImage*] The image for the robot to draw itself
+  @return void
+  **/
   void CGuiRobot::drawSelf(QImage *m)
   {
     QPainter painter(m);
-    painter.setPen(Qt::blue);
+    painter.setPen(QColor(0,0,200,10 + 100 * (2 - visualization_status_)));
     
     painter.drawEllipse(
       (current_pose_.x - radius_) / resolution_,
@@ -104,7 +121,7 @@ namespace stdr_gui
   
     if(show_circles_)
     {
-      painter.setPen(QColor(255,0,0,150));
+      painter.setPen(QColor(255,0,0,10 + 100 * (2 - visualization_status_)));
       for(unsigned int i = 0 ; i < 5 ; i++)
       {
         painter.drawEllipse(
@@ -116,6 +133,11 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Checks if the robot is near a specific point
+  @param p [QPoint] A point
+  @return bool : True if the robot is in proximity with p
+  **/
   bool CGuiRobot::checkEventProximity(QPoint p)
   {
     float dx = p.x() * resolution_ - current_pose_.x;
@@ -124,11 +146,19 @@ namespace stdr_gui
     return dist <= radius_;
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CGuiRobot::~CGuiRobot(void)
   {
     
   }
   
+  /**
+  @brief Destroys the robot object
+  @return void
+  **/
   void CGuiRobot::destroy(void){
     for(unsigned int i = 0 ; i < lasers_.size() ; i++)
     {
@@ -140,31 +170,41 @@ namespace stdr_gui
     }
   }
 
+  /**
+  @brief Returns the frame id of the specific robot
+  @return std::string : The robot frame id
+  **/
   std::string CGuiRobot::getFrameId(void)
   {
     return frame_id_;
   }
   
+  /**
+  @brief Draws the robot's label
+  @param m [QImage*] The image to be drawn
+  @param ocgd [float] The map's resolution
+  @return void
+  **/
   void CGuiRobot::drawLabel(QImage *m,float ocgd)
   {
     QPainter painter(m);
     
-    painter.setPen(Qt::black);
+    painter.setPen(QColor(0,0,0,10 + 100 * (2 - visualization_status_)));
     
     painter.drawRect(
       current_pose_.x / ocgd + 10,
       m->height() - (current_pose_.y / ocgd) - 30,
       100,
       20);
-      
-    painter.setPen(Qt::white);
+    
+    painter.setPen(QColor(255,255,255,10 + 100 * (2 - visualization_status_)));
     
     painter.fillRect(
       current_pose_.x / ocgd + 10,
       m->height() - (current_pose_.y / ocgd) - 30,
       100,
       20,
-      QBrush(QColor(0,0,0,140)));
+      QBrush(QColor(0,0,0,10 + 100 * (2 - visualization_status_))));
     
     painter.drawText(
       current_pose_.x / ocgd + 12,
@@ -172,41 +212,74 @@ namespace stdr_gui
       QString(frame_id_.c_str()));
   }
   
+  /**
+  @brief Sets the show_label_ flag
+  @param b [bool] True for showing the label
+  @return void
+  **/
   void CGuiRobot::setShowLabel(bool b)
   {
     show_label_ = b;
   }
   
+  /**
+  @brief Gets the show_label_ flag
+  @return bool : show_label_
+  **/
   bool CGuiRobot::getShowLabel(void)
   {
     return show_label_;
   }
   
+  /**
+  @brief Gets the show_label_ flag
+  @return bool : show_label_
+  **/
   void CGuiRobot::toggleShowLabel(void)
   {
     show_label_ =! show_label_;
   }
   
+  /**
+  @brief Toggles the show_circles_ flag
+  @return void
+  **/
   void CGuiRobot::toggleShowCircles(void)
   {
     show_circles_ =! show_circles_;
   }
   
+  /**
+  @brief Returns the current robot pose
+  @return QPoint : The current robot pose
+  **/
   QPoint CGuiRobot::getCurrentPose(void)
   {
     return QPoint(current_pose_.x / resolution_, current_pose_.y / resolution_);
   }
   
+  /**
+  @brief Returns the lasers number
+  @return int : the lasers number
+  **/
   int CGuiRobot::getLasersNumber(void)
   {
     return lasers_.size();
   }
   
+  /**
+  @brief Returns the sonars number
+  @return int : the sonars number
+  **/
   int CGuiRobot::getSonarsNumber(void)
   {
     return sonars_.size();
   }
   
+  /**
+  @brief Returns the visibility status
+  @return char
+  **/
   QImage CGuiRobot::getVisualization(float ocgd)
   {
     float maxRange = -1;
@@ -239,6 +312,11 @@ namespace stdr_gui
     return visualization;
   }
   
+  /**
+  @brief Returns the laser visibility status
+  @param frame_id [std::string] The laser frame id
+  @return char
+  **/
   char CGuiRobot::getLaserVisualizationStatus(std::string frame_id)
   {
     for(unsigned int i = 0 ; i < lasers_.size() ; i++)
@@ -250,6 +328,11 @@ namespace stdr_gui
     }
   }
     
+  /**
+  @brief Toggles the laser visibility status
+  @param frame_id [std::string] The laser frame id
+  @return void
+  **/
   void CGuiRobot::toggleLaserVisualizationStatus(std::string frame_id)
   {
     for(unsigned int i = 0 ; i < lasers_.size() ; i++)
@@ -258,6 +341,64 @@ namespace stdr_gui
       {
         lasers_[i]->toggleVisualizationStatus();
       }
+    }
+  }
+  
+  /**
+  @brief Returns the sonar visibility status
+  @param frame_id [std::string] The sonar frame id
+  @return char
+  **/
+  char CGuiRobot::getSonarVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < sonars_.size() ; i++)
+    {
+      if(sonars_[i]->getFrameId() == frame_id)
+      {
+        return sonars_[i]->getVisualizationStatus();
+      }
+    }
+  }
+  
+  /**
+  @brief Toggles the sonar visibility status
+  @param frame_id [std::string] The sonar frame id
+  @return void
+  **/
+  void CGuiRobot::toggleSonarVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < sonars_.size() ; i++)
+    {
+      if(sonars_[i]->getFrameId() == frame_id)
+      {
+        sonars_[i]->toggleVisualizationStatus();
+      }
+    }
+  }
+  
+  /**
+  @brief Returns the visibility status
+  @return char
+  **/
+  char CGuiRobot::getVisualizationStatus(void)
+  {
+    return visualization_status_;
+  }
+  
+  /**
+  @brief Toggles the visibility status
+  @return void
+  **/
+  void CGuiRobot::toggleVisualizationStatus(void)
+  {
+    visualization_status_ = (visualization_status_ + 1) % 3;
+    for(unsigned int i = 0 ; i < lasers_.size() ; i++)
+    {
+      lasers_[i]->setVisualizationStatus(visualization_status_);
+    }
+    for(unsigned int i = 0 ; i < sonars_.size() ; i++)
+    {
+      sonars_[i]->setVisualizationStatus(visualization_status_);
     }
   }
 }

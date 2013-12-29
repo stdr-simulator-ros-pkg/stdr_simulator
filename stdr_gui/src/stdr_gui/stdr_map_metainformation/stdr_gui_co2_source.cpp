@@ -22,6 +22,13 @@
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.h"
 
 namespace stdr_gui{
+  
+  /**
+  @brief Default contructor
+  @param p [QPoint] The pose of the CO2 source
+  @param name [std::string] The "name" of the source
+  @return void
+  **/
   CGuiCo2Source::CGuiCo2Source(QPoint p,std::string name):
     position_(p),
     name_(name)
@@ -29,21 +36,39 @@ namespace stdr_gui{
 
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CGuiCo2Source::~CGuiCo2Source(void)
   {
 
   }
   
+  /**
+  @brief Returns the "name" of the CO2 source
+  @return std::string 
+  **/
   std::string CGuiCo2Source::getName(void)
   {
     return name_;
   }
   
+  /**
+  @brief Checks proximity to a point
+  @param p [QPoint] The proximity point to check
+  @return bool : True if CO2 source is close to p
+  **/
   bool CGuiCo2Source::checkProximity(QPoint p)
   {
     return false;  // 2b changed
   }
   
+  /**
+  @brief Draws the source in the map
+  @param img [QImage*] The image to draw to
+  @return void
+  **/
   void CGuiCo2Source::draw(QImage *img)
   {
     QPainter painter(img);

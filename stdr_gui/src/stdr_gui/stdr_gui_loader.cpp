@@ -23,7 +23,12 @@
 
 namespace stdr_gui
 {
-
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char **] Input arguments
+  @return void
+  **/
   CGuiLoader::CGuiLoader(int argc,char **argv):
     argc_(argc),
     argv_(argv)
@@ -34,6 +39,10 @@ namespace stdr_gui
     close_signal_ = false;
   }
   
+  /**
+  @brief Adds the tool buttons in the main window toolbar
+  @return void
+  **/
   void CGuiLoader::addToolbarIcons(void)
   {
     
@@ -207,6 +216,11 @@ namespace stdr_gui
     toolBar->setIconSize(QSize(30,30));
   }
   
+  /**
+  @brief Overloading of closeEvent function from QMainWindow
+  @param event [QCloseEvent*] The exit event
+  @return void
+  **/
   void CGuiLoader::closeEvent(QCloseEvent *event)
   {
     //~ ROS_ERROR("Shutdown signal!");
@@ -223,16 +237,28 @@ namespace stdr_gui
     event_ = event;
   }
   
+  /**
+  @brief Returns the exit event
+  @return QEvent* 
+  **/
   QEvent* CGuiLoader::getCloseEvent(void)
   {
     return event_;
   }
-    
+  
+  /**
+  @brief Returns true if a close event was triggered
+  @return bool
+  **/
   bool CGuiLoader::closeTriggered(void)
   {
     return close_signal_;
   }
   
+  /**
+  @brief Shuts down the main window
+  @return void
+  **/
   void CGuiLoader::shutdown(void)
   {
     this->close();

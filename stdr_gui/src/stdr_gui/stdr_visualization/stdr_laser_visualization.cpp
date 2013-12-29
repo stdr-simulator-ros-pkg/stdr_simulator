@@ -24,6 +24,12 @@
 namespace stdr_gui
 {
 
+  /**
+  @brief Default contructor
+  @param name [QString] Laser frame id
+  @param resolution [float] Map resolution
+  @return void
+  **/
   CLaserVisualisation::CLaserVisualisation(QString name,float resolution):
     name_(name),
     resolution_(resolution)
@@ -48,11 +54,19 @@ namespace stdr_gui
     void_image_.fill(QColor(255,255,255,255));
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CLaserVisualisation::~CLaserVisualisation(void)
   {
     
   }
   
+  /**
+  @brief Destroys the visualizer
+  @return void
+  **/
   void CLaserVisualisation::destruct(void)
   {
     active_ = false;
@@ -64,6 +78,11 @@ namespace stdr_gui
     delete laserImage;
   }
   
+  /**
+  @brief Called when the close event is triggered
+  @param event [QCloseEvent*] The close event
+  @return void
+  **/
   void CLaserVisualisation::closeEvent(QCloseEvent *event)
   {
     destruct();
@@ -71,11 +90,20 @@ namespace stdr_gui
     subscriber_.shutdown();
   }
   
+  /**
+  @brief Returns true if the visualizer is active
+  @return bool
+  **/
   bool CLaserVisualisation::getActive(void)
   {
     return active_;
   }
   
+  /**
+  @brief Sets the laser description message
+  @param msg [stdr_msgs::LaserSensorMsg] The laser description
+  @return void
+  **/
   void CLaserVisualisation::setLaser(stdr_msgs::LaserSensorMsg msg)
   {
     msg_ = msg;
@@ -83,11 +111,20 @@ namespace stdr_gui
     laserMin->setText(QString().setNum(msg.minRange) + QString(" m"));
   }
   
+  /**
+  @brief Called when new laser data are available
+  @param msg [const sensor_msgs::LaserScan&] The new laser data
+  @return void
+  **/
   void CLaserVisualisation::callback(const sensor_msgs::LaserScan& msg)
   {
     scan_ = msg;
   }
   
+  /**
+  @brief Paints the visualizer
+  @return void
+  **/
   void CLaserVisualisation::paint(void)
   {
     internal_image_ = void_image_;
@@ -95,8 +132,8 @@ namespace stdr_gui
     float mean = 0;
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
     {
-		
-	  float real_dist = scan_.ranges[i];
+
+    float real_dist = scan_.ranges[i];
       if(real_dist > msg_.maxRange)
       {
         real_dist = msg_.maxRange;

@@ -25,15 +25,34 @@
 #include "ui_robotProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
+  /**
+  @class CRobotPropertiesLoader
+  @brief Implements the low level functionalities of the robot properties widget. Inherits form QWidget and Ui_RobotProperties (auto created from ui file)
+  **/ 
   class CRobotPropertiesLoader : 
     public QWidget, 
     public Ui_RobotProperties
   {
+    //------------------------------------------------------------------------//
+    private:
+      //!< Number of input arguments
       int   argc_;
+      //!< Input arguments
       char**  argv_;
+    //------------------------------------------------------------------------//
     public:
+      /**
+      @brief Default contructor
+      @param argc [int] Number of input arguments
+      @param argv [char**] Input arguments
+      @return void
+      **/
       CRobotPropertiesLoader(int argc, char **argv);
   };  
 }

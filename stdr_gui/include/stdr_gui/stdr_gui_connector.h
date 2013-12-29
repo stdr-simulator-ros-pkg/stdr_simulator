@@ -25,35 +25,45 @@
 #include "stdr_gui/stdr_gui_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
   
   /**
-   @class GuiConnector
-   @brief Serves the Qt events of the main GUI window. Inherits from QObject
-   **/ 
+  @class CGuiConnector
+  @brief Serves the Qt events of the main GUI window. Inherits from QObject
+  **/ 
   class CGuiConnector:
     public QObject
   {
     Q_OBJECT
     
+    //------------------------------------------------------------------------//
     private:
     
-      int   argc_;       //!< Number of input arguments
-      char**  argv_;      //!< Input arguments
-      bool   map_loaded_;  //!< True if any map is loaded from server
-      
+      //!< Number of input arguments
+      int   argc_;  
+      //!< Input arguments     
+      char**  argv_;   
+      //!< True if any map is loaded from server
+      bool map_initialized_;
+      //!< True if grid is enabled
       bool   grid_enabled_;
       
-      CGuiLoader loader_;    //!< The loader of main GUI QWidget 
-      
-    public:
+      //!< The loader of main GUI QWidget 
+      CGuiLoader loader_;    
     
-                  
-      CRobotCreatorConnector robotCreatorConn;    //!< Serves the Qt events of the RobotCreator Widget
+    //------------------------------------------------------------------------//
+    public:
+      
+      //!< Serves the Qt events of the RobotCreator Widget
+      CRobotCreatorConnector robotCreatorConn;    
       
       /**
-      @brief Deafault contructor
+      @brief Default contructor
       @param argc [int] Number of input arguments
       @param argv [char **] Input arguments
       @return void
@@ -61,28 +71,67 @@ namespace stdr_gui
       CGuiConnector(int argc, char **argv);
       
       /**
-      @brief Setter of _mapLoaded variable
-      @param mapLoaded [bool] 
-      @return void
+      @brief Returns the grid enabled state
+      @return bool : True if grid is enabled
       **/
-      void setMapLoaded(bool mapLoaded);
-      
       bool isGridEnabled(void);
       
+      /**
+      @brief Adds a widget to the main window Qt grid
+      @param w [QWidget*] The widget to be placed
+      @param row [int] The row of the grid
+      @param column [int] The column of the grid
+      @return void
+      **/
       void addToGrid(QWidget *w,int row,int column);
       
+      /**
+      @brief Wraps the Qt gridColumnStretch function
+      @param cell [int] The specific column
+      @param stretch [int] The relative stretch coefficient
+      @return void
+      **/
       void setGridColumnStretch(int cell,int stretch);
       
+      /**
+      @brief Shows the main window
+      @return void
+      **/
       void show(void);
       
+      /**
+      @brief Displays a message in the QMainWindow status bar
+      @param s [QString] The message
+      @return void
+      **/
       void setStatusBarMessage(QString s);
       
+      /**
+      @brief Returns the exit event captured
+      @return QEvent* The captured event
+      **/
       QEvent* getCloseEvent(void);
       
+      /**
+      @brief Returns the exit triggered status
+      @return bool True if exit has been triggered
+      **/
       bool closeTriggered(void);
       
+      /**
+      @brief Shuts down the main window
+      @return void
+      **/
       void shutdown(void);
-
+      
+      /**
+      @brief Sets the map_initialized_ private variable
+      @param mi [bool] The new value
+      @return void
+      **/
+      void setMapInitialized(bool mi);
+    
+    //------------------------------------------------------------------------//
     public Q_SLOTS:
     
       /**
@@ -115,9 +164,28 @@ namespace stdr_gui
       **/
       void actionNewRobotTriggered(void);
       
+      /**
+      @brief Qt slot that is called when the NewRfid tool button is pressed
+      @return void
+      **/
       void actionNewRfidTriggered(void);
+      
+      /**
+      @brief Qt slot that is called when the NewCO2 tool button is pressed
+      @return void
+      **/
       void actionNewCo2Triggered(void);
+      
+      /**
+      @brief Qt slot that is called when the NewThermal tool button is pressed
+      @return void
+      **/
       void actionNewThermalTriggered(void);
+      
+      /**
+      @brief Qt slot that is called when the AddRobot tool button is pressed
+      @return void
+      **/
       void actionAddRobotTriggered(void);
       
       /**
@@ -132,9 +200,19 @@ namespace stdr_gui
       **/
       void actionZoomOutTriggered(void);
       
+      /**
+      @brief Qt slot that is called when the adjusted map visualization tool button is pressed
+      @return void
+      **/
       void actionAdjustedTriggered(void); 
-      void actionGridTriggered(void);
       
+      /**
+      @brief Qt slot that is called when the grid status has changed
+      @return void
+      **/
+      void actionGridTriggered(void);
+    
+    //------------------------------------------------------------------------//
     Q_SIGNALS:
     
       /**
@@ -150,17 +228,44 @@ namespace stdr_gui
       @return void
       **/
       void setZoomOutCursor(bool state);
+      
+      /**
+      @brief Qt signal that is emmited when the Adjust map button is pressed
+      @param state [bool] Toggle flag
+      @return void
+      **/
       void setAdjustedCursor(bool state);
       
+      /**
+      @brief Signal emmited on exit pressed
+      @return void
+      **/
       void guiExitEvent(void);
       
+      /**
+      @brief Signal emmited on load RFID tag pressed
+      @return void
+      **/
       void loadRfidPressed(void);
+      
+      /**
+      @brief Signal emmited on load thermal source pressed
+      @return void
+      **/
       void loadThermalPressed(void);
+      
+      /**
+      @brief Signal emmited on load CO2 source pressed
+      @return void
+      **/
       void loadCo2Pressed(void);
       
+      /**
+      @brief Signal emmited on load robot from file pressed
+      @param msg [stdr_msgs::RobotMsg] The robot to be placed in the map
+      @return void
+      **/
       void robotFromFile(stdr_msgs::RobotMsg msg);
-      
-      
   };
 }
 

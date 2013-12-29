@@ -25,17 +25,40 @@
 #include "ui_rfidAntennaProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
+  /**
+  @class CRfidAntennaPropertiesLoader
+  @brief Implements the low level functionalities of the Rfid antenna properties widget. Inherits form QWidget and Ui_RfidAntennaProperties (auto created from ui file)
+  **/ 
   class CRfidAntennaPropertiesLoader : 
     public QWidget, 
     public Ui_RfidAntennaProperties
   {
+    //------------------------------------------------------------------------//
     private:
+      //!< Number of input arguments
       int   argc_;
+      //!< Input arguments
       char**  argv_;
+    //------------------------------------------------------------------------//
     public:
+      /**
+      @brief Default contructor
+      @param argc [int] Number of input arguments
+      @param argv [char**] Input arguments
+      @return void
+      **/
       CRfidAntennaPropertiesLoader(int argc, char **argv);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CRfidAntennaPropertiesLoader(void);
   };  
 }

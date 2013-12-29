@@ -23,19 +23,59 @@
 
 #include "stdr_gui/stdr_tools.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
-
+  /**
+  @class CGuiCo2Source
+  @brief Implements the functionalities of a CO2 source
+  **/ 
   class CGuiCo2Source
   {
+    //------------------------------------------------------------------------//
     private:
+      //!< The position of the CO2 source in the map
       QPoint position_;  
+      //!< The "name" of the CO2 source
       std::string name_;    
+    //------------------------------------------------------------------------//
     public:
+    
+      /**
+      @brief Default contructor
+      @param p [QPoint] The pose of the CO2 source
+      @param name [std::string] The "name" of the source
+      @return void
+      **/
       CGuiCo2Source(QPoint p,std::string name);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CGuiCo2Source(void);
+      
+      /**
+      @brief Returns the "name" of the CO2 source
+      @return std::string 
+      **/
       std::string getName(void);
+      
+      /**
+      @brief Checks proximity to a point
+      @param p [QPoint] The proximity point to check
+      @return bool : True if CO2 source is close to p
+      **/
       bool checkProximity(QPoint p);
+      
+      /**
+      @brief Draws the source in the map
+      @param img [QImage*] The image to draw to
+      @return void
+      **/
       void draw(QImage *img);
   };  
 }

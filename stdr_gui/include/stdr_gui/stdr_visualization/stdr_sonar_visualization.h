@@ -26,34 +26,87 @@
 #include "ui_sonarVisualization.h"
 #include "sensor_msgs/Range.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
-
+  /**
+  @class CSonarVisualisation
+  @brief Implements the functionalities of the sonar visualization widget. Inherits form QWidget and Ui_sonarVisualization (auto created from ui file)
+  **/ 
   class CSonarVisualisation : 
     public QWidget, 
     public Ui_sonarVisualization
   {
+    //------------------------------------------------------------------------//
     private:
+      //!< True if the visualizer is active
       bool active_;
-      
+      //!< The map resolution
       float resolution_;
-      
+      //!< The latest sonar range
       sensor_msgs::Range   range_;
+      //!< Subscriber for getting the sonar ranges
       ros::Subscriber   subscriber_;
-      
+      //!< Description of the sonar sensor
       stdr_msgs::SonarSensorMsg msg_;
-
+      //!< The laser frame id
       QString name_;
-    
+    //------------------------------------------------------------------------//
     public:
+      /**
+      @brief Default contructor
+      @param name [QString] Sonar frame id
+      @param resolution [float] Map resolution
+      @return void
+      **/
       CSonarVisualisation(QString name,float resolution);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CSonarVisualisation(void);
     
+      /**
+      @brief Returns true if the visualizer is active
+      @return bool
+      **/
       bool getActive(void);
+      
+      /**
+      @brief Sets the sonar description message
+      @param msg [stdr_msgs::SonarSensorMsg] The sonar description
+      @return void
+      **/
       void setSonar(stdr_msgs::SonarSensorMsg msg);
+      
+      /**
+      @brief Destroys the visualizer
+      @return void
+      **/
       void destruct(void);
+      
+      /**
+      @brief Called when the close event is triggered
+      @param event [QCloseEvent*] The close event
+      @return void
+      **/
       void closeEvent(QCloseEvent *event);
+      
+      /**
+      @brief Called when new laser data are available
+      @param msg [const sensor_msgs::Range&] The new sonar data
+      @return void
+      **/
       void callback(const sensor_msgs::Range& msg); 
+      
+      /**
+      @brief Paints the visualizer
+      @return void
+      **/
       void paint(void);
   };  
 }
