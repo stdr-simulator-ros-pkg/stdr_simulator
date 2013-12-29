@@ -85,12 +85,14 @@ namespace stdr_gui
   @param m [QImage*] The image to be drawn
   @param ocgd [float] The map's resolution
   @param listener [tf::TransformListener *] ROS tf transform listener
+  @param origin [geometry_msgs::Pose] The map origin
   @return void
   **/
   void CGuiLaser::paint(
     QImage *m,
     float ocgd,
-    tf::TransformListener *listener)
+    tf::TransformListener *listener,
+    geometry_msgs::Pose origin)
   {
     lock_ = true;
     QPainter painter(m);
@@ -113,6 +115,12 @@ namespace stdr_gui
     transform.getBasis().getRPY(roll,pitch,yaw);
     float pose_theta = yaw;
     
+    geometry_msgs::Pose2D real_pose;
+    real_pose.x = pose_x;
+    real_pose.y = pose_y;
+    real_pose.theta = pose_theta;
+    real_pose = stdr_gui_tools::globalToGui(origin,real_pose);
+    
     //!< Draw laser stuff
     
     for(unsigned int i = 0 ; i < scan_.ranges.size() ; i++)
@@ -134,16 +142,16 @@ namespace stdr_gui
         painter.setPen(QColor(255,0,0,75 * (2 - visualization_status_)));
       }
       painter.drawLine(
-        pose_x / ocgd,
+        real_pose.x / ocgd,
         
-        pose_y / ocgd,
+        real_pose.y / ocgd,
           
-        pose_x / ocgd + real_dist * 
-          cos(pose_theta + scan_.angle_min + i * scan_.angle_increment)
+        real_pose.x / ocgd + real_dist * 
+          cos(real_pose.theta + scan_.angle_min + i * scan_.angle_increment)
            / ocgd,
           
-        pose_y / ocgd + real_dist * 
-          sin(pose_theta + scan_.angle_min + i * scan_.angle_increment)
+        real_pose.y / ocgd + real_dist * 
+          sin(real_pose.theta + scan_.angle_min + i * scan_.angle_increment)
            / ocgd
       );
     }

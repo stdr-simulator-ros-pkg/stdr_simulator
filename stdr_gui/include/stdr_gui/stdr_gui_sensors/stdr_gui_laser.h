@@ -90,9 +90,11 @@ namespace stdr_gui
       @param m [QImage*] The image to be drawn
       @param ocgd [float] The map's resolution
       @param listener [tf::TransformListener *] ROS tf transform listener
+      @param origin [geometry_msgs::Pose] The map origin
       @return void
       **/
-      void paint(QImage *m,float ocgd,tf::TransformListener *listener);
+      void paint(QImage *m,float ocgd,tf::TransformListener *listener,
+        geometry_msgs::Pose origin);
       
       /**
       @brief Paints the laser scan in it's own visualizer

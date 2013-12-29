@@ -262,4 +262,69 @@ namespace stdr_gui_tools
     rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
     return rmsg;
   }
+  
+  /**
+  @brief Transforms a quaternion angle message to euler angles
+  @param msg [geometry_msgs::Quaternion] A ROS quaternion message
+  @return std::vector<float> : The euler angles
+  **/
+  std::vector<float> quaternionToEuler(geometry_msgs::Quaternion msg)
+  {
+    float qx = msg.x;
+    float qy = msg.y;
+    float qz = msg.z;
+    float qw = msg.w;
+    float rx = atan2(2*((qw * qx) + (qy * qz)), 1 - (2 * ((qx* qx) + (qy * qy))));
+    float ry = asin(2 * ((qw * qy) - (qz * qx)));
+    float rz = atan2(2 * ((qw * qz) + (qx * qy)), 1 - (2 * ((qy * qy) + (qz * qz))));
+    std::vector<float> eu;
+    eu.push_back(rx);
+    eu.push_back(ry);
+    eu.push_back(rz);
+    return eu;
+  }
+  
+  /**
+  @brief Transforms a point based on origin from local map to global coordinate system
+  @param origin [geometry_msgs::Pose] The map origin
+  @param p [geometry_msgs::Pose2D] The point to be transformed
+  @return geometry_msgs::Pose2D : The transformed point
+  **/
+  geometry_msgs::Pose2D guiToGlobal(
+    geometry_msgs::Pose origin,geometry_msgs::Pose2D p)
+  {
+    float x = p.x;
+    float y = p.y;
+    float orx = origin.position.x;
+    float ory = origin.position.y;
+    std::vector<float> eu = quaternionToEuler(origin.orientation);
+    float orth = eu[2];
+    geometry_msgs::Pose2D ret;
+    ret.x = (cos(orth) * x - sin(orth) * y) + orx;
+    ret.y = (sin(orth) * x + cos(orth) * y) + ory;
+    ret.theta = p.theta + eu[2];
+    return ret;
+  }
+  
+  /**
+  @brief Transforms a point based on origin from global coordinate system to the map
+  @param origin [geometry_msgs::Pose] The map origin
+  @param p [geometry_msgs::Pose2D] The point to be transformed
+  @return geometry_msgs::Pose2D : The transformed point
+  **/
+  geometry_msgs::Pose2D globalToGui(
+    geometry_msgs::Pose origin,geometry_msgs::Pose2D p)
+  {
+    float x = p.x;
+    float y = p.y;
+    float orx = origin.position.x;
+    float ory = origin.position.y;
+    std::vector<float> eu = quaternionToEuler(origin.orientation);
+    float orth = eu[2];
+    geometry_msgs::Pose2D ret;
+    ret.x = (cos(orth) * (x - orx) + sin(orth) * (y - ory));
+    ret.y = (- sin(orth) * (x - orx) + cos(orth) * (y - ory));
+    ret.theta = p.theta - eu[2];
+    return ret;
+  }
 }

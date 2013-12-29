@@ -300,11 +300,26 @@ namespace stdr_gui
         painter.drawPoint(i,j);
       }
     }
-    int originx = msg.info.origin.position.x / msg.info.resolution;
-    int originy = msg.info.origin.position.y / msg.info.resolution;
+    int originx = - msg.info.origin.position.x / msg.info.resolution;
+    int originy = - msg.info.origin.position.y / msg.info.resolution;
     painter.setPen(Qt::blue);
-    painter.drawLine(originx, originy - 20, originx, originy + 20);
-    painter.drawLine(originx - 20, originy, originx + 20, originy);
+    
+    std::vector<float> eu = 
+      stdr_gui_tools::quaternionToEuler(msg.info.origin.orientation);
+    
+    float yaw = eu[2];
+    
+    painter.drawLine( 
+      originx - cos(yaw) * 20, 
+      originy + sin(yaw) * 20, 
+      originx + cos(yaw) * 20, 
+      originy - sin(yaw) * 20);
+      
+    painter.drawLine( 
+      originx - cos(yaw + STDR_PI / 2) * 20, 
+      originy + sin(yaw + STDR_PI / 2) * 20, 
+      originx + cos(yaw + STDR_PI / 2) * 20, 
+      originy - sin(yaw + STDR_PI / 2) * 20);
     
     initial_map_ = running_map_;
 
@@ -544,9 +559,18 @@ namespace stdr_gui
     map_lock_ = true;
     
     QPoint pnew = map_connector_.getGlobalPoint(p);
-    gui_connector_.robotCreatorConn.setInitialPose(
-      pnew.x() * map_msg_.info.resolution,
-      pnew.y() * map_msg_.info.resolution);
+    ROS_ERROR("%f %f",pnew.x()* map_msg_.info.resolution,pnew.y()* map_msg_.info.resolution);
+    
+    geometry_msgs::Pose2D local;
+    local.x = pnew.x() * map_msg_.info.resolution;
+    local.y = pnew.y() * map_msg_.info.resolution;
+    
+    geometry_msgs::Pose2D gpose = 
+      stdr_gui_tools::guiToGlobal(map_msg_.info.origin,local);
+    
+    ROS_ERROR("%f %f",gpose.x,gpose.y);
+    
+    gui_connector_.robotCreatorConn.setInitialPose(gpose.x,gpose.y);
       
     stdr_msgs::RobotIndexedMsg newRobot;
     try 
@@ -665,7 +689,10 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
     {
       registered_robots_[i].draw(
-        &running_map_,map_msg_.info.resolution,&listener_);
+        &running_map_,
+        map_msg_.info.resolution,
+        &listener_,
+        map_msg_.info.origin);
     }
     running_map_ = running_map_.mirrored(false,true);
     for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)

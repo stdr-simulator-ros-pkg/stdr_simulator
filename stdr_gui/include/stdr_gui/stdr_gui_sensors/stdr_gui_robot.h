@@ -110,9 +110,11 @@ namespace stdr_gui
       @param m [QImage*] The image to be drawn
       @param ocgd [float] The map's resolution
       @param listener [tf::TransformListener *] ROS tf listener to get the robot's current pose
+      @param origin [geometry_msgs::Pose] The map origin
       @return void
       **/
-      void draw(QImage *m,float ocgd,tf::TransformListener *listener);
+      void draw(QImage *m,float ocgd,tf::TransformListener *listener,
+        geometry_msgs::Pose origin);
       
       /**
       @brief Draws the robot's label

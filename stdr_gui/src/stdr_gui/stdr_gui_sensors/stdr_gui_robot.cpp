@@ -57,9 +57,11 @@ namespace stdr_gui
   @param m [QImage*] The image to be drawn
   @param ocgd [float] The map's resolution
   @param listener [tf::TransformListener *] ROS tf listener to get the robot's current pose
+  @param origin [geometry_msgs::Pose] The map origin
   @return void
   **/
-  void CGuiRobot::draw(QImage *m,float ocgd,tf::TransformListener *listener)
+  void CGuiRobot::draw(QImage *m,float ocgd,tf::TransformListener *listener,
+    geometry_msgs::Pose origin)
   {
     if(!robot_initialized_)
     {
@@ -83,9 +85,11 @@ namespace stdr_gui
     transform.getBasis().getRPY(roll,pitch,yaw);
     current_pose_.theta = yaw;
     
+    current_pose_ = stdr_gui_tools::globalToGui(origin,current_pose_);
+    
     for(unsigned int i = 0 ; i < lasers_.size() ; i++)
     {
-      lasers_[i]->paint(m,resolution_,listener);
+      lasers_[i]->paint(m,resolution_,listener,origin);
     }
     for(unsigned int i = 0 ; i < sonars_.size() ; i++)
     {

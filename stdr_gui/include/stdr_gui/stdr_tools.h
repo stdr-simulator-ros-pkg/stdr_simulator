@@ -176,6 +176,31 @@ namespace stdr_gui_tools
   **/
   stdr_msgs::SonarSensorMsg fixSonarAnglesToDegrees(
     stdr_msgs::SonarSensorMsg rmsg);
+  
+  /**
+  @brief Transforms a quaternion angle message to euler angles
+  @param msg [geometry_msgs::Quaternion] A ROS quaternion message
+  @return std::vector<float> : The euler angles
+  **/
+  std::vector<float> quaternionToEuler(geometry_msgs::Quaternion msg);
+  
+  /**
+  @brief Transforms a point based on origin from local map to global coordinate system
+  @param origin [geometry_msgs::Pose] The map origin
+  @param p [geometry_msgs::Pose2D] The point to be transformed
+  @return geometry_msgs::Pose2D : The transformed point
+  **/
+  geometry_msgs::Pose2D guiToGlobal(
+    geometry_msgs::Pose origin,geometry_msgs::Pose2D p);
+    
+  /**
+  @brief Transforms a point based on origin from global coordinate system to the map
+  @param origin [geometry_msgs::Pose] The map origin
+  @param p [geometry_msgs::Pose2D] The point to be transformed
+  @return geometry_msgs::Pose2D : The transformed point
+  **/
+  geometry_msgs::Pose2D globalToGui(
+    geometry_msgs::Pose origin,geometry_msgs::Pose2D p);
 }
 
 #endif
