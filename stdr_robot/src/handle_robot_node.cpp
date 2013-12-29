@@ -22,7 +22,7 @@
 #include <stdr_robot/handle_robot.h>
 #include <stdr_robot/stdr_yaml_parser.h>
 
-#define USAGE "USAGE: robot_handler add <description.yaml>\n" \
+#define USAGE "USAGE: robot_handler add <description.yaml> <x> <y> <theta>\n" \
               "OR: robot_handler delete <robot_name>\n"\
               "OR: robot_handler replace <robot_name> <new_x> <new_y> <new_theta>"
 
@@ -33,8 +33,7 @@ int main(int argc, char** argv) {
 	stdr_robot::HandleRobot handler;
 	
 	// add
-	// TODO: read new robot description from yaml
-	if ((argc == 3) && (std::string(argv[1]) == "add")) {
+	if (((argc == 3) || (argc == 6)) && (std::string(argv[1]) == "add")) {
 		
 		stdr_msgs::RobotMsg msg;
     
@@ -44,6 +43,12 @@ int main(int argc, char** argv) {
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());
       return -1;
+    }
+    
+    if (argc == 6) {
+      msg.initialPose.x = atof(argv[3]);
+      msg.initialPose.y = atof(argv[4]);
+      msg.initialPose.theta = atof(argv[5]);
     }
     
 		stdr_msgs::RobotIndexedMsg namedRobot;
