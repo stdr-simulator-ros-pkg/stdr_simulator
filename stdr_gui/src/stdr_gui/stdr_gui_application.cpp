@@ -23,12 +23,23 @@
 
 namespace stdr_gui
 {
-
+  /**
+  @brief Default contructor
+  @param argc [int&] Number of input arguments
+  @param argv [char **] Input arguments
+  @return void
+  **/
   CStdrApplication::CStdrApplication(int &argc,char **argv):
     QApplication(argc,argv)  
   {
   }
   
+  /**
+  @brief Called at every Qt event 
+  @param receiver [QObject*] The event receiver
+  @param event [QEvent*] The event triggered
+  @return bool : True if receiver was notified about event
+  **/
   bool CStdrApplication::notify(QObject * receiver, QEvent * event)
   {
     try 

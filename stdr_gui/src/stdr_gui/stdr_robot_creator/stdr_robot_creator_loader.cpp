@@ -23,7 +23,12 @@
 
 namespace stdr_gui
 {
-    
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char**] Input arguments
+  @return void
+  **/
   CRobotCreatorLoader::CRobotCreatorLoader(int argc, char **argv):
     robotPropLoader(argc,argv),
     laserPropLoader(argc,argv),
@@ -42,6 +47,10 @@ namespace stdr_gui
     robotPreviewImage.fill(QColor(220,220,220,1));
   }
   
+  /**
+  @brief Sets up the information tree in robot creator widget
+  @return void
+  **/
   void CRobotCreatorLoader::setupInitialTree(void)
   {
     addIcon.addFile(QString::fromUtf8((

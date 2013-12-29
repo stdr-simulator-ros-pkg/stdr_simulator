@@ -23,6 +23,12 @@
 
 namespace stdr_gui
 {
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char**] Input arguments
+  @return void
+  **/
   CRobotPropertiesLoader::CRobotPropertiesLoader(int argc, char **argv):
     argc_(argc),
     argv_(argv)

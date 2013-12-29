@@ -25,32 +25,80 @@
 #include "stdr_gui/stdr_tools.h"
 #include "ui_robotVisualization.h"
 
+/**
+@namespace stdr_gui
+@brief The main namespace for STDR GUI
+**/ 
 namespace stdr_gui
 {
-
+  /**
+  @class CRobotVisualisation
+  @brief Implements the functionalities of the robot visualization widget. Inherits form QWidget and Ui_robotVisualization (auto created from ui file)
+  **/ 
   class CRobotVisualisation : 
     public QWidget, 
     public Ui_robotVisualization
   {
+    //------------------------------------------------------------------------//
     private:
-      
+      //!< True if the visualizer is active
       bool active_;
-      
+      //!< The map resolution
       float resolution_;
-      
-      QImage   internal_image_;
-      QImage   void_image_;
+      //!< The image to draw into
+      QImage internal_image_;
+      //!< A void image
+      QImage void_image_;
+      //!< The robot frame id
       QString name_;
-      
+    //------------------------------------------------------------------------//  
     public:
+      /**
+      @brief Default contructor
+      @param name [QString] Robot frame id
+      @param resolution [float] Map resolution
+      @return void
+      **/
       CRobotVisualisation(QString name,float resolution);
+      
+      /**
+      @brief Default destructor
+      @return void
+      **/
       ~CRobotVisualisation(void);
     
+      /**
+      @brief Returns true if the visualizer is active
+      @return bool
+      **/
       bool getActive(void);
+      
+      /**
+      @brief Destroys the visualizer
+      @return void
+      **/
       void destruct(void);
+      
+      /**
+      @brief Called when the close event is triggered
+      @param event [QCloseEvent*] The close event
+      @return void
+      **/
       void closeEvent(QCloseEvent *event);
-      void setImage(QImage img);
+      
+      /**
+      @brief Returns the internal image size
+      @return int : Width of the internal image
+      **/
       int getInternalImageSize(void);
+      
+      /**
+      @brief Sets the image to be shown
+      @param img [QImage] The drawn image
+      @return void
+      **/
+      void setImage(QImage img);
+      
   };  
 }
 

@@ -22,6 +22,13 @@
 #include "stdr_gui/stdr_info_loader.h"
 
 namespace stdr_gui{
+  
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char **] Input arguments
+  @return void
+  **/
   CInfoLoader::CInfoLoader(int argc, char **argv):
     argc_(argc),
     argv_(argv)
@@ -76,11 +83,20 @@ namespace stdr_gui{
         std::string("/resources/images/visible_transparent.png")).c_str()));
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CInfoLoader::~CInfoLoader(void)
   {
     
   }
   
+  /**
+  @brief Deletes a specific tree node. Recursive function.
+  @param item [QTreeWidgetItem*] The item to be deleted
+  @return void
+  **/
   void CInfoLoader::deleteTreeNode(QTreeWidgetItem *item)
   {
     int count = item->childCount();
@@ -92,6 +108,10 @@ namespace stdr_gui{
     delete item;
   }
   
+  /**
+  @brief Deletes the information tree
+  @return void
+  **/
   void CInfoLoader::deleteTree(void)
   {
     int count = robotsInfo.childCount();
@@ -101,6 +121,13 @@ namespace stdr_gui{
     }
   }
   
+  /**
+  @brief Updates the information tree according to the specific map
+  @param width [float] The map width
+  @param height [float] The map height
+  @param ocgd [float] The map resolution (m/pixel)
+  @return void
+  **/
   void CInfoLoader::updateMapInfo(float width,float height,float ocgd)
   {
     mapWidth.setText(1,(QString().setNum(width) + QString(" m")));
@@ -108,6 +135,11 @@ namespace stdr_gui{
     mapOcgd.setText(1,(QString().setNum(ocgd) + QString(" m/px")));
   }
   
+  /**
+  @brief Updates the information tree according to the ensemble of robots
+  @param msg [const stdr_msgs::RobotIndexedVectorMsg&] The existent robots
+  @return void
+  **/
   void CInfoLoader::updateRobots(const stdr_msgs::RobotIndexedVectorMsg& msg)
   {
     for(unsigned int i = 0 ; i < msg.robots.size() ; i++)

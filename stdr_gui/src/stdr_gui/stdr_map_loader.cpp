@@ -23,7 +23,12 @@
 
 namespace stdr_gui
 {
-
+  /**
+  @brief Default contructor
+  @param argc [int] Number of input arguments
+  @param argv [char **] Input arguments
+  @return void
+  **/
   CMapLoader::CMapLoader(int argc, char **argv):
     argc_(argc),
     argv_(argv)
@@ -34,11 +39,22 @@ namespace stdr_gui
     zoom_ = 0;
   }
   
+  /**
+  @brief Captures the resize event
+  @param e [QResizeEvent*] The resize event
+  @return void
+  **/
   void CMapLoader::resizeEvent(QResizeEvent *e)
   {
     updateImage(internal_img_);
   }
   
+  /**
+  @brief Return the dimensions according to the container size
+  @param w [int] Image width
+  @param h [int] Image height
+  @return std::pair<int,int> : The size the map must be resized to
+  **/
   std::pair<int,int> CMapLoader::checkDimensions(int w,int h)
   {
     float containerWidth = this->width();
@@ -58,6 +74,11 @@ namespace stdr_gui
     return std::pair<int,int>(finalW,finalH);
   }
   
+  /**
+  @brief Updates the image
+  @param img [QImage*] The image to be updated
+  @return void
+  **/
   void CMapLoader::updateImage(QImage *img)
   {
     internal_img_ = img;
@@ -77,6 +98,12 @@ namespace stdr_gui
     map->resize(newDims.first,newDims.second);
   }
   
+  /**
+  @brief Draws a grid in an image
+  @param img [QImage*] The image for the grid to be drawn on
+  @param resolution [float] The map resolution
+  @return void
+  **/
   void CMapLoader::drawGrid(QImage *img,float resolution)
   {
     QPainter painter(img);
@@ -92,6 +119,12 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Updates the zoom of the image
+  @param p [QPoint] The point of the zoom event
+  @param zoomIn [bool] True if zoom in, false if zoom out
+  @return void
+  **/
   void CMapLoader::updateZoom(QPoint p,bool zoom_In)
   {
     QPoint np = getGlobalPoint(p);
@@ -145,6 +178,11 @@ namespace stdr_gui
     map_max_ = QPoint(xmax,ymax);
   }
   
+  /**
+  @brief Updates the image center
+  @param p [QPoint] The new center
+  @return void
+  **/
   void CMapLoader::updateCenter(QPoint p)
   {
     
@@ -188,6 +226,11 @@ namespace stdr_gui
     //~ ROS_ERROR("Update center after:%d %d",map_min_.x(),map_min_.y());
   }
   
+  /**
+  @brief Unscales the input point
+  @param p [QPoint] Point of an event in the adjusted map
+  @return QPoint : The same point in the original map
+  **/
   QPoint CMapLoader::pointUnscaled(QPoint p)
   {
     QPoint newPoint;
@@ -202,13 +245,22 @@ namespace stdr_gui
     return newPoint;
   }
   
+  /**
+  @brief Resets the zoom of the image
+  @return void
+  **/
   void CMapLoader::resetZoom(void)
   {
     zoom_ = 0;
     map_min_ = QPoint(0,0);
     map_max_ = QPoint(internal_img_->width() - 1,internal_img_->height() - 1);
   }
-  
+    
+  /**
+  @brief Calculates the "real" point in the image
+  @param p [QPoint] The point to be translated
+  @return QPoint : The new point
+  **/
   QPoint CMapLoader::getGlobalPoint(QPoint p){
     //~ ROS_ERROR("Robot place set (loader) : %d %d",p.x(),p.y());
     QPoint np = pointUnscaled(p);
@@ -219,6 +271,11 @@ namespace stdr_gui
     return QPoint(xev,internal_img_->height() - yev);
   }
   
+  /**
+  @brief Captures the mouse wheel event
+  @param event [QWheelEvent *] The wheel event
+  @return void
+  **/
   void CMapLoader::wheelEvent ( QWheelEvent * event )
   {
     if(event->delta() > 0)
@@ -239,6 +296,11 @@ namespace stdr_gui
     }
   }
   
+  /**
+  @brief Sets the initial image size
+  @param s [QSize] The initial image size
+  @return void
+  **/
   void CMapLoader::setInitialImageSize(QSize s)
   {
     initial_image_size_ = s;

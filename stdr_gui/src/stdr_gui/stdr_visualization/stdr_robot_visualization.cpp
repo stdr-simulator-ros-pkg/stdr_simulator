@@ -23,7 +23,12 @@
 
 namespace stdr_gui
 {
-
+  /**
+  @brief Default contructor
+  @param name [QString] Robot frame id
+  @param resolution [float] Map resolution
+  @return void
+  **/
   CRobotVisualisation::CRobotVisualisation(QString name,float resolution):
     name_(name),
     resolution_(resolution)
@@ -40,11 +45,19 @@ namespace stdr_gui
     void_image_.fill(QColor(255,255,255,255));
   }
   
+  /**
+  @brief Default destructor
+  @return void
+  **/
   CRobotVisualisation::~CRobotVisualisation(void)
   {
     
   }
   
+  /**
+  @brief Destroys the visualizer
+  @return void
+  **/
   void CRobotVisualisation::destruct(void)
   {
     active_ = false;
@@ -54,17 +67,31 @@ namespace stdr_gui
     delete robotSpeeds;
   }
   
+  /**
+  @brief Called when the close event is triggered
+  @param event [QCloseEvent*] The close event
+  @return void
+  **/
   void CRobotVisualisation::closeEvent(QCloseEvent *event)
   {
     destruct();
     active_ = false;
   }
   
+  /**
+  @brief Returns true if the visualizer is active
+  @return bool
+  **/
   bool CRobotVisualisation::getActive(void)
   {
     return active_;
   }
 
+  /**
+  @brief Sets the image to be shown
+  @param img [QImage] The drawn image
+  @return void
+  **/
   void CRobotVisualisation::setImage(QImage img)
   {
     internal_image_ = img;
