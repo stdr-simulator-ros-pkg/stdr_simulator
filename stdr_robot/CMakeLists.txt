@@ -31,16 +31,16 @@ catkin_package(
   INCLUDE_DIRS 
     include
   LIBRARIES 
-	handle_robot
+    handle_robot
   CATKIN_DEPENDS
     roscpp
-	nodelet
-	actionlib
-	tf
-	stdr_msgs
-	geometry_msgs
-	sensor_msgs
-	nav_msgs
+    nodelet
+    actionlib
+    tf
+    stdr_msgs
+    geometry_msgs
+    sensor_msgs
+    nav_msgs
 #  DEPENDS system_lib
 )
 
@@ -62,9 +62,9 @@ target_link_libraries(ideal_motion_controller ${catkin_LIBRARIES})
 add_library(stdr_robot_nodelet src/stdr_robot.cpp)
 add_dependencies(stdr_robot_nodelet stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_robot_nodelet ${catkin_LIBRARIES}
-	laser
-        sonar
-	ideal_motion_controller
+    laser
+    sonar
+    ideal_motion_controller
 )
 
 ######################### HandleRobot ##################################
@@ -78,6 +78,7 @@ add_dependencies(robot_handler stdr_msgs_gencpp) # wait for stdr_msgs to be buil
 target_link_libraries(robot_handler 
 	${catkin_LIBRARIES}
 	handle_robot
+  stdr_parser
 )
 
 #################### Parser ##########################################

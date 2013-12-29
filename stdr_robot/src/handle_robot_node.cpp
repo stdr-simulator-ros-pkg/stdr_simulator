@@ -20,6 +20,7 @@
 ******************************************************************************/
 
 #include <stdr_robot/handle_robot.h>
+#include <stdr_robot/stdr_yaml_parser.h>
 
 #define USAGE "USAGE: robot_handler add <description.yaml>\n" \
               "OR: robot_handler delete <robot_name>\n"\
@@ -33,10 +34,18 @@ int main(int argc, char** argv) {
 	
 	// add
 	// TODO: read new robot description from yaml
-	if ((argc == 2) && (std::string(argv[1]) == "add")) {
+	if ((argc == 3) && (std::string(argv[1]) == "add")) {
 		
 		stdr_msgs::RobotMsg msg;
-	
+    
+    try {
+      msg = stdr_robot::parser::yamlToRobotMsg(std::string(argv[2]));
+    }
+    catch(YAML::RepresentationException& e) {
+      ROS_ERROR("%s", e.what());
+      return -1;
+    }
+    
 		stdr_msgs::RobotIndexedMsg namedRobot;
 		
 		try {
