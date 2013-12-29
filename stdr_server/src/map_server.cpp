@@ -41,6 +41,9 @@ MapServer::MapServer(const nav_msgs::OccupancyGrid& map) {
 }
 
 void MapServer::publishData() {
+  
+  tfTimer = n.createTimer(ros::Duration(0.01), &MapServer::publishTransform, this);
+  
   // Latched publisher for metadata
   metadata_pub= n.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
   metadata_pub.publish( meta_data_message_ );
@@ -48,6 +51,19 @@ void MapServer::publishData() {
   // Latched publisher for data
   map_pub = n.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
   map_pub.publish( map_ );
+}
+
+
+void MapServer::publishTransform(const ros::TimerEvent&) {
+  
+  tf::Vector3 translation(map_.info.origin.position.x, map_.info.origin.position.y, 0);
+  tf::Quaternion rotation;
+  rotation.setRPY(0, 0, tf::getYaw(map_.info.origin.orientation));
+
+  tf::Transform worldTomap(rotation, translation);
+
+  tfBroadcaster.sendTransform(tf::StampedTransform(worldTomap, ros::Time::now(), "map", "map_static"));
+  
 }
 
 } // end of namespace stdr_server

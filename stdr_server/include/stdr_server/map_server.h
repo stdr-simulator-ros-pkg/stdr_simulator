@@ -20,6 +20,8 @@
 ******************************************************************************/
 
 #include "ros/ros.h"
+#include "tf/tf.h"
+#include "tf/transform_broadcaster.h"
 #include "nav_msgs/MapMetaData.h"
 #include "nav_msgs/OccupancyGrid.h"
 #include "stdr_server/map_loader.h"
@@ -36,11 +38,14 @@ class MapServer
   private:
     
     void publishData();
+    void publishTransform(const ros::TimerEvent&);
   
   private:
     ros::NodeHandle n;
     ros::Publisher map_pub;
     ros::Publisher metadata_pub;
+    ros::Timer tfTimer;
+    tf::TransformBroadcaster tfBroadcaster;
     
     nav_msgs::MapMetaData meta_data_message_;
     nav_msgs::OccupancyGrid map_;
