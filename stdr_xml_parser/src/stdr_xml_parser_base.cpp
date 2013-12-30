@@ -132,6 +132,40 @@ type specified",n->tag.c_str());
     return true;
   }
   
+  bool Base::validityRequiredCheck(Node* n)
+  {
+    //!< Immediately return if we have a value node
+    if(n->value != "")
+    {
+      return true;
+    }
+    std::string tag = n->tag;
+    if(Specs::specs.find(tag) == Specs::specs.end() &&
+      tag != "STDR_Parser_Root_Node")
+    {
+      ROS_ERROR("[%s] is not a valid tag",tag.c_str());
+      return false;
+    }
+    for(std::set<std::string>::iterator it = Specs::specs[tag].required.begin() 
+      ; it != Specs::specs[tag].required.end() ; it++)
+    {
+      std::vector<int> num = n->getTag(*it);
+      if(num.size() == 0)
+      {
+        ROS_ERROR("[%s] requires [%s]",tag.c_str(),(*it).c_str());
+        return false;
+      }
+    }
+    for(unsigned int i = 0 ; i < n->elements.size() ; i++)
+    {
+      if(!validityRequiredCheck(n->elements[i]))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
   void Base::mergeNodesValues(Node* n)
   {
     //!< Check if the node does not contain pure values
@@ -242,7 +276,7 @@ type specified",n->tag.c_str());
     
     mergeNodes();
     
-    if(validityAllowedCheck(base_node_))
+    if(validityAllowedCheck(base_node_) && validityRequiredCheck(base_node_))
     {
       ROS_ERROR("XML is STDR valid");
     }
@@ -387,7 +421,7 @@ specifications.xml", node_text.c_str());
         }
         else if(base_type == "default")
         {
-          
+          Specs::specs[base_tag].default_value = node_text;
         }
         else
         {

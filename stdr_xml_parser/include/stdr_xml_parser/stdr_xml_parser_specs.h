@@ -31,6 +31,7 @@ namespace stdr_xml_parser
     ElSpecs(void);
     std::set<std::string> required;
     std::set<std::string> allowed;
+    std::string default_value;
   };
   
   struct Specs
