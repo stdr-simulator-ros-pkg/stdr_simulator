@@ -96,15 +96,125 @@ type specified",n->tag.c_str());
     return true;
   }
   
+  void Base::validityCheck(void)
+  {
+  }
+  
+  void Base::mergeNodesValues(Node* n)
+  {
+    //!< Check if the node does not contain pure values
+    bool pure_values = true;
+    for(unsigned int i = 0 ; i < n->elements.size() ; i++)
+    {
+      if(n->elements[i]->value == "")
+      {
+        pure_values = false;
+        break;
+      }
+    }
+    
+    if(pure_values)
+    {
+      //!< Unique value child
+      if(n->elements.size() <= 1)
+      {
+        return;
+      }
+      
+      //!< Multiple value childer. Find min priority
+      int min_priority = n->elements[0]->priority;
+      unsigned int index = 0;
+      for(unsigned int i = 1 ; i < n->elements.size() ; i++)
+      {
+        if(n->elements[i]->priority < min_priority)
+        {
+          min_priority = n->elements[i]->priority;
+          index = i;
+        }
+      }
+      Node* proper_child = n->elements[index];
+      n->elements.clear();
+      n->elements.push_back(proper_child);
+    }
+    else
+    {
+      for(unsigned int i = 0 ; i < n->elements.size() ; i++)
+      {
+        mergeNodesValues(n->elements[i]);
+      }
+    }
+  }
+  
+  void Base::mergeNodes(void)
+  {
+    printParsedXml();
+    while(!mergeNodes(base_node_))
+    {
+      
+    }
+    printParsedXml();
+    mergeNodesValues(base_node_);
+    printParsedXml();
+  }
+
+  bool Base::mergeNodes(Node* n)
+  {
+    if(n->value != "")  //!< Node is value
+    {
+      return true;
+    }
+    for(unsigned int i = 0 ; i < n->elements.size() ; i++)
+    {
+      //!< Node's child is value
+      if(n->elements[i]->value != "") 
+      {
+        continue;
+      }
+      std::string tag = n->elements[i]->tag;
+      
+      //!< Child is a mergable tag
+      if(non_mergable_tags_.find(tag) == non_mergable_tags_.end())
+      {
+        std::vector<int> num = n->getTag(tag);
+        
+        //!< Multiple mergable tags
+        if(num.size() != 1) 
+        { 
+          for(int i = num.size()-1 ; i > 0 ; i --)
+          {
+            //!< Merging multiple tag's children into the first occurence
+            for (unsigned int j = 0 ; j < n->elements[num[i]]->elements.size() ; 
+              j++)
+            {
+              n->elements[num[0]]->elements.push_back(
+                n->elements[num[i]]->elements[j]);
+            }
+            n->elements.erase(n->elements.begin() + num[i]);
+          }
+          return false;
+        }
+      }
+      
+      if(!mergeNodes(n->elements[i]))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
   void Base::parse(std::string file_name)
   {
     // Must destroy prev tree
     parse(file_name,base_node_);
     
     parseMergableSpecifications();
-    
-    // Must do validity checks
+
     eliminateFilenames();
+    
+    mergeNodes();
+    
+    validityCheck();
   }
   
   void Base::parse(std::string file_name,Node* n)
@@ -130,7 +240,7 @@ type specified",n->tag.c_str());
       ROS_ERROR("Failed to load file \"%s\"\n,%s", path.c_str(),doc.ErrorDesc());
       return;
     }
-    mergable_tags_ = explodeString(
+    non_mergable_tags_ = explodeString(
       doc.FirstChild()->FirstChild()->Value(), ',');
   }
   

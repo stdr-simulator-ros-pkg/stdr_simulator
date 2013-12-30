@@ -34,7 +34,7 @@ namespace stdr_xml_parser
     public:
       Node(void);
       bool check_for_filename(std::string base);
-      std::vector<int> get_tag(std::string tag);
+      std::vector<int> getTag(std::string tag);
       void increasePriority(void);
       
       int priority;

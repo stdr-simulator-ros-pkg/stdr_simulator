@@ -41,7 +41,7 @@ namespace stdr_xml_parser
     return false;
   }
   
-  std::vector<int> Node::get_tag(std::string tag)
+  std::vector<int> Node::getTag(std::string tag)
   {
     std::vector<int> ret;
     for(unsigned int i = 0 ; i < elements.size() ; i++)

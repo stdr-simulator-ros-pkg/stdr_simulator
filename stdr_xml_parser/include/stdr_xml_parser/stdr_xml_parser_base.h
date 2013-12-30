@@ -24,16 +24,24 @@
 
 #include "stdr_xml_parser/stdr_xml_parser_node.h"
 
+/**
+@namespace stdr_xml_parser
+@brief The main namespace for STDR GUI XML parser
+**/ 
 namespace stdr_xml_parser
 {
-  
+  /**
+  @class Base
+  @brief Implements the main functionalities of the high-level parser
+  **/ 
   class Base
   {
     private:
+      
+      //!< Base node of the parsed file
       Node* base_node_;
-      Node* mergable_node_;
       std::string base_path_;
-      std::set<std::string> mergable_tags_;
+      std::set<std::string> non_mergable_tags_;
       
       void parseSpecifications(TiXmlNode* node);
       void loadSpecifications(void);
@@ -41,11 +49,25 @@ namespace stdr_xml_parser
       void parseLow(TiXmlNode* node,Node* n);
       void parse(std::string file_name,Node* n);
       void printParsedXml(Node* n,std::string indent);
+      
       bool eliminateFilenames(Node* n);
       void eliminateFilenames(void);
+      
+      bool mergeNodes(Node* n);
+      void mergeNodes(void);
+      
+      void mergeNodesValues(Node* n);
+      
+      void validityCheck(void);
+      
       void parseMergableSpecifications(void);
+      
     public:
     
+      /**
+      @brief Default constructor
+      @return void
+      **/
       Base(void);
       void initialize(void);
       void parse(std::string file_name);

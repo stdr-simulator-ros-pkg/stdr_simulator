@@ -21,6 +21,10 @@
 
 #include "stdr_xml_parser/stdr_xml_parser_base.h"
 
+/**
+@brief Main function of xml parser ros node
+@return int
+**/
 int main(int argc, char **argv)
 {
   ros::init(argc,argv,"stdr_xml_parser");
@@ -28,7 +32,7 @@ int main(int argc, char **argv)
   stdr_xml_parser::Base b;
   b.initialize();
   b.parse("simple_robot.xml");
-  b.printParsedXml();
+  //~ b.printParsedXml();
   //~ ros::spin();
   return 0;
 }
