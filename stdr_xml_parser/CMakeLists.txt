@@ -32,6 +32,14 @@ catkin_package(
 )
 
 ######################### Stdr parser ##################################
-add_executable(stdr_xml_parser_node src/stdr_xml_parser.cpp)
+add_executable(stdr_xml_parser_node 
+  src/stdr_xml_parser_ros_node.cpp
+  src/stdr_xml_parser_base.cpp
+  src/stdr_xml_parser_node.cpp
+  src/stdr_xml_parser_specs.cpp
+  src/stdr_xml_parser_tools.cpp
+)
+
 add_dependencies(stdr_xml_parser_node stdr_msgs_gencpp) # wait for stdr_msgs to be build
+
 target_link_libraries(stdr_xml_parser_node ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})

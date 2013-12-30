@@ -19,54 +19,13 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_XML_PARSER__H
-#define STDR_XML_PARSER__H
+#ifndef STDR_XML_PARSER__BASE
+#define STDR_XML_PARSER__BASE
 
-#include <iostream>
-#include <cstdlib>
-#include <map>
-#include <vector>
-#include <string>
-
-#include <ros/package.h>
-#include "ros/ros.h"
-
-#include <tinyxml.h>
-
-#include "stdr_msgs/RobotMsg.h"
-#include "geometry_msgs/Pose2D.h"
-#include "geometry_msgs/Point.h"
+#include "stdr_xml_parser/stdr_xml_parser_node.h"
 
 namespace stdr_xml_parser
 {
-  struct ElSpecs
-  {
-    ElSpecs(void);
-    std::set<std::string> required;
-    std::set<std::string> allowed;
-  };
-  
-  struct Specs
-  {
-    Specs(void);
-    static std::map<std::string,ElSpecs> specs;
-  };
-
-  class Node
-  {
-    private:
-
-    public:
-      Node(void);
-      bool check_for_filename(std::string base);
-      std::vector<int> get_tag(std::string tag);
-      void increasePriority(void);
-      
-      int priority;
-      std::string tag;
-      std::string value;
-      std::vector<Node*> elements;
-  };
   
   class Base
   {

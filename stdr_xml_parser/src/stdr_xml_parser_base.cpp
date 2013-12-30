@@ -19,64 +19,10 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_xml_parser.h"
+#include "stdr_xml_parser/stdr_xml_parser_base.h"
 
 namespace stdr_xml_parser
 {
-  //-----------------------------------------------------------------------//
-  ElSpecs::ElSpecs(void)
-  {
-    required.clear();
-    allowed.clear();
-  }
-  
-  std::map<std::string,ElSpecs> Specs::specs = 
-    std::map<std::string,ElSpecs>();
-    
-  Specs::Specs(void)
-  {
-    specs.clear();
-  }
-  //-----------------------------------------------------------------------//
-  Node::Node(void)
-  {
-    priority = 0;
-  }
-  
-  bool Node::check_for_filename(std::string base)
-  {
-    if(elements.size() == 1)
-    {
-      if(elements[0]->tag == base)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  std::vector<int> Node::get_tag(std::string tag)
-  {
-    std::vector<int> ret;
-    for(unsigned int i = 0 ; i < elements.size() ; i++)
-    {
-      if(elements[i]->tag == tag)
-      {
-        ret.push_back(i);
-      }
-    }
-    return ret;
-  }
-  
-  void Node::increasePriority(void)
-  {
-    priority ++;
-    for(unsigned int i = 0 ; i < elements.size() ; i++)
-    {
-      elements[i]->increasePriority();
-    }
-  }
-  //-----------------------------------------------------------------------//
   
   Base::Base(void)
   {
@@ -354,14 +300,3 @@ or required : [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(), node_text.c_s
   }
 }
 
-int main(int argc, char **argv)
-{
-  ros::init(argc,argv,"stdr_xml_parser");
-  
-  stdr_xml_parser::Base b;
-  b.initialize();
-  b.parse("simple_robot.xml");
-  b.printParsedXml();
-  //~ ros::spin();
-  return 0;
-}
