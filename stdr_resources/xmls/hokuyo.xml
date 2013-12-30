@@ -1,0 +1,23 @@
+<laser>
+  <laser_specifications>
+    <max_angle>1.57</max_angle>
+    <min_angle>-1.57</min_angle>
+    <max_range>30</max_range>
+    <min_range>0.1</min_range>
+    <num_rays>270</num_rays>
+    <frequency>50</frequency>
+    <frame_id>front_laser</frame_id>
+    <pose>
+      <x>0.1</x>
+      <y>0</y>
+      <theta>0</theta>
+    </pose>
+    <noise>
+      <filename>gauss.xml</filename>
+      <noise_specifications>
+        <mean>0.5</mean>
+        <std>0.05</std>
+      </noise_specifications>
+    </noise>
+  </laser_specifications>
+</laser>

@@ -1,0 +1,107 @@
+<specifications>
+  <environment>
+    <allowed>map,robot,rfid_tag</allowed>
+    <required>map</required>
+  </environment>
+
+  <map>
+    <allowed>filename,map_specifications</allowed>
+    <required></required>
+  </map>
+
+  <map_specifications>
+    <allowed>image,resolution,origin,free_thresh,negate,occupied_thresh</allowed>
+    <required>image,resolution</required>
+  </map_specifications>
+
+  <origin>
+    <allowed>x,y,theta</allowed>
+    <required></required>
+  </origin>
+
+  <robot>
+    <allowed>filename,robot_specifications</allowed>
+    <required></required>
+  </robot>
+
+  <robot_specification>
+    <allowed>pose,footprint,laser,sonar,rfid,kinematic</allowed>
+    <required></required>
+  </robot_specification>
+
+  <pose>
+    <allowed>x,y,theta</allowed>
+    <required></required>
+  </pose>
+
+  <footprint>
+    <allowed>filename,footprint_specifications</allowed>
+    <required></required>
+  </footprint>
+
+  <footprint_specifications>
+    <allowed>radius,points</allowed>
+    <required></required>
+  </footprint_specifications>
+
+  <points>
+    <allowed>point</allowed>
+    <required></required>
+  </points>
+
+  <point>
+    <allowed>x,y</allowed>
+    <required></required>
+  </point>
+
+  <laser>
+    <allowed>filename,laser_specifications</allowed>
+    <required></required>
+  </laser>
+
+  <laser_specifications>
+    <allowed>max_angle,min_angle,max_range,min_range,num_rays,frequency,frame_id,pose,noise</allowed>
+    <required></required>
+  </laser_specifications>
+
+  <noise>
+    <allowed>filename,noise_specifications</allowed>
+    <required></required>
+  </noise>
+
+  <noise_specification>
+    <allowed>mean,std</allowed>
+    <required></required>
+  </noise_specification>
+
+  <sonar>
+    <allowed>filename,sonar_specifications</allowed>
+    <required></required>
+  </sonar>
+
+  <sonar_specifications>
+    <allowed>cone_angle,max_range,min_range,frequency,frame_id,pose,noise</allowed>
+    <required></required>
+  </sonar_specifications>
+
+  <rfid>
+    <allowed>filename,rfid_specifications</allowed>
+    <required></required>
+  </rfid>
+
+  <rfid_specifications>
+    <allowed>angle_span,signal_cutoff,max_range,frequency,frame_id,pose</allowed>
+    <required></required>
+  </rfid_specifications>
+
+  <kinematic>
+    <allowed>filename,kinematic_specifications</allowed>
+    <required></required>
+  </kinematic>
+
+  <rfid_tag>
+    <allowed>x,y,message</allowed>
+    <required>x,y</required>
+  </rfid_tag>
+</specifications>
+

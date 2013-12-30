@@ -1,0 +1,12 @@
+<robot>
+  <robot_specifications>
+    <initial_pose>
+      <x>0</x>
+      <y>0</y>
+      <theta>0</theta>
+    </initial_pose>
+    <laser>
+      <filename>hokuyo.xml</filename>
+    </laser>
+  </robot_specifications>
+</robot>

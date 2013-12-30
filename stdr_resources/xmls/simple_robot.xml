@@ -1,0 +1,18 @@
+<robot>
+  <filename>too_simple_robot.xml</filename>
+  <robot_specifications>
+    <initial_pose>
+      <x>3</x>
+      <y>2</y>
+      <theta>1.57</theta>
+    </initial_pose>
+    <laser>
+      <filename>hokuyo.xml</filename>
+      <laser_specifications>
+        <pose>
+          <theta>-3.1415</theta>
+        </pose>
+      </laser_specifications>
+    </laser>
+  </robot_specifications>
+</robot>

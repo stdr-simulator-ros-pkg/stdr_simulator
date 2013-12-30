@@ -1,0 +1,16 @@
+<map>
+  <filename>test_map.yaml</filename>
+  <map_specifications>
+    <image>map1.png</image>
+    <resolution>0.02</resolution>
+    <origin>
+      <x>0.0</x>
+      <y>0.0</y>
+      <theta>0.0</theta>
+    </origin>
+    <free_thresh>0.196</free_thresh>
+    <negate>0</negate>
+    <occupied_thresh>0.6</occupied_thresh>
+  <map_specifications>
+</map> 
+ 
