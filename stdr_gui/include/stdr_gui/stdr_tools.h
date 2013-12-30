@@ -73,6 +73,9 @@
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/LaserScan.h>
 
+#include "stdr_server/map_loader.h"
+#include <stdr_msgs/LoadExternalMap.h>
+
 #include <stdr_robot/stdr_yaml_parser.h>
 #include "yaml-cpp/exceptions.h"
 
