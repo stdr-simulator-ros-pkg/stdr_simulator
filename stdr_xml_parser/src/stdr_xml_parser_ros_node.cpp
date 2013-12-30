@@ -32,8 +32,11 @@ int main(int argc, char **argv)
   
   stdr_xml_parser::Base b;
   b.initialize();
-  b.parse("simple_robot.xml");
+  b.parse("pandora_robot.xml");
   //~ b.printParsedXml();
-  //~ ros::spin();
+  
+  stdr_xml_parser::MessageCreator creator;
+  stdr_msgs::RobotMsg msg = creator.createRobotMessage(b.getBaseNode());
+
   return 0;
 }

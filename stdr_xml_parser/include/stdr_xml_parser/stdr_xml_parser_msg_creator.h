@@ -45,6 +45,14 @@ namespace stdr_xml_parser
       @return void
       **/
       MessageCreator(void);
+      
+      stdr_msgs::RobotMsg createRobotMessage(Node *n);
+      stdr_msgs::LaserSensorMsg createLaserMessage(Node *n,unsigned int id);
+      stdr_msgs::SonarSensorMsg createSonarMessage(Node *n,unsigned int id);
+      stdr_msgs::FootprintMsg createFootprintMessage(Node *n);
+      stdr_msgs::Noise createNoiseMessage(Node *n);
+      
+      geometry_msgs::Pose2D createPoseMessage(Node *n);
   };
 }
 #endif

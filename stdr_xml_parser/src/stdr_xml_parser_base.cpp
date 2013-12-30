@@ -478,5 +478,10 @@ or required : [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(), node_text.c_s
       }
     }
   }
+  
+  Node* Base::getBaseNode(void)
+  {
+    return base_node_;
+  }
 }
 

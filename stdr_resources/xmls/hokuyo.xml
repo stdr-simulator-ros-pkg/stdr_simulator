@@ -1,14 +1,13 @@
 <laser>
   <laser_specifications>
-    <max_angle>1.57</max_angle>
-    <min_angle>-1.57</min_angle>
-    <max_range>30</max_range>
+    <max_angle>1.570795</max_angle>
+    <min_angle>-1.570795</min_angle>
+    <max_range>4.0</max_range>
     <min_range>0.1</min_range>
     <num_rays>270</num_rays>
-    <frequency>50</frequency>
-    <frame_id>front_laser</frame_id>
+    <frequency>10</frequency>
     <pose>
-      <x>0.1</x>
+      <x>0</x>
       <y>0</y>
       <theta>0</theta>
     </pose>

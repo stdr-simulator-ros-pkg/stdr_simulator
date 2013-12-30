@@ -27,6 +27,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include <ros/package.h>
 #include "ros/ros.h"
@@ -37,7 +38,11 @@
 #include "geometry_msgs/Pose2D.h"
 #include "geometry_msgs/Point.h"
 
+#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
+
 namespace stdr_xml_parser
 {
+  
 }
 #endif

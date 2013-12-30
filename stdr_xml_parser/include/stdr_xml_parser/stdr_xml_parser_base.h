@@ -74,6 +74,7 @@ namespace stdr_xml_parser
       void parse(std::string file_name);
       void printSpecifications(void);
       void printParsedXml(void);
+      Node* getBaseNode(void);
   };
 }
 #endif

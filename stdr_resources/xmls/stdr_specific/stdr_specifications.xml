@@ -145,5 +145,13 @@
   <noise_std>
     <default>0</default>
   </noise_std>
+  
+  <radius>
+    <default>0.3</default>
+  </radius>
+  
+  <cone_angle>
+    <default>1.0</default>
+  </cone_angle>
 </specifications>
 
