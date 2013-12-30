@@ -96,8 +96,40 @@ type specified",n->tag.c_str());
     return true;
   }
   
-  void Base::validityCheck(void)
+  bool Base::validityAllowedCheck(Node* n)
   {
+    //!< Immediately return if we have a value node
+    if(n->value != "")
+    {
+      return true;
+    }
+    std::string tag = n->tag;
+    if(Specs::specs.find(tag) == Specs::specs.end() &&
+      tag != "STDR_Parser_Root_Node")
+    {
+      ROS_ERROR("[%s] is not a valid tag",tag.c_str());
+      return false;
+    }
+    for(unsigned int i = 0 ; i < n->elements.size() ; i++)
+    {
+      std::string child_tag = n->elements[i]->tag;
+      std::string child_value = n->elements[i]->value;
+      if(tag != "STDR_Parser_Root_Node" && child_value == "")
+      {
+        if(Specs::specs[tag].allowed.find(child_tag) == 
+          Specs::specs[tag].allowed.end())
+        {
+          ROS_ERROR("[%s] is not allowed in a [%s] tag",
+            child_tag.c_str(),tag.c_str());
+          return false;
+        }
+      }
+      if(!validityAllowedCheck(n->elements[i]))
+      {
+        return false;
+      }
+    }
+    return true;
   }
   
   void Base::mergeNodesValues(Node* n)
@@ -147,14 +179,10 @@ type specified",n->tag.c_str());
   
   void Base::mergeNodes(void)
   {
-    printParsedXml();
     while(!mergeNodes(base_node_))
     {
-      
     }
-    printParsedXml();
     mergeNodesValues(base_node_);
-    printParsedXml();
   }
 
   bool Base::mergeNodes(Node* n)
@@ -214,7 +242,10 @@ type specified",n->tag.c_str());
     
     mergeNodes();
     
-    validityCheck();
+    if(validityAllowedCheck(base_node_))
+    {
+      ROS_ERROR("XML is STDR valid");
+    }
   }
   
   void Base::parse(std::string file_name,Node* n)

@@ -58,7 +58,7 @@ namespace stdr_xml_parser
       
       void mergeNodesValues(Node* n);
       
-      void validityCheck(void);
+      bool validityAllowedCheck(Node* n);
       
       void parseMergableSpecifications(void);
       

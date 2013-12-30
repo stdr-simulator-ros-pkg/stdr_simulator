@@ -24,11 +24,16 @@
     <required></required>
   </robot>
 
-  <robot_specification>
-    <allowed>pose,footprint,laser,sonar,rfid,kinematic</allowed>
+  <robot_specifications>
+    <allowed>initial_pose,footprint,laser,sonar,rfid,kinematic</allowed>
     <required></required>
-  </robot_specification>
+  </robot_specifications>
 
+  <initial_pose>
+    <allowed>x,y,theta</allowed>
+    <required></required>
+  </initial_pose>
+  
   <pose>
     <allowed>x,y,theta</allowed>
     <required></required>
@@ -69,10 +74,10 @@
     <required></required>
   </noise>
 
-  <noise_specification>
-    <allowed>mean,std</allowed>
+  <noise_specifications>
+    <allowed>noise_mean,noise_std</allowed>
     <required></required>
-  </noise_specification>
+  </noise_specifications>
 
   <sonar>
     <allowed>filename,sonar_specifications</allowed>
@@ -103,5 +108,65 @@
     <allowed>x,y,message</allowed>
     <required>x,y</required>
   </rfid_tag>
+  
+  <x>
+    <allowed></allowed>
+    <required></required>
+  </x>
+  
+  <y>
+    <allowed></allowed>
+    <required></required>
+  </y>
+  
+  <theta>
+    <allowed></allowed>
+    <required></required>
+  </theta>
+  
+  <max_angle>
+    <allowed></allowed>
+    <required></required>
+  </max_angle>
+  
+  <min_angle>
+    <allowed></allowed>
+    <required></required>
+  </min_angle>
+  
+  <max_range>
+    <allowed></allowed>
+    <required></required>
+  </max_range>
+  
+  <min_range>
+    <allowed></allowed>
+    <required></required>
+  </min_range>
+  
+  <num_rays>
+    <allowed></allowed>
+    <required></required>
+  </num_rays>
+  
+  <frequency>
+    <allowed></allowed>
+    <required></required>
+  </frequency>
+  
+  <frame_id>
+    <allowed></allowed>
+    <required></required>
+  </frame_id>
+  
+  <noise_mean>
+    <allowed></allowed>
+    <required></required>
+  </noise_mean>
+  
+  <noise_std>
+    <allowed></allowed>
+    <required></required>
+  </noise_std>
 </specifications>
 

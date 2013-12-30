@@ -15,8 +15,8 @@
     <noise>
       <filename>gauss.xml</filename>
       <noise_specifications>
-        <mean>0.5</mean>
-        <std>0.05</std>
+        <noise_mean>0.5</noise_mean>
+        <noise_std>0.05</noise_std>
       </noise_specifications>
     </noise>
   </laser_specifications>
