@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${TinyXML_INCLUDE_DIRS}
 )
 
 find_package(TinyXML REQUIRED)
@@ -33,4 +34,4 @@ catkin_package(
 ######################### Stdr parser ##################################
 add_executable(stdr_xml_parser_node src/stdr_xml_parser.cpp)
 add_dependencies(stdr_xml_parser_node stdr_msgs_gencpp) # wait for stdr_msgs to be build
-target_link_libraries(stdr_xml_parser_node ${catkin_LIBRARIES} ${TinyXML_INCLUDE_DIRS})
+target_link_libraries(stdr_xml_parser_node ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
