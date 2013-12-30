@@ -45,7 +45,7 @@ namespace stdr_xml_parser
     std::set<std::string> required;
     std::set<std::string> allowed;
   };
-
+  
   struct Specs
   {
     Specs(void);
@@ -55,23 +55,43 @@ namespace stdr_xml_parser
   class Node
   {
     private:
-      std::vector<Node> elements_;
-      std::map<std::string,std::string> attributes_;
-    public:
-      void parse(std::string file_name);
-  };
 
+    public:
+      Node(void);
+      bool check_for_filename(std::string base);
+      std::vector<int> get_tag(std::string tag);
+      void increasePriority(void);
+      
+      int priority;
+      std::string tag;
+      std::string value;
+      std::vector<Node*> elements;
+  };
+  
   class Base
   {
     private:
-      Node base_node_;
+      Node* base_node_;
+      Node* mergable_node_;
       std::string base_path_;
-    public:
-      Base(void);
-      void initializeParsing(std::string file_name);
-      void loadSpecifications(void);
+      std::set<std::string> mergable_tags_;
+      
       void parseSpecifications(TiXmlNode* node);
+      void loadSpecifications(void);
+      std::set<std::string> explodeString(std::string s,char delimiter);
+      void parseLow(TiXmlNode* node,Node* n);
+      void parse(std::string file_name,Node* n);
+      void printParsedXml(Node* n,std::string indent);
+      bool eliminateFilenames(Node* n);
+      void eliminateFilenames(void);
+      void parseMergableSpecifications(void);
+    public:
+    
+      Base(void);
+      void initialize(void);
+      void parse(std::string file_name);
+      void printSpecifications(void);
+      void printParsedXml(void);
   };
 }
-
 #endif
