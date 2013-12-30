@@ -22,7 +22,7 @@
 #ifndef STDR_XML_PARSER__BASE
 #define STDR_XML_PARSER__BASE
 
-#include "stdr_xml_parser/stdr_xml_parser_node.h"
+#include "stdr_xml_parser/stdr_xml_parser_msg_creator.h"
 
 /**
 @namespace stdr_xml_parser
@@ -42,6 +42,8 @@ namespace stdr_xml_parser
       Node* base_node_;
       std::string base_path_;
       std::set<std::string> non_mergable_tags_;
+      
+      MessageCreator creator_;
       
       void parseSpecifications(TiXmlNode* node);
       void loadSpecifications(void);
@@ -75,6 +77,7 @@ namespace stdr_xml_parser
       void printSpecifications(void);
       void printParsedXml(void);
       Node* getBaseNode(void);
+      stdr_msgs::RobotMsg createRobotMessage(std::string file_name);
   };
 }
 #endif

@@ -20,7 +20,6 @@
 ******************************************************************************/
 
 #include "stdr_xml_parser/stdr_xml_parser_base.h"
-#include "stdr_xml_parser/stdr_xml_parser_msg_creator.h"
 
 /**
 @brief Main function of xml parser ros node
@@ -31,12 +30,7 @@ int main(int argc, char **argv)
   ros::init(argc,argv,"stdr_xml_parser");
   
   stdr_xml_parser::Base b;
-  b.initialize();
-  b.parse("pandora_robot.xml");
-  //~ b.printParsedXml();
-  
-  stdr_xml_parser::MessageCreator creator;
-  stdr_msgs::RobotMsg msg = creator.createRobotMessage(b.getBaseNode());
+  stdr_msgs::RobotMsg msg = b.createRobotMessage("pandora_robot.xml");
 
   return 0;
 }

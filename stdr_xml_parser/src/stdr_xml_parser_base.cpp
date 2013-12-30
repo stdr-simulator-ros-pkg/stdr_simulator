@@ -483,5 +483,12 @@ or required : [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(), node_text.c_s
   {
     return base_node_;
   }
+  
+  stdr_msgs::RobotMsg Base::createRobotMessage(std::string file_name)
+  {
+    initialize();
+    parse(file_name);
+    return creator_.createRobotMessage(base_node_);
+  }
 }
 
