@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
 )
 
+set(CMAKE_BUILD_TYPE Debug)
 
 include_directories(
   include
@@ -32,6 +33,7 @@ catkin_package(
     include
   LIBRARIES 
     handle_robot
+    stdr_parser
   CATKIN_DEPENDS
     roscpp
     nodelet

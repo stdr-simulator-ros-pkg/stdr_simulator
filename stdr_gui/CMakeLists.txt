@@ -10,11 +10,14 @@ find_package(catkin REQUIRED COMPONENTS
 	stdr_server
 	sensor_msgs
 	nav_msgs
+	map_server
 )
 
 include_directories( include
 	${catkin_INCLUDE_DIRS}
 )
+
+link_directories(${catkin_LIBRARY_DIRS})
 
 find_package(Qt4 REQUIRED COMPONENTS 
 	QtCore 
