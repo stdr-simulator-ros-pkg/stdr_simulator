@@ -353,7 +353,8 @@ Error was '%s'", path.c_str(),doc.ErrorDesc());
         {
           break;
         }
-        else if(node_text!="allowed" && node_text!="required")
+        else if(node_text!="allowed" && node_text!="required" 
+          && node_text!="default")
         { //!< Base specifications tag
           if(Specs::specs.find(node_text) == Specs::specs.end())
           { //!< New base specifications tag
@@ -383,6 +384,10 @@ specifications.xml", node_text.c_str());
         else if(base_type == "required")
         {
           Specs::specs[base_tag].required = explodeString(node_text,',');
+        }
+        else if(base_type == "default")
+        {
+          
         }
         else
         {

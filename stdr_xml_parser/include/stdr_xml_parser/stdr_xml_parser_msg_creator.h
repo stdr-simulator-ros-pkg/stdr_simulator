@@ -19,21 +19,32 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_xml_parser_base.h"
-#include "stdr_xml_parser/stdr_xml_parser_msg_creator.h"
+#ifndef STDR_XML_PARSER__MSG_CREATOR
+#define STDR_XML_PARSER__MSG_CREATOR
+
+#include "stdr_xml_parser/stdr_xml_parser_node.h"
 
 /**
-@brief Main function of xml parser ros node
-@return int
-**/
-int main(int argc, char **argv)
+@namespace stdr_xml_parser
+@brief The main namespace for STDR GUI XML parser
+**/ 
+namespace stdr_xml_parser
 {
-  ros::init(argc,argv,"stdr_xml_parser");
-  
-  stdr_xml_parser::Base b;
-  b.initialize();
-  b.parse("simple_robot.xml");
-  //~ b.printParsedXml();
-  //~ ros::spin();
-  return 0;
+  /**
+  @class Base
+  @brief Implements the main functionalities of the high-level parser
+  **/ 
+  class MessageCreator
+  {
+    private:
+     
+    public:
+    
+      /**
+      @brief Default constructor
+      @return void
+      **/
+      MessageCreator(void);
+  };
 }
+#endif

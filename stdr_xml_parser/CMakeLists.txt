@@ -36,6 +36,7 @@ catkin_package(
 add_executable(stdr_xml_parser_node 
   src/stdr_xml_parser_ros_node.cpp
   src/stdr_xml_parser_base.cpp
+  src/stdr_xml_parser_msg_creator.cpp
   src/stdr_xml_parser_node.cpp
   src/stdr_xml_parser_specs.cpp
   src/stdr_xml_parser_tools.cpp
