@@ -26,25 +26,67 @@
 #include <sensor_msgs/Range.h>
 #include <stdr_msgs/SonarSensorMsg.h>
 
+/**
+@namespace stdr_robot
+@brief The main namespace for STDR Robot
+**/ 
 namespace stdr_robot {
 
+  /**
+  @class Sonar
+  @brief A class that provides sonar implementation. Inherits publicly Sensor
+  **/ 
   class Sonar : public Sensor {
 
     public:
-
+      /**
+      @brief Default constructor
+      @param map [const nav_msgs::OccupancyGrid&] An occupancy grid map
+      @param msg [const stdr_msgs::SonarSensorMsg&] The sonar description message
+      @param name [const std::string&] The sensor frame id without the base
+      @param n [ros::NodeHandle&] The ROS node handle
+      @return void
+      **/ 
       Sonar(const nav_msgs::OccupancyGrid& map,
-          const stdr_msgs::SonarSensorMsg& msg, 
-          const std::string& name, 
-          ros::NodeHandle& n);
+        const stdr_msgs::SonarSensorMsg& msg, 
+        const std::string& name, 
+        ros::NodeHandle& n);
+      
+      /**
+      @brief Updates the sensor measurements
+      @param ev [const ros::TimerEvent&] A ROS timer event
+      @return void
+      **/ 
       virtual void updateSensorCallback(const ros::TimerEvent&);
+      
+      /**
+      @brief Returns the sensor pose relatively to robot
+      @return geometry_msgs::Pose2D
+      **/ 
       virtual geometry_msgs::Pose2D getSensorPose();
+      
+      /**
+      @brief Returns the sensor frame id
+      @return std::string
+      **/ 
       virtual std::string getFrameId();
+      
+      /**
+      @brief Updates the sensor tf transform
+      @param ev [const ros::TimerEvent&] A ROS timer event
+      @return void
+      **/ 
       virtual void updateTransform(const ros::TimerEvent&);
 
-      ~Sonar() {}
+      /**
+      @brief Default destructor
+      @return void
+      **/ 
+      ~Sonar(void);
 
     private:
 
+      //!< Sonar sensor description
       stdr_msgs::SonarSensorMsg _description;
   };
 

@@ -24,10 +24,21 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
+/**
+@class ConnectionException
+@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
+**/ 
 class ConnectionException : public std::runtime_error
 {
-	public:
-		ConnectionException(const std::string errorDescription) : std::runtime_error(errorDescription) { ; };
+  public:
+    /**
+    @brief Throws an std::runtime_error with a messsage
+    @param errorDescription [const std::string] The error message
+    **/ 
+    ConnectionException(const std::string errorDescription) : 
+      std::runtime_error(errorDescription) 
+    {
+    }
 };
 
 #endif

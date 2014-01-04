@@ -24,6 +24,12 @@
 
 #define USAGE "USAGE: load_map <map_file.yaml>"
 
+/**
+@brief Main function of the server node
+@param argc [int] Number of input arguments
+@param argv [char**] Input arguments
+@return int
+**/
 int main(int argc, char** argv) {
   
   ros::init(argc, argv, "map_loader", ros::init_options::AnonymousName);
@@ -38,10 +44,14 @@ int main(int argc, char** argv) {
     
     ros::ServiceClient client;
     
-    while (!ros::service::waitForService("/stdr_server/load_static_map_external", ros::Duration(.1)) && ros::ok()) {
-      ROS_WARN("Trying to register to /stdr_server/load_static_map_external...");
+    while (!ros::service::waitForService(
+      "/stdr_server/load_static_map_external", ros::Duration(.1)) && ros::ok()) 
+    {
+      ROS_WARN(
+        "Trying to register to /stdr_server/load_static_map_external...");
     }
-    client = nh.serviceClient<stdr_msgs::LoadExternalMap>("/stdr_server/load_static_map_external", true);
+    client = nh.serviceClient<stdr_msgs::LoadExternalMap>
+      ("/stdr_server/load_static_map_external", true);
     
     stdr_msgs::LoadExternalMap srv;
     
