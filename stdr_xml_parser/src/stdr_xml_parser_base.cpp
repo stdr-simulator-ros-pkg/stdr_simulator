@@ -23,7 +23,10 @@
 
 namespace stdr_xml_parser
 {
-  
+  /**
+  @brief Default constructor
+  @return void
+  **/
   Base::Base(void)
   {
     base_path_=ros::package::getPath("stdr_resources");
@@ -31,6 +34,12 @@ namespace stdr_xml_parser
     base_node_->tag = "STDR_Parser_Root_Node";
   }
   
+  /**
+  @brief Debug recursive function - Prints the xml tree
+  @param n [Node*] The stdr xml tree node to begin
+  @param indent [std::string] The indentation for the specific node
+  @return void
+  **/
   void Base::printParsedXml(Node *n,std::string indent)
   {
     if(n->value != "")
@@ -47,12 +56,20 @@ namespace stdr_xml_parser
     }
   }
   
+  /**
+  @brief Prints the parsed xml
+  @return void
+  **/
   void Base::printParsedXml(void)
   {
     ROS_ERROR("-----------------------------------------------------");
     printParsedXml(base_node_,"");
   }
   
+  /**
+  @brief High level function that eliminates the 'filename' nodes. Calls the eliminateFilenames(Node* n) function until it returns false
+  @return void
+  **/
   void Base::eliminateFilenames(void)
   {
     while(!eliminateFilenames(base_node_))
@@ -60,6 +77,11 @@ namespace stdr_xml_parser
     }
   }
   
+  /**
+  @brief Recursive function - Expands the 'filename' nodes and eliminates them
+  @param n [Node*] The stdr xml tree node to begin
+  @return bool : True is a 'filename' node was expanded
+  **/
   bool Base::eliminateFilenames(Node* n)
   {
     if(n->value != "")
@@ -96,6 +118,11 @@ type specified",n->tag.c_str());
     return true;
   }
   
+  /**
+  @brief Performs a allowed - validity check on the xml tree
+  @param n [Node*] The stdr xml tree node to begin
+  @return bool : True is the xml is allowed-valid
+  **/
   bool Base::validityAllowedCheck(Node* n)
   {
     //!< Immediately return if we have a value node
@@ -132,6 +159,11 @@ type specified",n->tag.c_str());
     return true;
   }
   
+  /**
+  @brief Performs a required - validity check on the xml tree
+  @param n [Node*] The stdr xml tree node to begin
+  @return bool : True is the xml is required-valid
+  **/
   bool Base::validityRequiredCheck(Node* n)
   {
     //!< Immediately return if we have a value node
@@ -165,7 +197,11 @@ type specified",n->tag.c_str());
     }
     return true;
   }
-  
+  /**
+  @brief Merges the leaves of the xml tree, which are the value nodes
+  @param n [Node*] The stdr xml tree node to begin
+  @return void
+  **/
   void Base::mergeNodesValues(Node* n)
   {
     //!< Check if the node does not contain pure values
@@ -211,6 +247,10 @@ type specified",n->tag.c_str());
     }
   }
   
+  /**
+  @brief High level function that merges similar nodes. Calls the mergeNodes(Node* n) function until it returns false
+  @return void
+  **/
   void Base::mergeNodes(void)
   {
     while(!mergeNodes(base_node_))
@@ -219,6 +259,11 @@ type specified",n->tag.c_str());
     mergeNodesValues(base_node_);
   }
 
+  /**
+  @brief Recursive function - Merges the nodes that do not exist in non_mergable_tags_
+  @param n [Node*] The stdr xml tree node to begin
+  @return bool : True is a ndoe was merged
+  **/
   bool Base::mergeNodes(Node* n)
   {
     if(n->value != "")  //!< Node is value
@@ -245,8 +290,8 @@ type specified",n->tag.c_str());
           for(int i = num.size()-1 ; i > 0 ; i --)
           {
             //!< Merging multiple tag's children into the first occurence
-            for (unsigned int j = 0 ; j < n->elements[num[i]]->elements.size() ; 
-              j++)
+            for (unsigned int j = 0 ; 
+              j < n->elements[num[i]]->elements.size() ; j++)
             {
               n->elements[num[0]]->elements.push_back(
                 n->elements[num[i]]->elements[j]);
@@ -265,6 +310,11 @@ type specified",n->tag.c_str());
     return true;
   }
   
+  /**
+  @brief Parses an xml file
+  @param file_name [std::string] The xml filename
+  @return void
+  **/
   void Base::parse(std::string file_name)
   {
     // Must destroy prev tree
@@ -276,12 +326,17 @@ type specified",n->tag.c_str());
     
     mergeNodes();
     
-    if(validityAllowedCheck(base_node_) && validityRequiredCheck(base_node_))
-    {
-      ROS_ERROR("XML is STDR valid");
-    }
+    validityAllowedCheck(base_node_);
+    
+    validityRequiredCheck(base_node_);
   }
   
+  /**
+  @brief Private function that initiates the parsing of an xml file
+  @param file_name [std::string] The xml file name
+  @param n [Node*] The stdr xml tree node to update
+  @return void
+  **/
   void Base::parse(std::string file_name,Node* n)
   {
     std::string path=base_path_ + std::string("/xmls/") + file_name;
@@ -289,11 +344,16 @@ type specified",n->tag.c_str());
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
     {
-      ROS_ERROR("Failed to load file \"%s\"\n,%s", path.c_str(),doc.ErrorDesc());
+      ROS_ERROR("Failed to load file \"%s\"\n,%s", 
+        path.c_str(),doc.ErrorDesc());
     }
     parseLow(&doc,n);
   }
   
+  /**
+  @brief Parses the mergabl speciications file
+  @return void
+  **/
   void Base::parseMergableSpecifications(void)
   {
     std::string path=base_path_ + 
@@ -302,13 +362,20 @@ type specified",n->tag.c_str());
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
     {
-      ROS_ERROR("Failed to load file \"%s\"\n,%s", path.c_str(),doc.ErrorDesc());
+      ROS_ERROR("Failed to load file \"%s\"\n,%s", 
+        path.c_str(),doc.ErrorDesc());
       return;
     }
     non_mergable_tags_ = explodeString(
       doc.FirstChild()->FirstChild()->Value(), ',');
   }
   
+  /**
+  @brief Low-level recursive function for parsing the xml robot file
+  @param node [TiXmlNode*] The xml node to start from
+  @param n [Node*] The stdr xml tree node to update
+  @return void
+  **/
   void Base::parseLow(TiXmlNode* node,Node* n)
   {
     Node* new_node = new Node();
@@ -353,6 +420,10 @@ type specified",n->tag.c_str());
     }
   }
   
+  /**
+  @brief Loads the specifications file and parses it
+  @return void
+  **/
   void Base::initialize(void)
   {
     std::string path=base_path_ + 
@@ -370,6 +441,11 @@ Error was '%s'", path.c_str(),doc.ErrorDesc());
     parseSpecifications(&doc);
   }
   
+  /**
+  @brief Low-level recursive function for parsing the xml specifications file
+  @param node [TiXmlNode*] The xml node to start from
+  @return void
+  **/
   void Base::parseSpecifications(TiXmlNode* node)
   {
     TiXmlNode* pChild;
@@ -426,7 +502,8 @@ specifications.xml", node_text.c_str());
         else
         {
           ROS_ERROR("STDR XML parser Error : Specifications not in allowed \
-or required : [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(), node_text.c_str());
+or required : [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(), 
+            node_text.c_str());
         }
         break;
       }
@@ -441,35 +518,24 @@ or required : [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(), node_text.c_s
     }
   }
   
-  std::set<std::string> Base::explodeString(std::string s,char delimiter)
-  {
-    std::set<std::string> ret;
-    int prev = 0, next = 0;
-    next = s.find(delimiter,prev);
-    while(next != std::string::npos)
-    {
-      ret.insert(s.substr(prev , next - prev));
-      prev = next + 1;
-      next = s.find(delimiter,prev);
-    }
-    ret.insert(s.substr(prev , s.size() - prev));
-    return ret;
-  }
-  
+  /**
+  @brief Prints the specifications
+  @return void
+  **/
   void Base::printSpecifications(void)
   {
     for(std::map<std::string,ElSpecs>::iterator it = Specs::specs.begin();
       it != Specs::specs.end() ; it ++)
     {
       ROS_ERROR("[%s]",it->first.c_str());
-      ROS_ERROR("  [allowed : ]",it->first.c_str());
+      ROS_ERROR("  [allowed : %s]",it->first.c_str());
       for(std::set<std::string>::iterator inner_it = 
         it->second.allowed.begin(); 
           inner_it != it->second.allowed.end() ; inner_it ++)
       {
         ROS_ERROR("    - %s",(*inner_it).c_str());
       }
-      ROS_ERROR("  [required : ]",it->first.c_str());
+      ROS_ERROR("  [required : %s]",it->first.c_str());
       for(std::set<std::string>::iterator inner_it = 
         it->second.required.begin(); 
           inner_it != it->second.required.end() ; inner_it ++)
@@ -479,11 +545,11 @@ or required : [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(), node_text.c_s
     }
   }
   
-  Node* Base::getBaseNode(void)
-  {
-    return base_node_;
-  }
-  
+  /**
+  @brief Parses an xml file and produces a stdr_msgs::RobotMsg message
+  @param file_name [std::string] The xml filename
+  @return stdr_msgs::RobotMsg : The robot message
+  **/
   stdr_msgs::RobotMsg Base::createRobotMessage(std::string file_name)
   {
     initialize();

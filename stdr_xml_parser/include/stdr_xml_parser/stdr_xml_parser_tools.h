@@ -38,11 +38,22 @@
 #include "geometry_msgs/Pose2D.h"
 #include "geometry_msgs/Point.h"
 
+//!< Transforms a float number to string
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
 
+/**
+@namespace stdr_xml_parser
+@brief The main namespace for STDR GUI XML parser
+**/ 
 namespace stdr_xml_parser
 {
-  
+  /**
+  @brief Explodes a string based on a delimiter
+  @param s [std::string] The input string
+  @param delimiter [char] The delimiter
+  @return std::set<std::string> : An ensemble of strings
+  **/
+  std::set<std::string> explodeString(std::string s,char delimiter);
 }
 #endif

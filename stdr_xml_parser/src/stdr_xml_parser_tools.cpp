@@ -23,5 +23,24 @@
 
 namespace stdr_xml_parser
 {
-
+  /**
+  @brief Explodes a string based on a delimiter
+  @param s [std::string] The input string
+  @param delimiter [char] The delimiter
+  @return std::set<std::string> : An ensemble of strings
+  **/
+  std::set<std::string> explodeString(std::string s,char delimiter)
+  {
+    std::set<std::string> ret;
+    int prev = 0, next = 0;
+    next = s.find(delimiter,prev);
+    while(next != std::string::npos)
+    {
+      ret.insert(s.substr(prev , next - prev));
+      prev = next + 1;
+      next = s.find(delimiter,prev);
+    }
+    ret.insert(s.substr(prev , s.size() - prev));
+    return ret;
+  }
 }
