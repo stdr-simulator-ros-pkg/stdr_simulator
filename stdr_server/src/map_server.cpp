@@ -23,48 +23,77 @@
 
 namespace stdr_server {
 
-MapServer::MapServer(const std::string& fname) {
-  
-  map_ = map_loader::loadMap(fname);
+  /**
+  @brief Constructor by filename
+  @param fname [const std::string&] The file name
+  @return void
+  **/
+  MapServer::MapServer(const std::string& fname) 
+  {
+    
+    map_ = map_loader::loadMap(fname);
 
-  meta_data_message_ = map_.info;
-  
-  publishData();  
-}
+    meta_data_message_ = map_.info;
+    
+    publishData();  
+  }
 
-MapServer::MapServer(const nav_msgs::OccupancyGrid& map) {
-  
-  map_ = map;
-  meta_data_message_ = map_.info;
-  
-  publishData();
-}
+  /**
+  @brief Constructor by occupancy grid map
+  @param map [const nav_msgs::OccupancyGrid&] The occupancy grid map
+  @return void
+  **/
+  MapServer::MapServer(const nav_msgs::OccupancyGrid& map) 
+  {
+    
+    map_ = map;
+    
+    meta_data_message_ = map_.info;
+    
+    publishData();
+  }
 
-void MapServer::publishData() {
-  
-  tfTimer = n.createTimer(ros::Duration(0.01), &MapServer::publishTransform, this);
-  
-  // Latched publisher for metadata
-  metadata_pub= n.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
-  metadata_pub.publish( meta_data_message_ );
-  
-  // Latched publisher for data
-  map_pub = n.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
-  map_pub.publish( map_ );
-}
+  /**
+  @brief Publishes the map data and metadata
+  @return void
+  **/
+  void MapServer::publishData(void) 
+  {
+    
+    tfTimer = n.createTimer(ros::Duration(0.01), 
+      &MapServer::publishTransform, this);
+    
+    //!< Latched publisher for metadata
+    metadata_pub= n.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
+    metadata_pub.publish( meta_data_message_ );
+    
+    //!< Latched publisher for data
+    map_pub = n.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
+    map_pub.publish( map_ );
+  }
 
+  /**
+  @brief Publishes the map to map_static transform
+  @param ev [const ros::TimerEvent&] A ROS timer event
+  @return void
+  **/
+  void MapServer::publishTransform(const ros::TimerEvent&) {
+    
+    tf::Vector3 translation(
+      map_.info.origin.position.x, 
+      map_.info.origin.position.y, 
+      0);
+    
+    tf::Quaternion rotation;
+    
+    rotation.setRPY(0, 0, tf::getYaw(map_.info.origin.orientation));
 
-void MapServer::publishTransform(const ros::TimerEvent&) {
-  
-  tf::Vector3 translation(map_.info.origin.position.x, map_.info.origin.position.y, 0);
-  tf::Quaternion rotation;
-  rotation.setRPY(0, 0, tf::getYaw(map_.info.origin.orientation));
+    tf::Transform worldTomap(rotation, translation);
 
-  tf::Transform worldTomap(rotation, translation);
-
-  tfBroadcaster.sendTransform(tf::StampedTransform(worldTomap, ros::Time::now(), "map", "map_static"));
-  
-}
+    tfBroadcaster.sendTransform(
+      tf::StampedTransform(worldTomap, ros::Time::now(), "map", "map_static"));
+    
+  }
 
 } // end of namespace stdr_server
 

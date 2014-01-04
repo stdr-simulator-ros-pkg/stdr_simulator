@@ -25,6 +25,11 @@ namespace stdr_server {
 
   namespace map_loader {
     
+    /**
+    @brief Loads a map from an image file
+    @param fname [const std::string&] The file name
+    @return nav_msgs::OccupancyGrid
+    **/
     nav_msgs::OccupancyGrid loadMap(const std::string& fname) {
       
       nav_msgs::GetMap::Response map_resp_;
@@ -48,7 +53,8 @@ namespace stdr_server {
       try { 
         doc["resolution"] >> res; 
       } catch (YAML::InvalidScalar) { 
-        ROS_ERROR("The map does not contain a resolution tag or it is invalid.");
+        ROS_ERROR(
+          "The map does not contain a resolution tag or it is invalid.");
         exit(-1);
       }
       try { 
@@ -60,13 +66,15 @@ namespace stdr_server {
       try { 
         doc["occupied_thresh"] >> occ_th; 
       } catch (YAML::InvalidScalar) { 
-        ROS_ERROR("The map does not contain an occupied_thresh tag or it is invalid.");
+        ROS_ERROR(
+          "The map does not contain an occupied_thresh tag or it is invalid.");
         exit(-1);
       }
       try { 
         doc["free_thresh"] >> free_th; 
       } catch (YAML::InvalidScalar) { 
-        ROS_ERROR("The map does not contain a free_thresh tag or it is invalid.");
+        ROS_ERROR(
+          "The map does not contain a free_thresh tag or it is invalid.");
         exit(-1);
       }
       try { 
@@ -98,7 +106,9 @@ namespace stdr_server {
       }
     
       ROS_INFO("Loading map from image \"%s\"", mapfname.c_str());
-      map_server::loadMapFromFile(&map_resp_,mapfname.c_str(),res,negate,occ_th,free_th, origin);
+      map_server::loadMapFromFile(&map_resp_,mapfname.c_str(),
+        res,negate,occ_th,free_th, origin);
+        
       map_resp_.map.info.map_load_time = ros::Time::now();
       map_resp_.map.header.frame_id = frame_id;
       map_resp_.map.header.stamp = ros::Time::now();

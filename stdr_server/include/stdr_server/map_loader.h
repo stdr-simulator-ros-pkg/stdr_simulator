@@ -35,8 +35,8 @@
 
 
 #ifdef HAVE_NEW_YAMLCPP
-// The >> operator disappeared in yaml-cpp 0.5, so this function is
-// added to provide support for code written under the yaml-cpp 0.3 API.
+//! The >> operator disappeared in yaml-cpp 0.5, so this function is
+//! added to provide support for code written under the yaml-cpp 0.3 API.
 template<typename T>
 void operator >> (const YAML::Node& node, T& i)
 {
@@ -44,10 +44,23 @@ void operator >> (const YAML::Node& node, T& i)
 }
 #endif
 
+/**
+@namespace stdr_server
+@brief The main namespace for STDR Server
+**/ 
 namespace stdr_server {
 
+  /**
+  @namespace map_loader
+  @brief The namespace for STDR map loader
+  **/ 
   namespace map_loader {
     
+    /**
+    @brief Loads a map from an image file
+    @param fname [const std::string&] The file name
+    @return nav_msgs::OccupancyGrid
+    **/
     nav_msgs::OccupancyGrid loadMap(const std::string& fname); 
     
   } // end of namespace map_loader
