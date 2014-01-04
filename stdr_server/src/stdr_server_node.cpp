@@ -22,13 +22,19 @@
 
 #include <stdr_server/stdr_server.h>
 
+/**
+@brief Main function of the server node
+@param argc [int] Number of input arguments
+@param argv [char**] Input arguments
+@return int
+**/
 int main(int argc, char** argv) {
-	
-	ros::init(argc, argv, "stdr_server");
-	
-	stdr_server::Server server(argc, argv);
-	
-	ros::spin();
-	
-	return 0;
+
+  ros::init(argc, argv, "stdr_server");
+
+  stdr_server::Server server(argc, argv);
+
+  ros::spin();
+
+  return 0;
 }
