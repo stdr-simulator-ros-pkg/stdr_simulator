@@ -23,13 +23,20 @@
 
 namespace stdr_xml_parser
 {
-  
+  /**
+  @brief Default constructor
+  @return void
+  **/
   Node::Node(void)
   {
     priority = 0;
   }
   
-  bool Node::check_for_filename(std::string base)
+  /**
+  @brief Checks a node if a specific filename exists
+  @return void
+  **/
+  bool Node::checkForFilename(std::string base)
   {
     if(elements.size() == 1)
     {
@@ -41,6 +48,11 @@ namespace stdr_xml_parser
     return false;
   }
   
+  /**
+  @brief Searches for a tag in the specific node
+  @param tag [std::string] The tag to search for
+  @return std::vector<int> : The indexes in elements where tag is found
+  **/
   std::vector<int> Node::getTag(std::string tag)
   {
     std::vector<int> ret;
@@ -54,6 +66,10 @@ namespace stdr_xml_parser
     return ret;
   }
   
+  /**
+  @brief Increases the priority of the node
+  @return void
+  **/
   void Node::increasePriority(void)
   {
     priority ++;

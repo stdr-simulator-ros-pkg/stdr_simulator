@@ -24,19 +24,45 @@
 
 #include "stdr_xml_parser/stdr_xml_parser_tools.h"
 
+/**
+@namespace stdr_xml_parser
+@brief The main namespace for STDR GUI XML parser
+**/ 
 namespace stdr_xml_parser
 {
+  /**
+  @struct ElSpecs
+  @brief An element of Specs - represents a valid xml tag
+  **/ 
   struct ElSpecs
   {
+    /**
+    @brief Default constructor
+    @return void
+    **/
     ElSpecs(void);
+    
+    //!< The required tags for the xml tag
     std::set<std::string> required;
+    //!< The allowed tags for the xml tag
     std::set<std::string> allowed;
+    //!< Default value for the xml node (if it is a value)
     std::string default_value;
   };
   
+  /**
+  @struct Specs
+  @brief The STDR xml parser specifications
+  **/ 
   struct Specs
   {
+    /**
+    @brief Default constructor
+    @return void
+    **/
     Specs(void);
+    
+    //!< std::map of valid STDR xml tags
     static std::map<std::string,ElSpecs> specs;
   };
 }

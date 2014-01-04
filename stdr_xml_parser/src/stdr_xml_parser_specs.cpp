@@ -23,16 +23,23 @@
 
 namespace stdr_xml_parser
 {
-  //-----------------------------------------------------------------------//
+  /**
+  @brief Default constructor
+  @return void
+  **/
   ElSpecs::ElSpecs(void)
   {
     required.clear();
     allowed.clear();
   }
-  
-  std::map<std::string,ElSpecs> Specs::specs = 
-    std::map<std::string,ElSpecs>();
     
+  //!< Static member variable initialization
+  std::map<std::string,ElSpecs> Specs::specs = std::map<std::string,ElSpecs>();
+  
+  /**
+  @brief Default constructor
+  @return void
+  **/
   Specs::Specs(void)
   {
     specs.clear();

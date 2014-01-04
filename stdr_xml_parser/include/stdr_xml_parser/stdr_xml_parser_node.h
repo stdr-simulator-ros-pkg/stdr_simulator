@@ -24,22 +24,56 @@
 
 #include "stdr_xml_parser/stdr_xml_parser_specs.h"
 
+/**
+@namespace stdr_xml_parser
+@brief The main namespace for STDR GUI XML parser
+**/ 
 namespace stdr_xml_parser
 {
-  
+  /**
+  @class Node
+  @brief Implements the main functionalities of the stdr xml parser tree
+  **/ 
   class Node
   {
     private:
 
     public:
+    
+      /**
+      @brief Default constructor
+      @return void
+      **/
       Node(void);
-      bool check_for_filename(std::string base);
+      
+      /**
+      @brief Checks a node if a specific filename exists
+      @return void
+      **/
+      bool checkForFilename(std::string base);
+      
+      /**
+      @brief Searches for a tag in the specific node
+      @param tag [std::string] The tag to search for
+      @return std::vector<int> : The indexes in elements where tag is found
+      **/
       std::vector<int> getTag(std::string tag);
+      
+      /**
+      @brief Increases the priority of the node
+      @return void
+      **/
       void increasePriority(void);
       
+      //!< The node priority. Used in merging. Basically works inversely. Nodes in lower priority overwrite the ones in higher priority
       int priority;
+      
+      //!< The node tag (if it not a value node)
       std::string tag;
+      //!< The node value (if it not a tag node)
       std::string value;
+      
+      //!< The node children
       std::vector<Node*> elements;
   };
   

@@ -92,7 +92,7 @@ namespace stdr_xml_parser
     {
       if(n->elements[i]->tag == "filename")
       { //!< Sanity check for filename. Base and file must be the same
-        if(!n->elements[i]->check_for_filename(n->tag))
+        if(!n->elements[i]->checkForFilename(n->tag))
         {
           ROS_ERROR("STDR XML parser Error : [%s] had a filename of wrong \
 type specified",n->tag.c_str());
