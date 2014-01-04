@@ -171,6 +171,20 @@ namespace stdr_xml_parser
       @return stdr_msgs::RobotMsg : The robot message
       **/
       stdr_msgs::RobotMsg createRobotMessage(std::string file_name);
+      
+      /**
+      @brief Parses an xml file and produces a stdr_msgs::LaserSensorMsg message
+      @param file_name [std::string] The xml filename
+      @return stdr_msgs::LaserSensorMsg : The laser message
+      **/
+      stdr_msgs::LaserSensorMsg createLaserMessage(std::string file_name);
+      
+      /**
+      @brief Parses an xml file and produces a stdr_msgs::SonarSensorMsg message
+      @param file_name [std::string] The xml filename
+      @return stdr_msgs::SonarSensorMsg : The sonar message
+      **/
+      stdr_msgs::SonarSensorMsg createSonarMessage(std::string file_name);
   };
 }
 #endif

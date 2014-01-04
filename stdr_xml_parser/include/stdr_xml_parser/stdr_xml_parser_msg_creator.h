@@ -89,6 +89,15 @@ namespace stdr_xml_parser
       @return geometry_msgs::Pose2D
       **/
       geometry_msgs::Pose2D createPoseMessage(Node *n);
+      
+      //----------------------------------------------------------------------//
+      /**
+      @brief Creates an xml from a robot msg
+      @param msg [stdr_msgs::RobotMsg] The robot message
+      @param file_name [std::string] The file name to write the xml
+      @return void
+      **/
+      void robotToXml(stdr_msgs::RobotMsg msg,std::string file_name);
   };
 }
 #endif

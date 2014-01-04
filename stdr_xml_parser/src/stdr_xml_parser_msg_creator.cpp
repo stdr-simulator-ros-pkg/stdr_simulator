@@ -353,5 +353,18 @@ namespace stdr_xml_parser
     }
     return msg;
   }
+  
+  //--------------------------------------------------------------------------//
+  /**
+  @brief Creates an xml from a robot msg
+  @param msg [stdr_msgs::RobotMsg] The robot message
+  @param file_name [std::string] The file name to write the xml
+  @return void
+  **/
+  void MessageCreator::robotToXml(
+    stdr_msgs::RobotMsg msg,std::string file_name)
+  {
+    
+  }
 }
 

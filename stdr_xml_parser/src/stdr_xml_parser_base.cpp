@@ -556,5 +556,29 @@ or required : [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(),
     parse(file_name);
     return creator_.createRobotMessage(base_node_);
   }
+  
+  /**
+  @brief Parses an xml file and produces a stdr_msgs::LaserSensorMsg message
+  @param file_name [std::string] The xml filename
+  @return stdr_msgs::LaserSensorMsg : The laser message
+  **/
+  stdr_msgs::LaserSensorMsg Base::createLaserMessage(std::string file_name)
+  {
+    initialize();
+    parse(file_name);
+    return creator_.createLaserMessage(base_node_,0);
+  }
+  
+  /**
+  @brief Parses an xml file and produces a stdr_msgs::SonarSensorMsg message
+  @param file_name [std::string] The xml filename
+  @return stdr_msgs::SonarSensorMsg : The sonar message
+  **/
+  stdr_msgs::SonarSensorMsg Base::createSonarMessage(std::string file_name)
+  {
+    initialize();
+    parse(file_name);
+    return creator_.createSonarMessage(base_node_,0);
+  }
 }
 
