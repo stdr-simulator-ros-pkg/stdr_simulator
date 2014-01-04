@@ -326,6 +326,7 @@ namespace stdr_gui
         return lasers_[i]->getVisualizationStatus();
       }
     }
+    return 0;
   }
     
   /**
@@ -358,6 +359,7 @@ namespace stdr_gui
         return sonars_[i]->getVisualizationStatus();
       }
     }
+    return 0;
   }
   
   /**
