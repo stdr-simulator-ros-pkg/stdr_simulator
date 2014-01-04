@@ -23,6 +23,14 @@
 
 namespace stdr_robot {
 
+  /**
+  @brief Default constructor
+  @param map [const nav_msgs::OccupancyGrid&] An occupancy grid map
+  @param msg [const stdr_msgs::SonarSensorMsg&] The sonar description message
+  @param name [const std::string&] The sensor frame id without the base
+  @param n [ros::NodeHandle&] The ROS node handle
+  @return void
+  **/ 
   Sonar::Sonar(const nav_msgs::OccupancyGrid& map,
       const stdr_msgs::SonarSensorMsg& msg, 
       const std::string& name,
@@ -31,15 +39,32 @@ namespace stdr_robot {
   {
     _description = msg;
 
-    _timer = n.createTimer(ros::Duration(1/msg.frequency), &Sonar::updateSensorCallback, this);  
-    _tfTimer = n.createTimer(ros::Duration(1/(2*msg.frequency)), &Sonar::updateTransform, this);
+    _timer = n.createTimer(
+      ros::Duration(1 / msg.frequency), &Sonar::updateSensorCallback, this);  
+    _tfTimer = n.createTimer(
+      ros::Duration(1 / (2 * msg.frequency)), &Sonar::updateTransform, this);
 
-    _publisher = n.advertise<sensor_msgs::Range>( _namespace+"/"+msg.frame_id, 1 );
+    _publisher = n.advertise<sensor_msgs::Range>
+      ( _namespace + "/" + msg.frame_id, 1 );
+  }
+  
+  /**
+  @brief Default destructor
+  @return void
+  **/ 
+  Sonar::~Sonar(void)
+  {
+    
   }
 
+  /**
+  @brief Updates the sensor measurements
+  @param ev [const ros::TimerEvent&] A ROS timer event
+  @return void
+  **/ 
   void Sonar::updateSensorCallback(const ros::TimerEvent&) 
   {
-    if (!_gotTransform) { // wait for transform 
+    if (!_gotTransform) { //!< wait for transform 
       return;
     }
     
@@ -62,63 +87,98 @@ namespace stdr_robot {
     sonarRangeMsg.range = _description.maxRange;
 
     float angleStep = 3.14159 / 180.0;
-    float angleMin = -( _description.coneAngle / 2.0 ); 
+    float angleMin = - ( _description.coneAngle / 2.0 ); 
     float angleMax = _description.coneAngle / 2.0 ; 
     ////float angleStep = _description.coneAngle * 180.0 / 3.14159;
     //float angleMin = -( _description.coneAngle * 180.0 / 3.14159 / 2.0 ); 
     //float angleMax = _description.coneAngle * 180.0 / 3.14159 / 2.0 ; 
 
-    for ( float sonarIter = angleMin; sonarIter < angleMax; sonarIter += angleStep )
+    for ( float sonarIter = angleMin; sonarIter < angleMax; 
+      sonarIter += angleStep )
     {
 
       distance = 1;
 
       while ( distance <= _description.maxRange / _map.info.resolution )
       {
-        xMap = _sensorTransform.getOrigin().x() / _map.info.resolution + cos( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) * distance;
-        yMap = _sensorTransform.getOrigin().y() / _map.info.resolution + sin( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) * distance;
+        xMap = _sensorTransform.getOrigin().x() / _map.info.resolution + 
+          cos( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) 
+            * distance;
+        yMap = _sensorTransform.getOrigin().y() / _map.info.resolution + 
+          sin( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) 
+            * distance;
         
-        if ( _map.data[ yMap * _map.info.width + xMap ] > 70 ) break;
+        //!< Found obstacle
+        if ( _map.data[ yMap * _map.info.width + xMap ] > 70 )
+        {
+          break;
+        }
         distance ++;
       }
 
       if ( distance * _map.info.resolution < sonarRangeMsg.range )
+      {
         sonarRangeMsg.range = distance * _map.info.resolution;
+      }
     }
     
     if ( sonarRangeMsg.range < _description.minRange )
+    {
       sonarRangeMsg.range = -std::numeric_limits<float>::infinity();
+    }
     else if ( sonarRangeMsg.range >= _description.maxRange )
+    {
       sonarRangeMsg.range = std::numeric_limits<float>::infinity();
+    }
 
     sonarRangeMsg.header.stamp = ros::Time::now();
     sonarRangeMsg.header.frame_id = _namespace + "_" + _description.frame_id;
     _publisher.publish( sonarRangeMsg );
   }
 
+  /**
+  @brief Returns the sensor pose relatively to robot
+  @return geometry_msgs::Pose2D
+  **/ 
   geometry_msgs::Pose2D Sonar::getSensorPose()
   {
     return _description.pose;
   }
   
+  /**
+  @brief Returns the sensor frame id
+  @return std::string
+  **/ 
   std::string Sonar::getFrameId()
   {
     return _namespace + "_" + _description.frame_id;
   }
   
+  /**
+  @brief Updates the sensor tf transform
+  @param ev [const ros::TimerEvent&] A ROS timer event
+  @return void
+  **/
   void Sonar::updateTransform(const ros::TimerEvent&)
   {
-    try {
-      _tfListener.waitForTransform("map_static",
-                                  _namespace + "_" + _description.frame_id,
-                                  ros::Time(0),
-                                  ros::Duration(0.2));
-      _tfListener.lookupTransform("map_static",
-                                  _namespace + "_" + _description.frame_id,
-                                  ros::Time(0), _sensorTransform);
+    try 
+    {
+      _tfListener.waitForTransform(
+        "map_static",
+        _namespace + "_" + _description.frame_id,
+        ros::Time(0),
+        ros::Duration(0.2));
+        
+      _tfListener.lookupTransform(
+        "map_static",
+        _namespace + "_" + _description.frame_id,
+        ros::Time(0), 
+        _sensorTransform);
+      
       _gotTransform = true;
     }
-    catch (tf::TransformException ex) {
+    catch (tf::TransformException ex) 
+    {
       ROS_WARN("%s", ex.what());
     }
     

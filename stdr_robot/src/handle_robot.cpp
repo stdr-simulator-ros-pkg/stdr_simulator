@@ -22,71 +22,98 @@
 #include <stdr_robot/handle_robot.h>
 
 namespace stdr_robot {
-	
-HandleRobot::HandleRobot() 
-  : _spawnRobotClient("stdr_server/spawn_robot", true)
-  , _deleteRobotClient("stdr_server/delete_robot", true)
-{
-}
 
-stdr_msgs::RobotIndexedMsg HandleRobot::spawnNewRobot(const stdr_msgs::RobotMsg msg) {
-	
-	stdr_msgs::SpawnRobotGoal goal;
-	goal.description = msg;
-		
-	while (!_spawnRobotClient.waitForServer(ros::Duration(1)) && ros::ok()) {
-		ROS_WARN("Could not find stdr_server/spawn_robot action, is it running??");
-	}
-	
-	_spawnRobotClient.sendGoal(goal);
-	
-	bool success = _spawnRobotClient.waitForResult(ros::Duration(10));
-	
-	if (!success) {
-		throw ConnectionException("Could not spawn robot...");
-	}
-	
-	ROS_INFO("New robot spawned successfully, with name %s.", _spawnRobotClient.getResult()->indexedDescription.name.c_str());
-	
-	return _spawnRobotClient.getResult()->indexedDescription;
-	
-}
+  /**
+  @brief Default constructor
+  @return void
+  **/
+  HandleRobot::HandleRobot() 
+    : _spawnRobotClient("stdr_server/spawn_robot", true)
+    , _deleteRobotClient("stdr_server/delete_robot", true)
+  {
+  }
 
-bool HandleRobot::deleteRobot(const std::string& name) {
-	
-	stdr_msgs::DeleteRobotGoal goal;
-	goal.name = name;
-	
-	while (!_deleteRobotClient.waitForServer(ros::Duration(1)) && ros::ok()) {
-		ROS_WARN("Could not find stdr_server/delete_robot action, is it running??");
-	}
-	
-	_deleteRobotClient.sendGoal(goal);
-	
-	bool success = _deleteRobotClient.waitForResult(ros::Duration(10));
-	
-	if (!success) {
-		throw ConnectionException("Could not delete robot, connection error...");
-	}
-	
-	return _deleteRobotClient.getResult()->success;
-	
-}
+  /**
+  @brief Spawns a new robot
+  @param msg [const stdr_msgs::RobotMsg] The robot message from which the robot is created
+  @return stdr_msgs::RobotIndexedMsg : The robot message with the proper frame_id
+  **/
+  stdr_msgs::RobotIndexedMsg HandleRobot::spawnNewRobot(
+    const stdr_msgs::RobotMsg msg) 
+  {
+    
+    stdr_msgs::SpawnRobotGoal goal;
+    goal.description = msg;
+      
+    while (!_spawnRobotClient.waitForServer(ros::Duration(1)) && ros::ok()) {
+      ROS_WARN("Could not find stdr_server/spawn_robot action.");
+    }
+    
+    _spawnRobotClient.sendGoal(goal);
+    
+    bool success = _spawnRobotClient.waitForResult(ros::Duration(10));
+    
+    if (!success) {
+      throw ConnectionException("Could not spawn robot...");
+    }
+    
+    ROS_INFO("New robot spawned successfully, with name %s.", 
+      _spawnRobotClient.getResult()->indexedDescription.name.c_str());
+    
+    return _spawnRobotClient.getResult()->indexedDescription;
+    
+  }
 
-bool HandleRobot::moveRobot(const std::string& name, const geometry_msgs::Pose2D newPose) {
-	
-	while (!ros::service::waitForService(name + "/replace", ros::Duration(.1)) && ros::ok()) {
-		ROS_WARN("Could not find %s/replace ...", name.c_str());
-	}
-	
-	stdr_msgs::MoveRobot srv;
-	srv.request.newPose = newPose;
-	
-	if (ros::service::call(name + "/replace", srv)) {
-		return true;
-	}
-	
-	return false;
-}
-	
+  /**
+  @brief Deletes a robot by frame_id
+  @param name [const std::string&] The robot frame_id to be deleted
+  @return bool : True if deletion was successful
+  **/
+  bool HandleRobot::deleteRobot(const std::string& name) 
+  {
+    
+    stdr_msgs::DeleteRobotGoal goal;
+    goal.name = name;
+    
+    while (!_deleteRobotClient.waitForServer(ros::Duration(1)) && ros::ok()) {
+      ROS_WARN("Could not find stdr_server/delete_robot action.");
+    }
+    
+    _deleteRobotClient.sendGoal(goal);
+    
+    bool success = _deleteRobotClient.waitForResult(ros::Duration(10));
+    
+    if (!success) {
+      throw ConnectionException("Could not delete robot, connection error...");
+    }
+    
+    return _deleteRobotClient.getResult()->success;
+    
+  }
+
+  /**
+  @brief Re-places a robot by frame_id
+  @param name [const std::string&] The robot frame_id to be moved
+  @param newPose [const geometry_msgs::Pose2D] The pose for the robot to be moved to
+  @return bool : True if move was successful
+  **/
+  bool HandleRobot::moveRobot(
+    const std::string& name, const geometry_msgs::Pose2D newPose) 
+  {
+    
+    while (!ros::service::waitForService(name + "/replace", 
+      ros::Duration(.1)) && ros::ok()) {
+      ROS_WARN("Could not find %s/replace ...", name.c_str());
+    }
+    
+    stdr_msgs::MoveRobot srv;
+    srv.request.newPose = newPose;
+    
+    if (ros::service::call(name + "/replace", srv)) {
+      return true;
+    }
+    
+    return false;
+  }
+    
 } // end of namespace stdr_robot

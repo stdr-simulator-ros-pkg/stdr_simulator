@@ -26,29 +26,65 @@
 #include "nav_msgs/OccupancyGrid.h"
 #include "stdr_server/map_loader.h"
 
+/**
+@namespace stdr_server
+@brief The main namespace for STDR Server
+**/ 
 namespace stdr_server {
 
-class MapServer
-{
-  public:
+  /**
+  @class MapServer
+  @brief Implements the STDR map server functionalities
+  **/ 
+  class MapServer
+  {
+    public:
+      
+      /**
+      @brief Constructor by filename
+      @param fname [const std::string&] The file name
+      @return void
+      **/
+      explicit MapServer(const std::string& fname);
+      
+      /**
+      @brief Constructor by occupancy grid map
+      @param map [const nav_msgs::OccupancyGrid&] The occupancy grid map
+      @return void
+      **/
+      explicit MapServer(const nav_msgs::OccupancyGrid& map);
+      
+    private:
+      
+      /**
+      @brief Publishes the map data and metadata
+      @return void
+      **/
+      void publishData();
+      
+      /**
+      @brief Publishes the map to map_static transform
+      @param ev [const ros::TimerEvent&] A ROS timer event
+      @return void
+      **/
+      void publishTransform(const ros::TimerEvent& ev);
     
-    explicit MapServer(const std::string& fname);
-    explicit MapServer(const nav_msgs::OccupancyGrid& map);
+    private:
     
-  private:
-    
-    void publishData();
-    void publishTransform(const ros::TimerEvent&);
-  
-  private:
-    ros::NodeHandle n;
-    ros::Publisher map_pub;
-    ros::Publisher metadata_pub;
-    ros::Timer tfTimer;
-    tf::TransformBroadcaster tfBroadcaster;
-    
-    nav_msgs::MapMetaData meta_data_message_;
-    nav_msgs::OccupancyGrid map_;
+      //!< The ROS node handle
+      ros::NodeHandle n;
+      //!< ROS publisher for posting the map
+      ros::Publisher map_pub;
+      //!< ROS publisher for posting the map metadata
+      ros::Publisher metadata_pub;
+      //!< ROS timer for tf posting
+      ros::Timer tfTimer;
+      //!< ROS tf broadcaster
+      tf::TransformBroadcaster tfBroadcaster;
+      //!< ROS map metadata message
+      nav_msgs::MapMetaData meta_data_message_;
+      //!< ROS occupancy grid message
+      nav_msgs::OccupancyGrid map_;
 
-};
+  };
 }

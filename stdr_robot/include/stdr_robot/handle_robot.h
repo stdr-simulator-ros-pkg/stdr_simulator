@@ -31,26 +31,62 @@
 #ifndef HANDLE_ROBOT_H
 #define HANDLE_ROBOT_H
 
+/**
+@namespace stdr_robot
+@brief The main namespace for STDR Robot
+**/ 
 namespace stdr_robot {
 
-typedef actionlib::SimpleActionClient<stdr_msgs::SpawnRobotAction> SpawnRobotClient;
-typedef actionlib::SimpleActionClient<stdr_msgs::DeleteRobotAction> DeleteRobotClient;
+  typedef actionlib::SimpleActionClient<stdr_msgs::SpawnRobotAction> 
+    SpawnRobotClient;
+  typedef actionlib::SimpleActionClient<stdr_msgs::DeleteRobotAction> 
+    DeleteRobotClient;
 
-class HandleRobot {
-	
-	public:
-		
-		HandleRobot();
-		stdr_msgs::RobotIndexedMsg spawnNewRobot(const stdr_msgs::RobotMsg msg);
-		bool deleteRobot(const std::string& name);
-		bool moveRobot(const std::string& name, const geometry_msgs::Pose2D newPose);
-		
-	private:
-		
-		SpawnRobotClient _spawnRobotClient;
-		DeleteRobotClient _deleteRobotClient;
-};
-	
+  /**
+  @class HandleRobot
+  @brief Handles the manipulation of robots (creation, deletion, move)
+  **/ 
+  class HandleRobot {
+    //------------------------------------------------------------------------//
+    private:
+    
+      //!< Action client for spawning robots
+      SpawnRobotClient _spawnRobotClient;
+      //!< Action client for deleting robots
+      DeleteRobotClient _deleteRobotClient;
+      
+    //------------------------------------------------------------------------//
+    public:
+
+      /**
+      @brief Default constructor
+      @return void
+      **/
+      HandleRobot();
+      
+      /**
+      @brief Spawns a new robot
+      @param msg [const stdr_msgs::RobotMsg] The robot message from which the robot is created
+      @return stdr_msgs::RobotIndexedMsg : The robot message with the proper frame_id
+      **/
+      stdr_msgs::RobotIndexedMsg spawnNewRobot(const stdr_msgs::RobotMsg msg);
+      
+      /**
+      @brief Deletes a robot by frame_id
+      @param name [const std::string&] The robot frame_id to be deleted
+      @return bool : True if deletion was successful
+      **/
+      bool deleteRobot(const std::string& name);
+      
+      /**
+      @brief Re-places a robot by frame_id
+      @param name [const std::string&] The robot frame_id to be moved
+      @param newPose [const geometry_msgs::Pose2D] The pose for the robot to be moved to
+      @return bool : True if move was successful
+      **/
+      bool moveRobot(const std::string& name, 
+        const geometry_msgs::Pose2D newPose);
+  };
 }
 
 #endif

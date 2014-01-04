@@ -24,22 +24,62 @@
 
 #include <stdr_robot/motion/motion_controller_base.h>
 
-namespace stdr_robot {
-	
-class IdealMotionController : public MotionController {
-	
-	public:
-		
-		IdealMotionController(const geometry_msgs::Pose2DPtr& pose, tf::TransformBroadcaster& tf, ros::NodeHandle& n, const std::string& name);
-		void velocityCallback(const geometry_msgs::Twist& msg);
-		void stop();
-		void calculateMotion(const ros::TimerEvent& event);
-		~IdealMotionController() {}
-				
-	
-};	
-	
-	
+/**
+@namespace stdr_robot
+@brief The main namespace for STDR Robot
+**/ 
+namespace stdr_robot 
+{
+  
+  /**
+  @class IdealMotionController
+  @brief A class that provides motion controller implementation. Inherits publicly MotionController
+  **/ 
+  class IdealMotionController : public MotionController 
+  {
+    
+    public:
+    
+      /**
+      @brief Default constructor
+      @param pose [const geometry_msgs::Pose2DPtr&] The robot pose
+      @param tf [tf::TransformBroadcaster&] A ROS tf broadcaster
+      @param n [ros::NodeHandle&] The ROS node handle
+      @param name [const std::string&] The robot frame id
+      @return void
+      **/
+      IdealMotionController(
+        const geometry_msgs::Pose2DPtr& pose, 
+        tf::TransformBroadcaster& tf, 
+        ros::NodeHandle& n, 
+        const std::string& name);
+      
+      /**
+      @brief Callback for velocity commands
+      @param msg [const geometry_msgs::Twist&] The velocity command
+      @return void
+      **/
+      void velocityCallback(const geometry_msgs::Twist& msg);
+      
+      /**
+      @brief Stops the robot
+      @return void
+      **/
+      void stop(void);
+      
+      /**
+      @brief Calculates the motion - updates the robot pose
+      @param event [const ros::TimerEvent&] A ROS timer event
+      @return void
+      **/
+      void calculateMotion(const ros::TimerEvent& event);
+      
+      /**
+      @brief Default destructor 
+      @return void
+      **/
+      ~IdealMotionController(void);
+  };
 }
 
 
