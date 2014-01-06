@@ -410,4 +410,14 @@ namespace stdr_gui
   {
     map_initialized_ = mi;
   }
+  
+  /**
+  @brief Unchecks the zoom in & out buttons when right click in map is pushed
+  @return void
+  **/
+  void CGuiConnector::uncheckZoomButtons(void)
+  {
+    loader_.actionZoomIn->setChecked(false);
+    loader_.actionZoomOut->setChecked(false);
+  }
 }

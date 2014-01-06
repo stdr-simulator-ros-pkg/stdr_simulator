@@ -158,7 +158,7 @@ namespace stdr_gui
     actionGrid = new QAction(this);
     actionGrid->setObjectName(QString::fromUtf8("actionGrid"));
     actionGrid->setCheckable(true);
-    actionGrid->setChecked(true);
+    actionGrid->setChecked(false);
     actionGrid->setIconText(QString("Enable grid"));
     QIcon iconGrid;
     iconGrid.addFile(QString::fromUtf8((
@@ -200,7 +200,7 @@ namespace stdr_gui
         
     actionAdjusted = new QAction(this);
     actionAdjusted->setObjectName(QString::fromUtf8("actionAdjusted"));
-    actionAdjusted->setCheckable(true);
+    actionAdjusted->setCheckable(false);
     actionAdjusted->setChecked(true);
     actionAdjusted->setIconText(QString("Auto size"));
     QIcon iconAdjust;

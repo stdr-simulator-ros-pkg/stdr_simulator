@@ -130,6 +130,12 @@ namespace stdr_gui
       @return void
       **/
       void setMapInitialized(bool mi);
+      
+      /**
+      @brief Unchecks the zoom in & out buttons when right click in map is pushed
+      @return void
+      **/
+      void uncheckZoomButtons(void);
     
     //------------------------------------------------------------------------//
     public Q_SLOTS:

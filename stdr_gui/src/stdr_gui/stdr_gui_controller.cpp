@@ -921,6 +921,7 @@ namespace stdr_gui
   **/
   void CGuiController::itemClicked(QPoint p,Qt::MouseButton b)
   {
+    gui_connector_.uncheckZoomButtons();
     QPoint pointClicked = map_connector_.getGlobalPoint(p);
     for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
     {
