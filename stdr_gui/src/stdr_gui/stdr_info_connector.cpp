@@ -120,8 +120,10 @@ namespace stdr_gui
   void CInfoConnector::updateTree(
     const stdr_msgs::RobotIndexedVectorMsg& msg)
   {
+    
     loader.deleteTree();
     loader.updateRobots(msg);
+    
     Q_EMIT adaptSignal();
   }
   

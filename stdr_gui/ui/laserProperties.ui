@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>331</width>
-    <height>410</height>
+    <width>249</width>
+    <height>377</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,34 +16,18 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="1">
-      <widget class="QComboBox" name="laserCombo">
-       <item>
-        <property name="text">
-         <string>Hokuyo URG-04LX</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Hokuyo URG-30LX</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>SICK LMS 200</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="4" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Orientation</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
+     <item row="7" column="1">
       <widget class="QLineEdit" name="laserTranslationX">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>0.1</string>
        </property>
@@ -52,36 +36,35 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="4" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>Angle span (degrees)</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="1" column="1">
       <widget class="QLineEdit" name="laserMaxDistance">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>10</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Max distance (m)</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Real Lasers</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
+     <item row="4" column="1">
       <widget class="QLineEdit" name="laserAngleSpan">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>270</string>
        </property>
@@ -90,15 +73,18 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Noise - mean (cm)</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="5" column="1">
       <widget class="QLineEdit" name="laserNoiseMean">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>0.0</string>
        </property>
@@ -107,8 +93,11 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
+     <item row="6" column="1">
       <widget class="QLineEdit" name="laserNoiseStd">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>0.0</string>
        </property>
@@ -117,29 +106,39 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="0">
+     <item row="7" column="0">
       <widget class="QLabel" name="label_7">
        <property name="text">
         <string>Translation - x (m)</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
+     <item row="6" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Noise - std (cm)</string>
        </property>
       </widget>
      </item>
-     <item row="9" column="0">
+     <item row="8" column="0">
       <widget class="QLabel" name="label_8">
        <property name="text">
         <string>Translation - y (m)</string>
        </property>
       </widget>
      </item>
-     <item row="9" column="1">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Min distance (m)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
       <widget class="QLineEdit" name="laserTranslationY">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>0.0</string>
        </property>
@@ -148,50 +147,55 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="laserOrientation">
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>Min distance (m)</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="laserMinDistance">
+      <widget class="QLineEdit" name="laserOrientation">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>0</string>
        </property>
       </widget>
      </item>
-     <item row="10" column="0">
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="laserMinDistance">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
       <widget class="QLabel" name="label_10">
        <property name="text">
         <string>Frequency (Hz)</string>
        </property>
       </widget>
      </item>
-     <item row="10" column="1">
+     <item row="9" column="1">
       <widget class="QLineEdit" name="laserFrequency">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>10</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="0" column="0">
       <widget class="QLabel" name="label_11">
        <property name="text">
         <string>Number of rays</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="0" column="1">
       <widget class="QLineEdit" name="laserRays">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
         <string>270</string>
        </property>
@@ -214,6 +218,19 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>laserRays</tabstop>
+  <tabstop>laserMaxDistance</tabstop>
+  <tabstop>laserMinDistance</tabstop>
+  <tabstop>laserOrientation</tabstop>
+  <tabstop>laserAngleSpan</tabstop>
+  <tabstop>laserNoiseMean</tabstop>
+  <tabstop>laserNoiseStd</tabstop>
+  <tabstop>laserTranslationX</tabstop>
+  <tabstop>laserTranslationY</tabstop>
+  <tabstop>laserFrequency</tabstop>
+  <tabstop>laserUpdateButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -314,7 +314,7 @@ namespace stdr_gui
     map_connector_.setMapInitialized(true);
     gui_connector_.setMapInitialized(true);
     
-    timer_->start(50);
+    timer_->start(200);
     
     robot_subscriber_ = n_.subscribe(
       "stdr_server/active_robots", 
@@ -930,6 +930,12 @@ namespace stdr_gui
         if(b == Qt::RightButton)
         {
           QMenu myMenu;
+          
+          QAction *nothing = myMenu.addAction(
+            QString("Robot : ") + 
+            QString(registered_robots_[i].getFrameId().c_str()));
+          nothing->setCheckable(false);
+          nothing->setEnabled(false);
           
           QAction *deleteRobot = myMenu.addAction(icon_delete_,"Delete robot");
           QAction *moveRobot = myMenu.addAction(icon_move_,"Move robot");

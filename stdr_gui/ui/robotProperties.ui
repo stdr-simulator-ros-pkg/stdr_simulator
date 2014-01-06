@@ -30,21 +30,6 @@
          <string>Circle</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Rectangle</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Square</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Custom</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item row="1" column="1">
@@ -92,6 +77,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBox</tabstop>
+  <tabstop>robotShape</tabstop>
+  <tabstop>robotOrientation</tabstop>
+  <tabstop>updateButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -103,7 +103,7 @@ namespace stdr_gui
   void CGuiRobot::drawSelf(QImage *m)
   {
     QPainter painter(m);
-    painter.setPen(QColor(0,0,200,10 + 100 * (2 - visualization_status_)));
+    painter.setPen(QColor(0,0,200,50 + 100 * (2 - visualization_status_)));
     
     painter.drawEllipse(
       (current_pose_.x - radius_) / resolution_,
@@ -121,7 +121,7 @@ namespace stdr_gui
   
     if(show_circles_)
     {
-      painter.setPen(QColor(255,0,0,10 + 100 * (2 - visualization_status_)));
+      painter.setPen(QColor(255,0,0,50 + 100 * (2 - visualization_status_)));
       for(unsigned int i = 0 ; i < 5 ; i++)
       {
         painter.drawEllipse(
@@ -189,7 +189,7 @@ namespace stdr_gui
   {
     QPainter painter(m);
     
-    painter.setPen(QColor(0,0,0,10 + 100 * (2 - visualization_status_)));
+    painter.setPen(QColor(0,0,0,100 * (2 - visualization_status_)));
     
     painter.drawRect(
       current_pose_.x / ocgd + 10,
@@ -197,14 +197,14 @@ namespace stdr_gui
       100,
       20);
     
-    painter.setPen(QColor(255,255,255,10 + 100 * (2 - visualization_status_)));
+    painter.setPen(QColor(255,255,255,100 * (2 - visualization_status_)));
     
     painter.fillRect(
       current_pose_.x / ocgd + 10,
       m->height() - (current_pose_.y / ocgd) - 30,
       100,
       20,
-      QBrush(QColor(0,0,0,10 + 100 * (2 - visualization_status_))));
+      QBrush(QColor(0,0,0,100 * (2 - visualization_status_))));
     
     painter.drawText(
       current_pose_.x / ocgd + 12,

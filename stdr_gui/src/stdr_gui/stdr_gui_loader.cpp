@@ -202,7 +202,7 @@ namespace stdr_gui
     actionAdjusted->setObjectName(QString::fromUtf8("actionAdjusted"));
     actionAdjusted->setCheckable(false);
     actionAdjusted->setChecked(true);
-    actionAdjusted->setIconText(QString("Auto size"));
+    actionAdjusted->setIconText(QString("Adjust size"));
     QIcon iconAdjust;
     iconAdjust.addFile(QString::fromUtf8((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 

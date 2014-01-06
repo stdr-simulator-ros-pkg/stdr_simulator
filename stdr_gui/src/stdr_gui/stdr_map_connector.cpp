@@ -153,10 +153,7 @@ namespace stdr_gui{
         {
           map_state_ = NORMAL;
           loader_.map->setCursor(QCursor(Qt::CrossCursor));
-          //~ if(map_state_ == NORMAL)
-          //~ {
-            Q_EMIT itemClicked(p,Qt::RightButton);
-          //~ }
+          Q_EMIT itemClicked(p,Qt::RightButton);
         }
         else if(me->button() == Qt::LeftButton)
         {

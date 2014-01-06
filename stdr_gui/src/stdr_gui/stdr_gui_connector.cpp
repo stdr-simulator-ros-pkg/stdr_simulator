@@ -174,12 +174,12 @@ namespace stdr_gui
     QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
     msg.setWindowTitle(QString("STDR Simulator - About"));
     msg.setText(QString("Simple Two Dimentional Robot Simulator\
-    (STDR Simulator) is a multi-robot simulator created in QT4. Its goals\
-    are : \n1) to simulate easily a single robot or a swarm in a 2D\
-    environment, \n2) to be totally parameterizable \n3) to be ROS\
-    compliant.\n\nDevelopers:\nManos Tsardoulias, etsardou@gmail.com\
-    \nAris Thallas, aris.thallas@gmail.com\nChris Zalidis,\
-    zalidis@gmail.com"));
+ (STDR Simulator) is a multi-robot simulator created in QT4. Its goals\
+ are : \n\n1) to simulate easily a single robot or a swarm in a 2D\
+ environment, \n2) to be totally parameterizable \n3) to be ROS\
+ compliant.\n\nDevelopers:\nManos Tsardoulias, etsardou@gmail.com\
+\nAris Thallas, aris.thallas@gmail.com\nChris Zalidis,\
+ zalidis@gmail.com"));
     msg.exec();
   }
   

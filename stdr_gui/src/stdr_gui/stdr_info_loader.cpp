@@ -103,9 +103,10 @@ namespace stdr_gui{
     for(int i = count - 1 ; i >= 0 ; i--)
     {
       deleteTreeNode(item->child(i));
+      QTreeWidgetItem *child = item->child(i);
+      item->removeChild(item->child(i));
+      delete child;
     }
-    stdrInformationTree->removeItemWidget(item,0);
-    delete item;
   }
   
   /**
@@ -117,7 +118,10 @@ namespace stdr_gui{
     int count = robotsInfo.childCount();
     for(int i = count - 1 ; i >= 0 ; i--)
     {
-      deleteTreeNode(robotsInfo.child(i));
+      //~ deleteTreeNode(robotsInfo.child(i));
+      QTreeWidgetItem *child = robotsInfo.child(i);
+      robotsInfo.removeChild(robotsInfo.child(i));
+      //~ delete child;
     }
   }
   
@@ -148,6 +152,8 @@ namespace stdr_gui{
       rnode->setText(0,QString(msg.robots[i].name.c_str()));
       rnode->setIcon(2,visible_icon_on_);
       rnode->setIcon(3,visible_icon_);
+      rnode->setToolTip(2,"Visibility status");
+      rnode->setToolTip(3,"Visualize robot topics");
       
       QTreeWidgetItem *radius = new QTreeWidgetItem();
       radius->setText(0,"Radius");
@@ -172,8 +178,11 @@ namespace stdr_gui{
         lname=new QTreeWidgetItem();
         lname->setText(0,
           msg.robots[i].robot.laserSensors[l].frame_id.c_str());
+          
         lname->setIcon(2,visible_icon_on_);
+        lname->setToolTip(2,"Visibility status");
         lname->setIcon(3,visible_icon_);
+        lname->setToolTip(3,"Visualize topic");
 
         QTreeWidgetItem *lrays = new QTreeWidgetItem();
         QTreeWidgetItem *lmaxrange = new QTreeWidgetItem();
@@ -246,6 +255,9 @@ namespace stdr_gui{
           msg.robots[i].robot.sonarSensors[l].frame_id.c_str());
         sname->setIcon(2,visible_icon_on_);
         sname->setIcon(3,visible_icon_);
+        
+        sname->setToolTip(2,"Visibility status");
+        sname->setToolTip(3,"Visualize topic");
 
         QTreeWidgetItem *smaxrange = new QTreeWidgetItem();
         QTreeWidgetItem *sminrange = new QTreeWidgetItem();

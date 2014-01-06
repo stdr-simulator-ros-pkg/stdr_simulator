@@ -99,7 +99,7 @@ namespace stdr_gui
     lasersNode.setText(0,"Lasers");
     sonarsNode.setText(0,"Sonars");
     //~ rfidAntennasNode.setText(0,"Rfid Antennas");
-    kinematicNode.setText(0,"Kinematic");
+    //~ kinematicNode.setText(0,"Kinematic");
     
     robotNode.setIcon(2,editIcon);
     robotNode.setIcon(3,saveIcon);
@@ -107,13 +107,13 @@ namespace stdr_gui
     lasersNode.setIcon(2,addIcon);
     sonarsNode.setIcon(2,addIcon);
     //~ rfidAntennasNode.setIcon(2,addIcon);
-    kinematicNode.setIcon(2,editIcon);
+    //~ kinematicNode.setIcon(2,editIcon);
     
     robotTreeWidget->addTopLevelItem(&robotNode);
     robotTreeWidget->addTopLevelItem(&lasersNode);
     robotTreeWidget->addTopLevelItem(&sonarsNode);
     //~ robotTreeWidget->addTopLevelItem(&rfidAntennasNode);
-    robotTreeWidget->addTopLevelItem(&kinematicNode);
+    //~ robotTreeWidget->addTopLevelItem(&kinematicNode);
     
     robotInfoShape.setText(0,"Shape");
     robotInfoShape.setText(1,"Circle");
@@ -128,7 +128,7 @@ namespace stdr_gui
     lasersNode.setExpanded(true);
     sonarsNode.setExpanded(true);
     //~ rfidAntennasNode.setExpanded(true);
-    kinematicNode.setExpanded(true);
+    //~ kinematicNode.setExpanded(true);
     
     robotTreeWidget->resizeColumnToContents(0);
     robotTreeWidget->resizeColumnToContents(1);
