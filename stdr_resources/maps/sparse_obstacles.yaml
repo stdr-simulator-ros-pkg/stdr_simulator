@@ -1,4 +1,4 @@
-image: map2.png
+image: sparse_obstacles.png
 resolution: 0.02
 origin: [0.0, 0.0, 0.0]
 occupied_thresh: 0.6

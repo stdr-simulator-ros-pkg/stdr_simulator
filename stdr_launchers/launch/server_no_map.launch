@@ -5,8 +5,5 @@
 	<node type="stdr_server_node" pkg="stdr_server" name="stdr_server" output="screen"/>
 
 	<node pkg="tf" type="static_transform_publisher" name="world2map" args="0 0 0 0 0 0  world map 100" />
-<!--
-	<include file="$(find stdr_launcers)/launch/rviz.launch" />
--->
-	
+
 </launch>
