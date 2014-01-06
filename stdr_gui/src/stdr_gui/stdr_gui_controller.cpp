@@ -84,12 +84,6 @@ namespace stdr_gui
       1, 
       &CGuiController::receiveMap,
       this);
-      
-    robot_subscriber_ = n_.subscribe(
-      "stdr_server/active_robots", 
-      1, 
-      &CGuiController::receiveRobots,
-      this);
     
     QObject::connect(
       &gui_connector_,SIGNAL(setZoomInCursor(bool)),
@@ -321,6 +315,12 @@ namespace stdr_gui
     gui_connector_.setMapInitialized(true);
     
     timer_->start(50);
+    
+    robot_subscriber_ = n_.subscribe(
+      "stdr_server/active_robots", 
+      1, 
+      &CGuiController::receiveRobots,
+      this);
   }
   
   /**
