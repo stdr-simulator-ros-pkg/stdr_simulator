@@ -361,6 +361,7 @@ namespace stdr_gui
   void CGuiConnector::show(void)
   {
     loader_.show();
+    loader_.showMaximized();
   }
   
   /**
