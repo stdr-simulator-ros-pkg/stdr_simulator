@@ -70,6 +70,10 @@ namespace stdr_gui
       
     try
     {
+      listener->waitForTransform("map_static",
+                                  frame_id_.c_str(),
+                                  ros::Time(0),
+                                  ros::Duration(1.0));
       listener->lookupTransform("map_static", 
         frame_id_.c_str(), ros::Time(0), transform);
     }

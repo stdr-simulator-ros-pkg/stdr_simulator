@@ -60,7 +60,7 @@ namespace stdr_server {
   void MapServer::publishData(void) 
   {
     
-    tfTimer = n.createTimer(ros::Duration(0.01), 
+    tfTimer = n.createTimer(ros::Duration(0.1), 
       &MapServer::publishTransform, this);
     
     //!< Latched publisher for metadata

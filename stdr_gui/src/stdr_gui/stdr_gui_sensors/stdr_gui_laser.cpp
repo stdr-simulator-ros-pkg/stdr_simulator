@@ -100,6 +100,10 @@ namespace stdr_gui
       
     try
     {
+      listener->waitForTransform("map_static",
+                                  tf_frame_.c_str(),
+                                  ros::Time(0),
+                                  ros::Duration(1.0));
       listener->lookupTransform("map_static", 
         tf_frame_.c_str(), ros::Time(0), transform);
     }
