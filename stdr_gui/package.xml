@@ -4,9 +4,14 @@
   <version>0.0.0</version>
   <description>The stdr_gui package</description>
 
-  <maintainer email="etsardou@gmail.com">etsardou@gmail.com</maintainer>
+  <maintainer email="etsardou@gmail.com">Manos Tsardoulias</maintainer>
 
   <license>GPLv3</license>
+  
+  <url type="bugtracker">https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues</url>
+  <url type="repository">https://github.com/stdr-simulator-ros-pkg/stdr_simulator</url>
+  
+  <author>Manos Tsardoulias</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   

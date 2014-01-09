@@ -4,16 +4,14 @@
   <version>0.0.1</version>
   <description>Launch files, to easily bringup server, robots, guis</description>
 
-  <maintainer email="etsardou@gmail.com">Manos Tsardoulias</maintainer>
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
-  <maintainer email="aris.thallas@gmail.com">Aris Thallas</maintainer>
 
   <license>GPLv3</license>
 
   <url type="bugtracker">https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues</url>
   <url type="repository">https://github.com/stdr-simulator-ros-pkg/stdr_simulator</url>
 
-  <author>Manos Tsardoulias, Chris Zalidis, Aris Thallas</author>
+  <author>Chris Zalidis</author>
   
   <buildtool_depend>catkin</buildtool_depend>
   

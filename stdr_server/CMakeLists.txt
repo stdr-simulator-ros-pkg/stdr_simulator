@@ -1,17 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(stdr_server)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-					roscpp
-					tf
-					nav_msgs
-					stdr_msgs
-					actionlib
-					nodelet
-					map_server
+    roscpp
+    tf
+    nav_msgs
+    stdr_msgs
+    actionlib
+    nodelet
+    map_server
 )
 
 set(CMAKE_BUILD_TYPE Debug)
@@ -23,16 +20,16 @@ add_definitions(-DHAVE_NEW_YAMLCPP)
 endif(NEW_YAMLCPP_FOUND)
 
 catkin_package(
-    INCLUDE_DIRS
-      include
-    LIBRARIES
-      map_loader
-    CATKIN_DEPENDS
-      roscpp
-      tf
-      nav_msgs
-      nodelet
-      actionlib
+  INCLUDE_DIRS
+    include
+  LIBRARIES
+    map_loader
+  CATKIN_DEPENDS
+    roscpp
+    tf
+    nav_msgs
+    nodelet
+    actionlib
 )
 
 link_directories(${catkin_LIBRARY_DIRS})
@@ -71,3 +68,13 @@ target_link_libraries(load_map
 	${catkin_LIBRARIES}
 )
 
+install(TARGETS 
+  map_loader
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/
+   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+)

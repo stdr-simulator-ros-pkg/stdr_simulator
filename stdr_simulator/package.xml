@@ -8,7 +8,7 @@
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
   <maintainer email="aris.thallas@gmail.com">Aris Thallas</maintainer>
 
-  <license>GPL v3.0</license>
+  <license>GPLv3</license>
 
   <url type="bugtracker">https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues</url>
   <url type="repository">https://github.com/stdr-simulator-ros-pkg/stdr_simulator</url>
@@ -16,9 +16,6 @@
   <author>Manos Tsardoulias, Chris Zalidis, Aris Thallas</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-
-  <run_depend>nav_msgs</run_depend>
-  <run_depend>geometry_msgs</run_depend>
 
   <export>
     <metapackage/>

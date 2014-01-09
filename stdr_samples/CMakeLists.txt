@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(stdr_samples)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf
@@ -39,5 +36,5 @@ add_executable(stdr_obstacle_avoidance
   src/obstacle_avoidance/obstacle_avoidance.cpp)
 add_dependencies(stdr_obstacle_avoidance stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_obstacle_avoidance 
-	${catkin_LIBRARIES}
+  ${catkin_LIBRARIES}
 )
