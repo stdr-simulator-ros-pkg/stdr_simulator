@@ -83,14 +83,12 @@ namespace stdr_robot {
     
       /**
       @brief Checks the robot collision -2b changed-
-      @param const ros::TimerEvent&
       @return void
       **/
       void checkCollision(const ros::TimerEvent&);
       
       /**
       @brief Publishes the tf transforms every with 10Hz
-      @param const ros::TimerEvent&
       @return void
       **/
       void publishTransforms(const ros::TimerEvent&);

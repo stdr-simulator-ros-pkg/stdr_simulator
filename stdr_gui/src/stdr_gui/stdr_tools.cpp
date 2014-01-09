@@ -144,7 +144,7 @@ namespace stdr_gui_tools
   
   /**
   @brief Takes a stdr_msgs::RobotMsg and converts its angles to rads
-  @param robot [stdr_msgs::RobotMsg] The robot message
+  @param rmsg [stdr_msgs::RobotMsg] The robot message
   @return stdr_msgs::RobotMsg : The recreated robot message
   **/
   stdr_msgs::RobotMsg fixRobotAnglesToRad(stdr_msgs::RobotMsg rmsg)
@@ -179,7 +179,7 @@ namespace stdr_gui_tools
   
   /**
   @brief Takes a stdr_msgs::RobotMsg and converts its angles to degrees
-  @param robot [stdr_msgs::RobotMsg] The robot message
+  @param rmsg [stdr_msgs::RobotMsg] The robot message
   @return stdr_msgs::RobotMsg : The recreated robot message
   **/
   stdr_msgs::RobotMsg fixRobotAnglesToDegrees(stdr_msgs::RobotMsg rmsg)

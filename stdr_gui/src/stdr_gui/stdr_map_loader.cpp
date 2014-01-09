@@ -125,12 +125,12 @@ namespace stdr_gui
   @param zoomIn [bool] True if zoom in, false if zoom out
   @return void
   **/
-  void CMapLoader::updateZoom(QPoint p,bool zoom_In)
+  void CMapLoader::updateZoom(QPoint p,bool zoomIn)
   {
     QPoint np = getGlobalPoint(p);
     np.setY(internal_img_->height() - np.y());
     int prevZoom = zoom_;
-    if(zoom_In)
+    if(zoomIn)
     {
       zoom_++;
     }

@@ -59,7 +59,6 @@ namespace stdr_robot {
 
   /**
   @brief Updates the sensor measurements
-  @param ev [const ros::TimerEvent&] A ROS timer event
   @return void
   **/ 
   void Sonar::updateSensorCallback(const ros::TimerEvent&) 
@@ -156,7 +155,6 @@ namespace stdr_robot {
   
   /**
   @brief Updates the sensor tf transform
-  @param ev [const ros::TimerEvent&] A ROS timer event
   @return void
   **/
   void Sonar::updateTransform(const ros::TimerEvent&)

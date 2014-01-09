@@ -74,7 +74,6 @@ namespace stdr_robot {
       
       /**
       @brief Updates the sensor tf transform
-      @param ev [const ros::TimerEvent&] A ROS timer event
       @return void
       **/ 
       virtual void updateTransform(const ros::TimerEvent&);
