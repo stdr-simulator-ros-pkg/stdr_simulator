@@ -85,7 +85,7 @@ namespace stdr_samples
     linear /= scan_.ranges.size();
     rotational /= scan_.ranges.size();
     
-    ROS_ERROR("%f %f",linear,rotational);
+    //~ ROS_ERROR("%f %f",linear,rotational);
     
     if(linear > 0.3)
     {
