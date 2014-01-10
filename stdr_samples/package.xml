@@ -4,9 +4,7 @@
   <version>0.1.0</version>
   <description>Provides sample codes for STDR simulator</description>
 
-  <maintainer email="etsardou@gmail.com">Manos Tsardoulias</maintainer>
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
-  <maintainer email="aris.thallas@gmail.com">Aris Thallas</maintainer>
 
   <license>GPL v3.0</license>
 

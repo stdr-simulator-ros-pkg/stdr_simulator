@@ -4,9 +4,7 @@
   <version>0.0.1</version>
   <description>A simple, flexible and scalable 2D robot simulator.</description>
 
-  <maintainer email="etsardou@gmail.com">Manos Tsardoulias</maintainer>
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
-  <maintainer email="aris.thallas@gmail.com">Aris Thallas</maintainer>
 
   <license>GPLv3</license>
 

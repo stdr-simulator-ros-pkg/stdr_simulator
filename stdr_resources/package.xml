@@ -4,8 +4,6 @@
   <version>0.0.1</version>
   <description>The stdr_resources package provides robot and sensors for stdr simulator.</description>
 
-  <maintainer email="etsardou@gmail.com">Manos Tsardoulias</maintainer>
-  <maintainer email="aris.thallas@gmail.com">Aris Thallas</maintainer>
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
 
 
