@@ -5,7 +5,7 @@ noise:
   mean: 0
   std: 0
 frequency: 10
-frame_id: sonar_1
+frame_id: sonar_8
 pose:
   x: 0.00999999977648258
   y: 0.017000000923872
