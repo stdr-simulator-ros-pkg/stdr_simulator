@@ -46,6 +46,15 @@ namespace stdr_gui
   void CGuiLoader::addToolbarIcons(void)
   {
     
+    QIcon applicationIcon;
+    applicationIcon.addFile(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+        std::string("/resources/images/favicon.ico")).c_str()), 
+      QSize(), 
+      QIcon::Normal, 
+      QIcon::Off);
+    setWindowIcon (applicationIcon);
+    
     actionLoadMap = new QAction(this);
     actionLoadMap->setObjectName(QString::fromUtf8("actionLoadMap"));
     actionLoadMap->setCheckable(false);

@@ -147,7 +147,7 @@ namespace stdr_gui
     float dx = p.x() * resolution_ - current_pose_.x;
     float dy = p.y() * resolution_ - current_pose_.y;
     float dist = sqrt( pow(dx,2) + pow(dy,2) );
-    return dist <= radius_;
+    return dist <= 0.3;
   }
   
   /**
