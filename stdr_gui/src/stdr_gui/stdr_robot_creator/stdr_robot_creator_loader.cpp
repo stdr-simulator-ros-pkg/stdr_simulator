@@ -122,6 +122,7 @@ namespace stdr_gui
 
     
     robotNode.addChild(&robotInfoShape);
+    robotNode.addChild(&robotInfoRadius);
     robotNode.addChild(&robotInfoOrientation);
     
     robotNode.setExpanded(true);

@@ -33,9 +33,9 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="robotShape">
+      <widget class="QLineEdit" name="robotRadius">
        <property name="text">
-        <string>-</string>
+        <string>0.15</string>
        </property>
       </widget>
      </item>
@@ -49,7 +49,7 @@
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Robot shape (point pairs)</string>
+        <string>Robot radius</string>
        </property>
       </widget>
      </item>
@@ -62,26 +62,42 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0" alignment="Qt::AlignHCenter">
-    <widget class="QPushButton" name="updateButton">
-     <property name="maximumSize">
-      <size>
-       <width>100</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Update</string>
-     </property>
-    </widget>
+   <item row="2" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="updateButton">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="refresh_robot">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Refresh</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>comboBox</tabstop>
-  <tabstop>robotShape</tabstop>
+  <tabstop>robotRadius</tabstop>
   <tabstop>robotOrientation</tabstop>
-  <tabstop>updateButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

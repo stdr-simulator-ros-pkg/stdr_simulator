@@ -47,24 +47,36 @@ namespace stdr_gui
     QObject::connect(
       loader_.laserPropLoader.laserUpdateButton,SIGNAL(clicked(bool)),
       this,SLOT(updateLaser()));
+    QObject::connect(
+      loader_.laserPropLoader.refresh_laser,SIGNAL(clicked(bool)),
+      this,SLOT(updateLaserOpen()));
     
     QObject::connect(
       loader_.robotPropLoader.updateButton,SIGNAL(clicked(bool)),
       this,SLOT(updateRobot()));
+    QObject::connect(
+      loader_.robotPropLoader.refresh_robot,SIGNAL(clicked(bool)),
+      this,SLOT(updateRobotOpen()));
     
     QObject::connect(
       loader_.sonarPropLoader.pushButton,SIGNAL(clicked(bool)),
       this,SLOT(updateSonar()));
-    
     QObject::connect(
-      loader_.rfidAntennaPropLoader.pushButton,SIGNAL(clicked(bool)),
-      this,SLOT(updateRfid()));
+      loader_.sonarPropLoader.refresh_sonar,SIGNAL(clicked(bool)),
+      this,SLOT(updateSonarOpen()));
+    
+    //~ QObject::connect(
+      //~ loader_.rfidAntennaPropLoader.pushButton,SIGNAL(clicked(bool)),
+      //~ this,SLOT(updateRfid()));
     
     QObject::connect(
       loader_.loadRobotButton,SIGNAL(clicked(bool)),
       this,SLOT(loadRobot()));
+    
 
     climax_ = - 1;
+    sonar_hightlight_id_ = -1;
+    laser_hightlight_id_ = -1;
   }
   
   /**
@@ -86,6 +98,8 @@ namespace stdr_gui
     
     loader_.robotInfoShape.setText(0,"Shape");
     loader_.robotInfoShape.setText(1,"Circle");
+    loader_.robotInfoRadius.setText(0,"Radius");
+    loader_.robotInfoRadius.setText(1,"0.15");
     loader_.robotInfoOrientation.setText(0,"Orientation");
     loader_.robotInfoOrientation.setText(1,"0");
     
@@ -121,6 +135,32 @@ namespace stdr_gui
     QTreeWidgetItem * item, 
     int column)
   {
+    
+    //!< Laser clicked
+    if(item->parent() == &loader_.lasersNode)
+    {
+      unsigned int laserFrameId = searchLaser(item->text(0));
+      if(laserFrameId == -1) 
+      {
+        ROS_ERROR("Something went terribly wrong...");
+      }
+      laser_hightlight_id_ = laserFrameId;
+      sonar_hightlight_id_ = -1;
+    }  
+    //!< Laser clicked
+    if(item->parent() == &loader_.sonarsNode)
+    {
+      unsigned int sonarFrameId = searchSonar(item->text(0));
+      if(sonarFrameId == -1) 
+      {
+        ROS_ERROR("Something went terribly wrong...");
+      }
+      sonar_hightlight_id_ = sonarFrameId;
+      laser_hightlight_id_ = -1;
+    }  
+    
+    updateRobotPreview();
+    
     //!< Robot edit clicked
     if(item == &loader_.robotNode && column == 2)
     {    
@@ -206,6 +246,7 @@ namespace stdr_gui
     {
       loadSonar(item);
     }
+    
   }
 
   /**
@@ -1046,6 +1087,11 @@ namespace stdr_gui
         loader_.robotNode.child(i)->
           setText(1,QString().setNum(new_robot_msg_.initialPose.theta));
       }
+      if(loader_.robotNode.child(i)->text(0) == QString("Radius"))
+      {
+        loader_.robotNode.child(i)->
+          setText(1,QString().setNum(new_robot_msg_.footprint.radius));
+      }
     }
     for(unsigned int i = 0 ; i < new_robot_msg_.laserSensors.size() ; i++)
     {
@@ -1277,6 +1323,169 @@ namespace stdr_gui
   }
   
   /**
+  @brief Called when the refresh button of the properties widget is clicked 
+  @return void
+  **/ 
+  void CRobotCreatorConnector::updateLaserOpen(void)
+  {
+    unsigned int laserFrameId = searchLaser(current_laser_->text(0));
+    if(laserFrameId == -1) 
+    {
+      return;
+    }
+    float max_range = 1000.0;
+    float min_range = 0.0;
+    for(unsigned int i = 0 ; i < current_laser_->childCount() ; i++)
+    {
+      
+      //!< Laser angle span
+      if(current_laser_->child(i)->text(0) == QString("Angle span"))
+      {
+        current_laser_->child(i)->setText(
+          1,loader_.laserPropLoader.laserAngleSpan->text());
+        float angleSpan = loader_.laserPropLoader.laserAngleSpan->
+          text().toFloat() / 2.0;
+        if( angleSpan <= 0 )
+        {
+          showMessage(QString("Laser angle span invalid :") + 
+            QString().setNum(angleSpan * 2.0));
+          return;
+        }
+        new_robot_msg_.laserSensors[laserFrameId].minAngle = - angleSpan;
+        new_robot_msg_.laserSensors[laserFrameId].maxAngle = angleSpan;
+      }
+      
+      //!< Laser orientation
+      else if(current_laser_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = loader_.laserPropLoader.laserOrientation->
+          text().toFloat();
+        current_laser_->child(i)->setText(
+          1,QString().setNum(orientation));
+        //~ new_robot_msg_.laserSensors[laserFrameId].minAngle += orientation;
+        //~ new_robot_msg_.laserSensors[laserFrameId].maxAngle += orientation;
+        new_robot_msg_.laserSensors[laserFrameId].pose.theta = orientation;
+      }
+      
+      //!< Laser max range
+      else if(current_laser_->child(i)->text(0) == QString("Max range"))
+      {
+        max_range = loader_.laserPropLoader.laserMaxDistance->
+          text().toFloat();
+        if( max_range <= 0 )
+        {
+          showMessage(QString("Laser maximum range invalid :") + 
+            QString().setNum(max_range));
+          return;
+        }
+        if( max_range < min_range )
+        {
+          showMessage(QString("Laser maximum range lower than minimum range"));
+          return;
+        }
+        current_laser_->child(i)->setText(1,QString().setNum(max_range));
+        new_robot_msg_.laserSensors[laserFrameId].maxRange = max_range;
+      }
+      
+      //!< Laser number of rays
+      else if(current_laser_->child(i)->text(0) == QString("Number of rays"))
+      {
+        int rays = loader_.laserPropLoader.laserRays->text().toFloat();
+        if( rays <= 0 )
+        {
+          showMessage(QString("Laser rays number invalid :") + 
+            QString().setNum(rays));
+          return;
+        }
+        current_laser_->child(i)->setText(1,QString().setNum(rays));
+        new_robot_msg_.laserSensors[laserFrameId].numRays = rays;
+      }
+      
+      //!< Laser minimum range
+      else if(current_laser_->child(i)->text(0) == QString("Min range"))
+      {
+        min_range = loader_.laserPropLoader.laserMinDistance->
+          text().toFloat();
+        if( min_range < 0 )
+        {
+          showMessage(QString("Laser minimum range invalid :") + 
+            QString().setNum(min_range));
+          return;
+        }
+        if( min_range > max_range )
+        {
+          showMessage(QString("Laser minimum range higher than maximum range"));
+          return;
+        }
+        current_laser_->child(i)->setText(1,QString().setNum(min_range));
+        new_robot_msg_.laserSensors[laserFrameId].minRange = min_range;
+      }
+      
+      //!< Laser mean noise
+      else if(current_laser_->child(i)->text(0) == QString("Noise mean"))
+      {
+        float noiseMean = loader_.laserPropLoader.laserNoiseMean->
+          text().toFloat();
+        current_laser_->child(i)->setText(1,QString().setNum(noiseMean));
+        new_robot_msg_.laserSensors[laserFrameId].noise.noiseMean = 
+          noiseMean;
+      }
+      
+      //!< Laser std noise
+      else if(current_laser_->child(i)->text(0) == QString("Noise std"))
+      {
+        float noiseStd = 
+          loader_.laserPropLoader.laserNoiseStd->text().toFloat();
+        if( noiseStd < 0 )
+        {
+          showMessage(QString("Laser standard deviation of noise invalid :") + 
+            QString().setNum(noiseStd));
+          return;
+        }
+        current_laser_->child(i)->setText(1,QString().setNum(noiseStd));
+        new_robot_msg_.laserSensors[laserFrameId].noise.noiseStd = 
+          noiseStd;
+      }
+      
+      //!< Laser pose - x coordinate
+      else if(current_laser_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.laserPropLoader.laserTranslationX->
+          text().toFloat();
+        current_laser_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.laserSensors[laserFrameId].pose.x = dx;
+      }
+      
+      //!< Laser pose - y coordinate
+      else if(current_laser_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.laserPropLoader.laserTranslationY->
+          text().toFloat();
+        current_laser_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.laserSensors[laserFrameId].pose.y = dy;
+      }
+      
+      //!< Laser publishing frequency
+      else if(current_laser_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = loader_.laserPropLoader.laserFrequency->
+          text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Laser publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_laser_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.laserSensors[laserFrameId].frequency = frequency;
+      }
+    }
+
+    updateRobotPreview();
+  }
+  
+  
+  /**
   @brief Called when the update button of the properties widget is clicked 
   @return void
   **/ 
@@ -1413,11 +1622,153 @@ namespace stdr_gui
         new_robot_msg_.sonarSensors[frameId].frequency = frequency;
       }
     }
-
+    
     loader_.sonarPropLoader.hide();
     
     updateRobotPreview();
   }
+  
+  /**
+  @brief Called when the refresh button of the properties widget is clicked 
+  @return void
+  **/ 
+  void CRobotCreatorConnector::updateSonarOpen(void)
+  {
+    unsigned int frameId=searchSonar(current_sonar_->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    float min_range = 0;
+    float max_range = 10000.0;
+    for(unsigned int i = 0 ; i < current_sonar_->childCount() ; i++)
+    {
+      //!< Sonar cone span
+      if(current_sonar_->child(i)->text(0) == QString("Cone span"))
+      {
+        float cone_span = 
+          loader_.sonarPropLoader.sonarConeSpan->text().toFloat();
+        if( cone_span <= 0 )
+        {
+          showMessage(QString("Sonar cone span invalid :") + 
+            QString().setNum(cone_span));
+          return;
+        }
+        current_sonar_->child(i)->setText(1,QString().setNum(cone_span));
+        new_robot_msg_.sonarSensors[frameId].coneAngle = cone_span;
+      }
+      
+      //!< Sonar orientation
+      else if(current_sonar_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = 
+          loader_.sonarPropLoader.sonarOrientation->text().toFloat();
+        current_sonar_->child(i)->
+          setText(1,QString().setNum(orientation));
+        new_robot_msg_.sonarSensors[frameId].pose.theta = orientation;
+      }
+      
+      //!< Sonar max range
+      else if(current_sonar_->child(i)->text(0) == QString("Max range"))
+      {
+        max_range = loader_.sonarPropLoader.sonarMaxDistance->text().toFloat();
+        if( max_range <= 0 )
+        {
+          showMessage(QString("Sonar maximum range invalid :") + 
+            QString().setNum(max_range));
+          return;
+        }
+        if( max_range < min_range )
+        {
+          showMessage(QString("Sonar maximum range lower than minimum range."));
+          return;
+        }
+        current_sonar_->child(i)->
+          setText(1,QString().setNum(max_range));
+        new_robot_msg_.sonarSensors[frameId].maxRange = max_range;
+      }
+      
+      //!< Sonar min range
+      else if(current_sonar_->child(i)->text(0) == QString("Min range"))
+      {
+        min_range = loader_.sonarPropLoader.sonarMinDistance->text().toFloat();
+        if( min_range < 0 )
+        {
+          showMessage(QString("Sonar minimum range invalid :") + 
+            QString().setNum(min_range));
+          return;
+        }
+        if( max_range < min_range )
+        {
+          showMessage(
+            QString("Sonar minimum range higher than maximum range."));
+          return;
+        }
+        current_sonar_->child(i)->setText(1,QString().setNum(min_range));
+        new_robot_msg_.sonarSensors[frameId].minRange = min_range;
+      }
+      
+      //!< Sonar noise mean
+      else if(current_sonar_->child(i)->text(0) == QString("Noise mean"))
+      {
+        float noiseMean = 
+          loader_.sonarPropLoader.sonarNoiseMean->text().toFloat();
+        current_sonar_->child(i)->
+          setText(1,QString().setNum(noiseMean));
+        new_robot_msg_.sonarSensors[frameId].noise.noiseMean = noiseMean;
+      }
+      
+      //!< Sonar noise standard deviation
+      else if(current_sonar_->child(i)->text(0) == QString("Noise std"))
+      {
+        float noiseStd = 
+          loader_.sonarPropLoader.sonarNoiseStd->text().toFloat();
+        if( noiseStd < 0 )
+        {
+          showMessage(QString("Sonar noise standard deviation invalid :") + 
+            QString().setNum(noiseStd));
+          return;
+        }
+        current_sonar_->
+          child(i)->setText(1,QString().setNum(noiseStd));
+        new_robot_msg_.sonarSensors[frameId].noise.noiseStd = noiseStd;
+      }
+      
+      //!< Sonar pose - x coordinate
+      else if(current_sonar_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.sonarPropLoader.sonarX->text().toFloat();
+        current_sonar_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.sonarSensors[frameId].pose.x = dx;
+      }
+      
+      //!< Sonar pose - y coordinate
+      else if(current_sonar_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.sonarPropLoader.sonarY->text().toFloat();
+        current_sonar_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.sonarSensors[frameId].pose.y = dy;
+      }
+      
+      //!< Sonar publishing frequency
+      else if(current_sonar_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = 
+          loader_.sonarPropLoader.sonarFrequency->text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Sonar publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_sonar_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.sonarSensors[frameId].frequency = frequency;
+      }
+    }
+
+    updateRobotPreview();
+  }
+  
   
   /**
   @brief Updates a tree item with a specific sonar sensor
@@ -1587,6 +1938,8 @@ namespace stdr_gui
   {
     loader_.robotPropLoader.robotOrientation->
       setText(QString().setNum(new_robot_msg_.initialPose.theta));
+    loader_.robotPropLoader.robotRadius->
+      setText(QString().setNum(new_robot_msg_.footprint.radius));
     loader_.robotPropLoader.show();
   }
   
@@ -1605,9 +1958,43 @@ namespace stdr_gui
         new_robot_msg_.initialPose.theta = 
           loader_.robotPropLoader.robotOrientation->text().toFloat();
       }
+      if(loader_.robotNode.child(i)->text(0) == QString("Radius"))
+      {
+        loader_.robotNode.child(i)->
+          setText(1,loader_.robotPropLoader.robotRadius->text());
+        new_robot_msg_.footprint.radius = 
+          loader_.robotPropLoader.robotRadius->text().toFloat();
+      }
     }
 
     loader_.robotPropLoader.hide();
+    
+    updateRobotPreview();
+  }
+  
+  /**
+  @brief Called when the refresh button of the properties widget is clicked 
+  @return void
+  **/ 
+  void CRobotCreatorConnector::updateRobotOpen(void)
+  {
+    for(unsigned int i = 0 ; i < loader_.robotNode.childCount() ; i++)
+    {
+      if(loader_.robotNode.child(i)->text(0) == QString("Orientation"))
+      {
+        loader_.robotNode.child(i)->
+          setText(1,loader_.robotPropLoader.robotOrientation->text());
+        new_robot_msg_.initialPose.theta = 
+          loader_.robotPropLoader.robotOrientation->text().toFloat();
+      }
+      if(loader_.robotNode.child(i)->text(0) == QString("Radius"))
+      {
+        loader_.robotNode.child(i)->
+          setText(1,loader_.robotPropLoader.robotRadius->text());
+        new_robot_msg_.footprint.radius = 
+          loader_.robotPropLoader.robotRadius->text().toFloat();
+      }
+    }
     
     updateRobotPreview();
   }
@@ -1786,6 +2173,15 @@ namespace stdr_gui
     
     for(unsigned int i = 0 ; i < new_robot_msg_.laserSensors.size() ; i++)
     {
+      if(laser_hightlight_id_ == i)
+      {
+        brush = QBrush(QColor(0,200,0,150));
+      }
+      else
+      {
+        brush = QBrush(QColor(0,200,0,50));
+      }
+      painter.setBrush(brush);
       
       float laserx = new_robot_msg_.laserSensors[i].pose.x;
       float lasery = new_robot_msg_.laserSensors[i].pose.y;
@@ -1829,6 +2225,16 @@ namespace stdr_gui
     
     for(unsigned int i = 0 ; i < new_robot_msg_.sonarSensors.size() ; i++)
     {
+      
+      if(sonar_hightlight_id_ == i)
+      {
+        brush = QBrush(QColor(200,0,0,150));
+      }
+      else
+      {
+        brush = QBrush(QColor(200,0,0,50));
+      }
+      painter.setBrush(brush);
       
       float sonarx = new_robot_msg_.sonarSensors[i].pose.x;
       float sonary = new_robot_msg_.sonarSensors[i].pose.y;

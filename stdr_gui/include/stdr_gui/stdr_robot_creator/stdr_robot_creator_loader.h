@@ -71,6 +71,8 @@ namespace stdr_gui
       QTreeWidgetItem robotInfoShape;
       //!< Tree item for the robot orientation
       QTreeWidgetItem robotInfoOrientation;
+      //!< Tree item for the robot radius
+      QTreeWidgetItem robotInfoRadius;
       
       //!< Holds the robot preview image
       QImage robotPreviewImage;

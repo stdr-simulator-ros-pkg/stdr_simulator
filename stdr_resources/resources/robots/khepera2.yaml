@@ -3,7 +3,7 @@ initial_pose:
   y: 0
   theta: 0
 footprint:
-  radius: 0.0225
+  radius: 0.0225000008940697
   points:
     []
 kinematic:
@@ -14,99 +14,99 @@ sensors:
   sonars:
     - max_range: 1
       min_range: 0.100000001490116
-      cone_angle: 0.349065542221069
+      cone_angle: 0.174532771110535
       noise:
         mean: 0
         std: 0
       frequency: 10
       frame_id: sonar_1
       pose:
-        x: 0.0500000007450581
-        y: 0.100000001490116
+        x: 0.00999999977648258
+        y: 0.017000000923872
         theta: 1.570795
     - max_range: 1
       min_range: 0.100000001490116
-      cone_angle: 0.349065542221069
+      cone_angle: 0.174532771110535
       noise:
         mean: 0
         std: 0
       frequency: 10
       frame_id: sonar_2
       pose:
-        x: 0.0900000035762787
-        y: 0.0900000035762787
+        x: 0.0120000001043081
+        y: 0.0120000001043081
         theta: 0.7853975
     - max_range: 1
       min_range: 0.100000001490116
-      cone_angle: 0.349065542221069
+      cone_angle: 0.174532771110535
       noise:
         mean: 0
         std: 0
       frequency: 10
       frame_id: sonar_3
       pose:
-        x: 0.119999997317791
-        y: 0.0199999995529652
+        x: 0.0199999995529652
+        y: 0.00800000037997961
         theta: 0
     - max_range: 1
       min_range: 0.100000001490116
-      cone_angle: 0.349065542221069
+      cone_angle: 0.174532771110535
       noise:
         mean: 0
         std: 0
       frequency: 10
       frame_id: sonar_4
       pose:
-        x: 0.119999997317791
-        y: -0.0199999995529652
+        x: 0.0199999995529652
+        y: -0.00800000037997961
         theta: 0
     - max_range: 1
       min_range: 0.100000001490116
-      cone_angle: 0.349065542221069
+      cone_angle: 0.174532771110535
       noise:
         mean: 0
         std: 0
       frequency: 10
       frame_id: sonar_5
       pose:
-        x: 0.0900000035762787
-        y: -0.0900000035762787
+        x: 0.0120000001043081
+        y: -0.0120000001043081
         theta: -0.7853975
     - max_range: 1
       min_range: 0.100000001490116
-      cone_angle: 0.349065542221069
+      cone_angle: 0.174532771110535
       noise:
         mean: 0
         std: 0
       frequency: 10
       frame_id: sonar_6
       pose:
-        x: 0.0500000007450581
-        y: -0.100000001490116
+        x: 0.00999999977648258
+        y: -0.017000000923872
         theta: -1.570795
     - max_range: 1
       min_range: 0.100000001490116
-      cone_angle: 0.349065542221069
+      cone_angle: 0.174532771110535
       noise:
         mean: 0
         std: 0
       frequency: 10
       frame_id: sonar_7
       pose:
-        x: -0.119999997317791
-        y: -0.0299999993294477
+        x: -0.0199999995529652
+        y: -0.00999999977648258
         theta: 3.14159
     - max_range: 1
       min_range: 0.100000001490116
-      cone_angle: 0.349065542221069
+      cone_angle: 0.174532771110535
       noise:
         mean: 0
         std: 0
       frequency: 10
       frame_id: sonar_8
       pose:
-        x: -0.119999997317791
-        y: 0.0299999993294477
+        x: -0.0199999995529652
+        y: 0.00999999977648258
         theta: 3.14159
   rfids:
     []

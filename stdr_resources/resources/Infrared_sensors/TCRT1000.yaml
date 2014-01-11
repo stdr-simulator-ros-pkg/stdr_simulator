@@ -1,12 +1,12 @@
 max_range: 1
 min_range: 0.100000001490116
-cone_angle: 0.349065542221069
+cone_angle: 0.174532771110535
 noise:
   mean: 0
   std: 0
 frequency: 10
-frame_id: sonar_0
+frame_id: sonar_4
 pose:
-  x: 0
-  y: 0
+  x: 0.119999997317791
+  y: -0.00499999988824129
   theta: 0

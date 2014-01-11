@@ -54,6 +54,11 @@ namespace stdr_gui
       //!< Container of the new robot message
       stdr_msgs::RobotMsg new_robot_msg_;
       
+      //!< Current laser for highlight
+      unsigned int laser_hightlight_id_;
+      //!< Current sonar for highlight
+      unsigned int sonar_hightlight_id_;
+      
       //!< Tree item of the currently clicked laser 
       QTreeWidgetItem* current_laser_;
       //!< Tree item of the currently clicked sonar
@@ -339,6 +344,18 @@ namespace stdr_gui
       void updateSonar(void);
       
       /**
+      @brief Called when the refresh button of the properties widget is clicked 
+      @return void
+      **/ 
+      void updateLaserOpen(void);
+      
+      /**
+      @brief Called when the refresh button of the properties widget is clicked 
+      @return void
+      **/ 
+      void updateSonarOpen(void);
+      
+      /**
       @brief Called when the update button of the properties widget is clicked 
       @return void
       **/ 
@@ -349,6 +366,12 @@ namespace stdr_gui
       @return void
       **/ 
       void updateRobot(void);
+      
+      /**
+      @brief Called when the refresh button of the properties widget is clicked 
+      @return void
+      **/ 
+      void updateRobotOpen(void);
       
       /**
       @brief Called when the save robot button is clicked 
