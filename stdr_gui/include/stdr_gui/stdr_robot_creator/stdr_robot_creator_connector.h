@@ -77,11 +77,11 @@ namespace stdr_gui
     public:
     
       //!< Number of laser sensors
-      static unsigned int laser_number;
+      static int laser_number;
       //!< Number of sonar sensors
-      static unsigned int sonar_number;
+      static int sonar_number;
       //!< Number of rfid antenna sensors
-      static unsigned int rfid_number;
+      static int rfid_number;
     
       /**
       @brief Default contructor

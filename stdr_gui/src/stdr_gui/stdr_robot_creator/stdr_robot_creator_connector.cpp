@@ -24,9 +24,9 @@
 namespace stdr_gui
 {
   
-  unsigned int CRobotCreatorConnector::laser_number = 0;
-  unsigned int CRobotCreatorConnector::sonar_number = 0;
-  unsigned int CRobotCreatorConnector::rfid_number = 0;
+  int CRobotCreatorConnector::laser_number = -1;
+  int CRobotCreatorConnector::sonar_number = -1;
+  int CRobotCreatorConnector::rfid_number = -1;
   
   /**
   @brief Default contructor
@@ -256,7 +256,7 @@ namespace stdr_gui
   void CRobotCreatorConnector::addLaser(void)
   {
     QString laserFrameId=QString("laser_") + 
-      QString().setNum(CRobotCreatorConnector::laser_number++);
+      QString().setNum(++CRobotCreatorConnector::laser_number);
     
     stdr_msgs::LaserSensorMsg lmsg;
     lmsg.frame_id = laserFrameId.toStdString();
@@ -433,7 +433,7 @@ namespace stdr_gui
   {
     QString sonarFrameId = 
       QString("sonar_") + 
-      QString().setNum(CRobotCreatorConnector::sonar_number++);
+      QString().setNum(++CRobotCreatorConnector::sonar_number);
     
     stdr_msgs::SonarSensorMsg smsg;
     smsg.frame_id = sonarFrameId.toStdString();
@@ -2337,8 +2337,8 @@ namespace stdr_gui
       
       new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
 
-      CRobotCreatorConnector::laser_number = 0;
-      CRobotCreatorConnector::sonar_number = 0;
+      CRobotCreatorConnector::laser_number = -1;
+      CRobotCreatorConnector::sonar_number = -1;
       updateRobotTree();
       
     }
