@@ -75,6 +75,9 @@ namespace stdr_xml_parser
       
       //!< The node children
       std::vector<Node*> elements;
+      
+      //!< File it was into
+      std::string file_origin;
   };
   
 }
