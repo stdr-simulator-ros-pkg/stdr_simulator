@@ -314,7 +314,7 @@ namespace stdr_gui
     map_connector_.setMapInitialized(true);
     gui_connector_.setMapInitialized(true);
     
-    timer_->start(200);
+    timer_->start(50);
     
     robot_subscriber_ = n_.subscribe(
       "stdr_server/active_robots", 
@@ -640,9 +640,11 @@ namespace stdr_gui
     }
     map_lock_ = true;
     QPoint pnew = map_connector_.getGlobalPoint(p);
-    QString name=QString("thermal_source_") + QString().setNum(thermal_sources_.size());
+    QString name=QString("thermal_source_") + 
+      QString().setNum(thermal_sources_.size());
     CGuiThermalSource new_source(pnew,name.toStdString());
-    thermal_sources_.insert(std::pair<QString,CGuiThermalSource>(name,new_source));
+    thermal_sources_.insert(
+      std::pair<QString,CGuiThermalSource>(name,new_source));
     map_lock_ = false;
   }
   
@@ -684,7 +686,8 @@ namespace stdr_gui
       }
     }
 
-    for(RfidTagIterator it = rfid_tags_.begin() ; it != rfid_tags_.end() ; it++)
+    for(RfidTagIterator it = rfid_tags_.begin() ; 
+      it != rfid_tags_.end() ; it++)
     {
       it->second.draw(&running_map_);
     }
@@ -762,6 +765,10 @@ namespace stdr_gui
             it->second->setImage(
               registered_robots_[r].
                 getVisualization(map_msg_.info.resolution));
+            it->second->setCurrentPose(registered_robots_[r].getCurrentPoseM());
+            
+            it->second->setCurrentSpeed(
+              registered_robots_[r].getSpeeds());
             break;
           }
         }

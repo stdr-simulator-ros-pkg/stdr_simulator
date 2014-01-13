@@ -31,6 +31,7 @@ namespace stdr_gui
   CGuiRobot::CGuiRobot(const stdr_msgs::RobotIndexedMsg& msg)
   {
     robot_initialized_ = false;
+    started_ = false;
     initial_pose_ = msg.robot.initialPose;
     current_pose_ = initial_pose_;
     footprint_ = msg.robot.footprint;
@@ -53,6 +54,17 @@ namespace stdr_gui
   }
   
   /**
+  @brief Callback for the ros laser message
+  @param msg [const sensor_msgs::LaserScan&] The new laser scan message
+  @return void
+  **/
+  void CGuiRobot::speedsCallback(const geometry_msgs::Twist& msg)
+  {
+    linear_speed_ = msg.linear.x;
+    angular_speed_ = msg.angular.z;
+  }
+  
+  /**
   @brief Paints the robot and it's sensors to the image
   @param m [QImage*] The image to be drawn
   @param ocgd [float] The map's resolution
@@ -65,6 +77,17 @@ namespace stdr_gui
     {
       return;
     }
+    if(robot_initialized_ && !started_)
+    {
+      ros::NodeHandle n_;
+      std::string speeds_topic = frame_id_ + std::string("/cmd_vel");
+      speeds_subscriber_ = n_.subscribe(
+        speeds_topic.c_str(), 
+        1, 
+        &CGuiRobot::speedsCallback,
+        this);
+    }
+    started_ = true;
     resolution_ = ocgd;
     tf::StampedTransform transform;
       
@@ -259,7 +282,17 @@ namespace stdr_gui
   **/
   QPoint CGuiRobot::getCurrentPose(void)
   {
-    return QPoint(current_pose_.x / resolution_, current_pose_.y / resolution_);
+    return QPoint(current_pose_.x / resolution_, 
+      current_pose_.y / resolution_);
+  }
+  
+  /**
+  @brief Returns the current robot pose in meters
+  @return geometry_msgs::Pose2D : The current robot pose
+  **/
+  geometry_msgs::Pose2D CGuiRobot::getCurrentPoseM(void)
+  {
+    return current_pose_;
   }
   
   /**
@@ -406,5 +439,14 @@ namespace stdr_gui
     {
       sonars_[i]->setVisualizationStatus(visualization_status_);
     }
+  }
+  
+  /**
+  @brief Returns the current robot speed
+  @return std::pair<float,float> : The linear and angular speeds
+  **/
+  std::pair<float,float> CGuiRobot::getSpeeds(void)
+  {
+    return std::pair<float,float>(linear_speed_,angular_speed_);
   }
 }

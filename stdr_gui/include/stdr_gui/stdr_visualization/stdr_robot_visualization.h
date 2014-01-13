@@ -99,6 +99,19 @@ namespace stdr_gui
       **/
       void setImage(QImage img);
       
+      /**
+      @brief Sets the robot's current pose
+      @param pose [geometry_msgs::Pose2D] the robot pose
+      @return void
+      **/
+      void setCurrentPose(geometry_msgs::Pose2D pose);
+      
+      /**
+      @brief Sets the robot's current speed
+      @param msg [std::pair<float,float>] the robot speeds
+      @return void
+      **/
+      void setCurrentSpeed(std::pair<float,float> msg);
   };  
 }
 

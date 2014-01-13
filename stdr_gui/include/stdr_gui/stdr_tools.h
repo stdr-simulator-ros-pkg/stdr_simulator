@@ -71,6 +71,8 @@
 
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/Point.h>
+#include <geometry_msgs/Twist.h>
+
 #include <sensor_msgs/LaserScan.h>
 
 #include "stdr_server/map_loader.h"

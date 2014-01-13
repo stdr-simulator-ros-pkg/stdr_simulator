@@ -49,6 +49,17 @@ namespace stdr_gui
       //!< True when robot is initialized
       bool robot_initialized_;
       
+      //!< Check for start
+      bool started_;
+      
+      //!< Subscriber for the speeds twist message
+      ros::Subscriber speeds_subscriber_;
+      
+      //!< Robot current linear speed
+      float linear_speed_;
+      //!< Robot current angular speed
+      float angular_speed_;
+      
       //!< Radius of robot if shape is circular
       float radius_;
       //!< Map resolution
@@ -224,6 +235,25 @@ namespace stdr_gui
       @return QImage : The drawn image
       **/
       QImage getVisualization(float ocgd);
+      
+      /**
+      @brief Returns the current robot pose in meters
+      @return geometry_msgs::Pose2D : The current robot pose
+      **/
+      geometry_msgs::Pose2D getCurrentPoseM(void);
+      
+      /**
+      @brief Callback for the ros laser message
+      @param msg [const sensor_msgs::LaserScan&] The new laser scan message
+      @return void
+      **/
+      void speedsCallback(const geometry_msgs::Twist& msg);
+      
+      /**
+      @brief Returns the current robot speed
+      @return std::pair<float,float> : The linear and angular speeds
+      **/
+      std::pair<float,float> getSpeeds(void);
   };  
 }
 

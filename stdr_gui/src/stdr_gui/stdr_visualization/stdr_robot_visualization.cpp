@@ -98,4 +98,32 @@ namespace stdr_gui
     robotImage->setPixmap(
       QPixmap().fromImage(internal_image_.mirrored(false,true)));
   }
+  
+  /**
+  @brief Sets the robot's current pose
+  @param pose [geometry_msgs::Pose2D] the robot pose
+  @return void
+  **/
+  void CRobotVisualisation::setCurrentPose(geometry_msgs::Pose2D pose)
+  {
+    robotPoseX->setText(
+      QString("\tx = ") + QString().setNum(pose.x) + QString(" m"));
+    robotPoseY->setText(
+      QString("\ty = ") + QString().setNum(pose.y) + QString(" m"));
+    robotPoseTheta->setText(
+      QString("\ttheta = ") + QString().setNum(pose.theta) + QString(" rad"));
+  }
+  
+  /**
+  @brief Sets the robot's current speed
+  @param msg [std::pair<float,float>] the robot speeds
+  @return void
+  **/
+  void CRobotVisualisation::setCurrentSpeed(std::pair<float,float> msg)
+  {
+    robotSpeedLinear->setText(
+      QString("\tu = ") + QString().setNum(msg.first) + QString(" m/s"));
+    robotSpeedAngular->setText(
+      QString("\tw = ") + QString().setNum(msg.second) + QString(" rad/s"));
+  }
 }
