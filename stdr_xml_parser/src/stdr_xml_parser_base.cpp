@@ -139,7 +139,7 @@ type specified",n->tag.c_str());
       tag != "STDR_Parser_Root_Node")
     {
       ROS_ERROR("[%s] is not a valid tag",tag.c_str());
-      ROS_ERROR("  Error in %s",n->file_origin.c_str());
+      ROS_ERROR("  Error in line %d in %s",n->file_row,n->file_origin.c_str());
       return false;
     }
     for(unsigned int i = 0 ; i < n->elements.size() ; i++)
@@ -153,10 +153,10 @@ type specified",n->tag.c_str());
         {
           ROS_ERROR("[%s] is not allowed in a [%s] tag",
             child_tag.c_str(),tag.c_str());
-          ROS_ERROR("  %s was found in %s",tag.c_str(),
-            n->file_origin.c_str());
-          ROS_ERROR("  %s was found in %s",child_tag.c_str(),
-            n->elements[i]->file_origin.c_str());
+          ROS_ERROR("  %s was found in line %d in %s",tag.c_str(),
+            n->file_row,n->file_origin.c_str());
+          ROS_ERROR("  %s was found in line %d in %s",child_tag.c_str(),
+            n->elements[i]->file_row,n->elements[i]->file_origin.c_str());
           return false;
         }
       }
@@ -185,7 +185,7 @@ type specified",n->tag.c_str());
       tag != "STDR_Parser_Root_Node")
     {
       ROS_ERROR("[%s] is not a valid tag",tag.c_str());
-      ROS_ERROR("  Error in %s",n->file_origin.c_str());
+      ROS_ERROR("  Error in line %d in %s", n->file_row,n->file_origin.c_str());
       return false;
     }
     for(std::set<std::string>::iterator it = Specs::specs[tag].required.begin() 
@@ -195,7 +195,8 @@ type specified",n->tag.c_str());
       if(num.size() == 0)
       {
         ROS_ERROR("[%s] requires [%s]",tag.c_str(),(*it).c_str());
-        ROS_ERROR("  Error in %s",n->file_origin.c_str());
+        ROS_ERROR("  Error in line %d in %s", n->file_row,
+          n->file_origin.c_str());
         return false;
       }
     }
@@ -359,6 +360,7 @@ type specified",n->tag.c_str());
         path.c_str(),doc.ErrorDesc());
     }
     n->file_origin = path;
+    n->file_row = doc.Row();
     parseLow(&doc,n);
   }
   
@@ -405,6 +407,7 @@ type specified",n->tag.c_str());
       {
         new_node->tag = node_text;
         new_node->file_origin = n->file_origin;
+        n->file_row = node->Row();
         n->elements.push_back(new_node);
         break;
       }
@@ -419,6 +422,7 @@ type specified",n->tag.c_str());
         {
           new_node->value = node_text;
           new_node->file_origin = n->file_origin;
+          n->file_row = node->Row();
           n->elements.push_back(new_node);
         }
         break;

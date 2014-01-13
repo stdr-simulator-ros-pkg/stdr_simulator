@@ -78,6 +78,9 @@ namespace stdr_xml_parser
       
       //!< File it was into
       std::string file_origin;
+      
+      //!< Row in the original file
+      int file_row;
   };
   
 }
