@@ -46,13 +46,11 @@ namespace stdr_xml_parser
     {  
       ROS_ERROR("%s- '%s' (%d)",indent.c_str(),n->value.c_str(),
         n->priority);
-      //~ ROS_ERROR("[%s]",n->file_origin.c_str());
     }
     else
     {
       ROS_ERROR("%s[%s] (%d)",indent.c_str(),n->tag.c_str(),
         n->priority);
-      //~ ROS_ERROR("[%s]",n->file_origin.c_str());
     }  
     for(unsigned int i = 0 ; i < n->elements.size() ; i++)
     {
@@ -76,8 +74,15 @@ namespace stdr_xml_parser
   **/
   void Base::eliminateFilenames(void)
   {
-    while(!eliminateFilenames(base_node_))
+    try
     {
+      while(!eliminateFilenames(base_node_))
+      {
+      }
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
     }
   }
   
@@ -98,9 +103,12 @@ namespace stdr_xml_parser
       { //!< Sanity check for filename. Base and file must be the same
         if(!n->elements[i]->checkForFilename(n->tag))
         {
-          ROS_ERROR("STDR XML parser Error : [%s] had a filename of wrong \
-type specified",n->tag.c_str());
-          return true;
+          std::string error = 
+            std::string("STDR parser : ") + n->tag + std::string(" has a \
+filename of wrong type specified\n") + 
+            std::string("\nError was in line ") + SSTR( n->file_row ) + 
+            std::string(" of file '") + n->file_origin + std::string("'");
+          throw ParserException(error);
         }
         Node* child = n->elements[i]->elements[0];
         n->elements.erase(n->elements.begin() + i);
@@ -113,9 +121,16 @@ type specified",n->tag.c_str());
       }
       else
       {
-        if(!eliminateFilenames(n->elements[i]))
+        try
         {
-          return false;
+          if(!eliminateFilenames(n->elements[i]))
+          {
+            return false;
+          }
+        }
+        catch(ParserException ex)
+        {
+          throw ex;
         }
       }
     }
@@ -138,9 +153,12 @@ type specified",n->tag.c_str());
     if(Specs::specs.find(tag) == Specs::specs.end() &&
       tag != "STDR_Parser_Root_Node")
     {
-      ROS_ERROR("[%s] is not a valid tag",tag.c_str());
-      ROS_ERROR("  Error in line %d in %s",n->file_row,n->file_origin.c_str());
-      return false;
+      std::string error = 
+        std::string("STDR parser : ") + n->tag + 
+        std::string(" is not a valid tag\n") + 
+        std::string("\nError was in line ") + SSTR( n->file_row ) + 
+        std::string(" of file '") + n->file_origin + std::string("'");
+      throw ParserException(error);
     }
     for(unsigned int i = 0 ; i < n->elements.size() ; i++)
     {
@@ -151,18 +169,28 @@ type specified",n->tag.c_str());
         if(Specs::specs[tag].allowed.find(child_tag) == 
           Specs::specs[tag].allowed.end())
         {
-          ROS_ERROR("[%s] is not allowed in a [%s] tag",
-            child_tag.c_str(),tag.c_str());
-          ROS_ERROR("  %s was found in line %d in %s",tag.c_str(),
-            n->file_row,n->file_origin.c_str());
-          ROS_ERROR("  %s was found in line %d in %s",child_tag.c_str(),
-            n->elements[i]->file_row,n->elements[i]->file_origin.c_str());
+          std::string error = 
+            std::string("STDR parser : ") + child_tag + 
+            std::string(" is not allowed in a ") + tag + std::string(" tag\n") +
+            std::string("\nError was in line ") + SSTR( n->file_row ) + 
+            std::string(" of file '") + n->file_origin + std::string("'") +
+            std::string("\nError was in line ") + 
+            SSTR( n->elements[i]->file_row ) + 
+            std::string(" of file '") + n->elements[i]->file_origin + 
+            std::string("'");
+          throw ParserException(error);
+        }
+      }
+      try
+      {
+        if(!validityAllowedCheck(n->elements[i]))
+        {
           return false;
         }
       }
-      if(!validityAllowedCheck(n->elements[i]))
+      catch(ParserException ex)
       {
-        return false;
+        throw ex;
       }
     }
     return true;
@@ -184,9 +212,12 @@ type specified",n->tag.c_str());
     if(Specs::specs.find(tag) == Specs::specs.end() &&
       tag != "STDR_Parser_Root_Node")
     {
-      ROS_ERROR("[%s] is not a valid tag",tag.c_str());
-      ROS_ERROR("  Error in line %d in %s", n->file_row,n->file_origin.c_str());
-      return false;
+      std::string error = 
+        std::string("STDR parser : ") + n->tag + 
+        std::string(" is not a valid tag\n") + 
+        std::string("\nError was in line ") + SSTR( n->file_row ) + 
+        std::string(" of file '") + n->file_origin + std::string("'");
+      throw ParserException(error);
     }
     for(std::set<std::string>::iterator it = Specs::specs[tag].required.begin() 
       ; it != Specs::specs[tag].required.end() ; it++)
@@ -194,17 +225,26 @@ type specified",n->tag.c_str());
       std::vector<int> num = n->getTag(*it);
       if(num.size() == 0)
       {
-        ROS_ERROR("[%s] requires [%s]",tag.c_str(),(*it).c_str());
-        ROS_ERROR("  Error in line %d in %s", n->file_row,
-          n->file_origin.c_str());
-        return false;
+        std::string error = 
+          std::string("STDR parser : ") + tag + 
+          std::string(" requires ") + (*it) +
+          std::string("\nError was in line ") + SSTR( n->file_row ) + 
+          std::string(" of file '") + n->file_origin + std::string("'");
+        throw ParserException(error);
       }
     }
     for(unsigned int i = 0 ; i < n->elements.size() ; i++)
     {
-      if(!validityRequiredCheck(n->elements[i]))
+      try
       {
-        return false;
+        if(!validityRequiredCheck(n->elements[i]))
+        {
+          return false;
+        }      
+      }
+      catch(ParserException ex)
+      {
+        throw ex;
       }
     }
     return true;
@@ -330,17 +370,52 @@ type specified",n->tag.c_str());
   void Base::parse(std::string file_name)
   {
     // Must destroy prev tree
-    parse(file_name,base_node_);
-    
-    parseMergableSpecifications();
+    try
+    {
+      parse(file_name,base_node_);    
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
 
-    eliminateFilenames();
+    try
+    {
+      parseMergableSpecifications();
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
+
+    try
+    {
+      eliminateFilenames();
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
     
     mergeNodes();
     
-    validityAllowedCheck(base_node_);
+    try
+    {
+      validityAllowedCheck(base_node_);
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
     
-    validityRequiredCheck(base_node_);
+    try
+    {
+      validityRequiredCheck(base_node_);
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
   }
   
   /**
@@ -356,8 +431,13 @@ type specified",n->tag.c_str());
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
     {
-      ROS_ERROR("Failed to load file \"%s\",%s", 
-        path.c_str(),doc.ErrorDesc());
+      std::string error = 
+        std::string("STDR parser : Failed to load file '") + 
+        path + std::string("'") +
+        std::string("\nError was '") + std::string(doc.ErrorDesc()) + 
+        std::string("'\nIf error was 'Error reading end tag' you have a \
+malformed xml file");
+      throw ParserException(error);
     }
     n->file_origin = path;
     n->file_row = doc.Row();
@@ -376,9 +456,11 @@ type specified",n->tag.c_str());
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
     {
-      ROS_ERROR("Failed to load file \"%s\"\n,%s", 
-        path.c_str(),doc.ErrorDesc());
-      return;
+      std::string error = 
+        std::string("STDR parser : Failed to load file ") + 
+        path + std::string("'") +
+        std::string("\nError was \n\t") + std::string(doc.ErrorDesc());
+      throw ParserException(error);
     }
     non_mergable_tags_ = explodeString(
       doc.FirstChild()->FirstChild()->Value(), ',');
@@ -416,7 +498,15 @@ type specified",n->tag.c_str());
         
         if(std::string(node->Parent()->Value()) == "filename")
         {
-          parse(std::string(node->Value()) , n);
+          try
+          {
+            parse(std::string(node->Value()) , n);
+          }
+          catch(ParserException ex)
+          {
+            throw ex;
+          }
+          
         }
         else
         {
@@ -450,13 +540,20 @@ type specified",n->tag.c_str());
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
     {
-      ROS_ERROR("Failed to load specifications file.\nShould be at '%s'.\n\
-Error was '%s'", path.c_str(),doc.ErrorDesc());
-      ros::shutdown();
-      exit(0);
+      std::string error = 
+        std::string("Failed to load specifications file.\nShould be at '") + 
+        path + std::string("'\nError was") + std::string(doc.ErrorDesc());
+      throw ParserException(error);
     }
     
-    parseSpecifications(&doc);
+    try
+    {
+      parseSpecifications(&doc);
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
   }
   
   /**
@@ -491,8 +588,10 @@ Error was '%s'", path.c_str(),doc.ErrorDesc());
           }
           else
           { //!< Multiple base tags - error
-            ROS_ERROR("STDR XML parser Error : Multiple instance of %s in \
-specifications.xml", node_text.c_str());
+            std::string error = 
+              std::string("STDR parser : Multiple instance of '") + node_text +
+              std::string("' in specifications.");
+            throw ParserException(error);
           }
         }
         else
@@ -519,9 +618,11 @@ specifications.xml", node_text.c_str());
         }
         else
         {
-          ROS_ERROR("STDR XML parser Error : Specifications not in allowed \
-required or default: [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(), 
-            node_text.c_str());
+          std::string error = 
+            std::string("STDR parser : Specification '") + base_tag +
+            std::string("' not in 'allowed', 'required' or 'default' : '") +
+            base_type + std::string("' / '") + node_text  + std::string("'");
+          throw ParserException(error);
         }
         break;
       }
@@ -532,7 +633,14 @@ required or default: [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(),
       pChild != 0; 
       pChild = pChild->NextSibling()) 
     {
-      parseSpecifications( pChild );
+      try
+      {
+        parseSpecifications( pChild );
+      }
+      catch(ParserException ex)
+      {
+        throw ex;
+      }
     }
   }
   
@@ -570,9 +678,16 @@ required or default: [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(),
   **/
   stdr_msgs::RobotMsg Base::createRobotMessage(std::string file_name)
   {
-    initialize();
-    parse(file_name);
-    //~ printParsedXml();
+    
+    try
+    {
+      initialize();
+      parse(file_name);
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
     return creator_.createRobotMessage(base_node_);
   }
   
@@ -583,8 +698,17 @@ required or default: [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(),
   **/
   stdr_msgs::LaserSensorMsg Base::createLaserMessage(std::string file_name)
   {
-    initialize();
-    parse(file_name);
+    
+    try
+    {
+      initialize();
+      parse(file_name);
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
+    
     return creator_.createLaserMessage(base_node_,0);
   }
   
@@ -595,8 +719,16 @@ required or default: [%s] (%s) {%s}",base_tag.c_str(), base_type.c_str(),
   **/
   stdr_msgs::SonarSensorMsg Base::createSonarMessage(std::string file_name)
   {
-    initialize();
-    parse(file_name);
+    
+    try
+    {
+      initialize();
+      parse(file_name);
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
     return creator_.createSonarMessage(base_node_,0);
   }
 }

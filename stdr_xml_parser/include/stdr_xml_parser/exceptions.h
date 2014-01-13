@@ -19,43 +19,26 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_XML_PARSER__TOOLS
-#define STDR_XML_PARSER__TOOLS
+#include <stdexcept>
 
-#include <iostream>
-#include <cstdlib>
-#include <map>
-#include <vector>
-#include <string>
-#include <sstream>
-
-#include <ros/package.h>
-#include "ros/ros.h"
-
-#include <tinyxml.h>
-
-#include "stdr_msgs/RobotMsg.h"
-#include "geometry_msgs/Pose2D.h"
-#include "geometry_msgs/Point.h"
-
-#include "stdr_xml_parser/exceptions.h"
-
-//!< Transforms a float number to string
-#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
-        ( std::ostringstream() << std::dec << x ) ).str()
+#ifndef PARSER_EXCEPTIONS_H
+#define PARSER_EXCEPTIONS_H
 
 /**
-@namespace stdr_xml_parser
-@brief The main namespace for STDR GUI XML parser
+@class ParserException
+@brief Provides a parser exception. Publicly inherits from std::runtime_error. Used in robot handler.
 **/ 
-namespace stdr_xml_parser
+class ParserException : public std::runtime_error
 {
-  /**
-  @brief Explodes a string based on a delimiter
-  @param s [std::string] The input string
-  @param delimiter [char] The delimiter
-  @return std::set<std::string> : An ensemble of strings
-  **/
-  std::set<std::string> explodeString(std::string s,char delimiter);
-}
+  public:
+    /**
+    @brief Throws an std::runtime_error with a messsage
+    @param errorDescription [const std::string] The error message
+    **/ 
+    ParserException(const std::string errorDescription) : 
+      std::runtime_error(errorDescription) 
+    {
+    }
+};
+
 #endif

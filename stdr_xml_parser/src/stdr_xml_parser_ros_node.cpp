@@ -30,7 +30,15 @@ int main(int argc, char **argv)
   ros::init(argc,argv,"stdr_xml_parser");
   
   stdr_xml_parser::Base b;
-  stdr_msgs::RobotMsg msg = b.createRobotMessage("pandora_robot.xml");
+  try
+  {
+    stdr_msgs::RobotMsg msg = b.createRobotMessage("pandora_robot.xml");
+  }
+  catch(ParserException ex)
+  {
+    ROS_ERROR(" === STDR PARSER ERROR ===\n%s",ex.what());
+  }
+  
 
   return 0;
 }
