@@ -24,8 +24,7 @@
 
 #define USAGE "USAGE: robot_handler add <description.yaml> <x> <y> <theta>\n" \
 "OR: robot_handler delete <robot_name>\n"\
-"OR: robot_handler replace <robot_name> <new_x> <new_y> \
-<new_theta>"
+"OR: robot_handler replace <robot_name> <new_x> <new_y> <new_theta>"
 
 /**
 @brief Main function of the server node

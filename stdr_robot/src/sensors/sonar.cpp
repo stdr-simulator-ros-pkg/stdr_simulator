@@ -165,7 +165,7 @@ namespace stdr_robot {
         "map_static",
         _namespace + "_" + _description.frame_id,
         ros::Time(0),
-        ros::Duration(1.0));
+        ros::Duration(0.2));
         
       _tfListener.lookupTransform(
         "map_static",
