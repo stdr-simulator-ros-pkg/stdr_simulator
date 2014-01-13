@@ -355,16 +355,44 @@ namespace stdr_xml_parser
   }
   
   //--------------------------------------------------------------------------//
+  
   /**
-  @brief Creates an xml from a robot msg
-  @param msg [stdr_msgs::RobotMsg] The robot message
+  @brief Creates an xml from a noise msg
+  @param msg [stdr_msgs::Noise] The noise message
   @param file_name [std::string] The file name to write the xml
-  @return void
+  @return TiXmlDocument
   **/
-  void MessageCreator::robotToXml(
-    stdr_msgs::RobotMsg msg,std::string file_name)
+  TiXmlDocument MessageCreator::noiseToXml(
+    stdr_msgs::Noise msg,std::string file_name)
   {
+    TiXmlDocument doc;
     
+    //!< Create noise
+    TiXmlElement* noise;
+    noise = new TiXmlElement("noise");
+    doc.LinkEndChild(noise);
+        
+    //!< Create noise specifications
+    TiXmlElement* noise_specs;
+    noise_specs = new TiXmlElement("noise_specifications");
+    noise->LinkEndChild(noise_specs);
+    
+    //!< Create noise mean
+    TiXmlElement* noise_mean;
+    noise_mean = new TiXmlElement("noise_mean");
+    noise_specs->LinkEndChild(noise_mean);
+    
+    //!< Create noise std
+    TiXmlElement* noise_std;
+    noise_std = new TiXmlElement("noise_std");
+    noise_specs->LinkEndChild(noise_std);
+    
+    if(file_name != "")
+    {
+      doc.SaveFile( file_name.c_str() ); 
+    }
+    
+    return doc;
   }
 }
 

@@ -11,9 +11,7 @@
       <theta>0</theta>
     </initial_pose>
     <laser>e
-<!--
       <filename>hokuyo.xml</filename>
--->
     </laser>
     <sonar>
       <filename>standard_sonar.xml</filename>

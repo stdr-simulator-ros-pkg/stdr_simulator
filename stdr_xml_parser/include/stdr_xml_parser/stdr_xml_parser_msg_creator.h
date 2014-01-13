@@ -92,12 +92,12 @@ namespace stdr_xml_parser
       
       //----------------------------------------------------------------------//
       /**
-      @brief Creates an xml from a robot msg
-      @param msg [stdr_msgs::RobotMsg] The robot message
+      @brief Creates an xml from a noise msg
+      @param msg [stdr_msgs::Noise] The noise message
       @param file_name [std::string] The file name to write the xml
-      @return void
+      @return TiXmlDocument
       **/
-      void robotToXml(stdr_msgs::RobotMsg msg,std::string file_name);
+      TiXmlDocument noiseToXml(stdr_msgs::Noise msg,std::string file_name);
   };
 }
 #endif
