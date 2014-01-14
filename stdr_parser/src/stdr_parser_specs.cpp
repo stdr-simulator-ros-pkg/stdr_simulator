@@ -35,6 +35,8 @@ namespace stdr_parser
     
   //!< Static member variable initialization
   std::map<std::string,ElSpecs> Specs::specs = std::map<std::string,ElSpecs>();
+  //!< List of non-mergable tags. Read from stdr_multiple_allowed.xml
+  std::set<std::string> Specs::non_mergable_tags = std::set<std::string>();
   
   /**
   @brief Default constructor

@@ -25,6 +25,7 @@
 #include "stdr_parser/stdr_parser_msg_creator.h"
 #include "stdr_parser/stdr_parser_validator.h"
 #include "stdr_parser/stdr_parser_file_writer.h"
+#include "stdr_parser/stdr_xml_parser.h"
 
 /**
 @namespace stdr_parser
@@ -44,8 +45,7 @@ namespace stdr_parser
       Node* base_node_;
       //!< The path for stdr_resources
       std::string base_path_;
-      //!< List of non-mergable tags. Read from stdr_multiple_allowed.xml
-      std::set<std::string> non_mergable_tags_;
+      
       
       //!< Object of Message creator
       MessageCreator creator_;
@@ -53,6 +53,8 @@ namespace stdr_parser
       Validator validator_;
       //!< Extracts messages in files
       FileWriter file_writer_;
+      //!< Parses an xml file
+      XmlParser xml_parser_;
       
       /**
       @brief Low-level recursive function for parsing the xml robot file

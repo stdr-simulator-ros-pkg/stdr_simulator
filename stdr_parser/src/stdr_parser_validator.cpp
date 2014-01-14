@@ -184,7 +184,7 @@ namespace stdr_parser
         std::string("\nError was \n\t") + std::string(doc.ErrorDesc());
       throw ParserException(error);
     }
-    non_mergable_tags_ = explodeString(
+    Specs::non_mergable_tags = explodeString(
       doc.FirstChild()->FirstChild()->Value(), ',');
   }
 

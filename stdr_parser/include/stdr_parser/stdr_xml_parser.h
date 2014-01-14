@@ -19,8 +19,8 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_PARSER_VALIDATOR
-#define STDR_PARSER_VALIDATOR
+#ifndef STDR_PARSER_XML
+#define STDR_PARSER_XML
 
 #include "stdr_parser/stdr_parser_node.h"
 
@@ -34,39 +34,38 @@ namespace stdr_parser
   @class Parser
   @brief Implements the main functionalities of the high-level parser
   **/ 
-  class Validator
+  class XmlParser
   {
     private:
-
-      //!< The path for stdr_resources
-      std::string base_path_;
-
+     
       /**
-      @brief Low-level recursive function for parsing the xml specifications file
+      @brief Low-level recursive function for parsing the xml robot file
       @param node [TiXmlNode*] The xml node to start from
+      @param n [Node*] The stdr xml tree node to update
       @return void
       **/
-      void parseSpecifications(TiXmlNode* node);
+      void parseLow(TiXmlNode* node,Node* n);
       
       /**
-      @brief Parses the mergable specifications file
-      @return void
+      @brief Recursive function - Expands the 'filename' nodes and eliminates them
+      @param n [Node*] The stdr xml tree node to begin
+      @return bool : True is a 'filename' node was expanded
       **/
-      void parseMergableSpecifications(void);
+      bool eliminateFilenames(Node* n);
       
       /**
-      @brief Performs a allowed - validity check on the xml tree
+      @brief Recursive function - Merges the nodes that do not exist in non_mergable_tags_
+      @param n [Node*] The stdr xml tree node to begin
+      @return bool : True is a ndoe was merged
+      **/
+      bool mergeNodes(Node* n);
+      
+      /**
+      @brief Merges the leaves of the xml tree, which are the value nodes
       @param n [Node*] The stdr xml tree node to begin
       @return void
       **/
-      void validityAllowedCheck(Node* n);
-      
-      /**
-      @brief Performs a required - validity check on the xml tree
-      @param n [Node*] The stdr xml tree node to begin
-      @return void
-      **/
-      void validityRequiredCheck(Node* n);
+      void mergeNodesValues(Node* n);
       
     public:
     
@@ -74,14 +73,15 @@ namespace stdr_parser
       @brief Default constructor
       @return void
       **/
-      Validator(void);
+      XmlParser(void);
       
       /**
-      @brief Performs a required / allowed - validity check on the xml tree
-      @param n [Node*] The stdr xml tree node to begin
+      @brief Private function that initiates the parsing of an xml file
+      @param file_name [std::string] The xml file name
+      @param n [Node*] The stdr xml tree node to update
       @return void
       **/
-      void validate(Node* n);
+      void parse(std::string file_name,Node* n);
   };
 }
 #endif
