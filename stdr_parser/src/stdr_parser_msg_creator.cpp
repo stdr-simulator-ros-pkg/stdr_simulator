@@ -23,12 +23,20 @@
 
 namespace stdr_parser
 {
-  
+  /**
+  @brief Default constructor
+  @return void
+  **/
   MessageCreator::MessageCreator(void)
   {
 
   }
   
+  /**
+  @brief Creates a robot message from a parsed file
+  @param n [Node*] The root node
+  @return stdr_msgs::RobotMsg
+  **/
   stdr_msgs::RobotMsg MessageCreator::createRobotMessage(Node *n)
   {
     stdr_msgs::RobotMsg msg;
@@ -84,6 +92,12 @@ namespace stdr_parser
     return msg;
   }
   
+  /**
+  @brief Creates a laser message from a parsed file
+  @param n [Node*] The root node
+  @param id [unsigned int] The id to create the laser frame_id 
+  @return stdr_msgs::LaserSensorMsg
+  **/
   stdr_msgs::LaserSensorMsg MessageCreator::createLaserMessage(
     Node *n,unsigned int id)
   {
@@ -188,6 +202,12 @@ namespace stdr_parser
     return msg;
   }
   
+  /**
+  @brief Creates a sonar message from a parsed file
+  @param n [Node*] The root node
+  @param id [unsigned int] The id to create the sonar frame_id 
+  @return stdr_msgs::SonarSensorMsg
+  **/
   stdr_msgs::SonarSensorMsg MessageCreator::createSonarMessage(
     Node *n,unsigned int id)
   {
@@ -268,6 +288,11 @@ namespace stdr_parser
     return msg;
   }
   
+  /**
+  @brief Creates a footprint message from a parsed file
+  @param n [Node*] The root node
+  @return stdr_msgs::FootprintMsg
+  **/
   stdr_msgs::FootprintMsg MessageCreator::createFootprintMessage(Node *n)
   {
     stdr_msgs::FootprintMsg msg;
@@ -287,6 +312,11 @@ namespace stdr_parser
     return msg;
   }
   
+  /**
+  @brief Creates a noise message from a parsed file
+  @param n [Node*] The root node
+  @return stdr_msgs::Noise
+  **/
   stdr_msgs::Noise MessageCreator::createNoiseMessage(Node *n)
   {
     stdr_msgs::Noise msg;
@@ -317,6 +347,11 @@ namespace stdr_parser
     return msg;
   }
   
+  /**
+  @brief Creates a pose message from a parsed file
+  @param n [Node*] The root node
+  @return geometry_msgs::Pose2D
+  **/
   geometry_msgs::Pose2D MessageCreator::createPoseMessage(Node *n)
   {
     geometry_msgs::Pose2D msg;
@@ -352,47 +387,6 @@ namespace stdr_parser
       msg.theta = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
     }
     return msg;
-  }
-  
-  //--------------------------------------------------------------------------//
-  
-  /**
-  @brief Creates an xml from a noise msg
-  @param msg [stdr_msgs::Noise] The noise message
-  @param file_name [std::string] The file name to write the xml
-  @return TiXmlDocument
-  **/
-  TiXmlDocument MessageCreator::noiseToXml(
-    stdr_msgs::Noise msg,std::string file_name)
-  {
-    TiXmlDocument doc;
-    
-    //!< Create noise
-    TiXmlElement* noise;
-    noise = new TiXmlElement("noise");
-    doc.LinkEndChild(noise);
-        
-    //!< Create noise specifications
-    TiXmlElement* noise_specs;
-    noise_specs = new TiXmlElement("noise_specifications");
-    noise->LinkEndChild(noise_specs);
-    
-    //!< Create noise mean
-    TiXmlElement* noise_mean;
-    noise_mean = new TiXmlElement("noise_mean");
-    noise_specs->LinkEndChild(noise_mean);
-    
-    //!< Create noise std
-    TiXmlElement* noise_std;
-    noise_std = new TiXmlElement("noise_std");
-    noise_specs->LinkEndChild(noise_std);
-    
-    if(file_name != "")
-    {
-      doc.SaveFile( file_name.c_str() ); 
-    }
-    
-    return doc;
   }
 }
 

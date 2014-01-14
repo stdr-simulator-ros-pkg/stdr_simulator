@@ -24,6 +24,7 @@
 
 #include "stdr_parser/stdr_parser_msg_creator.h"
 #include "stdr_parser/stdr_parser_validator.h"
+#include "stdr_parser/stdr_parser_file_writer.h"
 
 /**
 @namespace stdr_parser
@@ -50,6 +51,8 @@ namespace stdr_parser
       MessageCreator creator_;
       //!< Node tree validator
       Validator validator_;
+      //!< Extracts messages in files
+      FileWriter file_writer_;
       
       /**
       @brief Low-level recursive function for parsing the xml robot file

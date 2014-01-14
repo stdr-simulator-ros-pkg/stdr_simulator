@@ -31,8 +31,8 @@
 namespace stdr_parser
 {
   /**
-  @class Base
-  @brief Implements the main functionalities of the high-level parser
+  @class MessageCreator
+  @brief Creates STDR messages from a STDR tree
   **/ 
   class MessageCreator
   {
@@ -89,15 +89,6 @@ namespace stdr_parser
       @return geometry_msgs::Pose2D
       **/
       geometry_msgs::Pose2D createPoseMessage(Node *n);
-      
-      //----------------------------------------------------------------------//
-      /**
-      @brief Creates an xml from a noise msg
-      @param msg [stdr_msgs::Noise] The noise message
-      @param file_name [std::string] The file name to write the xml
-      @return TiXmlDocument
-      **/
-      TiXmlDocument noiseToXml(stdr_msgs::Noise msg,std::string file_name);
   };
 }
 #endif
