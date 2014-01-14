@@ -19,9 +19,9 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_xml_parser_tools.h"
+#include "stdr_xml_parser/stdr_parser_tools.h"
 
-namespace stdr_xml_parser
+namespace stdr_parser
 {
   /**
   @brief Explodes a string based on a delimiter
@@ -42,5 +42,16 @@ namespace stdr_xml_parser
     }
     ret.insert(s.substr(prev , s.size() - prev));
     return ret;
+  }
+  
+  /**
+  @brief Extracts the filename from an absolute path
+  @param s [std::string] The input string
+  @return std::string
+  **/
+  std::string extractFilename(std::string s)
+  {
+    int n = s.find_last_of('/');
+    return s.substr(n + 1, s.size() - n - 1);
   }
 }

@@ -19,9 +19,9 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_xml_parser_msg_creator.h"
+#include "stdr_xml_parser/stdr_parser_msg_creator.h"
 
-namespace stdr_xml_parser
+namespace stdr_parser
 {
   
   MessageCreator::MessageCreator(void)

@@ -19,63 +19,29 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_xml_parser_node.h"
+#include "stdr_xml_parser/stdr_parser_specs.h"
 
-namespace stdr_xml_parser
+namespace stdr_parser
 {
   /**
   @brief Default constructor
   @return void
   **/
-  Node::Node(void)
+  ElSpecs::ElSpecs(void)
   {
-    priority = 0;
+    required.clear();
+    allowed.clear();
   }
+    
+  //!< Static member variable initialization
+  std::map<std::string,ElSpecs> Specs::specs = std::map<std::string,ElSpecs>();
   
   /**
-  @brief Checks a node if a specific filename exists
+  @brief Default constructor
   @return void
   **/
-  bool Node::checkForFilename(std::string base)
+  Specs::Specs(void)
   {
-    if(elements.size() == 1)
-    {
-      if(elements[0]->tag == base)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  /**
-  @brief Searches for a tag in the specific node
-  @param tag [std::string] The tag to search for
-  @return std::vector<int> : The indexes in elements where tag is found
-  **/
-  std::vector<int> Node::getTag(std::string tag)
-  {
-    std::vector<int> ret;
-    for(unsigned int i = 0 ; i < elements.size() ; i++)
-    {
-      if(elements[i]->tag == tag)
-      {
-        ret.push_back(i);
-      }
-    }
-    return ret;
-  }
-  
-  /**
-  @brief Increases the priority of the node
-  @return void
-  **/
-  void Node::increasePriority(void)
-  {
-    priority ++;
-    for(unsigned int i = 0 ; i < elements.size() ; i++)
-    {
-      elements[i]->increasePriority();
-    }
+    specs.clear();
   }
 }

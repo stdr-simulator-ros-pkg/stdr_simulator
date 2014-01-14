@@ -22,19 +22,20 @@
 #ifndef STDR_XML_PARSER__BASE
 #define STDR_XML_PARSER__BASE
 
-#include "stdr_xml_parser/stdr_xml_parser_msg_creator.h"
+#include "stdr_xml_parser/stdr_parser_msg_creator.h"
+#include "stdr_xml_parser/stdr_parser_validator.h"
 
 /**
-@namespace stdr_xml_parser
+@namespace stdr_parser
 @brief The main namespace for STDR GUI XML parser
 **/ 
-namespace stdr_xml_parser
+namespace stdr_parser
 {
   /**
-  @class Base
+  @class Parser
   @brief Implements the main functionalities of the high-level parser
   **/ 
-  class Base
+  class Parser
   {
     private:
       
@@ -47,13 +48,8 @@ namespace stdr_xml_parser
       
       //!< Object of Message creator
       MessageCreator creator_;
-      
-      /**
-      @brief Low-level recursive function for parsing the xml specifications file
-      @param node [TiXmlNode*] The xml node to start from
-      @return void
-      **/
-      void parseSpecifications(TiXmlNode* node);
+      //!< Node tree validator
+      Validator validator_;
       
       /**
       @brief Low-level recursive function for parsing the xml robot file
@@ -113,43 +109,11 @@ namespace stdr_xml_parser
       void mergeNodesValues(Node* n);
       
       /**
-      @brief Performs a allowed - validity check on the xml tree
-      @param n [Node*] The stdr xml tree node to begin
-      @return bool : True is the xml is allowed-valid
-      **/
-      bool validityAllowedCheck(Node* n);
-      
-      /**
-      @brief Performs a required - validity check on the xml tree
-      @param n [Node*] The stdr xml tree node to begin
-      @return bool : True is the xml is required-valid
-      **/
-      bool validityRequiredCheck(Node* n);
-      
-      /**
-      @brief Parses the mergabl speciications file
-      @return void
-      **/
-      void parseMergableSpecifications(void);
-      
-      /**
-      @brief Loads the specifications file and parses it
-      @return void
-      **/
-      void initialize(void);
-      
-      /**
       @brief Parses an xml file
       @param file_name [std::string] The xml filename
       @return void
       **/
       void parse(std::string file_name);
-      
-      /**
-      @brief Prints the specifications
-      @return void
-      **/
-      void printSpecifications(void);
       
       /**
       @brief Prints the parsed xml
@@ -163,7 +127,7 @@ namespace stdr_xml_parser
       @brief Default constructor
       @return void
       **/
-      Base(void);
+      Parser(void);
       
       /**
       @brief Parses an xml file and produces a stdr_msgs::RobotMsg message

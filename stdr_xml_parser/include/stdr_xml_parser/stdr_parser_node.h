@@ -19,20 +19,20 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_XML_PARSER__NODE
-#define STDR_XML_PARSER__NODE
+#ifndef STDR_PARSER__NODE
+#define STDR_PARSER__NODE
 
-#include "stdr_xml_parser/stdr_xml_parser_specs.h"
+#include "stdr_xml_parser/stdr_parser_specs.h"
 
 /**
-@namespace stdr_xml_parser
-@brief The main namespace for STDR GUI XML parser
+@namespace stdr_parser
+@brief The main namespace for STDR parser
 **/ 
-namespace stdr_xml_parser
+namespace stdr_parser
 {
   /**
   @class Node
-  @brief Implements the main functionalities of the stdr xml parser tree
+  @brief Implements the main functionalities of the stdr parser tree
   **/ 
   class Node
   {

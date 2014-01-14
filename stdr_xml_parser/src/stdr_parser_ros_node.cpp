@@ -19,20 +19,20 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_xml_parser_base.h"
+#include "stdr_xml_parser/stdr_parser.h"
 
 /**
-@brief Main function of xml parser ros node
+@brief Main function of stdr parser ros node
 @return int
 **/
 int main(int argc, char **argv)
 {
-  ros::init(argc,argv,"stdr_xml_parser");
+  ros::init(argc,argv,"stdr_parser");
   
-  stdr_xml_parser::Base b;
+  stdr_parser::Parser obj;
   try
   {
-    stdr_msgs::RobotMsg msg = b.createRobotMessage("pandora_robot.xml");
+    stdr_msgs::RobotMsg msg = obj.createRobotMessage("pandora_robot.xml");
   }
   catch(ParserException ex)
   {

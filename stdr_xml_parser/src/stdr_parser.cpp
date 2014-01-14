@@ -19,15 +19,15 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_xml_parser_base.h"
+#include "stdr_xml_parser/stdr_parser.h"
 
-namespace stdr_xml_parser
+namespace stdr_parser
 {
   /**
   @brief Default constructor
   @return void
   **/
-  Base::Base(void)
+  Parser::Parser(void)
   {
     base_path_=ros::package::getPath("stdr_resources");
     base_node_ = new Node();
@@ -40,7 +40,7 @@ namespace stdr_xml_parser
   @param indent [std::string] The indentation for the specific node
   @return void
   **/
-  void Base::printParsedXml(Node *n,std::string indent)
+  void Parser::printParsedXml(Node *n,std::string indent)
   {
     if(n->value != "")
     {  
@@ -62,7 +62,7 @@ namespace stdr_xml_parser
   @brief Prints the parsed xml
   @return void
   **/
-  void Base::printParsedXml(void)
+  void Parser::printParsedXml(void)
   {
     ROS_ERROR("-----------------------------------------------------");
     printParsedXml(base_node_,"");
@@ -72,7 +72,7 @@ namespace stdr_xml_parser
   @brief High level function that eliminates the 'filename' nodes. Calls the eliminateFilenames(Node* n) function until it returns false
   @return void
   **/
-  void Base::eliminateFilenames(void)
+  void Parser::eliminateFilenames(void)
   {
     try
     {
@@ -91,7 +91,7 @@ namespace stdr_xml_parser
   @param n [Node*] The stdr xml tree node to begin
   @return bool : True is a 'filename' node was expanded
   **/
-  bool Base::eliminateFilenames(Node* n)
+  bool Parser::eliminateFilenames(Node* n)
   {
     if(n->value != "")
     {  
@@ -138,123 +138,11 @@ filename of wrong type specified\n") +
   }
   
   /**
-  @brief Performs a allowed - validity check on the xml tree
-  @param n [Node*] The stdr xml tree node to begin
-  @return bool : True is the xml is allowed-valid
-  **/
-  bool Base::validityAllowedCheck(Node* n)
-  {
-    //!< Immediately return if we have a value node
-    if(n->value != "")
-    {
-      return true;
-    }
-    std::string tag = n->tag;
-    if(Specs::specs.find(tag) == Specs::specs.end() &&
-      tag != "STDR_Parser_Root_Node")
-    {
-      std::string error = 
-        std::string("STDR parser : ") + n->tag + 
-        std::string(" is not a valid tag\n") + 
-        std::string("\nError was in line ") + SSTR( n->file_row ) + 
-        std::string(" of file '") + n->file_origin + std::string("'");
-      throw ParserException(error);
-    }
-    for(unsigned int i = 0 ; i < n->elements.size() ; i++)
-    {
-      std::string child_tag = n->elements[i]->tag;
-      std::string child_value = n->elements[i]->value;
-      if(tag != "STDR_Parser_Root_Node" && child_value == "")
-      {
-        if(Specs::specs[tag].allowed.find(child_tag) == 
-          Specs::specs[tag].allowed.end())
-        {
-          std::string error = 
-            std::string("STDR parser : ") + child_tag + 
-            std::string(" is not allowed in a ") + tag + std::string(" tag\n") +
-            std::string("\nError was in line ") + SSTR( n->file_row ) + 
-            std::string(" of file '") + n->file_origin + std::string("'") +
-            std::string("\nError was in line ") + 
-            SSTR( n->elements[i]->file_row ) + 
-            std::string(" of file '") + n->elements[i]->file_origin + 
-            std::string("'");
-          throw ParserException(error);
-        }
-      }
-      try
-      {
-        if(!validityAllowedCheck(n->elements[i]))
-        {
-          return false;
-        }
-      }
-      catch(ParserException ex)
-      {
-        throw ex;
-      }
-    }
-    return true;
-  }
-  
-  /**
-  @brief Performs a required - validity check on the xml tree
-  @param n [Node*] The stdr xml tree node to begin
-  @return bool : True is the xml is required-valid
-  **/
-  bool Base::validityRequiredCheck(Node* n)
-  {
-    //!< Immediately return if we have a value node
-    if(n->value != "")
-    {
-      return true;
-    }
-    std::string tag = n->tag;
-    if(Specs::specs.find(tag) == Specs::specs.end() &&
-      tag != "STDR_Parser_Root_Node")
-    {
-      std::string error = 
-        std::string("STDR parser : ") + n->tag + 
-        std::string(" is not a valid tag\n") + 
-        std::string("\nError was in line ") + SSTR( n->file_row ) + 
-        std::string(" of file '") + n->file_origin + std::string("'");
-      throw ParserException(error);
-    }
-    for(std::set<std::string>::iterator it = Specs::specs[tag].required.begin() 
-      ; it != Specs::specs[tag].required.end() ; it++)
-    {
-      std::vector<int> num = n->getTag(*it);
-      if(num.size() == 0)
-      {
-        std::string error = 
-          std::string("STDR parser : ") + tag + 
-          std::string(" requires ") + (*it) +
-          std::string("\nError was in line ") + SSTR( n->file_row ) + 
-          std::string(" of file '") + n->file_origin + std::string("'");
-        throw ParserException(error);
-      }
-    }
-    for(unsigned int i = 0 ; i < n->elements.size() ; i++)
-    {
-      try
-      {
-        if(!validityRequiredCheck(n->elements[i]))
-        {
-          return false;
-        }      
-      }
-      catch(ParserException ex)
-      {
-        throw ex;
-      }
-    }
-    return true;
-  }
-  /**
   @brief Merges the leaves of the xml tree, which are the value nodes
   @param n [Node*] The stdr xml tree node to begin
   @return void
   **/
-  void Base::mergeNodesValues(Node* n)
+  void Parser::mergeNodesValues(Node* n)
   {
     //!< Check if the node does not contain pure values
     bool pure_values = true;
@@ -303,7 +191,7 @@ filename of wrong type specified\n") +
   @brief High level function that merges similar nodes. Calls the mergeNodes(Node* n) function until it returns false
   @return void
   **/
-  void Base::mergeNodes(void)
+  void Parser::mergeNodes(void)
   {
     while(!mergeNodes(base_node_))
     {
@@ -316,7 +204,7 @@ filename of wrong type specified\n") +
   @param n [Node*] The stdr xml tree node to begin
   @return bool : True is a ndoe was merged
   **/
-  bool Base::mergeNodes(Node* n)
+  bool Parser::mergeNodes(Node* n)
   {
     if(n->value != "")  //!< Node is value
     {
@@ -367,50 +255,15 @@ filename of wrong type specified\n") +
   @param file_name [std::string] The xml filename
   @return void
   **/
-  void Base::parse(std::string file_name)
+  void Parser::parse(std::string file_name)
   {
     // Must destroy prev tree
     try
     {
-      parse(file_name,base_node_);    
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-
-    try
-    {
-      parseMergableSpecifications();
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-
-    try
-    {
-      eliminateFilenames();
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-    
-    mergeNodes();
-    
-    try
-    {
-      validityAllowedCheck(base_node_);
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-    
-    try
-    {
-      validityRequiredCheck(base_node_);
+      parse(file_name,base_node_);  
+      eliminateFilenames(); 
+      mergeNodes();
+      validator_.validate(base_node_);
     }
     catch(ParserException ex)
     {
@@ -424,7 +277,7 @@ filename of wrong type specified\n") +
   @param n [Node*] The stdr xml tree node to update
   @return void
   **/
-  void Base::parse(std::string file_name,Node* n)
+  void Parser::parse(std::string file_name,Node* n)
   {
     std::string path=base_path_ + std::string("/xmls/") + file_name;
     TiXmlDocument doc;
@@ -445,34 +298,12 @@ malformed xml file");
   }
   
   /**
-  @brief Parses the mergabl speciications file
-  @return void
-  **/
-  void Base::parseMergableSpecifications(void)
-  {
-    std::string path=base_path_ + 
-      std::string("/xmls/stdr_specific/stdr_multiple_allowed.xml");
-    TiXmlDocument doc;
-    bool loadOkay = doc.LoadFile(path.c_str());
-    if (!loadOkay)
-    {
-      std::string error = 
-        std::string("STDR parser : Failed to load file ") + 
-        path + std::string("'") +
-        std::string("\nError was \n\t") + std::string(doc.ErrorDesc());
-      throw ParserException(error);
-    }
-    non_mergable_tags_ = explodeString(
-      doc.FirstChild()->FirstChild()->Value(), ',');
-  }
-  
-  /**
   @brief Low-level recursive function for parsing the xml robot file
   @param node [TiXmlNode*] The xml node to start from
   @param n [Node*] The stdr xml tree node to update
   @return void
   **/
-  void Base::parseLow(TiXmlNode* node,Node* n)
+  void Parser::parseLow(TiXmlNode* node,Node* n)
   {
     Node* new_node = new Node();
     TiXmlNode* pChild;
@@ -529,159 +360,15 @@ malformed xml file");
   }
   
   /**
-  @brief Loads the specifications file and parses it
-  @return void
-  **/
-  void Base::initialize(void)
-  {
-    std::string path=base_path_ + 
-      std::string("/xmls/stdr_specific/stdr_specifications.xml");
-    TiXmlDocument doc;
-    bool loadOkay = doc.LoadFile(path.c_str());
-    if (!loadOkay)
-    {
-      std::string error = 
-        std::string("Failed to load specifications file.\nShould be at '") + 
-        path + std::string("'\nError was") + std::string(doc.ErrorDesc());
-      throw ParserException(error);
-    }
-    
-    try
-    {
-      parseSpecifications(&doc);
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-  }
-  
-  /**
-  @brief Low-level recursive function for parsing the xml specifications file
-  @param node [TiXmlNode*] The xml node to start from
-  @return void
-  **/
-  void Base::parseSpecifications(TiXmlNode* node)
-  {
-    TiXmlNode* pChild;
-    int type = node->Type();
-    std::string node_text(node->Value());
-    switch (type)
-    {
-      case 0 :    //!< Type = document
-      {
-        break;
-      }
-      case 1 :    //!< Type = element
-      {
-        if(node_text == "specifications")
-        {
-          break;
-        }
-        else if(node_text!="allowed" && node_text!="required" 
-          && node_text!="default")
-        { //!< Base specifications tag
-          if(Specs::specs.find(node_text) == Specs::specs.end())
-          { //!< New base specifications tag
-            Specs::specs.insert(std::pair<std::string,ElSpecs>(
-              node_text,ElSpecs()));
-          }
-          else
-          { //!< Multiple base tags - error
-            std::string error = 
-              std::string("STDR parser : Multiple instance of '") + node_text +
-              std::string("' in specifications.");
-            throw ParserException(error);
-          }
-        }
-        else
-        { //!< required or allowed tags
-          break;
-        }
-        break;
-      }
-      case 4 :    //!< Type = text
-      {
-        std::string base_tag (node->Parent()->Parent()->Value());
-        std::string base_type(node->Parent()->Value());
-        if(base_type == "allowed")
-        {
-          Specs::specs[base_tag].allowed = explodeString(node_text,',');
-        }
-        else if(base_type == "required")
-        {
-          Specs::specs[base_tag].required = explodeString(node_text,',');
-        }
-        else if(base_type == "default")
-        {
-          Specs::specs[base_tag].default_value = node_text;
-        }
-        else
-        {
-          std::string error = 
-            std::string("STDR parser : Specification '") + base_tag +
-            std::string("' not in 'allowed', 'required' or 'default' : '") +
-            base_type + std::string("' / '") + node_text  + std::string("'");
-          throw ParserException(error);
-        }
-        break;
-      }
-    }
-    
-    for ( 
-      pChild = node->FirstChild(); 
-      pChild != 0; 
-      pChild = pChild->NextSibling()) 
-    {
-      try
-      {
-        parseSpecifications( pChild );
-      }
-      catch(ParserException ex)
-      {
-        throw ex;
-      }
-    }
-  }
-  
-  /**
-  @brief Prints the specifications
-  @return void
-  **/
-  void Base::printSpecifications(void)
-  {
-    for(std::map<std::string,ElSpecs>::iterator it = Specs::specs.begin();
-      it != Specs::specs.end() ; it ++)
-    {
-      ROS_ERROR("[%s]",it->first.c_str());
-      ROS_ERROR("  [allowed : %s]",it->first.c_str());
-      for(std::set<std::string>::iterator inner_it = 
-        it->second.allowed.begin(); 
-          inner_it != it->second.allowed.end() ; inner_it ++)
-      {
-        ROS_ERROR("    - %s",(*inner_it).c_str());
-      }
-      ROS_ERROR("  [required : %s]",it->first.c_str());
-      for(std::set<std::string>::iterator inner_it = 
-        it->second.required.begin(); 
-          inner_it != it->second.required.end() ; inner_it ++)
-      {
-        ROS_ERROR("    - %s",(*inner_it).c_str());
-      }
-    }
-  }
-  
-  /**
   @brief Parses an xml file and produces a stdr_msgs::RobotMsg message
   @param file_name [std::string] The xml filename
   @return stdr_msgs::RobotMsg : The robot message
   **/
-  stdr_msgs::RobotMsg Base::createRobotMessage(std::string file_name)
+  stdr_msgs::RobotMsg Parser::createRobotMessage(std::string file_name)
   {
     
     try
     {
-      initialize();
       parse(file_name);
     }
     catch(ParserException ex)
@@ -696,12 +383,11 @@ malformed xml file");
   @param file_name [std::string] The xml filename
   @return stdr_msgs::LaserSensorMsg : The laser message
   **/
-  stdr_msgs::LaserSensorMsg Base::createLaserMessage(std::string file_name)
+  stdr_msgs::LaserSensorMsg Parser::createLaserMessage(std::string file_name)
   {
     
     try
     {
-      initialize();
       parse(file_name);
     }
     catch(ParserException ex)
@@ -717,12 +403,11 @@ malformed xml file");
   @param file_name [std::string] The xml filename
   @return stdr_msgs::SonarSensorMsg : The sonar message
   **/
-  stdr_msgs::SonarSensorMsg Base::createSonarMessage(std::string file_name)
+  stdr_msgs::SonarSensorMsg Parser::createSonarMessage(std::string file_name)
   {
     
     try
     {
-      initialize();
       parse(file_name);
     }
     catch(ParserException ex)

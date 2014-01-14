@@ -19,16 +19,16 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_XML_PARSER__MSG_CREATOR
-#define STDR_XML_PARSER__MSG_CREATOR
+#ifndef STDR_PARSER_MSG_CREATOR
+#define STDR_PARSER_MSG_CREATOR
 
-#include "stdr_xml_parser/stdr_xml_parser_node.h"
+#include "stdr_xml_parser/stdr_parser_node.h"
 
 /**
-@namespace stdr_xml_parser
-@brief The main namespace for STDR GUI XML parser
+@namespace stdr_parser
+@brief The main namespace for STDR parser
 **/ 
-namespace stdr_xml_parser
+namespace stdr_parser
 {
   /**
   @class Base
@@ -47,14 +47,14 @@ namespace stdr_xml_parser
       MessageCreator(void);
       
       /**
-      @brief Creates a robot message from a parsed xml
+      @brief Creates a robot message from a parsed file
       @param n [Node*] The root node
       @return stdr_msgs::RobotMsg
       **/
       stdr_msgs::RobotMsg createRobotMessage(Node *n);
       
       /**
-      @brief Creates a laser message from a parsed xml
+      @brief Creates a laser message from a parsed file
       @param n [Node*] The root node
       @param id [unsigned int] The id to create the laser frame_id 
       @return stdr_msgs::LaserSensorMsg
@@ -62,7 +62,7 @@ namespace stdr_xml_parser
       stdr_msgs::LaserSensorMsg createLaserMessage(Node *n,unsigned int id);
       
       /**
-      @brief Creates a sonar message from a parsed xml
+      @brief Creates a sonar message from a parsed file
       @param n [Node*] The root node
       @param id [unsigned int] The id to create the sonar frame_id 
       @return stdr_msgs::SonarSensorMsg
@@ -70,21 +70,21 @@ namespace stdr_xml_parser
       stdr_msgs::SonarSensorMsg createSonarMessage(Node *n,unsigned int id);
       
       /**
-      @brief Creates a footprint message from a parsed xml
+      @brief Creates a footprint message from a parsed file
       @param n [Node*] The root node
       @return stdr_msgs::FootprintMsg
       **/
       stdr_msgs::FootprintMsg createFootprintMessage(Node *n);
       
       /**
-      @brief Creates a noise message from a parsed xml
+      @brief Creates a noise message from a parsed file
       @param n [Node*] The root node
       @return stdr_msgs::Noise
       **/
       stdr_msgs::Noise createNoiseMessage(Node *n);
       
       /**
-      @brief Creates a pose message from a parsed xml
+      @brief Creates a pose message from a parsed file
       @param n [Node*] The root node
       @return geometry_msgs::Pose2D
       **/

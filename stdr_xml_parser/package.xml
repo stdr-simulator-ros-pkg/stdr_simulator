@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>stdr_xml_parser</name>
+  <name>stdr_parser</name>
   <version>0.0.1</version>
   <description>The stdr_parser package</description>
 
