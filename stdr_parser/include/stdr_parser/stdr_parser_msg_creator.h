@@ -22,7 +22,7 @@
 #ifndef STDR_PARSER_MSG_CREATOR
 #define STDR_PARSER_MSG_CREATOR
 
-#include "stdr_xml_parser/stdr_parser_node.h"
+#include "stdr_parser/stdr_parser_node.h"
 
 /**
 @namespace stdr_parser

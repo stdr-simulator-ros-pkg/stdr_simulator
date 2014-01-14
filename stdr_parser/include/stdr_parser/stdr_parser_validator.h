@@ -22,7 +22,7 @@
 #ifndef STDR_PARSER_VALIDATOR
 #define STDR_PARSER_VALIDATOR
 
-#include "stdr_xml_parser/stdr_parser_node.h"
+#include "stdr_parser/stdr_parser_node.h"
 
 /**
 @namespace stdr_parser

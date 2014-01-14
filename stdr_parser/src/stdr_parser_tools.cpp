@@ -19,51 +19,39 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_PARSER_SPECS
-#define STDR_PARSER_SPECS
+#include "stdr_parser/stdr_parser_tools.h"
 
-#include "stdr_xml_parser/stdr_parser_tools.h"
-
-/**
-@namespace stdr_parser
-@brief The main namespace for STDR parser
-**/ 
 namespace stdr_parser
 {
   /**
-  @struct ElSpecs
-  @brief An element of Specs - represents a valid tag
-  **/ 
-  struct ElSpecs
+  @brief Explodes a string based on a delimiter
+  @param s [std::string] The input string
+  @param delimiter [char] The delimiter
+  @return std::set<std::string> : An ensemble of strings
+  **/
+  std::set<std::string> explodeString(std::string s,char delimiter)
   {
-    /**
-    @brief Default constructor
-    @return void
-    **/
-    ElSpecs(void);
-    
-    //!< The required tags for the tag
-    std::set<std::string> required;
-    //!< The allowed tags for the tag
-    std::set<std::string> allowed;
-    //!< Default value for the node (if it is a value)
-    std::string default_value;
-  };
+    std::set<std::string> ret;
+    int prev = 0, next = 0;
+    next = s.find(delimiter,prev);
+    while(next != std::string::npos)
+    {
+      ret.insert(s.substr(prev , next - prev));
+      prev = next + 1;
+      next = s.find(delimiter,prev);
+    }
+    ret.insert(s.substr(prev , s.size() - prev));
+    return ret;
+  }
   
   /**
-  @struct Specs
-  @brief The STDR parser specifications
-  **/ 
-  struct Specs
+  @brief Extracts the filename from an absolute path
+  @param s [std::string] The input string
+  @return std::string
+  **/
+  std::string extractFilename(std::string s)
   {
-    /**
-    @brief Default constructor
-    @return void
-    **/
-    Specs(void);
-    
-    //!< std::map of valid STDR tags
-    static std::map<std::string,ElSpecs> specs;
-  };
+    int n = s.find_last_of('/');
+    return s.substr(n + 1, s.size() - n - 1);
+  }
 }
-#endif

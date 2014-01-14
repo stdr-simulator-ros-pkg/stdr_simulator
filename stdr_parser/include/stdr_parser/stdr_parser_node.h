@@ -19,10 +19,10 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_PARSER__NODE
-#define STDR_PARSER__NODE
+#ifndef STDR_PARSER_NODE
+#define STDR_PARSER_NODE
 
-#include "stdr_xml_parser/stdr_parser_specs.h"
+#include "stdr_parser/stdr_parser_specs.h"
 
 /**
 @namespace stdr_parser

@@ -19,7 +19,7 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_parser.h"
+#include "stdr_parser/stdr_parser.h"
 
 namespace stdr_parser
 {

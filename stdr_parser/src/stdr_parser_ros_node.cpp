@@ -19,29 +19,26 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_parser_specs.h"
+#include "stdr_parser/stdr_parser.h"
 
-namespace stdr_parser
+/**
+@brief Main function of stdr parser ros node
+@return int
+**/
+int main(int argc, char **argv)
 {
-  /**
-  @brief Default constructor
-  @return void
-  **/
-  ElSpecs::ElSpecs(void)
-  {
-    required.clear();
-    allowed.clear();
-  }
-    
-  //!< Static member variable initialization
-  std::map<std::string,ElSpecs> Specs::specs = std::map<std::string,ElSpecs>();
+  ros::init(argc,argv,"stdr_parser");
   
-  /**
-  @brief Default constructor
-  @return void
-  **/
-  Specs::Specs(void)
+  stdr_parser::Parser obj;
+  try
   {
-    specs.clear();
+    stdr_msgs::RobotMsg msg = obj.createRobotMessage("pandora_robot.xml");
   }
+  catch(ParserException ex)
+  {
+    ROS_ERROR(" === STDR PARSER ERROR ===\n%s",ex.what());
+  }
+  
+
+  return 0;
 }

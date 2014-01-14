@@ -19,30 +19,10 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_PARSER_TOOLS
-#define STDR_PARSER_TOOLS
+#ifndef STDR_PARSER_SPECS
+#define STDR_PARSER_SPECS
 
-#include <iostream>
-#include <cstdlib>
-#include <map>
-#include <vector>
-#include <string>
-#include <sstream>
-
-#include <ros/package.h>
-#include "ros/ros.h"
-
-#include <tinyxml.h>
-
-#include "stdr_msgs/RobotMsg.h"
-#include "geometry_msgs/Pose2D.h"
-#include "geometry_msgs/Point.h"
-
-#include "stdr_xml_parser/exceptions.h"
-
-//!< Transforms a float number to string
-#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
-        ( std::ostringstream() << std::dec << x ) ).str()
+#include "stdr_parser/stdr_parser_tools.h"
 
 /**
 @namespace stdr_parser
@@ -51,18 +31,39 @@
 namespace stdr_parser
 {
   /**
-  @brief Explodes a string based on a delimiter
-  @param s [std::string] The input string
-  @param delimiter [char] The delimiter
-  @return std::set<std::string> : An ensemble of strings
-  **/
-  std::set<std::string> explodeString(std::string s,char delimiter);
+  @struct ElSpecs
+  @brief An element of Specs - represents a valid tag
+  **/ 
+  struct ElSpecs
+  {
+    /**
+    @brief Default constructor
+    @return void
+    **/
+    ElSpecs(void);
+    
+    //!< The required tags for the tag
+    std::set<std::string> required;
+    //!< The allowed tags for the tag
+    std::set<std::string> allowed;
+    //!< Default value for the node (if it is a value)
+    std::string default_value;
+  };
   
   /**
-  @brief Extracts the filename from an absolute path
-  @param s [std::string] The input string
-  @return std::string
-  **/
-  std::string extractFilename(std::string s);
+  @struct Specs
+  @brief The STDR parser specifications
+  **/ 
+  struct Specs
+  {
+    /**
+    @brief Default constructor
+    @return void
+    **/
+    Specs(void);
+    
+    //!< std::map of valid STDR tags
+    static std::map<std::string,ElSpecs> specs;
+  };
 }
 #endif

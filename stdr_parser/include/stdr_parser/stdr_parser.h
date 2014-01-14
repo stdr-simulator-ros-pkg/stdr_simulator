@@ -19,11 +19,11 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_XML_PARSER__BASE
-#define STDR_XML_PARSER__BASE
+#ifndef STDR_PARSER_BASE
+#define STDR_PARSER_BASE
 
-#include "stdr_xml_parser/stdr_parser_msg_creator.h"
-#include "stdr_xml_parser/stdr_parser_validator.h"
+#include "stdr_parser/stdr_parser_msg_creator.h"
+#include "stdr_parser/stdr_parser_validator.h"
 
 /**
 @namespace stdr_parser

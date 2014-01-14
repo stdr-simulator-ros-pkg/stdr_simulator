@@ -19,26 +19,50 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_xml_parser/stdr_parser.h"
+#ifndef STDR_PARSER_TOOLS
+#define STDR_PARSER_TOOLS
+
+#include <iostream>
+#include <cstdlib>
+#include <map>
+#include <vector>
+#include <string>
+#include <sstream>
+
+#include <ros/package.h>
+#include "ros/ros.h"
+
+#include <tinyxml.h>
+
+#include "stdr_msgs/RobotMsg.h"
+#include "geometry_msgs/Pose2D.h"
+#include "geometry_msgs/Point.h"
+
+#include "stdr_parser/stdr_parser_exceptions.h"
+
+//!< Transforms a float number to string
+#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
 
 /**
-@brief Main function of stdr parser ros node
-@return int
-**/
-int main(int argc, char **argv)
+@namespace stdr_parser
+@brief The main namespace for STDR parser
+**/ 
+namespace stdr_parser
 {
-  ros::init(argc,argv,"stdr_parser");
+  /**
+  @brief Explodes a string based on a delimiter
+  @param s [std::string] The input string
+  @param delimiter [char] The delimiter
+  @return std::set<std::string> : An ensemble of strings
+  **/
+  std::set<std::string> explodeString(std::string s,char delimiter);
   
-  stdr_parser::Parser obj;
-  try
-  {
-    stdr_msgs::RobotMsg msg = obj.createRobotMessage("pandora_robot.xml");
-  }
-  catch(ParserException ex)
-  {
-    ROS_ERROR(" === STDR PARSER ERROR ===\n%s",ex.what());
-  }
-  
-
-  return 0;
+  /**
+  @brief Extracts the filename from an absolute path
+  @param s [std::string] The input string
+  @return std::string
+  **/
+  std::string extractFilename(std::string s);
 }
+#endif
