@@ -65,6 +65,27 @@ namespace stdr_parser
       @return void
       **/
       void parse(std::string file_name);
+      
+      /**
+      @brief Recursive function - Expands the 'filename' nodes and eliminates them
+      @param n [Node*] The stdr xml tree node to begin
+      @return bool : True is a 'filename' node was expanded
+      **/
+      bool eliminateFilenames(Node* n);
+      
+      /**
+      @brief Recursive function - Merges the nodes that do not exist in non_mergable_tags_
+      @param n [Node*] The stdr xml tree node to begin
+      @return bool : True is a ndoe was merged
+      **/
+      bool mergeNodes(Node* n);
+      
+      /**
+      @brief Merges the leaves of the xml tree, which are the value nodes
+      @param n [Node*] The stdr xml tree node to begin
+      @return void
+      **/
+      void mergeNodesValues(Node* n);
 
     public:
     

@@ -46,27 +46,6 @@ namespace stdr_parser
       **/
       void parseLow(const YAML::Node& node,Node* n);
       
-      /**
-      @brief Recursive function - Expands the 'filename' nodes and eliminates them
-      @param n [Node*] The stdr parser tree node to begin
-      @return bool : True is a 'filename' node was expanded
-      **/
-      bool eliminateFilenames(Node* n);
-      
-      /**
-      @brief Recursive function - Merges the nodes that do not exist in non_mergable_tags_
-      @param n [Node*] The stdr parser tree node to begin
-      @return bool : True is a node was merged
-      **/
-      bool mergeNodes(Node* n);
-      
-      /**
-      @brief Merges the leaves of the tree, which are the value nodes
-      @param n [Node*] The stdr parser tree node to begin
-      @return void
-      **/
-      void mergeNodesValues(Node* n);
-      
     public:
     
       /**

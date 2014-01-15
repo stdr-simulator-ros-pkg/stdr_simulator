@@ -32,7 +32,7 @@ int main(int argc, char **argv)
   stdr_parser::Parser obj;
   try
   {
-    stdr_msgs::RobotMsg msg = obj.createRobotMessage("pandora_robot.yaml");
+    stdr_msgs::RobotMsg msg = obj.createRobotMessage(argv[1]);
   }
   catch(ParserException ex)
   {
