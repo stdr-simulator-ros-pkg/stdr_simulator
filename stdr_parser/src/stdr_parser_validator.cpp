@@ -45,6 +45,7 @@ namespace stdr_parser
     try
     {
       parseSpecifications(&doc);
+      parseMergableSpecifications();
     }
     catch(ParserException ex)
     {
