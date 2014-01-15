@@ -12,6 +12,12 @@ find_package(catkin REQUIRED COMPONENTS
   cmake_modules
 )
 
+find_package(PkgConfig)
+pkg_check_modules(NEW_YAMLCPP yaml-cpp>=0.5)
+if(NEW_YAMLCPP_FOUND)
+  add_definitions(-DHAVE_NEW_YAMLCPP)
+endif(NEW_YAMLCPP_FOUND)
+
 
 include_directories(
   include
@@ -40,6 +46,7 @@ add_executable(stdr_parser_node
   src/stdr_parser_msg_creator.cpp
   src/stdr_parser_file_writer.cpp
   src/stdr_xml_parser.cpp
+  src/stdr_yaml_parser.cpp
   src/stdr_parser_node.cpp
   src/stdr_parser_specs.cpp
   src/stdr_parser_tools.cpp
@@ -47,4 +54,7 @@ add_executable(stdr_parser_node
 
 add_dependencies(stdr_parser_node stdr_msgs_gencpp) # wait for stdr_msgs to be build
 
-target_link_libraries(stdr_parser_node ${catkin_LIBRARIES} ${TinyXML_LIBRARIES})
+target_link_libraries(stdr_parser_node 
+  ${catkin_LIBRARIES} ${TinyXML_LIBRARIES}
+  yaml-cpp
+)

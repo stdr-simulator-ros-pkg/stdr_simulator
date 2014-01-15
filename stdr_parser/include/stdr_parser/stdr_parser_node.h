@@ -81,6 +81,14 @@ namespace stdr_parser
       
       //!< Row in the original file
       int file_row;
+      
+      /**
+      @brief Debug recursive function - Prints the xml tree
+      @param n [Node*] The stdr xml tree node to begin
+      @param indent [std::string] The indentation for the specific node
+      @return void
+      **/
+      void printParsedXml(Node *n,std::string indent);
   };
   
 }

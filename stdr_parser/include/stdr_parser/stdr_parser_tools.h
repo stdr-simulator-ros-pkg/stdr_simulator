@@ -28,11 +28,13 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 #include <ros/package.h>
 #include "ros/ros.h"
 
 #include <tinyxml.h>
+#include "yaml-cpp/yaml.h"
 
 #include "stdr_msgs/RobotMsg.h"
 #include "geometry_msgs/Pose2D.h"

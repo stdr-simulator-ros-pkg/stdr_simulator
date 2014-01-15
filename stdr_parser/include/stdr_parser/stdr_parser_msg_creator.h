@@ -30,6 +30,7 @@
 **/ 
 namespace stdr_parser
 {
+  
   /**
   @class MessageCreator
   @brief Creates STDR messages from a STDR tree

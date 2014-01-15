@@ -33,40 +33,6 @@ namespace stdr_parser
     base_node_ = new Node();
     base_node_->tag = "STDR_Parser_Root_Node";
   }
-  
-  /**
-  @brief Debug recursive function - Prints the xml tree
-  @param n [Node*] The stdr xml tree node to begin
-  @param indent [std::string] The indentation for the specific node
-  @return void
-  **/
-  void Parser::printParsedXml(Node *n,std::string indent)
-  {
-    if(n->value != "")
-    {  
-      ROS_ERROR("%s- '%s' (%d)",indent.c_str(),n->value.c_str(),
-        n->priority);
-    }
-    else
-    {
-      ROS_ERROR("%s[%s] (%d)",indent.c_str(),n->tag.c_str(),
-        n->priority);
-    }  
-    for(unsigned int i = 0 ; i < n->elements.size() ; i++)
-    {
-      printParsedXml(n->elements[i],indent+std::string("| "));
-    }
-  }
-  
-  /**
-  @brief Prints the parsed xml
-  @return void
-  **/
-  void Parser::printParsedXml(void)
-  {
-    ROS_ERROR("-----------------------------------------------------");
-    printParsedXml(base_node_,"");
-  }
 
   /**
   @brief Parses an xml file
@@ -78,12 +44,27 @@ namespace stdr_parser
     // Must destroy prev tree
     try
     {
-      xml_parser_.parse(file_name,base_node_);  
+      if(file_name.find(".xml") != std::string::npos)
+      {
+        xml_parser_.parse(file_name,base_node_);  
+      }
+      else if(file_name.find(".yaml") != std::string::npos)
+      {
+        yaml_parser_.parse(file_name,base_node_);
+      }
       validator_.validate(base_node_);
     }
     catch(ParserException ex)
     {
       throw ex;
+    }
+    catch(YAML::ParserException& e)
+    {
+      std::string error = 
+        std::string("STDR parser : Failed to load file '") + 
+        file_name + std::string("'") +
+        std::string("\nError was '") + std::string(e.what());
+      throw ParserException(error);
     }
   }
  

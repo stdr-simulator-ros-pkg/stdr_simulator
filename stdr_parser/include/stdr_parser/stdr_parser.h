@@ -26,6 +26,7 @@
 #include "stdr_parser/stdr_parser_validator.h"
 #include "stdr_parser/stdr_parser_file_writer.h"
 #include "stdr_parser/stdr_xml_parser.h"
+#include "stdr_parser/stdr_yaml_parser.h"
 
 /**
 @namespace stdr_parser
@@ -55,6 +56,8 @@ namespace stdr_parser
       FileWriter file_writer_;
       //!< Parses an xml file
       XmlParser xml_parser_;
+      //!< Parses a yaml file
+      YamlParser yaml_parser_;
       
       /**
       @brief Low-level recursive function for parsing the xml robot file
@@ -71,14 +74,6 @@ namespace stdr_parser
       @return void
       **/
       void parse(std::string file_name,Node* n);
-      
-      /**
-      @brief Debug recursive function - Prints the xml tree
-      @param n [Node*] The stdr xml tree node to begin
-      @param indent [std::string] The indentation for the specific node
-      @return void
-      **/
-      void printParsedXml(Node* n,std::string indent);
       
       /**
       @brief Recursive function - Expands the 'filename' nodes and eliminates them
@@ -119,13 +114,7 @@ namespace stdr_parser
       @return void
       **/
       void parse(std::string file_name);
-      
-      /**
-      @brief Prints the parsed xml
-      @return void
-      **/
-      void printParsedXml(void);
-      
+
     public:
     
       /**

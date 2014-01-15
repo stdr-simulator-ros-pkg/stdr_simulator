@@ -78,4 +78,28 @@ namespace stdr_parser
       elements[i]->increasePriority();
     }
   }
+  
+  /**
+  @brief Debug recursive function - Prints the xml tree
+  @param n [Node*] The stdr xml tree node to begin
+  @param indent [std::string] The indentation for the specific node
+  @return void
+  **/
+  void Node::printParsedXml(Node *n,std::string indent)
+  {
+    if(n->value != "")
+    {  
+      ROS_ERROR("%s- '%s' (%d)",indent.c_str(),n->value.c_str(),
+        n->priority);
+    }
+    else
+    {
+      ROS_ERROR("%s[%s] (%d)",indent.c_str(),n->tag.c_str(),
+        n->priority);
+    }  
+    for(unsigned int i = 0 ; i < n->elements.size() ; i++)
+    {
+      printParsedXml(n->elements[i],indent+std::string("| "));
+    }
+  }
 }
