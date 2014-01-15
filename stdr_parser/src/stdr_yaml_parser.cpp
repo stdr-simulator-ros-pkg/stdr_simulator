@@ -42,7 +42,6 @@ namespace stdr_parser
     std::string path=ros::package::getPath("stdr_resources") + 
       std::string("/yamls/") + file_name;
     std::ifstream fin(path.c_str());
-    ROS_ERROR("%s",path.c_str());
     #ifdef HAVE_NEW_YAMLCPP
       YAML::Node doc = YAML::Load(fin);
     #else
@@ -50,13 +49,12 @@ namespace stdr_parser
       YAML::Node doc;
       parser.GetNextDocument(doc);
     #endif
-
-    parseLow(doc,base_node,"");
     
-    //~ base_node->file_origin = path;
-    //~ base_node->file_row = doc.Row();
-    //~ parseLow(&doc,base_node); 
-    //~ 
+    base_node->file_origin = file_name;
+    base_node->file_row = doc.GetMark().line;
+    
+    parseLow(doc,base_node);
+
     //~ try
     //~ {
       //~ while(!eliminateFilenames(base_node));
@@ -75,33 +73,37 @@ namespace stdr_parser
   @param n [Node*] The stdr tree node to update
   @return void
   **/
-  void YamlParser::parseLow(const YAML::Node& node,Node* n,std::string identation)
+  void YamlParser::parseLow(const YAML::Node& node,Node* n)
   {
     if(node.Type() == YAML::NodeType::Scalar)
     {
+      Node* new_node = new Node();
       std::string s;
       node >> s;
-      ROS_ERROR("%s[%s]",identation.c_str(),s.c_str());
-      for(YAML::Iterator it = node.begin() ; it != node.end() ; ++it) 
-      {
-        parseLow(it.second(),n,identation+std::string("  "));
-      }
+      new_node->value = s;
+      new_node->file_origin = n->file_origin;
+      new_node->file_row = node.GetMark().line;
+      n->elements.push_back(new_node);
     }
     else if(node.Type() == YAML::NodeType::Sequence)
     {
       for(unsigned int i = 0 ; i < node.size() ; i++) 
       {
-        parseLow(node[i],n,identation+std::string("  "));
+        parseLow(node[i],n);
       }
     }
     else if(node.Type() == YAML::NodeType::Map)
     {
-      for(YAML::Iterator it = node.begin() ; it != node.end() ; ++it) 
+      std::string s;
+      for(YAML::Iterator it = node.begin() ; it != node.end() ; it++) 
       {
-        std::string s;
+        Node* new_node = new Node();
         it.first() >> s;
-        ROS_ERROR("%s[%s]",identation.c_str(),s.c_str());
-        parseLow(it.second(),n,identation+std::string("| "));
+        new_node->tag = s;
+        new_node->file_origin = n->file_origin;
+        new_node->file_row = node.GetMark().line;
+        n->elements.push_back(new_node);
+        parseLow(it.second(),new_node);
       }
     }
   }

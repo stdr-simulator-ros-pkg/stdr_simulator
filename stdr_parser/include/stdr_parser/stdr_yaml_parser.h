@@ -44,7 +44,7 @@ namespace stdr_parser
       @param n [Node*] The stdr tree node to update
       @return void
       **/
-      void parseLow(const YAML::Node& node,Node* n,std::string identation);
+      void parseLow(const YAML::Node& node,Node* n);
       
       /**
       @brief Recursive function - Expands the 'filename' nodes and eliminates them

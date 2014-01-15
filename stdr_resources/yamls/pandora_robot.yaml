@@ -2,15 +2,16 @@ robot:
   robot_specifications:
     - footprint:
         footprint_specifications:
-          points:
-             []
+          #~ points:
+             #~ []
           radius: 0.15
     - initial_pose:
         theta: 0
         x: 0
         y: 0
-    - kinematic:
-        type: null_value
+    #~ - kinematic:
+        #~ kinematic_specifications:
+          #~ type: null_value
     - laser:
         laser_specifications: 
           max_angle: 2.35619258880615
@@ -20,8 +21,8 @@ robot:
           num_rays: 270
           noise:
             noise_specifications:
-              mean: 0.5
-              std: 0.200000002980232
+              noise_mean: 0.5
+              noise_std: 0.200000002980232
           frequency: 10
           frame_id: laser_0
           pose:
@@ -35,8 +36,8 @@ robot:
           cone_angle: 0.523598313331604
           noise:
             noise_specifications:
-              mean: 0
-              std: 0
+              noise_mean: 0
+              noise_std: 0
           frequency: 10
           frame_id: sonar_0
           pose:
@@ -50,8 +51,8 @@ robot:
           cone_angle: 0.523598313331604
           noise:
             noise_specifications:
-              mean: 0
-              std: 0
+              noise_mean: 0
+              noise_std: 0
           frequency: 10
           frame_id: sonar_1
           pose:
@@ -65,8 +66,8 @@ robot:
           cone_angle: 0.523598313331604
           noise:
             noise_specifications:
-              mean: 0
-              std: 0
+              noise_mean: 0
+              noise_std: 0
           frequency: 10
           frame_id: sonar_2
           pose:
@@ -80,8 +81,8 @@ robot:
           cone_angle: 0.523598313331604
           noise:
             noise_specifications:
-              mean: 0
-              std: 0
+              noise_mean: 0
+              noise_std: 0
           frequency: 10
           frame_id: sonar_3
           pose:
@@ -95,8 +96,8 @@ robot:
           cone_angle: 0.523598313331604
           noise:
             noise_specifications:
-              mean: 0
-              std: 0
+              noise_mean: 0
+              noise_std: 0
           frequency: 10
           frame_id: sonar_4
           pose:
