@@ -40,7 +40,11 @@ namespace stdr_parser
   stdr_msgs::RobotMsg MessageCreator::createRobotMessage(Node *n)
   {
     stdr_msgs::RobotMsg msg;
-    Node* specs = n->elements[0]->elements[0];
+    Node* specs = n->elements[0];
+    if(specs->tag == "robot")
+    {
+      specs = specs->elements[0];
+    }
     std::vector<int> indexes;
     
     //!< Search for pose
@@ -103,6 +107,10 @@ namespace stdr_parser
   {
     stdr_msgs::LaserSensorMsg msg;
     Node* specs = n->elements[0];
+    if(specs->tag == "laser")
+    {
+      specs = specs->elements[0];
+    }
     std::vector<int> indexes;
     
     //!< Search for max angle
@@ -213,6 +221,10 @@ namespace stdr_parser
   {
     stdr_msgs::SonarSensorMsg msg;
     Node* specs = n->elements[0];
+    if(specs->tag == "sonar")
+    {
+      specs = specs->elements[0];
+    }
     std::vector<int> indexes;
     
     //!< Search for max range
@@ -297,6 +309,10 @@ namespace stdr_parser
   {
     stdr_msgs::FootprintMsg msg;
     Node* specs = n->elements[0];
+    if(specs->tag == "footprint")
+    {
+      specs = specs->elements[0];
+    }
     std::vector<int> indexes;
     //!< Search for radius
     indexes = specs->getTag("radius");
@@ -321,6 +337,10 @@ namespace stdr_parser
   {
     stdr_msgs::Noise msg;
     Node* specs = n->elements[0];
+    if(specs->tag == "noise")
+    {
+      specs = specs->elements[0];
+    }
     std::vector<int> indexes;
     //!< Search for noise mean
     indexes = specs->getTag("noise_mean");

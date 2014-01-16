@@ -58,6 +58,9 @@ namespace stdr_parser
       mergeNodesValues(base_node_);
       
       validator_.validate(base_node_);
+      
+      //!< Uncomment to see the internal tree structure
+      //~ base_node_->printParsedXml(base_node_,"");
     }
     catch(ParserException ex)
     {
@@ -129,6 +132,25 @@ namespace stdr_parser
       throw ex;
     }
     return creator_.createSonarMessage(base_node_,0);
+  }
+  
+  /**
+  @brief Parses an xml file and produces a stdr_msgs::Noise message
+  @param file_name [std::string] The filename
+  @return stdr_msgs::SonarSensorMsg : The sonar message
+  **/
+  stdr_msgs::Noise Parser::createNoiseMessage(std::string file_name)
+  {
+    
+    try
+    {
+      parse(file_name);
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
+    return creator_.createNoiseMessage(base_node_);
   }
   
   
@@ -282,6 +304,24 @@ filename of wrong type specified\n") +
       }
     }
     return true;
+  }
+  
+  /**
+  @brief Saves a stdr_msgs::Noise message to a yaml or xml file
+  @param msg [stdr_msgs::Noise] The noise message
+  @param file_name [std::string] The xml/yaml filename
+  @return void
+  **/
+  void Parser::saveNoiseMessage(stdr_msgs::Noise msg,std::string file_name)
+  {
+    if(file_name.find(".xml") != std::string::npos)
+    {
+      xml_file_writer_.noiseToFile(msg,file_name);  
+    }
+    else if(file_name.find(".yaml") != std::string::npos)
+    {
+      //~ yaml_file_writer_.saveNoiseMessage(msg,file_name);  
+    }
   }
 }
 

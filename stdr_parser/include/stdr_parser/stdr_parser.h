@@ -24,7 +24,8 @@
 
 #include "stdr_parser/stdr_parser_msg_creator.h"
 #include "stdr_parser/stdr_parser_validator.h"
-#include "stdr_parser/stdr_parser_file_writer.h"
+#include "stdr_parser/stdr_parser_xml_file_writer.h"
+#include "stdr_parser/stdr_parser_yaml_file_writer.h"
 #include "stdr_parser/stdr_xml_parser.h"
 #include "stdr_parser/stdr_yaml_parser.h"
 
@@ -52,8 +53,10 @@ namespace stdr_parser
       MessageCreator creator_;
       //!< Node tree validator
       Validator validator_;
-      //!< Extracts messages in files
-      FileWriter file_writer_;
+      //!< Extracts messages in xml files
+      XmlFileWriter xml_file_writer_;
+      //!< Extracts messages in yaml files
+      YamlFileWriter yaml_file_writer_;
       //!< Parses an xml file
       XmlParser xml_parser_;
       //!< Parses a yaml file
@@ -97,24 +100,41 @@ namespace stdr_parser
       
       /**
       @brief Parses an xml file and produces a stdr_msgs::RobotMsg message
-      @param file_name [std::string] The xml filename
+      @param file_name [std::string] The filename
       @return stdr_msgs::RobotMsg : The robot message
       **/
       stdr_msgs::RobotMsg createRobotMessage(std::string file_name);
       
       /**
       @brief Parses an xml file and produces a stdr_msgs::LaserSensorMsg message
-      @param file_name [std::string] The xml filename
+      @param file_name [std::string] The filename
       @return stdr_msgs::LaserSensorMsg : The laser message
       **/
       stdr_msgs::LaserSensorMsg createLaserMessage(std::string file_name);
       
       /**
       @brief Parses an xml file and produces a stdr_msgs::SonarSensorMsg message
-      @param file_name [std::string] The xml filename
+      @param file_name [std::string] The filename
       @return stdr_msgs::SonarSensorMsg : The sonar message
       **/
       stdr_msgs::SonarSensorMsg createSonarMessage(std::string file_name);
+      
+      /**
+      @brief Parses an xml file and produces a stdr_msgs::Noise message
+      @param file_name [std::string] The filename
+      @return stdr_msgs::SonarSensorMsg : The sonar message
+      **/
+      stdr_msgs::Noise createNoiseMessage(std::string file_name);
+      
+      //---------------------------------------------------------------------------//
+      
+      /**
+      @brief Saves a stdr_msgs::Noise message to a yaml or xml file
+      @param msg [stdr_msgs::Noise] The noise message
+      @param file_name [std::string] The filename
+      @return void
+      **/
+      void saveNoiseMessage(stdr_msgs::Noise msg,std::string file_name);
   };
 }
 #endif

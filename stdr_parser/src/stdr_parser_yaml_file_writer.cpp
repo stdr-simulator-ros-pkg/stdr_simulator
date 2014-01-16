@@ -19,27 +19,29 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_parser/stdr_parser.h"
+#include "stdr_parser/stdr_parser_yaml_file_writer.h"
 
-/**
-@brief Main function of stdr parser ros node
-@return int
-**/
-int main(int argc, char **argv)
+namespace stdr_parser
 {
-  ros::init(argc,argv,"stdr_parser");
   
-  stdr_parser::Parser obj;
-  try
+  /**
+  @brief Default constructor
+  @return void
+  **/
+  YamlFileWriter::YamlFileWriter(void)
   {
-    stdr_msgs::Noise msg = obj.createNoiseMessage("gauss.xml");
-    obj.saveNoiseMessage(msg,"test_noise.xml");
-  }
-  catch(ParserException ex)
-  {
-    ROS_ERROR(" === STDR PARSER ERROR ===\n%s",ex.what());
-  }
-  
 
-  return 0;
+  }
+  
+  /**
+  @brief Creates a yaml file from a noise msg
+  @param msg [stdr_msgs::Noise] The noise message
+  @param file_name [std::string] The yaml file name to write the message
+  @return void
+  **/
+  void YamlFileWriter::noiseToFile(stdr_msgs::Noise msg,std::string file_name)
+  {
+    
+  }
 }
+

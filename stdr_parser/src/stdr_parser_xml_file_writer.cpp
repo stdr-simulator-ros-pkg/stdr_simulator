@@ -19,7 +19,7 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include "stdr_parser/stdr_parser_file_writer.h"
+#include "stdr_parser/stdr_parser_xml_file_writer.h"
 
 namespace stdr_parser
 {
@@ -28,18 +28,18 @@ namespace stdr_parser
   @brief Default constructor
   @return void
   **/
-  FileWriter::FileWriter(void)
+  XmlFileWriter::XmlFileWriter(void)
   {
 
   }
   
   /**
-  @brief Creates an xml from a noise msg
+  @brief Creates an xml file from a noise msg
   @param msg [stdr_msgs::Noise] The noise message
-  @param file_name [std::string] The file name to write the xml
+  @param file_name [std::string] The xml file name to write the message
   @return void
   **/
-  void FileWriter::noiseToXml(stdr_msgs::Noise msg,std::string file_name)
+  void XmlFileWriter::noiseToFile(stdr_msgs::Noise msg,std::string file_name)
   {
     TiXmlDocument doc;
     
@@ -58,12 +58,19 @@ namespace stdr_parser
     noise_mean = new TiXmlElement("noise_mean");
     noise_specs->LinkEndChild(noise_mean);
     
+    TiXmlText * noise_mean_text = new TiXmlText(SSTR(msg.noiseMean));
+    noise_mean->LinkEndChild(noise_mean_text);
+    
     //!< Create noise std
     TiXmlElement* noise_std;
     noise_std = new TiXmlElement("noise_std");
     noise_specs->LinkEndChild(noise_std);
+    
+    TiXmlText * noise_std_text = new TiXmlText(SSTR(msg.noiseStd));
+    noise_std->LinkEndChild(noise_std_text);
 
-    doc.SaveFile( file_name.c_str() ); 
+    doc.SaveFile((ros::package::getPath("stdr_resources") 
+      + "/" + file_name).c_str()); 
   }
 }
 

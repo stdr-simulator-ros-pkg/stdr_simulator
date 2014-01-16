@@ -19,8 +19,8 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef STDR_PARSER_FILE_WRITER
-#define STDR_PARSER_FILE_WRITER
+#ifndef STDR_PARSER_XML_FILE_WRITER
+#define STDR_PARSER_XML_FILE_WRITER
 
 #include "stdr_parser/stdr_parser_node.h"
 
@@ -32,9 +32,9 @@ namespace stdr_parser
 {
   /**
   @class FileWriter
-  @brief Writes a node tree to a file
+  @brief Writes a node tree to an xml file
   **/ 
-  class FileWriter
+  class XmlFileWriter
   {
     private:
      
@@ -44,15 +44,15 @@ namespace stdr_parser
       @brief Default constructor
       @return void
       **/
-      FileWriter(void);
+      XmlFileWriter(void);
       
       /**
-      @brief Creates an xml from a noise msg
+      @brief Creates an xml file from a noise msg
       @param msg [stdr_msgs::Noise] The noise message
-      @param file_name [std::string] The file name to write the xml
+      @param file_name [std::string] The xml file name to write the message
       @return void
       **/
-      void noiseToXml(stdr_msgs::Noise msg,std::string file_name);
+      void noiseToFile(stdr_msgs::Noise msg,std::string file_name);
   };
 }
 #endif

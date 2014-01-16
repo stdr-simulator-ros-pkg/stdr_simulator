@@ -44,7 +44,8 @@ add_executable(stdr_parser_node
   src/stdr_parser.cpp
   src/stdr_parser_validator.cpp
   src/stdr_parser_msg_creator.cpp
-  src/stdr_parser_file_writer.cpp
+  src/stdr_parser_xml_file_writer.cpp
+  src/stdr_parser_yaml_file_writer.cpp
   src/stdr_xml_parser.cpp
   src/stdr_yaml_parser.cpp
   src/stdr_parser_node.cpp
