@@ -30,7 +30,6 @@
   <run_depend>tf</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>stdr_msgs</run_depend>
-  <run_depend>stdr_server</run_depend>
   <run_depend>nav_msgs</run_depend>
   <run_depend>nodelet</run_depend>
   <run_depend>actionlib</run_depend>
