@@ -32,8 +32,8 @@ int main(int argc, char **argv)
   stdr_parser::Parser obj;
   try
   {
-    stdr_msgs::Noise msg = obj.createNoiseMessage("gauss.xml");
-    obj.saveNoiseMessage(msg,"test_noise.xml");
+    stdr_msgs::FootprintMsg msg = obj.createFootprintMessage("simple_footprint.xml");
+    obj.saveFootprintMessage(msg,"test.xml");
   }
   catch(ParserException ex)
   {

@@ -99,32 +99,39 @@ namespace stdr_parser
       Parser(void);
       
       /**
-      @brief Parses an xml file and produces a stdr_msgs::RobotMsg message
+      @brief Parses a file and produces a stdr_msgs::RobotMsg message
       @param file_name [std::string] The filename
       @return stdr_msgs::RobotMsg : The robot message
       **/
       stdr_msgs::RobotMsg createRobotMessage(std::string file_name);
       
       /**
-      @brief Parses an xml file and produces a stdr_msgs::LaserSensorMsg message
+      @brief Parses a file and produces a stdr_msgs::LaserSensorMsg message
       @param file_name [std::string] The filename
       @return stdr_msgs::LaserSensorMsg : The laser message
       **/
       stdr_msgs::LaserSensorMsg createLaserMessage(std::string file_name);
       
       /**
-      @brief Parses an xml file and produces a stdr_msgs::SonarSensorMsg message
+      @brief Parses a file and produces a stdr_msgs::SonarSensorMsg message
       @param file_name [std::string] The filename
       @return stdr_msgs::SonarSensorMsg : The sonar message
       **/
       stdr_msgs::SonarSensorMsg createSonarMessage(std::string file_name);
       
       /**
-      @brief Parses an xml file and produces a stdr_msgs::Noise message
+      @brief Parses a file and produces a stdr_msgs::Noise message
       @param file_name [std::string] The filename
-      @return stdr_msgs::SonarSensorMsg : The sonar message
+      @return stdr_msgs::Noise : The noise message
       **/
       stdr_msgs::Noise createNoiseMessage(std::string file_name);
+      
+      /**
+      @brief Parses a file and produces a stdr_msgs::FootprintMsg message
+      @param file_name [std::string] The filename
+      @return stdr_msgs::FootprintMsg : The footprint message
+      **/
+      stdr_msgs::FootprintMsg createFootprintMessage(std::string file_name);
       
       //---------------------------------------------------------------------------//
       
@@ -135,6 +142,15 @@ namespace stdr_parser
       @return void
       **/
       void saveNoiseMessage(stdr_msgs::Noise msg,std::string file_name);
+      
+      /**
+      @brief Saves a stdr_msgs::FootprintMsg message to a file
+      @param msg [stdr_msgs::FootprintMsg] The footprint message
+      @param file_name [std::string] The filename
+      @return void
+      **/
+      void saveFootprintMessage(
+        stdr_msgs::FootprintMsg msg,std::string file_name);
   };
 }
 #endif

@@ -153,6 +153,24 @@ namespace stdr_parser
     return creator_.createNoiseMessage(base_node_);
   }
   
+  /**
+  @brief Parses a file and produces a stdr_msgs::FootprintMsg message
+  @param file_name [std::string] The filename
+  @return stdr_msgs::FootprintMsg : The footprint message
+  **/
+  stdr_msgs::FootprintMsg Parser::createFootprintMessage(std::string file_name)
+  {
+    try
+    {
+      parse(file_name);
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
+    return creator_.createFootprintMessage(base_node_);
+  }
+  
   
   /**
   @brief Recursive function - Expands the 'filename' nodes and eliminates them
@@ -320,7 +338,24 @@ filename of wrong type specified\n") +
     }
     else if(file_name.find(".yaml") != std::string::npos)
     {
-      //~ yaml_file_writer_.saveNoiseMessage(msg,file_name);  
+    }
+  }
+  
+  /**
+  @brief Saves a stdr_msgs::FootprintMsg message to a file
+  @param msg [stdr_msgs::FootprintMsg] The footprint message
+  @param file_name [std::string] The filename
+  @return void
+  **/
+  void Parser::saveFootprintMessage(
+    stdr_msgs::FootprintMsg msg,std::string file_name)
+  {
+    if(file_name.find(".xml") != std::string::npos)
+    {
+      xml_file_writer_.footprintToFile(msg,file_name);  
+    }
+    else if(file_name.find(".yaml") != std::string::npos)
+    {
     }
   }
 }

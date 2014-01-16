@@ -42,11 +42,24 @@ namespace stdr_parser
   void XmlFileWriter::noiseToFile(stdr_msgs::Noise msg,std::string file_name)
   {
     TiXmlDocument doc;
-    
+    noiseToXmlElement(msg,&doc);
+    doc.SaveFile((ros::package::getPath("stdr_resources") 
+      + "/" + file_name).c_str()); 
+  }
+  
+  /**
+  @brief Creates an xml element from a noise msg
+  @param msg [stdr_msgs::Noise] The noise message
+  @param base [TiXmlNode*] The xml node to write the message
+  @return void
+  **/
+  void XmlFileWriter::noiseToXmlElement(
+    stdr_msgs::Noise msg,TiXmlNode* base)
+  {
     //!< Create noise
     TiXmlElement* noise;
     noise = new TiXmlElement("noise");
-    doc.LinkEndChild(noise);
+    base->LinkEndChild(noise);
         
     //!< Create noise specifications
     TiXmlElement* noise_specs;
@@ -68,9 +81,49 @@ namespace stdr_parser
     
     TiXmlText * noise_std_text = new TiXmlText(SSTR(msg.noiseStd));
     noise_std->LinkEndChild(noise_std_text);
-
+  }
+  //!<----------------------------------------------------------------
+  /**
+  @brief Creates an xml file from a footprint msg
+  @param msg [stdr_msgs::FootprintMsg] The footprint message
+  @param file_name [std::string] The xml file name to write the message
+  @return void
+  **/
+  void XmlFileWriter::footprintToFile(
+    stdr_msgs::FootprintMsg msg,std::string file_name)
+  {
+    TiXmlDocument doc;
+    footprintToXmlElement(msg,&doc);
     doc.SaveFile((ros::package::getPath("stdr_resources") 
       + "/" + file_name).c_str()); 
+  }
+  
+  /**
+  @brief Creates an xml element from a footprint msg
+  @param msg [stdr_msgs::FootprintMsg] The footprint message
+  @param base [TiXmlNode*] The xml node to write the message
+  @return void
+  **/
+  void XmlFileWriter::footprintToXmlElement(
+    stdr_msgs::FootprintMsg msg,TiXmlNode* base)
+  {
+    //!< Create noise
+    TiXmlElement* footprint;
+    footprint = new TiXmlElement("footprint");
+    base->LinkEndChild(footprint);
+        
+    //!< Create footprint specifications
+    TiXmlElement* footprint_specs;
+    footprint_specs = new TiXmlElement("footprint_specifications");
+    footprint->LinkEndChild(footprint_specs);
+    
+    //!< Create footprint radius
+    TiXmlElement* radius;
+    radius = new TiXmlElement("radius");
+    footprint_specs->LinkEndChild(radius);
+    
+    TiXmlText * radius_text = new TiXmlText(SSTR(msg.radius));
+    radius->LinkEndChild(radius_text);
   }
 }
 
