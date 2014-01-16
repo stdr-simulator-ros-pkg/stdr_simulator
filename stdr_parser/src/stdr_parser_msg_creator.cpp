@@ -33,76 +33,135 @@ namespace stdr_parser
   }
   
   /**
-  @brief Creates a robot message from a parsed file
+  @brief Creates a message from a parsed file
   @param n [Node*] The root node
-  @return stdr_msgs::RobotMsg
+  @return The message
   **/
-  stdr_msgs::RobotMsg MessageCreator::createRobotMessage(Node *n)
+  template <typename T> 
+  T MessageCreator::createMessage(Node *n,unsigned int id)
   {
-    stdr_msgs::RobotMsg msg;
-    Node* specs = n->elements[0];
-    if(specs->tag == "robot")
-    {
-      specs = specs->elements[0];
-    }
+  }
+  
+  /**
+  @brief Creates a message from a parsed file - template specialization for geometry_msgs::Pose2D 
+  @param n [Node*] The root node
+  @return The message
+  **/
+  template <> geometry_msgs::Pose2D MessageCreator::createMessage(
+    Node *n,unsigned int id)
+  {
+    geometry_msgs::Pose2D msg;
     std::vector<int> indexes;
-    
-    //!< Search for pose
-    indexes = specs->getTag("initial_pose");
-    if(indexes.size() != 0)
+    //!< Search for x
+    indexes = n->getTag("x");
+    if(indexes.size() == 0)
     {
-      msg.initialPose = createPoseMessage(specs->elements[indexes[0]]);
+      msg.x = atof(Specs::specs["x"].default_value.c_str());
     }
     else
     {
-      msg.initialPose.x = atof(Specs::specs["x"].default_value.c_str());
-      msg.initialPose.y = atof(Specs::specs["y"].default_value.c_str());
-      msg.initialPose.theta = atof(Specs::specs["theta"].default_value.c_str());
+      msg.x = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
     }
-    
-    //!< Search for footprint
-    indexes = specs->getTag("footprint");
-    if(indexes.size() != 0)
+    //!< Search for y
+    indexes = n->getTag("y");
+    if(indexes.size() == 0)
     {
-      msg.footprint = createFootprintMessage(specs->elements[indexes[0]]);
+      msg.y = atof(Specs::specs["y"].default_value.c_str());
     }
     else
     {
-      msg.footprint.radius = atof(Specs::specs["radius"].default_value.c_str());
+      msg.y = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
     }
-    
-    //!< Search for laser sensors
-    indexes = specs->getTag("laser");
-    if(indexes.size() != 0)
+    //!< Search for theta
+    indexes = n->getTag("theta");
+    if(indexes.size() == 0)
     {
-      for(unsigned int i = 0 ; i < indexes.size() ; i++)
-      {
-        msg.laserSensors.push_back(createLaserMessage(
-          specs->elements[indexes[i]] , i));
-      }
+      msg.theta = atof(Specs::specs["theta"].default_value.c_str());
     }
-    
-    //!< Search for sonar sensors
-    indexes = specs->getTag("sonar");
-    if(indexes.size() != 0)
+    else
     {
-      for(unsigned int i = 0 ; i < indexes.size() ; i++)
-      {
-        msg.sonarSensors.push_back(createSonarMessage(
-          specs->elements[indexes[i]] , i));
-      }
+      msg.theta = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
     }
-    
     return msg;
   }
   
   /**
-  @brief Creates a laser message from a parsed file
+  @brief Creates a message from a parsed file - template specialization for stdr_msgs::Noise
   @param n [Node*] The root node
-  @param id [unsigned int] The id to create the laser frame_id 
-  @return stdr_msgs::LaserSensorMsg
+  @return The message
   **/
-  stdr_msgs::LaserSensorMsg MessageCreator::createLaserMessage(
+  template <> stdr_msgs::Noise MessageCreator::createMessage(
+    Node *n,unsigned int id)
+  {
+    stdr_msgs::Noise msg;
+    Node* specs = n->elements[0];
+    if(specs->tag == "noise")
+    {
+      specs = specs->elements[0];
+    }
+    std::vector<int> indexes;
+    //!< Search for noise mean
+    indexes = specs->getTag("noise_mean");
+    if(indexes.size() == 0)
+    {
+      msg.noiseMean = atof(Specs::specs["noise_mean"].default_value.c_str());
+    }
+    else
+    {
+      msg.noiseMean = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    //!< Search for noise std
+    indexes = specs->getTag("noise_std");
+    if(indexes.size() == 0)
+    {
+      msg.noiseStd = atof(Specs::specs["noise_std"].default_value.c_str());
+    }
+    else
+    {
+      msg.noiseStd = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    return msg;
+  }
+  
+  /**
+  @brief Creates a message from a parsed file - template specialization for stdr_msgs::FootprintMsg
+  @param n [Node*] The root node
+  @return The message
+  **/
+  template <> 
+  stdr_msgs::FootprintMsg MessageCreator::createMessage(
+    Node *n,unsigned int id)
+  {
+    stdr_msgs::FootprintMsg msg;
+    Node* specs = n->elements[0];
+    if(specs->tag == "footprint")
+    {
+      specs = specs->elements[0];
+    }
+    std::vector<int> indexes;
+    //!< Search for radius
+    indexes = specs->getTag("radius");
+    if(indexes.size() == 0)
+    {
+      msg.radius = atof(Specs::specs["radius"].default_value.c_str());
+    }
+    else
+    {
+      msg.radius = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    return msg;
+  }
+  
+  /**
+  @brief Creates a message from a parsed file - template specialization for stdr_msgs::LaserSensorMsg
+  @param n [Node*] The root node
+  @return The message
+  **/
+  template <> 
+  stdr_msgs::LaserSensorMsg MessageCreator::createMessage(
     Node *n,unsigned int id)
   {
     stdr_msgs::LaserSensorMsg msg;
@@ -177,7 +236,8 @@ namespace stdr_parser
     indexes = specs->getTag("noise");
     if(indexes.size() != 0)
     {
-      msg.noise = createNoiseMessage(specs->elements[indexes[0]]);
+      msg.noise = 
+        createMessage<stdr_msgs::Noise>(specs->elements[indexes[0]],0);
     }
     
     //!< Search for frequency
@@ -199,7 +259,8 @@ namespace stdr_parser
     indexes = specs->getTag("pose");
     if(indexes.size() != 0)
     {
-      msg.pose = createPoseMessage(specs->elements[indexes[0]]);
+      msg.pose = 
+        createMessage<geometry_msgs::Pose2D>(specs->elements[indexes[0]],0);
     }
     else
     {
@@ -211,12 +272,11 @@ namespace stdr_parser
   }
   
   /**
-  @brief Creates a sonar message from a parsed file
+  @brief Creates a message from a parsed file - template specialization for stdr_msgs::SonarSensorMsg
   @param n [Node*] The root node
-  @param id [unsigned int] The id to create the sonar frame_id 
-  @return stdr_msgs::SonarSensorMsg
+  @return The message
   **/
-  stdr_msgs::SonarSensorMsg MessageCreator::createSonarMessage(
+  template <> stdr_msgs::SonarSensorMsg MessageCreator::createMessage(
     Node *n,unsigned int id)
   {
     stdr_msgs::SonarSensorMsg msg;
@@ -267,7 +327,8 @@ namespace stdr_parser
     indexes = specs->getTag("noise");
     if(indexes.size() != 0)
     {
-      msg.noise = createNoiseMessage(specs->elements[indexes[0]]);
+      msg.noise =   
+        createMessage<stdr_msgs::Noise>(specs->elements[indexes[0]],0);
     }
     
     //!< Search for frequency
@@ -289,7 +350,8 @@ namespace stdr_parser
     indexes = specs->getTag("pose");
     if(indexes.size() != 0)
     {
-      msg.pose = createPoseMessage(specs->elements[indexes[0]]);
+      msg.pose = 
+        createMessage<geometry_msgs::Pose2D>(specs->elements[indexes[0]],0);
     }
     else
     {
@@ -300,113 +362,77 @@ namespace stdr_parser
     return msg;
   }
   
+  
+  
   /**
-  @brief Creates a footprint message from a parsed file
+  @brief Creates a message from a parsed file - template specialization for stdr_msgs::RobotMsg
   @param n [Node*] The root node
-  @return stdr_msgs::FootprintMsg
+  @return The message
   **/
-  stdr_msgs::FootprintMsg MessageCreator::createFootprintMessage(Node *n)
+  template <> stdr_msgs::RobotMsg MessageCreator::createMessage(Node *n,unsigned int id)
   {
-    stdr_msgs::FootprintMsg msg;
+    stdr_msgs::RobotMsg msg;
     Node* specs = n->elements[0];
-    if(specs->tag == "footprint")
+    if(specs->tag == "robot")
     {
       specs = specs->elements[0];
     }
     std::vector<int> indexes;
-    //!< Search for radius
-    indexes = specs->getTag("radius");
-    if(indexes.size() == 0)
+    
+    //!< Search for pose
+    indexes = specs->getTag("initial_pose");
+    if(indexes.size() != 0)
     {
-      msg.radius = atof(Specs::specs["radius"].default_value.c_str());
+      msg.initialPose = 
+        createMessage<geometry_msgs::Pose2D>(specs->elements[indexes[0]],0);
     }
     else
     {
-      msg.radius = atof(specs->elements[indexes[0]]->elements[0]->
-        value.c_str());
+      msg.initialPose.x = atof(Specs::specs["x"].default_value.c_str());
+      msg.initialPose.y = atof(Specs::specs["y"].default_value.c_str());
+      msg.initialPose.theta = atof(Specs::specs["theta"].default_value.c_str());
     }
+    
+    //!< Search for footprint
+    indexes = specs->getTag("footprint");
+    if(indexes.size() != 0)
+    {
+      msg.footprint = 
+        createMessage<stdr_msgs::FootprintMsg>(specs->elements[indexes[0]],0);
+    }
+    else
+    {
+      msg.footprint.radius = atof(Specs::specs["radius"].default_value.c_str());
+    }
+    
+    //!< Search for laser sensors
+    indexes = specs->getTag("laser");
+    if(indexes.size() != 0)
+    {
+      for(unsigned int i = 0 ; i < indexes.size() ; i++)
+      {
+        msg.laserSensors.push_back(
+          createMessage<stdr_msgs::LaserSensorMsg>(
+            specs->elements[indexes[i]] , i));
+      }
+    }
+    
+    //!< Search for sonar sensors
+    indexes = specs->getTag("sonar");
+    if(indexes.size() != 0)
+    {
+      for(unsigned int i = 0 ; i < indexes.size() ; i++)
+      {
+        msg.sonarSensors.push_back(
+          createMessage<stdr_msgs::SonarSensorMsg>(
+            specs->elements[indexes[i]] , i));
+      }
+    }
+    
     return msg;
   }
   
-  /**
-  @brief Creates a noise message from a parsed file
-  @param n [Node*] The root node
-  @return stdr_msgs::Noise
-  **/
-  stdr_msgs::Noise MessageCreator::createNoiseMessage(Node *n)
-  {
-    stdr_msgs::Noise msg;
-    Node* specs = n->elements[0];
-    if(specs->tag == "noise")
-    {
-      specs = specs->elements[0];
-    }
-    std::vector<int> indexes;
-    //!< Search for noise mean
-    indexes = specs->getTag("noise_mean");
-    if(indexes.size() == 0)
-    {
-      msg.noiseMean = atof(Specs::specs["noise_mean"].default_value.c_str());
-    }
-    else
-    {
-      msg.noiseMean = atof(specs->elements[indexes[0]]->elements[0]->
-        value.c_str());
-    }
-    //!< Search for noise std
-    indexes = specs->getTag("noise_std");
-    if(indexes.size() == 0)
-    {
-      msg.noiseStd = atof(Specs::specs["noise_std"].default_value.c_str());
-    }
-    else
-    {
-      msg.noiseStd = atof(specs->elements[indexes[0]]->elements[0]->
-        value.c_str());
-    }
-    return msg;
-  }
   
-  /**
-  @brief Creates a pose message from a parsed file
-  @param n [Node*] The root node
-  @return geometry_msgs::Pose2D
-  **/
-  geometry_msgs::Pose2D MessageCreator::createPoseMessage(Node *n)
-  {
-    geometry_msgs::Pose2D msg;
-    std::vector<int> indexes;
-    //!< Search for x
-    indexes = n->getTag("x");
-    if(indexes.size() == 0)
-    {
-      msg.x = atof(Specs::specs["x"].default_value.c_str());
-    }
-    else
-    {
-      msg.x = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
-    }
-    //!< Search for y
-    indexes = n->getTag("y");
-    if(indexes.size() == 0)
-    {
-      msg.y = atof(Specs::specs["y"].default_value.c_str());
-    }
-    else
-    {
-      msg.y = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
-    }
-    //!< Search for theta
-    indexes = n->getTag("theta");
-    if(indexes.size() == 0)
-    {
-      msg.theta = atof(Specs::specs["theta"].default_value.c_str());
-    }
-    else
-    {
-      msg.theta = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
-    }
-    return msg;
-  }
+
 }
 

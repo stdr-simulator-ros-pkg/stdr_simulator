@@ -45,44 +45,24 @@ namespace stdr_parser
       XmlFileWriter(void);
       
     public:
-    
-     
-      
+
       /**
-      @brief Creates an xml file from a noise msg
-      @param msg [stdr_msgs::Noise] The noise message
+      @brief Creates an xml file from a message - template member function
+      @param msg [T] The message
       @param file_name [std::string] The xml file name to write the message
       @return void
       **/
-      static void noiseToFile(stdr_msgs::Noise msg,std::string file_name);
+      template <class T>
+      static void messageToFile(T msg,std::string file_name);
       
       /**
-      @brief Creates an xml element from a noise msg
-      @param msg [stdr_msgs::Noise] The noise message
+      @brief Creates an xml element from a msg - template member function
+      @param msg [T] The message
       @param base [TiXmlNode*] The xml node to write the message
       @return void
       **/
-      static void noiseToXmlElement(stdr_msgs::Noise msg,TiXmlNode* base);
-      
-      //!<-------------------------------------------------------------
-      
-      /**
-      @brief Creates an xml file from a footprint msg
-      @param msg [stdr_msgs::FootprintMsg] The footprint message
-      @param file_name [std::string] The xml file name to write the message
-      @return void
-      **/
-      static void footprintToFile(
-        stdr_msgs::FootprintMsg msg,std::string file_name);
-      
-      /**
-      @brief Creates an xml element from a footprint msg
-      @param msg [stdr_msgs::FootprintMsg] The footprint message
-      @param base [TiXmlNode*] The xml node to write the message
-      @return void
-      **/
-      static void footprintToXmlElement(
-        stdr_msgs::FootprintMsg msg,TiXmlNode* base);
+      template <class T>
+      static void messageToXmlElement(T msg,TiXmlNode* base);
   };
 }
 #endif

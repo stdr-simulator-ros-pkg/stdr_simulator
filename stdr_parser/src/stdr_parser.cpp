@@ -81,102 +81,6 @@ namespace stdr_parser
       throw ParserException(error);
     }
   }
- 
-  /**
-  @brief Parses an xml file and produces a stdr_msgs::RobotMsg message
-  @param file_name [std::string] The xml filename
-  @return stdr_msgs::RobotMsg : The robot message
-  **/
-  stdr_msgs::RobotMsg Parser::createRobotMessage(std::string file_name)
-  {
-    
-    try
-    {
-      parse(file_name);
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-    return MessageCreator::createRobotMessage(base_node_);
-  }
-  
-  /**
-  @brief Parses an xml file and produces a stdr_msgs::LaserSensorMsg message
-  @param file_name [std::string] The xml filename
-  @return stdr_msgs::LaserSensorMsg : The laser message
-  **/
-  stdr_msgs::LaserSensorMsg Parser::createLaserMessage(std::string file_name)
-  {
-    
-    try
-    {
-      parse(file_name);
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-    
-    return MessageCreator::createLaserMessage(base_node_,0);
-  }
-  
-  /**
-  @brief Parses an xml file and produces a stdr_msgs::SonarSensorMsg message
-  @param file_name [std::string] The xml filename
-  @return stdr_msgs::SonarSensorMsg : The sonar message
-  **/
-  stdr_msgs::SonarSensorMsg Parser::createSonarMessage(std::string file_name)
-  {
-    
-    try
-    {
-      parse(file_name);
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-    return MessageCreator::createSonarMessage(base_node_,0);
-  }
-  
-  /**
-  @brief Parses an xml file and produces a stdr_msgs::Noise message
-  @param file_name [std::string] The filename
-  @return stdr_msgs::SonarSensorMsg : The sonar message
-  **/
-  stdr_msgs::Noise Parser::createNoiseMessage(std::string file_name)
-  {
-    
-    try
-    {
-      parse(file_name);
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-    return MessageCreator::createNoiseMessage(base_node_);
-  }
-  
-  /**
-  @brief Parses a file and produces a stdr_msgs::FootprintMsg message
-  @param file_name [std::string] The filename
-  @return stdr_msgs::FootprintMsg : The footprint message
-  **/
-  stdr_msgs::FootprintMsg Parser::createFootprintMessage(std::string file_name)
-  {
-    try
-    {
-      parse(file_name);
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
-    return MessageCreator::createFootprintMessage(base_node_);
-  }
-  
   
   /**
   @brief Recursive function - Expands the 'filename' nodes and eliminates them
@@ -329,40 +233,65 @@ filename of wrong type specified\n") +
     }
     return true;
   }
+  //!<----------------------------------------------------------------
+  //!< Template declarations
+  template 
+    stdr_msgs::Noise Parser::createMessage(std::string file_name);
+  template 
+    stdr_msgs::FootprintMsg Parser::createMessage(std::string file_name);
+  template 
+    geometry_msgs::Pose2D Parser::createMessage(std::string file_name);
+  template 
+    stdr_msgs::LaserSensorMsg Parser::createMessage(std::string file_name);
+  template 
+    stdr_msgs::SonarSensorMsg Parser::createMessage(std::string file_name);
+  template 
+    stdr_msgs::RobotMsg Parser::createMessage(std::string file_name);
   
   /**
-  @brief Saves a stdr_msgs::Noise message to a yaml or xml file
-  @param msg [stdr_msgs::Noise] The noise message
-  @param file_name [std::string] The xml/yaml filename
-  @return void
+  @brief Creates a message from a file
+  @param file_name [std::string] The filename
+  @return T : The message
   **/
-  void Parser::saveNoiseMessage(stdr_msgs::Noise msg,std::string file_name)
+  template <class T>
+  T Parser::createMessage(std::string file_name)
   {
-    if(file_name.find(".xml") != std::string::npos)
+    try
     {
-      XmlFileWriter::noiseToFile(msg,file_name);  
+      parse(file_name);
     }
-    else if(file_name.find(".yaml") != std::string::npos)
+    catch(ParserException ex)
     {
+      throw ex;
     }
+    return MessageCreator::createMessage<T>(base_node_,0);
   }
   
+  //!<----------------------------------------------------------------
+  //!< Template declarations
+  template void Parser::saveMessage(
+    stdr_msgs::FootprintMsg msg,std::string file_name);
+  template void Parser::saveMessage(
+    stdr_msgs::Noise msg,std::string file_name);
+  
   /**
-  @brief Saves a stdr_msgs::FootprintMsg message to a file
-  @param msg [stdr_msgs::FootprintMsg] The footprint message
+  @brief Saves a stdr_msgs::Noise message to a file
+  @param msg [T] The message
   @param file_name [std::string] The filename
   @return void
   **/
-  void Parser::saveFootprintMessage(
-    stdr_msgs::FootprintMsg msg,std::string file_name)
+  template <class T>
+  void Parser::saveMessage(T msg,std::string file_name)
   {
     if(file_name.find(".xml") != std::string::npos)
     {
-      XmlFileWriter::footprintToFile(msg,file_name);  
+      XmlFileWriter::messageToFile(msg,file_name);  
     }
     else if(file_name.find(".yaml") != std::string::npos)
     {
     }
   }
+  
+  
 }
 

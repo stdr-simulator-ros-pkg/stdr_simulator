@@ -33,29 +33,32 @@ namespace stdr_parser
 
   }
   
+  //!< Template declaration for stdr_msgs::FootprintMsg
+  template void XmlFileWriter::messageToFile
+    (stdr_msgs::FootprintMsg msg,std::string file_name);
+  //!< Template declaration for stdr_msgs::Noise
+  template void XmlFileWriter::messageToFile
+    (stdr_msgs::Noise msg,std::string file_name);
+  
   /**
-  @brief Creates an xml file from a noise msg
-  @param msg [stdr_msgs::Noise] The noise message
+  @brief Creates an xml file from a message - template member function
+  @param msg [T] The message
   @param file_name [std::string] The xml file name to write the message
   @return void
   **/
-  void XmlFileWriter::noiseToFile(stdr_msgs::Noise msg,std::string file_name)
+  template <class T>
+  void XmlFileWriter::messageToFile(T msg,std::string file_name)
   {
     TiXmlDocument doc;
-    noiseToXmlElement(msg,&doc);
+    messageToXmlElement<T>(msg,&doc);
     doc.SaveFile((ros::package::getPath("stdr_resources") 
       + "/" + file_name).c_str()); 
   }
   
-  /**
-  @brief Creates an xml element from a noise msg
-  @param msg [stdr_msgs::Noise] The noise message
-  @param base [TiXmlNode*] The xml node to write the message
-  @return void
-  **/
-  void XmlFileWriter::noiseToXmlElement(
-    stdr_msgs::Noise msg,TiXmlNode* base)
-  {
+  //!< Template specialization for stdr_msgs::Noise
+  template <>
+  void XmlFileWriter::messageToXmlElement<stdr_msgs::Noise>
+    (stdr_msgs::Noise msg,TiXmlNode* base){
     //!< Create noise
     TiXmlElement* noise;
     noise = new TiXmlElement("noise");
@@ -82,31 +85,11 @@ namespace stdr_parser
     TiXmlText * noise_std_text = new TiXmlText(SSTR(msg.noiseStd));
     noise_std->LinkEndChild(noise_std_text);
   }
-  //!<----------------------------------------------------------------
-  /**
-  @brief Creates an xml file from a footprint msg
-  @param msg [stdr_msgs::FootprintMsg] The footprint message
-  @param file_name [std::string] The xml file name to write the message
-  @return void
-  **/
-  void XmlFileWriter::footprintToFile(
-    stdr_msgs::FootprintMsg msg,std::string file_name)
-  {
-    TiXmlDocument doc;
-    footprintToXmlElement(msg,&doc);
-    doc.SaveFile((ros::package::getPath("stdr_resources") 
-      + "/" + file_name).c_str()); 
-  }
   
-  /**
-  @brief Creates an xml element from a footprint msg
-  @param msg [stdr_msgs::FootprintMsg] The footprint message
-  @param base [TiXmlNode*] The xml node to write the message
-  @return void
-  **/
-  void XmlFileWriter::footprintToXmlElement(
-    stdr_msgs::FootprintMsg msg,TiXmlNode* base)
-  {
+  //!< Template specialization for stdr_msgs::Footprint
+  template <>
+  void XmlFileWriter::messageToXmlElement<stdr_msgs::FootprintMsg>
+    (stdr_msgs::FootprintMsg msg,TiXmlNode* base){
     //!< Create noise
     TiXmlElement* footprint;
     footprint = new TiXmlElement("footprint");
@@ -124,6 +107,18 @@ namespace stdr_parser
     
     TiXmlText * radius_text = new TiXmlText(SSTR(msg.radius));
     radius->LinkEndChild(radius_text);
+  }
+  
+  
+  /**
+  @brief Creates an xml element from a msg - template member function
+  @param msg [T] The message
+  @param base [TiXmlNode*] The xml node to write the message
+  @return void
+  **/
+  template <class T>
+  void XmlFileWriter::messageToXmlElement(T msg,TiXmlNode* base)
+  {
   }
 }
 

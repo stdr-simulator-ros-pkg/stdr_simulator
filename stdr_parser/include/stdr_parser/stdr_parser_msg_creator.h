@@ -46,52 +46,14 @@ namespace stdr_parser
       MessageCreator(void);
       
     public:
-    
-      
-      
-      /**
-      @brief Creates a robot message from a parsed file
-      @param n [Node*] The root node
-      @return stdr_msgs::RobotMsg
-      **/
-      static stdr_msgs::RobotMsg createRobotMessage(Node *n);
-      
-      /**
-      @brief Creates a laser message from a parsed file
-      @param n [Node*] The root node
-      @param id [unsigned int] The id to create the laser frame_id 
-      @return stdr_msgs::LaserSensorMsg
-      **/
-      static stdr_msgs::LaserSensorMsg createLaserMessage(Node *n,unsigned int id);
-      
-      /**
-      @brief Creates a sonar message from a parsed file
-      @param n [Node*] The root node
-      @param id [unsigned int] The id to create the sonar frame_id 
-      @return stdr_msgs::SonarSensorMsg
-      **/
-      static stdr_msgs::SonarSensorMsg createSonarMessage(Node *n,unsigned int id);
-      
-      /**
-      @brief Creates a footprint message from a parsed file
-      @param n [Node*] The root node
-      @return stdr_msgs::FootprintMsg
-      **/
-      static stdr_msgs::FootprintMsg createFootprintMessage(Node *n);
-      
-      /**
-      @brief Creates a noise message from a parsed file
-      @param n [Node*] The root node
-      @return stdr_msgs::Noise
-      **/
-      static stdr_msgs::Noise createNoiseMessage(Node *n);
       
       /**
       @brief Creates a pose message from a parsed file
       @param n [Node*] The root node
       @return geometry_msgs::Pose2D
       **/
-      static geometry_msgs::Pose2D createPoseMessage(Node *n);
+      template <typename T>
+      static T createMessage(Node *n,unsigned int id);
   };
 }
 #endif

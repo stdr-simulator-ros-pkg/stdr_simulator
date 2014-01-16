@@ -31,9 +31,10 @@ int main(int argc, char **argv)
 
   try
   {
-    stdr_msgs::FootprintMsg msg = 
-      stdr_parser::Parser::createFootprintMessage("simple_footprint.xml");
-    stdr_parser::Parser::saveFootprintMessage(msg,"test.xml");
+    stdr_msgs::FootprintMsg msg = stdr_parser::Parser::createMessage
+        <stdr_msgs::FootprintMsg>("simple_footprint.xml");
+      
+    stdr_parser::Parser::saveMessage(msg,"test.xml");
   }
   catch(ParserException ex)
   {
