@@ -28,12 +28,12 @@
 int main(int argc, char **argv)
 {
   ros::init(argc,argv,"stdr_parser");
-  
-  stdr_parser::Parser obj;
+
   try
   {
-    stdr_msgs::FootprintMsg msg = obj.createFootprintMessage("simple_footprint.xml");
-    obj.saveFootprintMessage(msg,"test.xml");
+    stdr_msgs::FootprintMsg msg = 
+      stdr_parser::Parser::createFootprintMessage("simple_footprint.xml");
+    stdr_parser::Parser::saveFootprintMessage(msg,"test.xml");
   }
   catch(ParserException ex)
   {

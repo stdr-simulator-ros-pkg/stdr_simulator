@@ -37,6 +37,12 @@ namespace stdr_parser
   class XmlParser
   {
     private:
+    
+      /**
+      @brief Default constructor
+      @return void
+      **/
+      XmlParser(void);
      
       /**
       @brief Low-level recursive function for parsing the xml robot file
@@ -44,23 +50,17 @@ namespace stdr_parser
       @param n [Node*] The stdr xml tree node to update
       @return void
       **/
-      void parseLow(TiXmlNode* node,Node* n);
+      static void parseLow(TiXmlNode* node,Node* n);
       
     public:
-    
-      /**
-      @brief Default constructor
-      @return void
-      **/
-      XmlParser(void);
-      
+
       /**
       @brief Private function that initiates the parsing of an xml file
       @param file_name [std::string] The xml file name
       @param n [Node*] The stdr xml tree node to update
       @return void
       **/
-      void parse(std::string file_name,Node* n);
+      static void parse(std::string file_name,Node* n);
   };
 }
 #endif

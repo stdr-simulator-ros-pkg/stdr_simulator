@@ -23,15 +23,18 @@
 
 namespace stdr_parser
 {
+  
+  //!< Static initializations
+  Node* Parser::base_node_ = new Node();
+  std::string Parser::base_path_ = ros::package::getPath("stdr_resources");
+  
   /**
   @brief Default constructor
   @return void
   **/
   Parser::Parser(void)
   {
-    base_path_=ros::package::getPath("stdr_resources");
-    base_node_ = new Node();
-    base_node_->tag = "STDR_Parser_Root_Node";
+    
   }
 
   /**
@@ -41,23 +44,26 @@ namespace stdr_parser
   **/
   void Parser::parse(std::string file_name)
   {
+    Parser::base_node_ = new Node();
+    Parser::base_node_->tag = "STDR_Parser_Root_Node";
+    
     // Must destroy prev tree
     try
     {
       if(file_name.find(".xml") != std::string::npos)
       {
-        xml_parser_.parse(file_name,base_node_);  
+        XmlParser::parse(file_name,base_node_);  
       }
       else if(file_name.find(".yaml") != std::string::npos)
       {
-        yaml_parser_.parse(file_name,base_node_);
+        YamlParser::parse(file_name,base_node_);
       }
 
       while(!eliminateFilenames(base_node_));
       while(!mergeNodes(base_node_));
       mergeNodesValues(base_node_);
       
-      validator_.validate(base_node_);
+      Validator::validate(base_node_);
       
       //!< Uncomment to see the internal tree structure
       //~ base_node_->printParsedXml(base_node_,"");
@@ -92,7 +98,7 @@ namespace stdr_parser
     {
       throw ex;
     }
-    return creator_.createRobotMessage(base_node_);
+    return MessageCreator::createRobotMessage(base_node_);
   }
   
   /**
@@ -112,7 +118,7 @@ namespace stdr_parser
       throw ex;
     }
     
-    return creator_.createLaserMessage(base_node_,0);
+    return MessageCreator::createLaserMessage(base_node_,0);
   }
   
   /**
@@ -131,7 +137,7 @@ namespace stdr_parser
     {
       throw ex;
     }
-    return creator_.createSonarMessage(base_node_,0);
+    return MessageCreator::createSonarMessage(base_node_,0);
   }
   
   /**
@@ -150,7 +156,7 @@ namespace stdr_parser
     {
       throw ex;
     }
-    return creator_.createNoiseMessage(base_node_);
+    return MessageCreator::createNoiseMessage(base_node_);
   }
   
   /**
@@ -168,7 +174,7 @@ namespace stdr_parser
     {
       throw ex;
     }
-    return creator_.createFootprintMessage(base_node_);
+    return MessageCreator::createFootprintMessage(base_node_);
   }
   
   
@@ -334,7 +340,7 @@ filename of wrong type specified\n") +
   {
     if(file_name.find(".xml") != std::string::npos)
     {
-      xml_file_writer_.noiseToFile(msg,file_name);  
+      XmlFileWriter::noiseToFile(msg,file_name);  
     }
     else if(file_name.find(".yaml") != std::string::npos)
     {
@@ -352,7 +358,7 @@ filename of wrong type specified\n") +
   {
     if(file_name.find(".xml") != std::string::npos)
     {
-      xml_file_writer_.footprintToFile(msg,file_name);  
+      XmlFileWriter::footprintToFile(msg,file_name);  
     }
     else if(file_name.find(".yaml") != std::string::npos)
     {

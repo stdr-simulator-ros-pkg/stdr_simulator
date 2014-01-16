@@ -39,20 +39,22 @@ namespace stdr_parser
     private:
      
       /**
+      @brief Default constructor
+      @return void
+      **/
+      YamlParser(void);
+     
+      /**
       @brief Low-level recursive function for parsing the yaml file
       @param node [YAML::Node&] The yaml node to start from
       @param n [Node*] The stdr tree node to update
       @return void
       **/
-      void parseLow(const YAML::Node& node,Node* n);
+      static void parseLow(const YAML::Node& node,Node* n);
       
     public:
     
-      /**
-      @brief Default constructor
-      @return void
-      **/
-      YamlParser(void);
+      
       
       /**
       @brief Private function that initiates the parsing of an xml file
@@ -60,7 +62,7 @@ namespace stdr_parser
       @param n [Node*] The stdr xml tree node to update
       @return void
       **/
-      void parse(std::string file_name,Node* n);
+      static void parse(std::string file_name,Node* n);
   };
 }
 #endif

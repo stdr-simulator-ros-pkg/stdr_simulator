@@ -37,22 +37,15 @@ namespace stdr_parser
   class YamlFileWriter
   {
     private:
-     
-    public:
     
       /**
       @brief Default constructor
       @return void
       **/
       YamlFileWriter(void);
-      
-      /**
-      @brief Creates a yaml file from a noise msg
-      @param msg [stdr_msgs::Noise] The noise message
-      @param file_name [std::string] The yaml file name to write the message
-      @return void
-      **/
-      void noiseToFile(stdr_msgs::Noise msg,std::string file_name);
+     
+    public:
+    
   };
 }
 #endif

@@ -38,13 +38,15 @@ namespace stdr_parser
   {
     private:
      
-    public:
-    
       /**
       @brief Default constructor
       @return void
       **/
       XmlFileWriter(void);
+      
+    public:
+    
+     
       
       /**
       @brief Creates an xml file from a noise msg
@@ -52,7 +54,7 @@ namespace stdr_parser
       @param file_name [std::string] The xml file name to write the message
       @return void
       **/
-      void noiseToFile(stdr_msgs::Noise msg,std::string file_name);
+      static void noiseToFile(stdr_msgs::Noise msg,std::string file_name);
       
       /**
       @brief Creates an xml element from a noise msg
@@ -60,7 +62,7 @@ namespace stdr_parser
       @param base [TiXmlNode*] The xml node to write the message
       @return void
       **/
-      void noiseToXmlElement(stdr_msgs::Noise msg,TiXmlNode* base);
+      static void noiseToXmlElement(stdr_msgs::Noise msg,TiXmlNode* base);
       
       //!<-------------------------------------------------------------
       
@@ -70,7 +72,8 @@ namespace stdr_parser
       @param file_name [std::string] The xml file name to write the message
       @return void
       **/
-      void footprintToFile(stdr_msgs::FootprintMsg msg,std::string file_name);
+      static void footprintToFile(
+        stdr_msgs::FootprintMsg msg,std::string file_name);
       
       /**
       @brief Creates an xml element from a footprint msg
@@ -78,7 +81,8 @@ namespace stdr_parser
       @param base [TiXmlNode*] The xml node to write the message
       @return void
       **/
-      void footprintToXmlElement(stdr_msgs::FootprintMsg msg,TiXmlNode* base);
+      static void footprintToXmlElement(
+        stdr_msgs::FootprintMsg msg,TiXmlNode* base);
   };
 }
 #endif

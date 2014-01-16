@@ -29,28 +29,7 @@ namespace stdr_parser
   **/
   Validator::Validator(void)
   {
-    base_path_=ros::package::getPath("stdr_resources");
-    std::string path=base_path_ + 
-      std::string("/xmls/stdr_specific/stdr_specifications.xml");
-    TiXmlDocument doc;
-    bool loadOkay = doc.LoadFile(path.c_str());
-    if (!loadOkay)
-    {
-      std::string error = 
-        std::string("Failed to load specifications file.\nShould be at '") + 
-        path + std::string("'\nError was") + std::string(doc.ErrorDesc());
-      throw ParserException(error);
-    }
     
-    try
-    {
-      parseSpecifications(&doc);
-      parseMergableSpecifications();
-    }
-    catch(ParserException ex)
-    {
-      throw ex;
-    }
   }
   
   /**
@@ -173,6 +152,7 @@ namespace stdr_parser
   **/
   void Validator::parseMergableSpecifications(void)
   {
+    std::string base_path_ = ros::package::getPath("stdr_resources");
     std::string path=base_path_ + 
       std::string("/xmls/stdr_specific/stdr_multiple_allowed.xml");
     TiXmlDocument doc;
@@ -284,6 +264,31 @@ namespace stdr_parser
   **/
   void Validator::validate(Node* n)
   {
+    std::string base_path_ = ros::package::getPath("stdr_resources");
+    
+    std::string path = base_path_ + 
+      std::string("/xmls/stdr_specific/stdr_specifications.xml");
+    
+    TiXmlDocument doc;
+    bool loadOkay = doc.LoadFile(path.c_str());
+    if (!loadOkay)
+    {
+      std::string error = 
+        std::string("Failed to load specifications file.\nShould be at '") + 
+        path + std::string("'\nError was") + std::string(doc.ErrorDesc());
+      throw ParserException(error);
+    }
+    
+    try
+    {
+      parseSpecifications(&doc);
+      parseMergableSpecifications();
+    }
+    catch(ParserException ex)
+    {
+      throw ex;
+    }
+    
     try
     {
       validityAllowedCheck(n);
@@ -294,6 +299,5 @@ namespace stdr_parser
       throw ex;
     }
   }
-
 }
 

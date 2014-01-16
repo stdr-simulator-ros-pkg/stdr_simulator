@@ -37,51 +37,47 @@ namespace stdr_parser
   class Validator
   {
     private:
-
-      //!< The path for stdr_resources
-      std::string base_path_;
-
       /**
       @brief Low-level recursive function for parsing the xml specifications file
       @param node [TiXmlNode*] The xml node to start from
       @return void
       **/
-      void parseSpecifications(TiXmlNode* node);
+      static void parseSpecifications(TiXmlNode* node);
       
       /**
       @brief Parses the mergable specifications file
       @return void
       **/
-      void parseMergableSpecifications(void);
+      static void parseMergableSpecifications(void);
       
       /**
       @brief Performs a allowed - validity check on the xml tree
       @param n [Node*] The stdr xml tree node to begin
       @return void
       **/
-      void validityAllowedCheck(Node* n);
+      static void validityAllowedCheck(Node* n);
       
       /**
       @brief Performs a required - validity check on the xml tree
       @param n [Node*] The stdr xml tree node to begin
       @return void
       **/
-      void validityRequiredCheck(Node* n);
+      static void validityRequiredCheck(Node* n);
       
-    public:
-    
       /**
       @brief Default constructor
       @return void
       **/
       Validator(void);
       
+    public:
+
       /**
       @brief Performs a required / allowed - validity check on the xml tree
       @param n [Node*] The stdr xml tree node to begin
       @return void
       **/
-      void validate(Node* n);
+      static void validate(Node* n);
   };
 }
 #endif
