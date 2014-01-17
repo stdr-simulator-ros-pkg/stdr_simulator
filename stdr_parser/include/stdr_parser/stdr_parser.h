@@ -90,7 +90,18 @@ namespace stdr_parser
       @return T : The message
       **/
       template <class T>
-      static T createMessage(std::string file_name);
+      static T createMessage(std::string file_name)
+      {
+        try
+        {
+          parse(file_name);
+        }
+        catch(ParserException ex)
+        {
+          throw ex;
+        }
+        return MessageCreator::createMessage<T>(base_node_,0);
+      }
       
       /**
       @brief Saves a stdr_msgs::Noise message to a file
@@ -99,7 +110,16 @@ namespace stdr_parser
       @return void
       **/
       template <class T>
-      static void saveMessage(T msg,std::string file_name);
+      static void saveMessage(T msg,std::string file_name)
+      {
+        if(file_name.find(".xml") != std::string::npos)
+        {
+          XmlFileWriter::messageToFile(msg,file_name);  
+        }
+        else if(file_name.find(".yaml") != std::string::npos)
+        {
+        }
+      }
 
   };
 }
