@@ -5,7 +5,7 @@
     <min_range>0.15</min_range>
     <frequency>10</frequency>
     <pose>
-      <x>0</x>
+      <x>0.1</x>
       <y>0</y>
       <theta>0</theta>
     </pose>

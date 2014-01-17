@@ -369,7 +369,8 @@ namespace stdr_parser
   @param n [Node*] The root node
   @return The message
   **/
-  template <> stdr_msgs::RobotMsg MessageCreator::createMessage(Node *n,unsigned int id)
+  template <> 
+  stdr_msgs::RobotMsg MessageCreator::createMessage(Node *n,unsigned int id)
   {
     stdr_msgs::RobotMsg msg;
     Node* specs = n->elements[0];

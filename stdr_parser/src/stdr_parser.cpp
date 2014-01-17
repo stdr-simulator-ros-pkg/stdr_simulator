@@ -58,7 +58,9 @@ namespace stdr_parser
       {
         YamlParser::parse(file_name,base_node_);
       }
-
+      
+      Validator::parseMergableSpecifications();
+      
       while(!eliminateFilenames(base_node_));
       while(!mergeNodes(base_node_));
       mergeNodesValues(base_node_);
@@ -273,6 +275,12 @@ filename of wrong type specified\n") +
     stdr_msgs::FootprintMsg msg,std::string file_name);
   template void Parser::saveMessage(
     stdr_msgs::Noise msg,std::string file_name);
+  template void Parser::saveMessage(
+    stdr_msgs::LaserSensorMsg msg,std::string file_name);
+  template void Parser::saveMessage(
+    stdr_msgs::SonarSensorMsg msg,std::string file_name);
+  template void Parser::saveMessage(
+    stdr_msgs::RobotMsg msg,std::string file_name);
   
   /**
   @brief Saves a stdr_msgs::Noise message to a file

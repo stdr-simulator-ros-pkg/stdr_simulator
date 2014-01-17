@@ -45,12 +45,6 @@ namespace stdr_parser
       static void parseSpecifications(TiXmlNode* node);
       
       /**
-      @brief Parses the mergable specifications file
-      @return void
-      **/
-      static void parseMergableSpecifications(void);
-      
-      /**
       @brief Performs a allowed - validity check on the xml tree
       @param n [Node*] The stdr xml tree node to begin
       @return void
@@ -78,6 +72,12 @@ namespace stdr_parser
       @return void
       **/
       static void validate(Node* n);
+      
+      /**
+      @brief Parses the mergable specifications file
+      @return void
+      **/
+      static void parseMergableSpecifications(void);
   };
 }
 #endif
