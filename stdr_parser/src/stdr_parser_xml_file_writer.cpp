@@ -41,7 +41,8 @@ namespace stdr_parser
   //!< Template specialization for stdr_msgs::Noise
   template <>
   void XmlFileWriter::messageToXmlElement<stdr_msgs::Noise>
-    (stdr_msgs::Noise msg,TiXmlNode* base){
+    (stdr_msgs::Noise msg,TiXmlNode* base)
+  {
     //!< Create noise
     TiXmlElement* noise;
     noise = new TiXmlElement("noise");
@@ -339,7 +340,7 @@ namespace stdr_parser
     TiXmlDocument doc;
     messageToXmlElement<T>(msg,&doc);
     doc.SaveFile((ros::package::getPath("stdr_resources") 
-      + "/" + file_name).c_str()); 
+      + "/xmls/" + file_name).c_str()); 
   }
 }
 

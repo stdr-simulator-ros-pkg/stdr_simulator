@@ -2,16 +2,11 @@ robot:
   robot_specifications:
     - footprint:
         footprint_specifications:
-          #~ points:
-             #~ []
           radius: 0.15
     - initial_pose:
         theta: 0
         x: 0
         y: 0
-    #~ - kinematic:
-        #~ kinematic_specifications:
-          #~ type: null_value
     - laser:
         filename: hokuyo.yaml
         laser_specifications: 
@@ -25,7 +20,6 @@ robot:
             y: 0
             theta: 0
     - sonar:
-        sonar_specifications:
         filename: standard_sonar.yaml
         sonar_specifications:
           frame_id: sonar_1
@@ -34,7 +28,6 @@ robot:
             y: 0.100000001490116
             theta: 1.570795
     - sonar:
-        sonar_specifications:
         filename: standard_sonar.yaml
         sonar_specifications:
           frame_id: sonar_2
@@ -43,7 +36,6 @@ robot:
             y: -0.100000001490116
             theta: -1.570795
     - sonar:
-        sonar_specifications:
         filename: standard_sonar.yaml
         sonar_specifications:
           frame_id: sonar_3
@@ -52,7 +44,6 @@ robot:
             y: -0.100000001490116
             theta: 2.79252444444444
     - sonar:
-        sonar_specifications:
         filename: standard_sonar.yaml
         sonar_specifications:
           frame_id: sonar_4

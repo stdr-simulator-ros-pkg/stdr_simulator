@@ -10,7 +10,7 @@
       <theta>0</theta>
     </pose>
     <noise>
-      <filename>gauss.xml</filename>
+      <filename>noise_gauss.xml</filename>
     </noise>
   </sonar_specifications>
 </sonar>

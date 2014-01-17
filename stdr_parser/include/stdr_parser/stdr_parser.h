@@ -118,6 +118,7 @@ namespace stdr_parser
         }
         else if(file_name.find(".yaml") != std::string::npos)
         {
+          YamlFileWriter::messageToFile(msg,file_name); 
         }
       }
 

@@ -33,8 +33,10 @@ int main(int argc, char **argv)
   {
     stdr_parser::Parser::saveMessage(
       stdr_parser::Parser::createMessage
-        <stdr_msgs::RobotMsg>("pandora_robot.xml"),
-          "test.xml");
+      <stdr_msgs::RobotMsg>   //!< Type
+      ("pandora_robot.yaml"),    //!< Input file
+      "parapapam.xml"              //!< Output file
+    );
   }
   catch(ParserException ex)
   {

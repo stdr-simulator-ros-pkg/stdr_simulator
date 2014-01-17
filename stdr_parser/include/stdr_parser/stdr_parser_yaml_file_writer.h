@@ -30,6 +30,16 @@
 **/ 
 namespace stdr_parser
 {
+  
+  /**
+  @brief Creates a yaml node from a msg - template member function
+  @param msg [T] The message
+  @param base [YAML::Emitter*] The yaml emitter to write the message
+  @return void
+  **/
+  template <class T>
+  YAML::Emitter& operator << (YAML::Emitter& out, const T& msg);
+  
   /**
   @class FileWriter
   @brief Writes a node tree to a file
@@ -43,9 +53,20 @@ namespace stdr_parser
       @return void
       **/
       YamlFileWriter(void);
+      
+      static YAML::Emitter out;
      
     public:
     
+      /**
+      @brief Creates an yaml file from a message - template member function
+      @param msg [T] The message
+      @param file_name [std::string] The yaml file name to write the message
+      @return void
+      **/
+      template <class T>
+      static void messageToFile(T msg,std::string file_name);
+   
   };
 }
 #endif
