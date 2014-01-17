@@ -45,6 +45,7 @@ catkin_package(
     stdr_msgs
     stdr_robot
     stdr_server
+    stdr_parser
     sensor_msgs
     nav_msgs
   INCLUDE_DIRS include

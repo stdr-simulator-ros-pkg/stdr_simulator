@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   tf
   stdr_msgs
+  stdr_parser
   geometry_msgs
   sensor_msgs
   nav_msgs
@@ -40,6 +41,7 @@ catkin_package(
     actionlib
     tf
     stdr_msgs
+    stdr_parser
     geometry_msgs
     sensor_msgs
     nav_msgs
@@ -80,16 +82,16 @@ add_dependencies(robot_handler stdr_msgs_gencpp) # wait for stdr_msgs to be buil
 target_link_libraries(robot_handler 
 	${catkin_LIBRARIES}
 	handle_robot
-  stdr_parser
+  stdr_parser_library
 )
 
 #################### Parser ##########################################
-add_library(stdr_parser src/stdr_yaml_parser.cpp)
-add_dependencies(stdr_parser stdr_msgs_gencpp)
-target_link_libraries(stdr_parser 
-	${catkin_LIBRARIES}
-	yaml-cpp
-)
+#~ add_library(stdr_parser src/stdr_yaml_parser.cpp)
+#~ add_dependencies(stdr_parser stdr_msgs_gencpp)
+#~ target_link_libraries(stdr_parser 
+	#~ ${catkin_LIBRARIES}
+	#~ yaml-cpp
+#~ )
 
 ## Mark the nodelet library for installations
 install(TARGETS stdr_robot_nodelet
@@ -105,7 +107,6 @@ install(DIRECTORY launch/
 
 install(TARGETS 
   handle_robot
-  stdr_parser
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
