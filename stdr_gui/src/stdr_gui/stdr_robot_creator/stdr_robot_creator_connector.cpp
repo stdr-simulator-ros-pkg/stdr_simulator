@@ -2306,7 +2306,7 @@ namespace stdr_gui
         QString().fromStdString(
         stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
         QString("/resources/"),
-        tr("Yaml files (*.yaml)"));
+        tr("Resource files (*.yaml *.xml)"));
     
     Q_EMIT saveRobotPressed(
       stdr_gui_tools::fixRobotAnglesToRad(new_robot_msg_),file_name);
@@ -2324,7 +2324,7 @@ namespace stdr_gui
       QString().fromStdString(
         stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
         QString("/resources/"), 
-        tr("Yaml Files (*.yaml)"));
+        tr("Resource Files (*.yaml *.xml)"));
     
     //!< Not a valid filename
     if (file_name.isEmpty()) { 

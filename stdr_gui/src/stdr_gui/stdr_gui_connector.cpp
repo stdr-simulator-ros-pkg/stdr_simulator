@@ -425,4 +425,18 @@ namespace stdr_gui
     loader_.actionZoomIn->setChecked(false);
     loader_.actionZoomOut->setChecked(false);
   }
+  
+  /**
+  @brief Raises a message box with a specific message
+  @param title [QString] The message box title
+  @param s [QString] The message
+  @return void
+  **/
+  void CGuiConnector::raiseMessage(QString title, QString s)
+  {
+    QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
+    msg.setWindowTitle(title);
+    msg.setText(s);
+    msg.exec();
+  }
 }
