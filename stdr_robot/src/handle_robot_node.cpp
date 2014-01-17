@@ -44,12 +44,12 @@ int main(int argc, char** argv) {
     stdr_msgs::RobotMsg msg;
     
     try {
-//~       Needs to add new api
-//~       msg = stdr_robot::parser::yamlToRobotMsg(std::string(argv[2]));
+      msg = stdr_parser::Parser::createMessage
+        <stdr_msgs::RobotMsg>(std::string(argv[2]));
     }
-    // also exception has to change
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
+    catch(ParserException ex)
+    {
+      ROS_ERROR(" === STDR PARSER ERROR ===\n%s",ex.what());
       return -1;
     }
     
