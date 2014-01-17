@@ -2331,21 +2331,27 @@ namespace stdr_gui
       return;
     }
     
-//~     try {
-//~       new_robot_msg_ = 
-//~       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
-//~       
-//~       new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
-//~ 
-//~       CRobotCreatorConnector::laser_number = -1;
-//~       CRobotCreatorConnector::sonar_number = -1;
-//~       updateRobotTree();
-//~       
-//~     }
-//~     catch(YAML::RepresentationException& e) {
-//~       ROS_ERROR("%s", e.what());
-//~       return;
-//~     }
+    try {
+      new_robot_msg_ = 
+        stdr_parser::Parser::createMessage<stdr_msgs::RobotMsg>
+          (file_name.toStdString());
+      //~ ROS_ERROR("SAADA");
+    }
+    catch(ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+
+    new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
+
+    CRobotCreatorConnector::laser_number = -1;
+    CRobotCreatorConnector::sonar_number = -1;
+    updateRobotTree();
+
     updateRobotPreview(); 
   }
   
