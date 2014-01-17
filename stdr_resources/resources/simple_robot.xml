@@ -3,7 +3,7 @@
   <robot_specifications>
     <footprint>
       <footprint_specifications>
-        <radius>0.5</radius>
+        <radius>0.05</radius>
       </footprint_specifications>
     </footprint>
     <initial_pose>
@@ -12,7 +12,7 @@
       <theta>1.57</theta>
     </initial_pose>
     <laser>
-      <filename>hokuyo.xml</filename>
+      <filename>hokuyo_laser_4L.xml</filename>
       <laser_specifications>
         <pose>
           <theta>-3.1415</theta>

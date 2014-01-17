@@ -154,7 +154,7 @@ namespace stdr_parser
   {
     std::string base_path_ = ros::package::getPath("stdr_resources");
     std::string path=base_path_ + 
-      std::string("/xmls/stdr_specific/stdr_multiple_allowed.xml");
+      std::string("/resources/specifications/stdr_multiple_allowed.xml");
     TiXmlDocument doc;
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
@@ -264,10 +264,14 @@ namespace stdr_parser
   **/
   void Validator::validate(Node* n)
   {
+    
+    Specs::specs.clear();
+    Specs::non_mergable_tags.clear();
+    
     std::string base_path_ = ros::package::getPath("stdr_resources");
     
     std::string path = base_path_ + 
-      std::string("/xmls/stdr_specific/stdr_specifications.xml");
+      std::string("/resources/specifications/stdr_specifications.xml");
     
     TiXmlDocument doc;
     bool loadOkay = doc.LoadFile(path.c_str());

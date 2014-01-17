@@ -339,8 +339,7 @@ namespace stdr_parser
   {
     TiXmlDocument doc;
     messageToXmlElement<T>(msg,&doc);
-    doc.SaveFile((ros::package::getPath("stdr_resources") 
-      + "/xmls/" + file_name).c_str()); 
+    doc.SaveFile(file_name.c_str()); 
   }
 }
 

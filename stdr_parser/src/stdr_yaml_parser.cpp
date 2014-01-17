@@ -39,8 +39,7 @@ namespace stdr_parser
   **/
   void YamlParser::parse(std::string file_name, Node* base_node)
   {
-    std::string path=ros::package::getPath("stdr_resources") + 
-      std::string("/yamls/") + file_name;
+    std::string path = file_name;
     std::ifstream fin(path.c_str());
     #ifdef HAVE_NEW_YAMLCPP
       YAML::Node doc = YAML::Load(fin);
@@ -96,8 +95,8 @@ namespace stdr_parser
         {
           std::string file_name;
           it.second() >> file_name;
-          std::string path=ros::package::getPath("stdr_resources") + 
-            std::string("/yamls/") + file_name;
+          std::string path = ros::package::getPath("stdr_resources") + 
+              std::string("/resources/") + file_name;
           std::ifstream fin(path.c_str());
           #ifdef HAVE_NEW_YAMLCPP
             YAML::Node doc = YAML::Load(fin);

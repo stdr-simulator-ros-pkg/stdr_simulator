@@ -4,7 +4,7 @@ sonar:
     min_range: 0.300000011920929
     cone_angle: 0.523598313331604
     noise:
-      filename: noise.yaml
+      filename: noise_gauss.yaml
     frequency: 10
     frame_id: sonar_0
     pose:

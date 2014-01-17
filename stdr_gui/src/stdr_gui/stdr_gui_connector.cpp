@@ -208,21 +208,26 @@ namespace stdr_gui
       QString().fromStdString(
         stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
         QString("/resources/"), 
-        tr("Yaml Files (*.yaml)"));
+        tr("Robot Files (*.yaml *xml)"));
     
     if (file_name.isEmpty()) { //!< Not a valid filename
       return;
     }
     
-//~     try {
-//~       stdr_msgs::RobotMsg new_robot_msg = 
-//~       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
-//~       Q_EMIT robotFromFile(new_robot_msg);
-//~     }
-//~     catch(YAML::RepresentationException& e) {
-//~       ROS_ERROR("%s", e.what());
-//~       return;
-//~     }
+    try {
+      stdr_msgs::RobotMsg new_robot_msg = 
+        stdr_parser::Parser::createMessage<stdr_msgs::RobotMsg>
+          (file_name.toStdString());
+      Q_EMIT robotFromFile(new_robot_msg);
+    }
+    catch(ParserException ex)
+    {
+      QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
   }
   
   /**

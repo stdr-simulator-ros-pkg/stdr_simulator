@@ -255,8 +255,7 @@ namespace stdr_parser
     out << msg;
     
     std::ofstream sensorYamlFile;    
-    sensorYamlFile.open((ros::package::getPath("stdr_resources") 
-      + "/yamls/" + file_name).c_str());
+    sensorYamlFile.open(file_name.c_str());
     sensorYamlFile << out.c_str();
     sensorYamlFile.close();
   }

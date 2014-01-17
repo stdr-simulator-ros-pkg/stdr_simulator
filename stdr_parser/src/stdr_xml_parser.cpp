@@ -41,8 +41,7 @@ namespace stdr_parser
   {
     // Must destroy prev tree
     
-    std::string path=ros::package::getPath("stdr_resources") + 
-      std::string("/xmls/") + file_name;
+    std::string path = file_name;
     TiXmlDocument doc;
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
@@ -94,7 +93,8 @@ malformed xml file");
         {
           try
           {
-            parse(std::string(node->Value()) , n);
+            parse(ros::package::getPath("stdr_resources") + 
+              std::string("/resources/") + std::string(node->Value()) , n);
           }
           catch(ParserException ex)
           {

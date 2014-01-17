@@ -8,7 +8,7 @@ robot:
         x: 0
         y: 0
     - laser:
-        filename: hokuyo.yaml
+        filename: hokuyo_laser_4L.yaml
         laser_specifications: 
           max_range: 10
     - sonar:

@@ -26,7 +26,7 @@ namespace stdr_parser
   
   //!< Static initializations
   Node* Parser::base_node_ = new Node();
-  std::string Parser::base_path_ = ros::package::getPath("stdr_resources");
+  //~ std::string Parser::base_path_ = ros::package::getPath("stdr_resources");
   
   /**
   @brief Default constructor
