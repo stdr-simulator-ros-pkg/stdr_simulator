@@ -5,8 +5,5 @@
       <y>0</y>
       <theta>0</theta>
     </initial_pose>
-    <laser>
-      <filename>hokuyo_laser_4L.xml</filename>
-    </laser>
   </robot_specifications>
 </robot>

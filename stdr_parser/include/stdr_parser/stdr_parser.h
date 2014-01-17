@@ -45,8 +45,6 @@ namespace stdr_parser
       
       //!< Base node of the parsed file
       static Node* base_node_;
-      //~ //!< The path for stdr_resources
-      //~ static std::string base_path_;
       
       /**
       @brief Parses an xml file

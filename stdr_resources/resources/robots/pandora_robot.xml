@@ -11,10 +11,10 @@
       <theta>0</theta>
     </initial_pose>
     <laser>
-      <filename>hokuyo_laser_4L.xml</filename>
+      <filename>laser_sensors/hokuyo_laser_4L.xml</filename>
     </laser>
     <sonar>
-      <filename>standard_sonar.xml</filename>
+      <filename>range_sensors/standard_sonar.xml</filename>
       <sonar_specifications>
         <pose>
           <x>0.1</x>
@@ -22,7 +22,7 @@
       </sonar_specifications>
     </sonar>
     <sonar>
-      <filename>standard_sonar.xml</filename>
+      <filename>range_sensors/standard_sonar.xml</filename>
       <sonar_specifications>
         <pose>
           <y>0.1</y>
@@ -31,7 +31,7 @@
       </sonar_specifications>
     </sonar>
     <sonar>
-      <filename>standard_sonar.xml</filename>
+      <filename>range_sensors/standard_sonar.xml</filename>
       <sonar_specifications>
         <pose>
           <y>-0.1</y>
@@ -40,7 +40,7 @@
       </sonar_specifications>
     </sonar>
     <sonar>
-      <filename>standard_sonar.xml</filename>
+      <filename>range_sensors/standard_sonar.xml</filename>
       <sonar_specifications>
         <pose>
           <x>-0.1</x>
@@ -50,7 +50,7 @@
       </sonar_specifications>
     </sonar>
     <sonar>
-      <filename>standard_sonar.xml</filename>
+      <filename>range_sensors/standard_sonar.xml</filename>
       <sonar_specifications>
         <pose>
           <x>-0.1</x>

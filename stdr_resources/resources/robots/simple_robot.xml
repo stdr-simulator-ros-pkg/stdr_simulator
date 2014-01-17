@@ -1,5 +1,5 @@
 <robot>
-  <filename>too_simple_robot.xml</filename>
+  <filename>robots/too_simple_robot.xml</filename>
   <robot_specifications>
     <footprint>
       <footprint_specifications>
@@ -12,7 +12,7 @@
       <theta>1.57</theta>
     </initial_pose>
     <laser>
-      <filename>hokuyo_laser_4L.xml</filename>
+      <filename>laser_sensors/hokuyo_laser_4L.xml</filename>
       <laser_specifications>
         <pose>
           <theta>-3.1415</theta>

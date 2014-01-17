@@ -1,14 +1,17 @@
-max_angle: 2.35619258880615
-min_angle: -2.35619258880615
-max_range: 4
-min_range: 0
-num_rays: 270
-noise:
-  mean: 0.5
-  std: 0.200000002980232
-frequency: 10
-frame_id: laser_0
-pose:
-  x: 0.100000001490116
-  y: 0
-  theta: 0
+laser:
+  laser_specifications:
+    max_angle: 2.35619258880615
+    min_angle: -2.35619258880615
+    max_range: 4
+    min_range: 0
+    num_rays: 270
+    noise:
+      noise_specifications:
+        mean: 0.5
+        std: 0.200000002980232
+    frequency: 10
+    frame_id: laser_0
+    pose:
+      x: 0.100000001490116
+      y: 0
+      theta: 0

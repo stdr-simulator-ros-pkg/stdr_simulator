@@ -12,7 +12,7 @@
       <theta>0</theta>
     </pose>
     <noise>
-      <filename>noise_gauss.xml</filename>
+      <filename>noises/noise_gauss.xml</filename>
       <noise_specifications>
         <noise_mean>0.5</noise_mean>
         <noise_std>0.05</noise_std>
