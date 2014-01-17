@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   sensor_msgs
   nav_msgs
+  stdr_parser
 )
 
 set(CMAKE_BUILD_TYPE Debug)
@@ -23,18 +24,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-find_package(PkgConfig)
-pkg_check_modules(NEW_YAMLCPP yaml-cpp>=0.5)
-if(NEW_YAMLCPP_FOUND)
-  add_definitions(-DHAVE_NEW_YAMLCPP)
-endif(NEW_YAMLCPP_FOUND)
-
 catkin_package(
   INCLUDE_DIRS 
     include
   LIBRARIES 
     handle_robot
-    stdr_parser
   CATKIN_DEPENDS
     roscpp
     nodelet
@@ -45,6 +39,7 @@ catkin_package(
     geometry_msgs
     sensor_msgs
     nav_msgs
+    stdr_parser
 #  DEPENDS system_lib
 )
 
@@ -82,16 +77,8 @@ add_dependencies(robot_handler stdr_msgs_gencpp) # wait for stdr_msgs to be buil
 target_link_libraries(robot_handler 
 	${catkin_LIBRARIES}
 	handle_robot
-  stdr_parser_library
+  stdr_parser
 )
-
-#################### Parser ##########################################
-#~ add_library(stdr_parser src/stdr_yaml_parser.cpp)
-#~ add_dependencies(stdr_parser stdr_msgs_gencpp)
-#~ target_link_libraries(stdr_parser 
-	#~ ${catkin_LIBRARIES}
-	#~ yaml-cpp
-#~ )
 
 ## Mark the nodelet library for installations
 install(TARGETS stdr_robot_nodelet

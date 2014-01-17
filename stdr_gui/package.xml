@@ -22,8 +22,10 @@
   <build_depend>stdr_msgs</build_depend>
   <build_depend>stdr_robot</build_depend>
   <build_depend>stdr_server</build_depend>
+  <build_depend>stdr_parser</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>nav_msgs</build_depend>
+  <build_depend>map_server</build_depend>
   
   <run_depend>roscpp</run_depend>
   <run_depend>roslib</run_depend>
@@ -31,8 +33,10 @@
   <run_depend>stdr_msgs</run_depend>
   <run_depend>stdr_robot</run_depend>
   <run_depend>stdr_server</run_depend>
+  <run_depend>stdr_parser</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
+  <run_depend>map_server</run_depend>
 
   <export>
   </export>

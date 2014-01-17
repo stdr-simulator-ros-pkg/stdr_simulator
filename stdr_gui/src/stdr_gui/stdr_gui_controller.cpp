@@ -334,7 +334,8 @@ namespace stdr_gui
   {
     std::string file_name_str=file_name.toStdString();
     
-    stdr_robot::parser::robotMsgToYaml(file_name_str,newRobotMsg);
+//~     stdr_robot::parser::robotMsgToYaml(file_name_str,newRobotMsg);
+//  exception is handled???
   }
   
   /**

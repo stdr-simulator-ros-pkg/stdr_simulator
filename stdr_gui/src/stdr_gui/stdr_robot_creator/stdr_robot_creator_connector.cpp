@@ -800,14 +800,14 @@ namespace stdr_gui
     
     std::string file_name_str=file_name.toStdString();
     stdr_msgs::LaserSensorMsg lmsg = new_robot_msg_.laserSensors[laserFrameId];
-    try {
-      stdr_robot::parser::laserSensorMsgToYaml(file_name_str,
-        stdr_gui_tools::fixLaserAnglesToRad(lmsg));
-    }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
-      return;
-    }
+//~     try {
+//~       stdr_robot::parser::laserSensorMsgToYaml(file_name_str,
+//~         stdr_gui_tools::fixLaserAnglesToRad(lmsg));
+//~     }
+//~     catch(YAML::RepresentationException& e) {
+//~       ROS_ERROR("%s", e.what());
+//~       return;
+//~     }
   }
   
   /**
@@ -831,14 +831,14 @@ namespace stdr_gui
     
     std::string file_name_str=file_name.toStdString();
     stdr_msgs::SonarSensorMsg smsg = new_robot_msg_.sonarSensors[sonarFrameId];
-    try {
-      stdr_robot::parser::sonarSensorMsgToYaml(file_name_str,
-        stdr_gui_tools::fixSonarAnglesToRad(smsg));
-    }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
-      return;
-    }
+//~     try {
+//~       stdr_robot::parser::sonarSensorMsgToYaml(file_name_str,
+//~         stdr_gui_tools::fixSonarAnglesToRad(smsg));
+//~     }
+//~     catch(YAML::RepresentationException& e) {
+//~       ROS_ERROR("%s", e.what());
+//~       return;
+//~     }
   }
   
   /**
@@ -864,21 +864,21 @@ namespace stdr_gui
     if (file_name.isEmpty()) {
       return;
     }
-    try {
-      std::string old_frame_id = item->text(0).toStdString();
-      
-      stdr_msgs::LaserSensorMsg lmsg = 
-      stdr_robot::parser::yamlToLaserSensorMsg(file_name.toStdString());
-
-      lmsg = stdr_gui_tools::fixLaserAnglesToDegrees(lmsg);
-      lmsg.frame_id = old_frame_id;
-      new_robot_msg_.laserSensors[laserFrameId]=lmsg;
-      updateLaserTree(item,lmsg);
-    }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
-      return;
-    }
+//~     try {
+//~       std::string old_frame_id = item->text(0).toStdString();
+//~       
+//~       stdr_msgs::LaserSensorMsg lmsg = 
+//~       stdr_robot::parser::yamlToLaserSensorMsg(file_name.toStdString());
+//~ 
+//~       lmsg = stdr_gui_tools::fixLaserAnglesToDegrees(lmsg);
+//~       lmsg.frame_id = old_frame_id;
+//~       new_robot_msg_.laserSensors[laserFrameId]=lmsg;
+//~       updateLaserTree(item,lmsg);
+//~     }
+//~     catch(YAML::RepresentationException& e) {
+//~       ROS_ERROR("%s", e.what());
+//~       return;
+//~     }
     updateRobotPreview(); 
   }
   
@@ -905,23 +905,23 @@ namespace stdr_gui
     if (file_name.isEmpty()) {
       return;
     }
-    try {
-      std::string old_frame_id = item->text(0).toStdString();
-      
-      stdr_msgs::SonarSensorMsg smsg = 
-      stdr_robot::parser::yamlToSonarSensorMsg(file_name.toStdString());
-
-      smsg = stdr_gui_tools::fixSonarAnglesToDegrees(smsg);
-      
-      smsg.frame_id = old_frame_id;
-      
-      new_robot_msg_.sonarSensors[sonarFrameId]=smsg;
-      updateSonarTree(item,smsg);
-    }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
-      return;
-    }
+//~     try {
+//~       std::string old_frame_id = item->text(0).toStdString();
+//~       
+//~       stdr_msgs::SonarSensorMsg smsg = 
+//~       stdr_robot::parser::yamlToSonarSensorMsg(file_name.toStdString());
+//~ 
+//~       smsg = stdr_gui_tools::fixSonarAnglesToDegrees(smsg);
+//~       
+//~       smsg.frame_id = old_frame_id;
+//~       
+//~       new_robot_msg_.sonarSensors[sonarFrameId]=smsg;
+//~       updateSonarTree(item,smsg);
+//~     }
+//~     catch(YAML::RepresentationException& e) {
+//~       ROS_ERROR("%s", e.what());
+//~       return;
+//~     }
     updateRobotPreview(); 
   }
   
@@ -2331,21 +2331,21 @@ namespace stdr_gui
       return;
     }
     
-    try {
-      new_robot_msg_ = 
-      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
-      
-      new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
-
-      CRobotCreatorConnector::laser_number = -1;
-      CRobotCreatorConnector::sonar_number = -1;
-      updateRobotTree();
-      
-    }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
-      return;
-    }
+//~     try {
+//~       new_robot_msg_ = 
+//~       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
+//~       
+//~       new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
+//~ 
+//~       CRobotCreatorConnector::laser_number = -1;
+//~       CRobotCreatorConnector::sonar_number = -1;
+//~       updateRobotTree();
+//~       
+//~     }
+//~     catch(YAML::RepresentationException& e) {
+//~       ROS_ERROR("%s", e.what());
+//~       return;
+//~     }
     updateRobotPreview(); 
   }
   

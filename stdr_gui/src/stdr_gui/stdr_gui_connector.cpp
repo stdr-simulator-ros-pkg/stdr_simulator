@@ -214,15 +214,15 @@ namespace stdr_gui
       return;
     }
     
-    try {
-      stdr_msgs::RobotMsg new_robot_msg = 
-      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
-      Q_EMIT robotFromFile(new_robot_msg);
-    }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
-      return;
-    }
+//~     try {
+//~       stdr_msgs::RobotMsg new_robot_msg = 
+//~       stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
+//~       Q_EMIT robotFromFile(new_robot_msg);
+//~     }
+//~     catch(YAML::RepresentationException& e) {
+//~       ROS_ERROR("%s", e.what());
+//~       return;
+//~     }
   }
   
   /**

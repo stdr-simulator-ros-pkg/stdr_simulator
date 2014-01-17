@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(PkgConfig)
 pkg_check_modules(NEW_YAMLCPP yaml-cpp>=0.5)
+pkg_check_modules(XML libxml-2.0)
 if(NEW_YAMLCPP_FOUND)
   add_definitions(-DHAVE_NEW_YAMLCPP)
 endif(NEW_YAMLCPP_FOUND)
@@ -30,6 +31,8 @@ find_package(TinyXML REQUIRED)
 catkin_package(
   INCLUDE_DIRS 
     include
+  LIBRARIES
+    stdr_parser
   CATKIN_DEPENDS
     roscpp
     roslib
@@ -39,7 +42,7 @@ catkin_package(
 )
 
 ######################### Stdr parser ##################################
-add_executable(stdr_parser_library 
+add_library(stdr_parser 
   src/stdr_parser.cpp
   src/stdr_parser_validator.cpp
   src/stdr_parser_msg_creator.cpp
@@ -51,10 +54,20 @@ add_executable(stdr_parser_library
   src/stdr_parser_specs.cpp
   src/stdr_parser_tools.cpp
 )
-
-add_dependencies(stdr_parser_library stdr_msgs_gencpp) # wait for stdr_msgs to be build
-
-target_link_libraries(stdr_parser_library 
+add_dependencies(stdr_parser stdr_msgs_gencpp) # wait for stdr_msgs to be build
+target_link_libraries(stdr_parser 
   ${catkin_LIBRARIES} ${TinyXML_LIBRARIES}
   yaml-cpp
+)
+
+
+install(TARGETS 
+  stdr_parser
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/
+   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
 )

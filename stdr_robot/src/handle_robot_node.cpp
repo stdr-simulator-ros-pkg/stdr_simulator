@@ -20,7 +20,7 @@
 ******************************************************************************/
 
 #include <stdr_robot/handle_robot.h>
-#include <stdr_robot/stdr_yaml_parser.h>
+#include <stdr_parser/stdr_parser.h>
 
 #define USAGE "USAGE: robot_handler add <description.yaml> <x> <y> <theta>\n" \
 "OR: robot_handler delete <robot_name>\n"\
@@ -44,8 +44,10 @@ int main(int argc, char** argv) {
     stdr_msgs::RobotMsg msg;
     
     try {
-      msg = stdr_robot::parser::yamlToRobotMsg(std::string(argv[2]));
+//~       Needs to add new api
+//~       msg = stdr_robot::parser::yamlToRobotMsg(std::string(argv[2]));
     }
+    // also exception has to change
     catch(YAML::RepresentationException& e) {
       ROS_ERROR("%s", e.what());
       return -1;
