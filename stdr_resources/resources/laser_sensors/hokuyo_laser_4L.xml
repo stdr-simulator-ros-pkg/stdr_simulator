@@ -6,6 +6,9 @@
     <min_range>0.1</min_range>
     <num_rays>270</num_rays>
     <frequency>10</frequency>
+<!--
+    <blah>s</blah>
+-->
     <pose>
       <x>0</x>
       <y>0</y>

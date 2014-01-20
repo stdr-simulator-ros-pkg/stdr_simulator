@@ -23,6 +23,7 @@
 
 namespace stdr_parser
 {
+  
   /**
   @brief Default constructor
   @return void
@@ -40,9 +41,9 @@ namespace stdr_parser
   void XmlParser::parse(std::string file_name, Node* base_node)
   {
     // Must destroy prev tree
-    
     std::string path = file_name;
     TiXmlDocument doc;
+    doc.SetTabSize(2);
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
     {

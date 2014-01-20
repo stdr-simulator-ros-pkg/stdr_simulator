@@ -34,10 +34,11 @@ namespace stdr_parser
   
   /**
   @brief Performs a allowed - validity check on the xml tree
+  @param file_name [std::string] The filename from which the node came from
   @param n [Node*] The stdr xml tree node to begin
   @return void
   **/
-  void Validator::validityAllowedCheck(Node* n)
+  void Validator::validityAllowedCheck(std::string file_name, Node* n)
   {
     //!< Immediately return if we have a value node
     if(n->value != "")
@@ -63,12 +64,14 @@ namespace stdr_parser
         if(Specs::specs[tag].allowed.find(child_tag) == 
           Specs::specs[tag].allowed.end())
         {
+          int decreaser = (extractFilename(n->elements[i]->file_origin) == 
+          extractFilename(file_name) ? 1 : 0);
           std::string error = 
             std::string("STDR parser : ") + child_tag + 
             std::string(" is not allowed in a ") + tag + std::string(" tag") +
             std::string("\nTrail: ");
           error += std::string("\n  [") + child_tag + std::string("] Line ") + 
-            SSTR( n->elements[i]->file_row ) + 
+            SSTR( n->elements[i]->file_row - decreaser ) + 
             std::string(" of file '") + 
             extractFilename(n->elements[i]->file_origin) + 
             std::string("'");
@@ -77,13 +80,19 @@ namespace stdr_parser
       }
       try
       {
-        validityAllowedCheck(n->elements[i]);
+        validityAllowedCheck(file_name, n->elements[i]);
       }
       catch(ParserException ex)
       {
+        if(n->tag == "STDR_Parser_Root_Node")
+        {
+          throw ex;
+        }
+        int decreaser = (extractFilename(n->file_origin) == 
+          extractFilename(file_name) ? 1 : 0);
         std::string trail(ex.what());
         trail += std::string("\n  [") + n->tag + std::string("] Line ") + 
-          SSTR( n->file_row ) + 
+          SSTR( n->file_row - decreaser) + 
           std::string(" of file '") + 
           extractFilename(n->file_origin) + std::string("'");
         ParserException ex_new(trail);
@@ -94,10 +103,11 @@ namespace stdr_parser
   
   /**
   @brief Performs a required - validity check on the xml tree
+  @param file_name [std::string] The filename from which the node came from
   @param n [Node*] The stdr xml tree node to begin
   @return void
   **/
-  void Validator::validityRequiredCheck(Node* n)
+  void Validator::validityRequiredCheck(std::string file_name, Node* n)
   {
     //!< Immediately return if we have a value node
     if(n->value != "")
@@ -131,13 +141,21 @@ namespace stdr_parser
     {
       try
       {
-        validityRequiredCheck(n->elements[i]);  
+        validityRequiredCheck(file_name, n->elements[i]);  
       }
       catch(ParserException ex)
       {
+        if(n->tag == "STDR_Parser_Root_Node")
+        {
+          throw ex;
+        }
+        
+        int decreaser = (extractFilename(n->elements[i]->file_origin) == 
+          extractFilename(file_name) ? 1 : 0);
+        
         std::string trail(ex.what());
         trail += std::string("\n  [") + n->tag + std::string("] Line ") + 
-          SSTR( n->file_row ) + 
+          SSTR( n->file_row - decreaser ) + 
           std::string(" of file '") + extractFilename(n->file_origin) 
           + std::string("'");
         ParserException ex_new(trail);
@@ -147,7 +165,7 @@ namespace stdr_parser
   }
   
   /**
-  @brief Parses the mergabl speciications file
+  @brief Parses the mergable speciications file
   @return void
   **/
   void Validator::parseMergableSpecifications(void)
@@ -259,10 +277,11 @@ namespace stdr_parser
   
   /**
   @brief Performs a required / allowed - validity check on the xml tree
+  @param file_name [std::string] The filename from which the tree was created
   @param n [Node*] The stdr xml tree node to begin
   @return void
   **/
-  void Validator::validate(Node* n)
+  void Validator::validate(std::string file_name, Node* n)
   {
     
     Specs::specs.clear();
@@ -286,7 +305,6 @@ namespace stdr_parser
     try
     {
       parseSpecifications(&doc);
-      parseMergableSpecifications();
     }
     catch(ParserException ex)
     {
@@ -295,8 +313,8 @@ namespace stdr_parser
     
     try
     {
-      validityAllowedCheck(n);
-      validityRequiredCheck(n);
+      validityAllowedCheck(file_name, n);
+      validityRequiredCheck(file_name, n);
     }
     catch(ParserException ex)
     {

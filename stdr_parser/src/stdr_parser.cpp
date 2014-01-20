@@ -26,7 +26,6 @@ namespace stdr_parser
   
   //!< Static initializations
   Node* Parser::base_node_ = new Node();
-  //~ std::string Parser::base_path_ = ros::package::getPath("stdr_resources");
   
   /**
   @brief Default constructor
@@ -65,7 +64,9 @@ namespace stdr_parser
       while(!mergeNodes(base_node_));
       mergeNodesValues(base_node_);
       
-      Validator::validate(base_node_);
+      base_node_->printParsedXml(base_node_,"");
+      
+      Validator::validate(file_name, base_node_);
       
       //!< Uncomment to see the internal tree structure
       //~ base_node_->printParsedXml(base_node_,"");

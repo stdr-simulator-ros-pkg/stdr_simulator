@@ -46,17 +46,19 @@ namespace stdr_parser
       
       /**
       @brief Performs a allowed - validity check on the xml tree
+      @param file_name [std::string] The filename from which the node came from
       @param n [Node*] The stdr xml tree node to begin
       @return void
       **/
-      static void validityAllowedCheck(Node* n);
+      static void validityAllowedCheck(std::string file_name, Node* n);
       
       /**
       @brief Performs a required - validity check on the xml tree
+      @param file_name [std::string] The filename from which the node came from
       @param n [Node*] The stdr xml tree node to begin
       @return void
       **/
-      static void validityRequiredCheck(Node* n);
+      static void validityRequiredCheck(std::string file_name, Node* n);
       
       /**
       @brief Default constructor
@@ -68,10 +70,11 @@ namespace stdr_parser
 
       /**
       @brief Performs a required / allowed - validity check on the xml tree
+      @param file_name [std::string] The filename from which the tree was created
       @param n [Node*] The stdr xml tree node to begin
       @return void
       **/
-      static void validate(Node* n);
+      static void validate(std::string file_name, Node* n);
       
       /**
       @brief Parses the mergable specifications file

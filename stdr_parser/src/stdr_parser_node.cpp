@@ -89,13 +89,13 @@ namespace stdr_parser
   {
     if(n->value != "")
     {  
-      ROS_ERROR("%s- '%s' (%d)",indent.c_str(),n->value.c_str(),
-        n->priority);
+      ROS_ERROR("%s- '%s' (%d) - %d %s",indent.c_str(),n->value.c_str(),
+        n->priority, n->file_row, extractFilename(n->file_origin).c_str());
     }
     else
     {
-      ROS_ERROR("%s[%s] (%d)",indent.c_str(),n->tag.c_str(),
-        n->priority);
+      ROS_ERROR("%s[%s] (%d) - %d %s",indent.c_str(),n->tag.c_str(),
+        n->priority, n->file_row, extractFilename(n->file_origin).c_str());
     }  
     for(unsigned int i = 0 ; i < n->elements.size() ; i++)
     {
