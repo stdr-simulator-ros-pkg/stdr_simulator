@@ -64,8 +64,6 @@ namespace stdr_parser
       while(!mergeNodes(base_node_));
       mergeNodesValues(base_node_);
       
-      base_node_->printParsedXml(base_node_,"");
-      
       Validator::validate(file_name, base_node_);
       
       //!< Uncomment to see the internal tree structure
