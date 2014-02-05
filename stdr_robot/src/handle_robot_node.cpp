@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
       msg = stdr_parser::Parser::createMessage
         <stdr_msgs::RobotMsg>(std::string(argv[2]));
     }
-    catch(ParserException ex)
+    catch(stdr_parser::ParserException& ex)
     {
       ROS_ERROR("[STDR_PARSER] %s", ex.what());
       return -1;

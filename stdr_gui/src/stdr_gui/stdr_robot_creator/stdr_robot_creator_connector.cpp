@@ -805,7 +805,7 @@ namespace stdr_gui
       stdr_parser::Parser::saveMessage(
         stdr_gui_tools::fixLaserAnglesToRad(lmsg), file_name_str);
     }
-    catch(ParserException ex)
+    catch(stdr_parser::ParserException ex)
     {
       QMessageBox msg;
       msg.setWindowTitle(QString("STDR Parser - Error"));
@@ -841,7 +841,7 @@ namespace stdr_gui
       stdr_parser::Parser::saveMessage(
         stdr_gui_tools::fixSonarAnglesToRad(smsg), file_name_str);
     }
-    catch(ParserException ex)
+    catch(stdr_parser::ParserException ex)
     {
       QMessageBox msg;
       msg.setWindowTitle(QString("STDR Parser - Error"));
@@ -881,7 +881,7 @@ namespace stdr_gui
         stdr_parser::Parser::createMessage<stdr_msgs::LaserSensorMsg>
           (file_name.toStdString());
     }
-    catch(ParserException ex)
+    catch(stdr_parser::ParserException ex)
     {
       QMessageBox msg;
       msg.setWindowTitle(QString("STDR Parser - Error"));
@@ -926,7 +926,7 @@ namespace stdr_gui
         stdr_parser::Parser::createMessage<stdr_msgs::SonarSensorMsg>
           (file_name.toStdString());
     }
-    catch(ParserException ex)
+    catch(stdr_parser::ParserException ex)
     {
       QMessageBox msg;
       msg.setWindowTitle(QString("STDR Parser - Error"));
@@ -2352,7 +2352,7 @@ namespace stdr_gui
         stdr_parser::Parser::createMessage<stdr_msgs::RobotMsg>
           (file_name.toStdString());
     }
-    catch(ParserException ex)
+    catch(stdr_parser::ParserException ex)
     {
       QMessageBox msg;
       msg.setWindowTitle(QString("STDR Parser - Error"));

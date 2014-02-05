@@ -220,7 +220,7 @@ namespace stdr_gui
           (file_name.toStdString());
       Q_EMIT robotFromFile(new_robot_msg);
     }
-    catch(ParserException ex)
+    catch(stdr_parser::ParserException ex)
     {
       QMessageBox msg(static_cast<QMainWindow *>(&this->loader_));
       msg.setWindowTitle(QString("STDR Parser - Error"));

@@ -337,7 +337,7 @@ namespace stdr_gui
     try {
       stdr_parser::Parser::saveMessage(newRobotMsg, file_name.toStdString());
     }
-    catch(ParserException ex)
+    catch(stdr_parser::ParserException ex)
     {
       gui_connector_.raiseMessage("STDR Parser - Error", ex.what());
     }

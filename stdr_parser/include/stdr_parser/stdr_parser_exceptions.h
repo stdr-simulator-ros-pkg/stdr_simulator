@@ -24,6 +24,9 @@
 #ifndef PARSER_EXCEPTIONS_H
 #define PARSER_EXCEPTIONS_H
 
+namespace stdr_parser
+{
+
 /**
 @class ParserException
 @brief Provides a parser exception. Publicly inherits from std::runtime_error. Used in robot handler.
@@ -40,5 +43,7 @@ class ParserException : public std::runtime_error
     {
     }
 };
+
+} // end of namespace stdr_parser
 
 #endif
