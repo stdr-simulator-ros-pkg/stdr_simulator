@@ -48,7 +48,7 @@ namespace stdr_parser
     if (!loadOkay)
     {
       std::string error = 
-        std::string("STDR parser : Failed to load file '") + 
+        std::string("Failed to load file '") + 
         path + std::string("'") +
         std::string("\nError was '") + std::string(doc.ErrorDesc()) + 
         std::string("'\nIf error was 'Error reading end tag' you have a \

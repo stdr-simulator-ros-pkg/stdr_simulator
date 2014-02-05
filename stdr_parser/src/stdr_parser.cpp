@@ -76,7 +76,7 @@ namespace stdr_parser
     catch(YAML::ParserException& e)
     {
       std::string error = 
-        std::string("STDR parser : Failed to load file '") + 
+        std::string("Failed to load file '") + 
         file_name + std::string("'") +
         std::string("\nError was '") + std::string(e.what());
       throw ParserException(error);
