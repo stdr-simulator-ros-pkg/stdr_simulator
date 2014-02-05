@@ -24,6 +24,8 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
+namespace stdr_robot {
+
 /**
 @class ConnectionException
 @brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
@@ -40,5 +42,7 @@ class ConnectionException : public std::runtime_error
     {
     }
 };
+
+} // end of namespace stdr_robot
 
 #endif

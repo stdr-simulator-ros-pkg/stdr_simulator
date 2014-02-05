@@ -562,7 +562,7 @@ namespace stdr_gui
           gui_connector_.robotCreatorConn.getNewRobot()));
         
     }
-    catch (ConnectionException& ex) 
+    catch (stdr_robot::ConnectionException& ex) 
     {
       ROS_ERROR("%s", ex.what());
       return;

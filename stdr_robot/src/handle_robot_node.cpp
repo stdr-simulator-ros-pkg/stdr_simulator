@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
       namedRobot = handler.spawnNewRobot(msg);
       return 0;
     }
-    catch (ConnectionException& ex) {
+    catch (stdr_robot::ConnectionException& ex) {
       ROS_ERROR("%s", ex.what());
       return -1;
     }
@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
       
       return 0;
     }
-    catch (ConnectionException& ex) {
+    catch (stdr_robot::ConnectionException& ex) {
       ROS_ERROR("%s", ex.what());
       return -1;
     }
