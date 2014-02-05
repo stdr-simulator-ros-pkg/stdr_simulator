@@ -23,6 +23,7 @@
 #define STDR_PARSER_YAML
 
 #include "stdr_parser/stdr_parser_node.h"
+#include "stdr_parser/stdr_parser_exceptions.h"
 
 /**
 @namespace stdr_parser

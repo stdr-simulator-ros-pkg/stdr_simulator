@@ -41,6 +41,11 @@ namespace stdr_parser
   {
     std::string path = file_name;
     std::ifstream fin(path.c_str());
+    
+    if (!fin.good()) {
+      throw ParserException("Failed to load '"+ file_name +"', no such file!");
+    }
+    
     #ifdef HAVE_NEW_YAMLCPP
       YAML::Node doc = YAML::Load(fin);
     #else
@@ -98,6 +103,10 @@ namespace stdr_parser
           std::string path = ros::package::getPath("stdr_resources") + 
               std::string("/resources/") + file_name;
           std::ifstream fin(path.c_str());
+          if (!fin.good()) {
+            throw ParserException("Failed to load '"+ file_name +
+                                    "', no such file!");
+          }
           #ifdef HAVE_NEW_YAMLCPP
             YAML::Node doc = YAML::Load(fin);
           #else

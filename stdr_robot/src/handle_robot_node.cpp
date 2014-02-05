@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
     }
     catch(ParserException ex)
     {
-      ROS_ERROR(" === STDR PARSER ERROR ===\n%s",ex.what());
+      ROS_ERROR("[STDR_PARSER] %s", ex.what());
       return -1;
     }
     
