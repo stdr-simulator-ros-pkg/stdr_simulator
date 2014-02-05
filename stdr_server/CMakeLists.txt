@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
     map_server
 )
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 find_package(PkgConfig)
 pkg_check_modules(NEW_YAMLCPP yaml-cpp>=0.5)

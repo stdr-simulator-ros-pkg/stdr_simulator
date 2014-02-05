@@ -10,7 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
 )
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 include_directories(
   include
