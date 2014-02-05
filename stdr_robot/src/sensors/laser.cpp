@@ -153,7 +153,7 @@ namespace stdr_robot {
       _gotTransform = true;
     }
     catch (tf::TransformException ex) {
-      ROS_WARN("%s",ex.what());
+      ROS_DEBUG("%s",ex.what());
     }
   }
 }
