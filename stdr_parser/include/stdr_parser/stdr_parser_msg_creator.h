@@ -19,30 +19,41 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdexcept>
+#ifndef STDR_PARSER_MSG_CREATOR
+#define STDR_PARSER_MSG_CREATOR
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
-
-namespace stdr_robot {
+#include "stdr_parser/stdr_parser_node.h"
 
 /**
-@class ConnectionException
-@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
+@namespace stdr_parser
+@brief The main namespace for STDR parser
 **/ 
-class ConnectionException : public std::runtime_error
+namespace stdr_parser
 {
-  public:
-    /**
-    @brief Throws an std::runtime_error with a messsage
-    @param errorDescription [const std::string] The error message
-    **/ 
-    ConnectionException(const std::string errorDescription) : 
-      std::runtime_error(errorDescription) 
-    {
-    }
-};
-
-} // end of namespace stdr_robot
-
+  
+  /**
+  @class MessageCreator
+  @brief Creates STDR messages from a STDR tree
+  **/ 
+  class MessageCreator
+  {
+    private:
+     
+      /**
+      @brief Default constructor
+      @return void
+      **/
+      MessageCreator(void);
+      
+    public:
+      
+      /**
+      @brief Creates a pose message from a parsed file
+      @param n [Node*] The root node
+      @return geometry_msgs::Pose2D
+      **/
+      template <typename T>
+      static T createMessage(Node *n,unsigned int id);
+  };
+}
 #endif

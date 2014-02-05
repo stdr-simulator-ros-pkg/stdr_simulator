@@ -1,89 +1,53 @@
-initial_pose:
-  x: 0
-  y: 0
-  theta: 0
-footprint:
-  radius: 0.150000005960464
-  points:
-    []
-kinematic:
-  type: ""
-sensors:
-  lasers:
-    - max_angle: 2.35619258880615
-      min_angle: -2.35619258880615
-      max_range: 4
-      min_range: 0
-      num_rays: 270
-      noise:
-        mean: 0.5
-        std: 0.200000002980232
-      frequency: 10
-      frame_id: laser_0
-      pose:
-        x: 0.100000001490116
-        y: 0
+robot:  
+  robot_specifications:
+    - footprint:
+        footprint_specifications:
+          radius: 0.15
+    - initial_pose:
         theta: 0
-  sonars:
-    - max_range: 3
-      min_range: 0.300000011920929
-      cone_angle: 0.523598313331604
-      noise:
-        mean: 0
-        std: 0
-      frequency: 10
-      frame_id: sonar_0
-      pose:
-        x: 0.100000001490116
+        x: 0
         y: 0
-        theta: 0
-    - max_range: 3
-      min_range: 0.300000011920929
-      cone_angle: 0.523598313331604
-      noise:
-        mean: 0
-        std: 0
-      frequency: 10
-      frame_id: sonar_1
-      pose:
-        x: 0
-        y: 0.100000001490116
-        theta: 1.570795
-    - max_range: 3
-      min_range: 0.300000011920929
-      cone_angle: 0.523598313331604
-      noise:
-        mean: 0
-        std: 0
-      frequency: 10
-      frame_id: sonar_2
-      pose:
-        x: 0
-        y: -0.100000001490116
-        theta: -1.570795
-    - max_range: 3
-      min_range: 0.300000011920929
-      cone_angle: 0.523598313331604
-      noise:
-        mean: 0
-        std: 0
-      frequency: 10
-      frame_id: sonar_3
-      pose:
-        x: -0.100000001490116
-        y: -0.100000001490116
-        theta: 2.79252444444444
-    - max_range: 3
-      min_range: 0.300000011920929
-      cone_angle: 0.523598313331604
-      noise:
-        mean: 0
-        std: 0
-      frequency: 10
-      frame_id: sonar_4
-      pose:
-        x: -0.100000001490116
-        y: 0.100000001490116
-        theta: 3.49065555555556
-  rfids:
-    []
+    - laser:
+        filename: laser_sensors/hokuyo_laser_4L.yaml
+        laser_specifications: 
+          max_range: 10
+    - sonar:
+        filename: range_sensors/standard_sonar.yaml
+        sonar_specifications:
+          frame_id: sonar_0
+          pose:
+            x: 0.100000001490116
+            y: 0
+            theta: 0
+    - sonar:
+        filename: range_sensors/standard_sonar.yaml
+        sonar_specifications:
+          frame_id: sonar_1
+          pose:
+            x: 0
+            y: 0.100000001490116
+            theta: 1.570795
+    - sonar:
+        filename: range_sensors/standard_sonar.yaml
+        sonar_specifications:
+          frame_id: sonar_2
+          pose:
+            x: 0
+            y: -0.100000001490116
+            theta: -1.570795
+    - sonar:
+        filename: range_sensors/standard_sonar.yaml
+        sonar_specifications:
+          frame_id: sonar_3
+          pose:
+            x: -0.100000001490116
+            y: -0.100000001490116
+            theta: 2.79252444444444
+    - sonar:
+        filename: range_sensors/standard_sonar.yaml
+        sonar_specifications:
+          frame_id: sonar_4
+          pose:
+            x: -0.100000001490116
+            y: 0.100000001490116
+            theta: 3.49065555555556

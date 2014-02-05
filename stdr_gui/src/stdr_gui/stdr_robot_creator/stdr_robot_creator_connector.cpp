@@ -800,12 +800,17 @@ namespace stdr_gui
     
     std::string file_name_str=file_name.toStdString();
     stdr_msgs::LaserSensorMsg lmsg = new_robot_msg_.laserSensors[laserFrameId];
+
     try {
-      stdr_robot::parser::laserSensorMsgToYaml(file_name_str,
-        stdr_gui_tools::fixLaserAnglesToRad(lmsg));
+      stdr_parser::Parser::saveMessage(
+        stdr_gui_tools::fixLaserAnglesToRad(lmsg), file_name_str);
     }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
       return;
     }
   }
@@ -827,16 +832,21 @@ namespace stdr_gui
         QString().fromStdString(
         stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
         QString("/resources/"),
-        tr("Yaml files (*.yaml)"));
+        tr("Resource files (*.yaml *.xml)"));
     
     std::string file_name_str=file_name.toStdString();
     stdr_msgs::SonarSensorMsg smsg = new_robot_msg_.sonarSensors[sonarFrameId];
+
     try {
-      stdr_robot::parser::sonarSensorMsgToYaml(file_name_str,
-        stdr_gui_tools::fixSonarAnglesToRad(smsg));
+      stdr_parser::Parser::saveMessage(
+        stdr_gui_tools::fixSonarAnglesToRad(smsg), file_name_str);
     }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
       return;
     }
   }
@@ -859,26 +869,30 @@ namespace stdr_gui
       QString().fromStdString(
         stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
         QString("/resources/"), 
-        tr("Yaml Files (*.yaml)"));
+        tr("Resource Files (*.yaml *.xml)"));
     
     if (file_name.isEmpty()) {
       return;
     }
+    std::string old_frame_id = item->text(0).toStdString();
+    stdr_msgs::LaserSensorMsg lmsg;
     try {
-      std::string old_frame_id = item->text(0).toStdString();
-      
-      stdr_msgs::LaserSensorMsg lmsg = 
-      stdr_robot::parser::yamlToLaserSensorMsg(file_name.toStdString());
-
-      lmsg = stdr_gui_tools::fixLaserAnglesToDegrees(lmsg);
-      lmsg.frame_id = old_frame_id;
-      new_robot_msg_.laserSensors[laserFrameId]=lmsg;
-      updateLaserTree(item,lmsg);
+      lmsg = 
+        stdr_parser::Parser::createMessage<stdr_msgs::LaserSensorMsg>
+          (file_name.toStdString());
     }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
       return;
     }
+    lmsg = stdr_gui_tools::fixLaserAnglesToDegrees(lmsg);
+    lmsg.frame_id = old_frame_id;
+    new_robot_msg_.laserSensors[laserFrameId]=lmsg;
+    updateLaserTree(item,lmsg);
     updateRobotPreview(); 
   }
   
@@ -900,28 +914,30 @@ namespace stdr_gui
       QString().fromStdString(
         stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
         QString("/resources/"), 
-        tr("Yaml Files (*.yaml)"));
+        tr("Resource Files (*.yaml *.xml)"));
     
     if (file_name.isEmpty()) {
       return;
     }
+    stdr_msgs::SonarSensorMsg smsg;
+    std::string old_frame_id = item->text(0).toStdString();
     try {
-      std::string old_frame_id = item->text(0).toStdString();
-      
-      stdr_msgs::SonarSensorMsg smsg = 
-      stdr_robot::parser::yamlToSonarSensorMsg(file_name.toStdString());
-
-      smsg = stdr_gui_tools::fixSonarAnglesToDegrees(smsg);
-      
-      smsg.frame_id = old_frame_id;
-      
-      new_robot_msg_.sonarSensors[sonarFrameId]=smsg;
-      updateSonarTree(item,smsg);
+      smsg = 
+        stdr_parser::Parser::createMessage<stdr_msgs::SonarSensorMsg>
+          (file_name.toStdString());
     }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
       return;
     }
+    smsg = stdr_gui_tools::fixSonarAnglesToDegrees(smsg);
+    smsg.frame_id = old_frame_id;
+    new_robot_msg_.sonarSensors[sonarFrameId]=smsg;
+    updateSonarTree(item,smsg);
     updateRobotPreview(); 
   }
   
@@ -2306,7 +2322,7 @@ namespace stdr_gui
         QString().fromStdString(
         stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
         QString("/resources/"),
-        tr("Yaml files (*.yaml)"));
+        tr("Resource files (*.yaml *.xml)"));
     
     Q_EMIT saveRobotPressed(
       stdr_gui_tools::fixRobotAnglesToRad(new_robot_msg_),file_name);
@@ -2324,7 +2340,7 @@ namespace stdr_gui
       QString().fromStdString(
         stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
         QString("/resources/"), 
-        tr("Yaml Files (*.yaml)"));
+        tr("Resource Files (*.yaml *.xml)"));
     
     //!< Not a valid filename
     if (file_name.isEmpty()) { 
@@ -2333,19 +2349,24 @@ namespace stdr_gui
     
     try {
       new_robot_msg_ = 
-      stdr_robot::parser::yamlToRobotMsg(file_name.toStdString());
-      
-      new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
-
-      CRobotCreatorConnector::laser_number = -1;
-      CRobotCreatorConnector::sonar_number = -1;
-      updateRobotTree();
-      
+        stdr_parser::Parser::createMessage<stdr_msgs::RobotMsg>
+          (file_name.toStdString());
     }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
       return;
     }
+
+    new_robot_msg_ = stdr_gui_tools::fixRobotAnglesToDegrees(new_robot_msg_);
+
+    CRobotCreatorConnector::laser_number = -1;
+    CRobotCreatorConnector::sonar_number = -1;
+    updateRobotTree();
+
     updateRobotPreview(); 
   }
   

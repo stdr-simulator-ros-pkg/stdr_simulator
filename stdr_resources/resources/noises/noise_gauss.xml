@@ -1,0 +1,7 @@
+<noise>
+  <noise_specifications>
+    <noise_mean>0.1</noise_mean>
+    <noise_std>0.01</noise_std>
+  </noise_specifications>
+</noise>
+

@@ -19,30 +19,54 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdexcept>
+#ifndef STDR_PARSER_SPECS
+#define STDR_PARSER_SPECS
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
-
-namespace stdr_robot {
+#include "stdr_parser/stdr_parser_tools.h"
 
 /**
-@class ConnectionException
-@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
+@namespace stdr_parser
+@brief The main namespace for STDR parser
 **/ 
-class ConnectionException : public std::runtime_error
+namespace stdr_parser
 {
-  public:
+  /**
+  @struct ElSpecs
+  @brief An element of Specs - represents a valid tag
+  **/ 
+  struct ElSpecs
+  {
     /**
-    @brief Throws an std::runtime_error with a messsage
-    @param errorDescription [const std::string] The error message
-    **/ 
-    ConnectionException(const std::string errorDescription) : 
-      std::runtime_error(errorDescription) 
-    {
-    }
-};
-
-} // end of namespace stdr_robot
-
+    @brief Default constructor
+    @return void
+    **/
+    ElSpecs(void);
+    
+    //!< The required tags for the tag
+    std::set<std::string> required;
+    //!< The allowed tags for the tag
+    std::set<std::string> allowed;
+    //!< Default value for the node (if it is a value)
+    std::string default_value;
+  };
+  
+  /**
+  @struct Specs
+  @brief The STDR parser specifications
+  **/ 
+  struct Specs
+  {
+    /**
+    @brief Default constructor
+    @return void
+    **/
+    Specs(void);
+    
+    //!< std::map of valid STDR tags
+    static std::map<std::string,ElSpecs> specs;
+    
+    //!< List of non-mergable tags. Read from stdr_multiple_allowed.xml
+    static std::set<std::string> non_mergable_tags;
+  };
+}
 #endif

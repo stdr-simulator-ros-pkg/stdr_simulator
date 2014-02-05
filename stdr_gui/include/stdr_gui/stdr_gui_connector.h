@@ -77,6 +77,14 @@ namespace stdr_gui
       bool isGridEnabled(void);
       
       /**
+      @brief Raises a message box with a specific message
+      @param title [QString] The message box title
+      @param s [QString] The message
+      @return void
+      **/
+      void raiseMessage(QString title, QString s);
+      
+      /**
       @brief Adds a widget to the main window Qt grid
       @param w [QWidget*] The widget to be placed
       @param row [int] The row of the grid

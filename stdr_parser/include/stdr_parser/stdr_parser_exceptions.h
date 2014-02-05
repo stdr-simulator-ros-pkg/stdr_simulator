@@ -21,28 +21,29 @@
 
 #include <stdexcept>
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#ifndef PARSER_EXCEPTIONS_H
+#define PARSER_EXCEPTIONS_H
 
-namespace stdr_robot {
+namespace stdr_parser
+{
 
 /**
-@class ConnectionException
-@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
+@class ParserException
+@brief Provides a parser exception. Publicly inherits from std::runtime_error. Used in robot handler.
 **/ 
-class ConnectionException : public std::runtime_error
+class ParserException : public std::runtime_error
 {
   public:
     /**
     @brief Throws an std::runtime_error with a messsage
     @param errorDescription [const std::string] The error message
     **/ 
-    ConnectionException(const std::string errorDescription) : 
+    ParserException(const std::string errorDescription) : 
       std::runtime_error(errorDescription) 
     {
     }
 };
 
-} // end of namespace stdr_robot
+} // end of namespace stdr_parser
 
 #endif

@@ -19,30 +19,52 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdexcept>
+#ifndef STDR_PARSER_TOOLS
+#define STDR_PARSER_TOOLS
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#include <iostream>
+#include <cstdlib>
+#include <map>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <fstream>
 
-namespace stdr_robot {
+#include <ros/package.h>
+#include "ros/ros.h"
+
+#include <tinyxml.h>
+#include "yaml-cpp/yaml.h"
+
+#include "stdr_msgs/RobotMsg.h"
+#include "geometry_msgs/Pose2D.h"
+#include "geometry_msgs/Point.h"
+
+#include "stdr_parser/stdr_parser_exceptions.h"
+
+//!< Transforms a float number to string
+#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
 
 /**
-@class ConnectionException
-@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
+@namespace stdr_parser
+@brief The main namespace for STDR parser
 **/ 
-class ConnectionException : public std::runtime_error
+namespace stdr_parser
 {
-  public:
-    /**
-    @brief Throws an std::runtime_error with a messsage
-    @param errorDescription [const std::string] The error message
-    **/ 
-    ConnectionException(const std::string errorDescription) : 
-      std::runtime_error(errorDescription) 
-    {
-    }
-};
-
-} // end of namespace stdr_robot
-
+  /**
+  @brief Explodes a string based on a delimiter
+  @param s [std::string] The input string
+  @param delimiter [char] The delimiter
+  @return std::set<std::string> : An ensemble of strings
+  **/
+  std::set<std::string> explodeString(std::string s,char delimiter);
+  
+  /**
+  @brief Extracts the filename from an absolute path
+  @param s [std::string] The input string
+  @return std::string
+  **/
+  std::string extractFilename(std::string s);
+}
 #endif

@@ -1,0 +1,157 @@
+<specifications>
+  <environment>
+    <allowed>map,robot,rfid_tag</allowed>
+    <required>map</required>
+  </environment>
+
+  <map>
+    <allowed>filename,map_specifications</allowed>
+    <required>map_specifications</required>
+  </map>
+
+  <map_specifications>
+    <allowed>image,resolution,origin,free_thresh,negate,occupied_thresh</allowed>
+    <required>image,resolution</required>
+  </map_specifications>
+
+  <origin>
+    <allowed>x,y,theta</allowed>
+  </origin>
+
+  <robot>
+    <allowed>filename,robot_specifications</allowed>
+    <required>robot_specifications</required>
+  </robot>
+
+  <robot_specifications>
+    <allowed>initial_pose,footprint,laser,sonar,rfid,kinematic</allowed>
+  </robot_specifications>
+
+  <initial_pose>
+    <allowed>x,y,theta</allowed>
+  </initial_pose>
+  
+  <pose>
+    <allowed>x,y,theta</allowed>
+  </pose>
+
+  <footprint>
+    <allowed>filename,footprint_specifications</allowed>
+    <required>footprint_specifications</required>
+  </footprint>
+
+  <footprint_specifications>
+    <allowed>radius,points</allowed>
+  </footprint_specifications>
+
+  <points>
+    <allowed>point</allowed>
+  </points>
+
+  <point>
+    <allowed>x,y</allowed>
+    <required>x,y</required>
+  </point>
+
+  <laser>
+    <allowed>filename,laser_specifications</allowed>
+    <required>laser_specifications</required>
+  </laser>
+
+  <laser_specifications>
+    <allowed>max_angle,min_angle,max_range,min_range,num_rays,frequency,frame_id,pose,noise</allowed>
+    <required></required>
+  </laser_specifications>
+
+  <noise>
+    <allowed>filename,noise_specifications</allowed>
+    <required>noise_specifications</required>
+  </noise>
+
+  <noise_specifications>
+    <allowed>noise_mean,noise_std</allowed>
+  </noise_specifications>
+
+  <sonar>
+    <allowed>filename,sonar_specifications</allowed>
+    <required>sonar_specifications</required>
+  </sonar>
+
+  <sonar_specifications>
+    <allowed>cone_angle,max_range,min_range,frequency,frame_id,pose,noise</allowed>
+  </sonar_specifications>
+
+  <rfid>
+    <allowed>filename,rfid_specifications</allowed>
+    <required>rfid_specifications</required>
+  </rfid>
+
+  <rfid_specifications>
+    <allowed>angle_span,signal_cutoff,max_range,frequency,frame_id,pose</allowed>
+  </rfid_specifications>
+
+  <kinematic>
+    <allowed>filename,kinematic_specifications</allowed>
+    <required>kinematic_specifications</required>
+  </kinematic>
+
+  <rfid_tag>
+    <allowed>x,y,message</allowed>
+    <required>x,y</required>
+  </rfid_tag>
+  
+  <x>
+    <default>0</default>
+  </x>
+  
+  <y>
+    <default>0</default>
+  </y>
+  
+  <theta>
+    <default>0</default>
+  </theta>
+  
+  <max_angle>
+    <default>1.57</default>
+  </max_angle>
+  
+  <min_angle>
+    <default>-1.57</default>
+  </min_angle>
+  
+  <max_range>
+    <default>4</default>
+  </max_range>
+  
+  <min_range>
+    <default>0</default>
+  </min_range>
+  
+  <num_rays>
+    <default>180</default>
+  </num_rays>
+  
+  <frequency>
+    <default>10</default>
+  </frequency>
+  
+  <frame_id></frame_id>
+  
+  <noise_mean>
+    <default>0</default>
+  </noise_mean>
+  
+  <noise_std>
+    <default>0</default>
+  </noise_std>
+  
+  <radius>
+    <default>0.3</default>
+  </radius>
+  
+  <cone_angle>
+    <default>1.0</default>
+  </cone_angle>
+</specifications>
+

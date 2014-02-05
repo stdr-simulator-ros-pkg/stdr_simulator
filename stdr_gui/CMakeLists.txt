@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   stdr_msgs
   stdr_robot
   stdr_server
+  stdr_parser
   sensor_msgs
   nav_msgs
   map_server
@@ -45,8 +46,10 @@ catkin_package(
     stdr_msgs
     stdr_robot
     stdr_server
+    stdr_parser
     sensor_msgs
     nav_msgs
+    map_server
   INCLUDE_DIRS include
   LIBRARIES 
 )

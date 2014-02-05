@@ -324,9 +324,9 @@ namespace stdr_gui
   }
   
   /**
-  @brief Saves the robot in a yaml file. Connects to the CGuiConnector::CRobotCreatorConnector::saveRobotPressed signal
+  @brief Saves the robot in a file. Connects to the CGuiConnector::CRobotCreatorConnector::saveRobotPressed signal
   @param newRobotMsg [stdr_msgs::RobotMsg] The robot to be saved
-  @param file_name [QString] The yaml file for the robot to be saved
+  @param file_name [QString] The file for the robot to be saved
   @return void
   **/
   void CGuiController::saveRobotPressed(stdr_msgs::RobotMsg newRobotMsg,
@@ -334,7 +334,13 @@ namespace stdr_gui
   {
     std::string file_name_str=file_name.toStdString();
     
-    stdr_robot::parser::robotMsgToYaml(file_name_str,newRobotMsg);
+    try {
+      stdr_parser::Parser::saveMessage(newRobotMsg, file_name.toStdString());
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      gui_connector_.raiseMessage("STDR Parser - Error", ex.what());
+    }
   }
   
   /**
@@ -556,7 +562,7 @@ namespace stdr_gui
           gui_connector_.robotCreatorConn.getNewRobot()));
         
     }
-    catch (ConnectionException& ex) 
+    catch (stdr_robot::ConnectionException& ex) 
     {
       ROS_ERROR("%s", ex.what());
       return;

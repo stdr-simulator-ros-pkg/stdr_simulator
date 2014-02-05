@@ -19,30 +19,48 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdexcept>
+#ifndef STDR_PARSER_XML
+#define STDR_PARSER_XML
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
-
-namespace stdr_robot {
+#include "stdr_parser/stdr_parser_node.h"
 
 /**
-@class ConnectionException
-@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
+@namespace stdr_parser
+@brief The main namespace for STDR GUI XML parser
 **/ 
-class ConnectionException : public std::runtime_error
+namespace stdr_parser
 {
-  public:
-    /**
-    @brief Throws an std::runtime_error with a messsage
-    @param errorDescription [const std::string] The error message
-    **/ 
-    ConnectionException(const std::string errorDescription) : 
-      std::runtime_error(errorDescription) 
-    {
-    }
-};
+  /**
+  @class Parser
+  @brief Implements the main functionalities of the high-level parser
+  **/ 
+  class XmlParser
+  {
+    private:
+    
+      /**
+      @brief Default constructor
+      @return void
+      **/
+      XmlParser(void);
+     
+      /**
+      @brief Low-level recursive function for parsing the xml robot file
+      @param node [TiXmlNode*] The xml node to start from
+      @param n [Node*] The stdr xml tree node to update
+      @return void
+      **/
+      static void parseLow(TiXmlNode* node,Node* n);
+      
+    public:
 
-} // end of namespace stdr_robot
-
+      /**
+      @brief Private function that initiates the parsing of an xml file
+      @param file_name [std::string] The xml file name
+      @param n [Node*] The stdr xml tree node to update
+      @return void
+      **/
+      static void parse(std::string file_name,Node* n);
+  };
+}
 #endif

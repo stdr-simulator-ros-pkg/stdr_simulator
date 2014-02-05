@@ -19,30 +19,31 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdexcept>
+#include "stdr_parser/stdr_parser_specs.h"
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
-
-namespace stdr_robot {
-
-/**
-@class ConnectionException
-@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
-**/ 
-class ConnectionException : public std::runtime_error
+namespace stdr_parser
 {
-  public:
-    /**
-    @brief Throws an std::runtime_error with a messsage
-    @param errorDescription [const std::string] The error message
-    **/ 
-    ConnectionException(const std::string errorDescription) : 
-      std::runtime_error(errorDescription) 
-    {
-    }
-};
-
-} // end of namespace stdr_robot
-
-#endif
+  /**
+  @brief Default constructor
+  @return void
+  **/
+  ElSpecs::ElSpecs(void)
+  {
+    required.clear();
+    allowed.clear();
+  }
+    
+  //!< Static member variable initialization
+  std::map<std::string,ElSpecs> Specs::specs = std::map<std::string,ElSpecs>();
+  //!< List of non-mergable tags. Read from stdr_multiple_allowed.xml
+  std::set<std::string> Specs::non_mergable_tags = std::set<std::string>();
+  
+  /**
+  @brief Default constructor
+  @return void
+  **/
+  Specs::Specs(void)
+  {
+    specs.clear();
+  }
+}

@@ -20,7 +20,7 @@
 ******************************************************************************/
 
 #include <stdr_robot/handle_robot.h>
-#include <stdr_robot/stdr_yaml_parser.h>
+#include <stdr_parser/stdr_parser.h>
 
 #define USAGE "USAGE: robot_handler add <description.yaml> <x> <y> <theta>\n" \
 "OR: robot_handler delete <robot_name>\n"\
@@ -44,10 +44,12 @@ int main(int argc, char** argv) {
     stdr_msgs::RobotMsg msg;
     
     try {
-      msg = stdr_robot::parser::yamlToRobotMsg(std::string(argv[2]));
+      msg = stdr_parser::Parser::createMessage
+        <stdr_msgs::RobotMsg>(std::string(argv[2]));
     }
-    catch(YAML::RepresentationException& e) {
-      ROS_ERROR("%s", e.what());
+    catch(stdr_parser::ParserException& ex)
+    {
+      ROS_ERROR("[STDR_PARSER] %s", ex.what());
       return -1;
     }
     
@@ -63,7 +65,7 @@ int main(int argc, char** argv) {
       namedRobot = handler.spawnNewRobot(msg);
       return 0;
     }
-    catch (ConnectionException& ex) {
+    catch (stdr_robot::ConnectionException& ex) {
       ROS_ERROR("%s", ex.what());
       return -1;
     }
@@ -84,7 +86,7 @@ int main(int argc, char** argv) {
       
       return 0;
     }
-    catch (ConnectionException& ex) {
+    catch (stdr_robot::ConnectionException& ex) {
       ROS_ERROR("%s", ex.what());
       return -1;
     }

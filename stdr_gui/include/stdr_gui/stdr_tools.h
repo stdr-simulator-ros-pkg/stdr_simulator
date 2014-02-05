@@ -78,8 +78,7 @@
 #include "stdr_server/map_loader.h"
 #include <stdr_msgs/LoadExternalMap.h>
 
-#include <stdr_robot/stdr_yaml_parser.h>
-#include "yaml-cpp/exceptions.h"
+#include <stdr_parser/stdr_parser.h>
 
 #define STDR_PI 3.14159
 

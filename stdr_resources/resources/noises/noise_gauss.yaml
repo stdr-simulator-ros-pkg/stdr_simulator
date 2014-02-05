@@ -1,0 +1,6 @@
+noise:
+  noise_specifications:
+    noise_mean: 0
+    noise_std: 0.2
+
+ 

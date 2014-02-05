@@ -19,30 +19,39 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdexcept>
+#include "stdr_parser/stdr_parser_tools.h"
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
-
-namespace stdr_robot {
-
-/**
-@class ConnectionException
-@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
-**/ 
-class ConnectionException : public std::runtime_error
+namespace stdr_parser
 {
-  public:
-    /**
-    @brief Throws an std::runtime_error with a messsage
-    @param errorDescription [const std::string] The error message
-    **/ 
-    ConnectionException(const std::string errorDescription) : 
-      std::runtime_error(errorDescription) 
+  /**
+  @brief Explodes a string based on a delimiter
+  @param s [std::string] The input string
+  @param delimiter [char] The delimiter
+  @return std::set<std::string> : An ensemble of strings
+  **/
+  std::set<std::string> explodeString(std::string s,char delimiter)
+  {
+    std::set<std::string> ret;
+    int prev = 0, next = 0;
+    next = s.find(delimiter,prev);
+    while(next != std::string::npos)
     {
+      ret.insert(s.substr(prev , next - prev));
+      prev = next + 1;
+      next = s.find(delimiter,prev);
     }
-};
-
-} // end of namespace stdr_robot
-
-#endif
+    ret.insert(s.substr(prev , s.size() - prev));
+    return ret;
+  }
+  
+  /**
+  @brief Extracts the filename from an absolute path
+  @param s [std::string] The input string
+  @return std::string
+  **/
+  std::string extractFilename(std::string s)
+  {
+    int n = s.find_last_of('/');
+    return s.substr(n + 1, s.size() - n - 1);
+  }
+}

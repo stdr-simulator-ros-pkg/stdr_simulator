@@ -19,30 +19,50 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#include <stdexcept>
+#ifndef STDR_PARSER_XML_FILE_WRITER
+#define STDR_PARSER_XML_FILE_WRITER
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
-
-namespace stdr_robot {
+#include "stdr_parser/stdr_parser_node.h"
 
 /**
-@class ConnectionException
-@brief Provides a connection exception. Publicly inherits from std::runtime_error. Used in robot handler.
+@namespace stdr_parser
+@brief The main namespace for STDR parser
 **/ 
-class ConnectionException : public std::runtime_error
+namespace stdr_parser
 {
-  public:
-    /**
-    @brief Throws an std::runtime_error with a messsage
-    @param errorDescription [const std::string] The error message
-    **/ 
-    ConnectionException(const std::string errorDescription) : 
-      std::runtime_error(errorDescription) 
-    {
-    }
-};
+  /**
+  @class FileWriter
+  @brief Writes a node tree to an xml file
+  **/ 
+  class XmlFileWriter
+  {
+    private:
+     
+      /**
+      @brief Default constructor
+      @return void
+      **/
+      XmlFileWriter(void);
+      
+    public:
 
-} // end of namespace stdr_robot
-
+      /**
+      @brief Creates an xml file from a message - template member function
+      @param msg [T] The message
+      @param file_name [std::string] The xml file name to write the message
+      @return void
+      **/
+      template <class T>
+      static void messageToFile(T msg,std::string file_name);
+      
+      /**
+      @brief Creates an xml element from a msg - template member function
+      @param msg [T] The message
+      @param base [TiXmlNode*] The xml node to write the message
+      @return void
+      **/
+      template <class T>
+      static void messageToXmlElement(T msg,TiXmlNode* base);
+  };
+}
 #endif
