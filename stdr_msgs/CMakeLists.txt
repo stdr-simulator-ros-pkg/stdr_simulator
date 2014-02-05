@@ -9,8 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
 )
 
-
-
 add_message_files(
     FILES
     Noise.msg
@@ -61,9 +59,10 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
-
-include_directories(
-  ${catkin_INCLUDE_DIRS}
+# Install headers
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
 )
 
 

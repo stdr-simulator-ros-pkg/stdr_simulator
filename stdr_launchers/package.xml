@@ -16,12 +16,10 @@
   
   <buildtool_depend>catkin</buildtool_depend>
   
-  <run_depend>stdr_msgs</run_depend>
   <run_depend>stdr_server</run_depend>
   <run_depend>stdr_robot</run_depend>
   <run_depend>stdr_gui</run_depend>
   <run_depend>rviz</run_depend>
-  <run_depend>tf</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

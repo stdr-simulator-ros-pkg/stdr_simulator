@@ -23,6 +23,7 @@
   <run_depend>stdr_launchers</run_depend>
   <run_depend>stdr_resources</run_depend>
   <run_depend>stdr_samples</run_depend>
+  <run_depend>stdr_parser</run_depend>
 
   <export>
     <metapackage/>

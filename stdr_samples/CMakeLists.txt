@@ -38,3 +38,8 @@ add_dependencies(stdr_obstacle_avoidance stdr_msgs_gencpp) # wait for stdr_msgs 
 target_link_libraries(stdr_obstacle_avoidance 
   ${catkin_LIBRARIES}
 )
+
+# Install excecutables
+install(TARGETS stdr_obstacle_avoidance
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

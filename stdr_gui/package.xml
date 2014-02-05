@@ -2,7 +2,7 @@
 <package>
   <name>stdr_gui</name>
   <version>0.0.0</version>
-  <description>The stdr_gui package</description>
+  <description>A gui in Qt for visualizing purposes in STDR Simulator.</description>
 
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
 
@@ -25,7 +25,6 @@
   <build_depend>stdr_parser</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>nav_msgs</build_depend>
-  <build_depend>map_server</build_depend>
   
   <run_depend>roscpp</run_depend>
   <run_depend>roslib</run_depend>
@@ -36,7 +35,6 @@
   <run_depend>stdr_parser</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
-  <run_depend>map_server</run_depend>
 
   <export>
   </export>

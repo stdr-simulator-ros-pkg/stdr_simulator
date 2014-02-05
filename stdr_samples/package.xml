@@ -2,11 +2,11 @@
 <package>
   <name>stdr_samples</name>
   <version>0.1.0</version>
-  <description>Provides sample codes for STDR simulator</description>
+  <description>Provides sample codes to demonstrate STDR simulator functionalities.</description>
 
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
 
-  <license>GPL v3.0</license>
+  <license>GPLv3</license>
 
   <url type="website">http://stdr-simulator-ros-pkg.github.io</url>
   <url type="bugtracker">https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues</url>

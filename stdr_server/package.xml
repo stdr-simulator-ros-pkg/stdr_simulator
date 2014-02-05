@@ -2,7 +2,7 @@
 <package>
   <name>stdr_server</name>
   <version>0.0.1</version>
-  <description>The stdr_server package</description>
+  <description>Implements synchronization and coordination functionalities of STDR Simulator.</description>
 
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
 

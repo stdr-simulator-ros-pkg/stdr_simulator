@@ -23,7 +23,7 @@ catkin_package(
   INCLUDE_DIRS
     include
   LIBRARIES
-    map_loader
+    stdr_map_loader
   CATKIN_DEPENDS
     roscpp
     tf
@@ -35,23 +35,23 @@ catkin_package(
 link_directories(${catkin_LIBRARY_DIRS})
 include_directories( include ${catkin_INCLUDE_DIRS})
 
-add_library(map_loader src/map_loader.cpp)
-target_link_libraries(map_loader
+add_library(stdr_map_loader src/map_loader.cpp)
+target_link_libraries(stdr_map_loader
     image_loader
     yaml-cpp
     ${catkin_LIBRARIES}
 )
 
-add_library(map_server src/map_server.cpp)
-target_link_libraries(map_server
-    map_loader
+add_library(stdr_map_server src/map_server.cpp)
+target_link_libraries(stdr_map_server
+    stdr_map_loader
     ${catkin_LIBRARIES}
 )
 
 add_library(stdr_server src/stdr_server.cpp)
 add_dependencies(stdr_server stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_server
-	map_server
+	stdr_map_server
 	${catkin_LIBRARIES}
 )
 
@@ -64,17 +64,22 @@ target_link_libraries(stdr_server_node
 add_executable(load_map src/map_loader_node.cpp)
 add_dependencies(load_map stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(load_map
-	map_loader
+	stdr_map_loader
 	${catkin_LIBRARIES}
 )
 
+# Install libraries
 install(TARGETS 
-  map_loader
+    stdr_map_loader
+    stdr_map_server
+    stdr_server
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
-install(DIRECTORY include/
-   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
-   FILES_MATCHING PATTERN "*.h"
+# Install excecutables
+install(TARGETS
+    stdr_server_node
+    load_map
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

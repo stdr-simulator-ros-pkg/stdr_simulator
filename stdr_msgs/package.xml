@@ -2,7 +2,7 @@
 <package>
   <name>stdr_msgs</name>
   <version>0.0.1</version>
-  <description>The stdr_msgs package provides msgs, services and actions for stdr simulator.</description>
+  <description>Provides msgs, services and actions for STDR Simulator.</description>
 
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
 

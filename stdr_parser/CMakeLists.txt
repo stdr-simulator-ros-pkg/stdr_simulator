@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(stdr_parser)
 
-set(CMAKE_BUILD_TYPE Debug)
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslib
   stdr_msgs
   cmake_modules
 )
+
+set(CMAKE_BUILD_TYPE Debug)
 
 find_package(PkgConfig)
 pkg_check_modules(NEW_YAMLCPP yaml-cpp>=0.5)
@@ -60,14 +58,8 @@ target_link_libraries(stdr_parser
   yaml-cpp
 )
 
-
 install(TARGETS 
   stdr_parser
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-)
-
-install(DIRECTORY include/
-   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
-   FILES_MATCHING PATTERN "*.h"
 )

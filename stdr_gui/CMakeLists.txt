@@ -11,7 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
   stdr_parser
   sensor_msgs
   nav_msgs
-  map_server
 )
 
 include_directories( include
@@ -49,7 +48,6 @@ catkin_package(
     stdr_parser
     sensor_msgs
     nav_msgs
-    map_server
   INCLUDE_DIRS include
   LIBRARIES 
 )
@@ -102,13 +100,16 @@ add_executable(stdr_gui_node
 )
 add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)  # Wait for std messages to build
 target_link_libraries(stdr_gui_node
-  stdr_parser
-  map_loader
   ${catkin_LIBRARIES} 
   ${QT_LIBRARIES}
 )
 
 # Install launch files
-install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+install(DIRECTORY launch resources
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+# Install excecutables
+install(TARGETS stdr_gui_node
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
