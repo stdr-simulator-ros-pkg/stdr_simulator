@@ -1,0 +1,15 @@
+/** 
+  \mainpage STDR Simulator Documetation Page
+  
+  \image html https://raw.github.com/stdr-simulator-ros-pkg/stdr_docs/master/logos/logo_small.png
+  
+  \section packages_sec Packages Documentation
+  - <a href="http://docs.ros.org/hydro/api/stdr_gui/html">stdr_gui</a>
+  - <a href="http://docs.ros.org/hydro/api/stdr_server/html">stdr_server</a>
+  - <a href="http://docs.ros.org/hydro/api/stdr_robot/html">stdr_robot</a>
+  
+  \section doc_sec Further Documentation and Tutorials
+  - <a href="http://ros.org/wiki/stdr_simulator">ROS Wiki page</a>
+  - <a href="http://stdr-simulator-ros-pkg.github.io/">STDR Simulator home page</a>
+ 
+*/

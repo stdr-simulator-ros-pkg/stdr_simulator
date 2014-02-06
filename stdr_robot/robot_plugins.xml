@@ -1,0 +1,7 @@
+<library path="libstdr_robot_nodelet">
+  <class name="stdr_robot/Robot" type="stdr_robot::Robot" base_class_type="nodelet::Nodelet">
+    <description>
+      This is a robot nodelet.
+    </description>
+  </class>
+</library>

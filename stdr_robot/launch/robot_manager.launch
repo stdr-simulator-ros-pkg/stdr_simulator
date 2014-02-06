@@ -1,0 +1,5 @@
+<launch>
+
+  <node pkg="nodelet" type="nodelet" name="robot_manager"  args="manager"/>
+ 
+</launch>

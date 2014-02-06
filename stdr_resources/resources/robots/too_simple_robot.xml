@@ -1,0 +1,9 @@
+<robot>
+  <robot_specifications>
+    <initial_pose>
+      <x>0</x>
+      <y>0</y>
+      <theta>0</theta>
+    </initial_pose>
+  </robot_specifications>
+</robot>

@@ -1,0 +1,14 @@
+sonar:
+  sonar_specifications:
+    max_range: 3
+    min_range: 0.300000011920929
+    cone_angle: 0.523598313331604
+    noise:
+      filename: noises/noise_gauss.yaml
+    frequency: 10
+    frame_id: sonar_0
+    pose:
+      x: 0.100000001490116
+      y: 0
+      theta: 0
+ 

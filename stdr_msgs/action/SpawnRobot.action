@@ -1,0 +1,7 @@
+#goal definition
+stdr_msgs/RobotMsg description
+---
+#result definition
+stdr_msgs/RobotIndexedMsg indexedDescription
+---
+#feedback

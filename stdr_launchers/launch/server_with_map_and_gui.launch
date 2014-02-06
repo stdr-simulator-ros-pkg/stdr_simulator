@@ -1,0 +1,11 @@
+<launch>
+	
+	<include file="$(find stdr_robot)/launch/robot_manager.launch" />
+	
+	<node type="stdr_server_node" pkg="stdr_server" name="stdr_server" output="screen" args="$(find stdr_resources)/maps/sparse_obstacles.yaml"/>
+
+	<node pkg="tf" type="static_transform_publisher" name="world2map" args="0 0 0 0 0 0  world map 100" />
+	
+	<include file="$(find stdr_gui)/launch/stdr_gui.launch"/>
+	
+</launch>

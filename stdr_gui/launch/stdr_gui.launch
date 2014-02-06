@@ -1,0 +1,5 @@
+<launch>
+
+	<node name="$(anon stdr_gui_node)" pkg="stdr_gui" type="stdr_gui_node"/>
+	
+</launch>
