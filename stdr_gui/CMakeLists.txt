@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   stdr_parser
   sensor_msgs
   nav_msgs
+  map_server
 )
 
 include_directories( include
@@ -48,6 +49,7 @@ catkin_package(
     stdr_parser
     sensor_msgs
     nav_msgs
+    map_server
   INCLUDE_DIRS include
   LIBRARIES 
 )

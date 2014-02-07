@@ -18,6 +18,7 @@
   
   <build_depend>roscpp</build_depend>
   <build_depend>roslib</build_depend>
+  <build_depend>libqt4-dev</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>stdr_msgs</build_depend>
   <build_depend>stdr_robot</build_depend>
@@ -25,9 +26,11 @@
   <build_depend>stdr_parser</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>nav_msgs</build_depend>
+  <build_depend>map_server</build_depend>
   
   <run_depend>roscpp</run_depend>
   <run_depend>roslib</run_depend>
+  <run_depend>libqt4</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>stdr_msgs</run_depend>
   <run_depend>stdr_robot</run_depend>
@@ -35,6 +38,7 @@
   <run_depend>stdr_parser</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
+  <run_depend>map_server</run_depend>
 
   <export>
   </export>
