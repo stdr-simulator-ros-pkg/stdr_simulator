@@ -97,6 +97,9 @@ namespace stdr_robot {
         yMap = _sensorTransform.getOrigin().y() / _map.info.resolution + 
           sin( angle ) * distance;
         
+        if (yMap * _map.info.width + xMap > _map.info.height*_map.info.width)
+          return;
+        
         if ( _map.data[ yMap * _map.info.width + xMap ] > 70 )
         {
           break;
