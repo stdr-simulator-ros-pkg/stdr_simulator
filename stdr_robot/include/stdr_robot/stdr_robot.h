@@ -56,8 +56,6 @@ namespace stdr_robot {
     
       //!< ROS subscriber for map
       ros::Subscriber _mapSubscriber;
-      //!< ROS timer to check collision -2b changed-
-      ros::Timer _collisionTimer;
       //!< ROS timer to publish tf transforms (10Hz)
       ros::Timer _tfTimer;
       
@@ -75,6 +73,8 @@ namespace stdr_robot {
       //!< Holds the robot current pose
       geometry_msgs::Pose2DPtr _currentPosePtr;
       
+      geometry_msgs::Pose2D previous_pose;
+      
       //!< Pointer of a motion controller
       MotionControllerPtr _motionControllerPtr;
       
@@ -85,7 +85,7 @@ namespace stdr_robot {
       @brief Checks the robot collision -2b changed-
       @return void
       **/
-      void checkCollision(const ros::TimerEvent&);
+      bool collisionExists(geometry_msgs::Pose2D new_pose);
       
       /**
       @brief Publishes the tf transforms every with 10Hz

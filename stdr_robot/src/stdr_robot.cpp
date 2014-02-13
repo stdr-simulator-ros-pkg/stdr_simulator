@@ -59,9 +59,6 @@ namespace stdr_robot
     _moveRobotService = n.advertiseService(
       getName() + "/replace", &Robot::moveRobotCallback, this);
       
-    _collisionTimer = n.createTimer(
-      ros::Duration(0.1), &Robot::checkCollision, this);
-      
     _tfTimer = n.createTimer(
       ros::Duration(0.1), &Robot::publishTransforms, this);
   }
@@ -88,6 +85,10 @@ namespace stdr_robot
     _currentPosePtr->x = result->description.initialPose.x;
     _currentPosePtr->y = result->description.initialPose.y;
     _currentPosePtr->theta = result->description.initialPose.theta;
+    
+    previous_pose.x = _currentPosePtr->x;
+    previous_pose.y = _currentPosePtr->y;
+    previous_pose.theta = _currentPosePtr->theta;
     
     for ( unsigned int laserIter = 0; 
       laserIter < result->description.laserSensors.size(); laserIter++ ){
@@ -128,16 +129,34 @@ namespace stdr_robot
     _currentPosePtr->x = req.newPose.x;
     _currentPosePtr->y = req.newPose.y;
     _currentPosePtr->theta = req.newPose.theta;
+    
+    previous_pose.x = _currentPosePtr->x;
+    previous_pose.y = _currentPosePtr->y;
+    previous_pose.theta = _currentPosePtr->theta;
     return true;
   }
 
   /**
   @brief Checks the robot collision -2b changed-
-  @return void
+  @return True on collision
   **/
-  void Robot::checkCollision(const ros::TimerEvent&) 
+  bool Robot::collisionExists(geometry_msgs::Pose2D new_pose) 
   {
-    //!< check if we have a collision and notify MotionController via stop() interface
+    if(_map.info.width == 0 || _map.info.height == 0)
+    {
+      return false;
+    }
+    unsigned int xMapPrev = previous_pose.x / _map.info.resolution;
+    unsigned int yMapPrev = previous_pose.y / _map.info.resolution;
+   
+    unsigned int xMap = new_pose.x / _map.info.resolution;
+    unsigned int yMap = new_pose.y / _map.info.resolution;
+    
+    float angle = atan2(yMapPrev - yMap, xMapPrev - xMap);
+    
+    if(_map.data[ yMap * _map.info.width + xMap ] > 70)
+      return true;
+    return false;
   }
 
   /**
@@ -146,11 +165,19 @@ namespace stdr_robot
   **/
   void Robot::publishTransforms(const ros::TimerEvent&) 
   {
-    geometry_msgs::Pose2D _pose = _motionControllerPtr->getPose();
+    geometry_msgs::Pose2D pose = _motionControllerPtr->getPose();
+    if( ! collisionExists(pose) )
+    {
+      previous_pose = pose;
+    }
+    else
+    {
+      _motionControllerPtr->setPose(previous_pose);
+    }
     //!< Robot tf
-    tf::Vector3 translation(_pose.x, _pose.y, 0);
+    tf::Vector3 translation(previous_pose.x, previous_pose.y, 0);
     tf::Quaternion rotation;
-    rotation.setRPY(0, 0, _pose.theta);
+    rotation.setRPY(0, 0, previous_pose.theta);
 
     tf::Transform mapToRobot(rotation, translation);
 
