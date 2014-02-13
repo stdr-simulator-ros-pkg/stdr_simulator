@@ -82,8 +82,25 @@ namespace stdr_robot {
         const geometry_msgs::Pose2DPtr& pose, 
         tf::TransformBroadcaster& tf, 
         const std::string& name)
-          : _posePtr(pose), _tfBroadcaster(tf), _freq(0.1), _namespace(name) 
+          : _tfBroadcaster(tf), _freq(0.1), _namespace(name) 
       { 
+        _pose.x = pose->x;
+        _pose.y = pose->y;
+        _pose.theta = pose->theta;
+      }
+      
+    public:
+      
+      geometry_msgs::Pose2D getPose(void)
+      {
+        return _pose;
+      }
+      
+      void setPose(geometry_msgs::Pose2D new_pose)
+      {
+        _pose.x = new_pose.x;
+        _pose.y = new_pose.y;
+        _pose.theta = new_pose.theta;
       }
     
     protected:
@@ -99,7 +116,7 @@ namespace stdr_robot {
       //!< Broadcaster of the robot tf transform
       tf::TransformBroadcaster& _tfBroadcaster;
       //!< Robot pose message
-      const geometry_msgs::Pose2DPtr& _posePtr;
+      geometry_msgs::Pose2D _pose;
       //!< Current motion command
       geometry_msgs::Twist _currentTwist;
   };

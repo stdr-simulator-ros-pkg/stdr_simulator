@@ -83,23 +83,22 @@ namespace stdr_robot {
     
     if (_currentTwist.angular.z == 0) {
       
-      _posePtr->x += _currentTwist.linear.x*dt.toSec()*cosf(_posePtr->theta);
-      _posePtr->y += _currentTwist.linear.x*dt.toSec()*sinf(_posePtr->theta);
+      _pose.x += _currentTwist.linear.x * dt.toSec() * cosf(_pose.theta);
+      _pose.y += _currentTwist.linear.x * dt.toSec() * sinf(_pose.theta);
     }
     else {
       
-      _posePtr->x += - _currentTwist.linear.x / _currentTwist.angular.z * 
-        sinf(_posePtr->theta) + 
+      _pose.x += - _currentTwist.linear.x / _currentTwist.angular.z * 
+        sinf(_pose.theta) + 
         _currentTwist.linear.x / _currentTwist.angular.z * 
-        sinf(_posePtr->theta + dt.toSec() * _currentTwist.angular.z);
+        sinf(_pose.theta + dt.toSec() * _currentTwist.angular.z);
       
-      _posePtr->y -= - _currentTwist.linear.x / _currentTwist.angular.z * 
-        cosf(_posePtr->theta) + 
+      _pose.y -= - _currentTwist.linear.x / _currentTwist.angular.z * 
+        cosf(_pose.theta) + 
         _currentTwist.linear.x / _currentTwist.angular.z * 
-        cosf(_posePtr->theta + dt.toSec() * _currentTwist.angular.z);
+        cosf(_pose.theta + dt.toSec() * _currentTwist.angular.z);
     }
-    _posePtr->theta += _currentTwist.angular.z*dt.toSec();
-    
+    _pose.theta += _currentTwist.angular.z * dt.toSec();
   }
   
   /**

@@ -146,11 +146,11 @@ namespace stdr_robot
   **/
   void Robot::publishTransforms(const ros::TimerEvent&) 
   {
-    
+    geometry_msgs::Pose2D _pose = _motionControllerPtr->getPose();
     //!< Robot tf
-    tf::Vector3 translation(_currentPosePtr->x, _currentPosePtr->y, 0);
+    tf::Vector3 translation(_pose.x, _pose.y, 0);
     tf::Quaternion rotation;
-    rotation.setRPY(0, 0, _currentPosePtr->theta);
+    rotation.setRPY(0, 0, _pose.theta);
 
     tf::Transform mapToRobot(rotation, translation);
 
