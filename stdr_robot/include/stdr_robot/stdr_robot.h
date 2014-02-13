@@ -85,7 +85,9 @@ namespace stdr_robot {
       @brief Checks the robot collision -2b changed-
       @return void
       **/
-      bool collisionExists(geometry_msgs::Pose2D new_pose);
+      bool collisionExists(
+        geometry_msgs::Pose2D new_pose, 
+        geometry_msgs::Pose2D& collision_point);
       
       /**
       @brief Publishes the tf transforms every with 10Hz

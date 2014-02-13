@@ -140,22 +140,39 @@ namespace stdr_robot
   @brief Checks the robot collision -2b changed-
   @return True on collision
   **/
-  bool Robot::collisionExists(geometry_msgs::Pose2D new_pose) 
+  bool Robot::collisionExists(
+    geometry_msgs::Pose2D new_pose,
+    geometry_msgs::Pose2D& collision_point) 
   {
     if(_map.info.width == 0 || _map.info.height == 0)
     {
       return false;
     }
-    unsigned int xMapPrev = previous_pose.x / _map.info.resolution;
-    unsigned int yMapPrev = previous_pose.y / _map.info.resolution;
+    int xMapPrev = previous_pose.x / _map.info.resolution;
+    int yMapPrev = previous_pose.y / _map.info.resolution;
    
-    unsigned int xMap = new_pose.x / _map.info.resolution;
-    unsigned int yMap = new_pose.y / _map.info.resolution;
+    int xMap = new_pose.x / _map.info.resolution;
+    int yMap = new_pose.y / _map.info.resolution;
     
-    float angle = atan2(yMapPrev - yMap, xMapPrev - xMap);
+    float angle = atan2(yMap - yMapPrev, xMap - xMapPrev);
     
-    if(_map.data[ yMap * _map.info.width + xMap ] > 70)
-      return true;
+    unsigned int x = xMapPrev;
+    unsigned int y = yMapPrev;
+    unsigned int d = 0;
+    while(pow(xMap - x,2) + pow(xMap - x,2) > 1)
+    {
+      x = xMapPrev + cos(angle) * d;
+      y = yMapPrev + sin(angle) * d;
+      if(_map.data[ y * _map.info.width + x ] > 70)
+      {
+        d--;    // Backtrace the previous valid position
+        collision_point.x = (xMapPrev + cos(angle) * d) * _map.info.resolution;
+        collision_point.y = (yMapPrev + sin(angle) * d) * _map.info.resolution;
+        collision_point.theta = new_pose.theta;
+        return true;
+      }
+      d++;
+    }
     return false;
   }
 
@@ -166,13 +183,15 @@ namespace stdr_robot
   void Robot::publishTransforms(const ros::TimerEvent&) 
   {
     geometry_msgs::Pose2D pose = _motionControllerPtr->getPose();
-    if( ! collisionExists(pose) )
+    geometry_msgs::Pose2D collision_point = previous_pose;
+    if( ! collisionExists(pose, collision_point) )
     {
       previous_pose = pose;
     }
     else
     {
-      _motionControllerPtr->setPose(previous_pose);
+      previous_pose = collision_point;
+      _motionControllerPtr->setPose(collision_point);
     }
     //!< Robot tf
     tf::Vector3 translation(previous_pose.x, previous_pose.y, 0);
