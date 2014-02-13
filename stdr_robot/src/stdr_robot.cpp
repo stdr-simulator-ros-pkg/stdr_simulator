@@ -103,6 +103,14 @@ namespace stdr_robot
           result->description.sonarSensors[sonarIter], getName(), n ) ) );
     }
     
+    float radius = result->description.footprint.radius;
+    for(unsigned int i = 0 ; i < 360 ; i++)
+    {
+      float x = cos(i * 3.14159265359 / 180.0) * radius;
+      float y = sin(i * 3.14159265359 / 180.0) * radius;
+      footprint.push_back( std::pair<float,float>(x,y));
+    }
+
     _motionControllerPtr.reset( 
       new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()));
   }
@@ -155,21 +163,33 @@ namespace stdr_robot
     int yMap = new_pose.y / _map.info.resolution;
     
     float angle = atan2(yMap - yMapPrev, xMap - xMapPrev);
-    
-    unsigned int x = xMapPrev;
-    unsigned int y = yMapPrev;
-    unsigned int d = 0;
+    int x = xMapPrev;
+    int y = yMapPrev;
+    int d = 0;
     while(pow(xMap - x,2) + pow(xMap - x,2) > 1)
     {
       x = xMapPrev + cos(angle) * d;
       y = yMapPrev + sin(angle) * d;
-      if(_map.data[ y * _map.info.width + x ] > 70)
+
+      //Check all footprint points
+      for(unsigned int i = 0 ; i < footprint.size() ; i++)
       {
-        d--;    // Backtrace the previous valid position
-        collision_point.x = (xMapPrev + cos(angle) * d) * _map.info.resolution;
-        collision_point.y = (yMapPrev + sin(angle) * d) * _map.info.resolution;
-        collision_point.theta = new_pose.theta;
-        return true;
+        int xx = x + (int)(footprint[i].first / _map.info.resolution);
+        int yy = y + (int)(footprint[i].second / _map.info.resolution);
+        
+        if(_map.data[ yy * _map.info.width + xx ] > 70)
+        {
+          //~ d-=2;    // Backtrace the previous valid position
+          //~ collision_point.x = (int)(xMapPrev + cos(angle) * d);   
+          //~ collision_point.x *= _map.info.resolution;
+          //~ collision_point.y = (int)(yMapPrev + sin(angle) * d); 
+          //~ collision_point.y *= _map.info.resolution;
+          //~ ROS_ERROR("Prevpos [%d %d] collision pos [%f %f]",xMapPrev,yMapPrev,
+            //~ collision_point.x / _map.info.resolution, collision_point.y / _map.info.resolution);
+          //~ collision_point.theta = previous_pose.theta;
+          collision_point = previous_pose;
+          return true;
+        }
       }
       d++;
     }

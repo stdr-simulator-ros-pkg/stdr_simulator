@@ -94,6 +94,9 @@ namespace stdr_robot {
       @return void
       **/
       void publishTransforms(const ros::TimerEvent&);
+      
+      // The robot footprint in points (row * 10000 + col)
+      std::vector<std::pair<float,float> > footprint;
     //------------------------------------------------------------------------//      
     public: 
       

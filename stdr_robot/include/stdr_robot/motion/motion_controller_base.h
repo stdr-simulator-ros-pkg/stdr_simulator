@@ -91,11 +91,20 @@ namespace stdr_robot {
       
     public:
       
+      /**
+      @brief Returns the pose calculated by the motion controller
+      @return geometry_msgs::Pose2D
+      **/
       geometry_msgs::Pose2D getPose(void)
       {
         return _pose;
       }
       
+      /**
+      @brief Sets the initial pose of the motion controller
+      @param new_pose [geometry_msgs::Pose2D] The new pose
+      @return void
+      **/
       void setPose(geometry_msgs::Pose2D new_pose)
       {
         _pose.x = new_pose.x;
