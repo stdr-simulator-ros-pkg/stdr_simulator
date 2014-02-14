@@ -88,6 +88,9 @@ namespace stdr_robot {
       bool collisionExists(
         geometry_msgs::Pose2D new_pose, 
         geometry_msgs::Pose2D& collision_point);
+        
+      bool collisionExistsNoPath(
+        geometry_msgs::Pose2D new_pose); 
       
       /**
       @brief Publishes the tf transforms every with 10Hz

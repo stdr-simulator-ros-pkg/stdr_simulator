@@ -134,6 +134,12 @@ namespace stdr_robot
   bool Robot::moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
                 stdr_msgs::MoveRobot::Response& res)
   {
+    
+    if(collisionExistsNoPath(req.newPose))
+    {
+      return false;
+    }
+    
     _currentPosePtr->x = req.newPose.x;
     _currentPosePtr->y = req.newPose.y;
     _currentPosePtr->theta = req.newPose.theta;
@@ -142,6 +148,37 @@ namespace stdr_robot
     previous_pose.y = _currentPosePtr->y;
     previous_pose.theta = _currentPosePtr->theta;
     return true;
+  }
+
+  /**
+  @brief Checks the robot collision -2b changed-
+  @return True on collision
+  **/
+  bool Robot::collisionExistsNoPath(
+    geometry_msgs::Pose2D new_pose) 
+  {
+    if(_map.info.width == 0 || _map.info.height == 0)
+    {
+      return false;
+    }
+    
+    int xMap = new_pose.x / _map.info.resolution;
+    int yMap = new_pose.y / _map.info.resolution;
+
+    int x = xMap;
+    int y = yMap;
+
+    for(unsigned int i = 0 ; i < footprint.size() ; i++)
+    {
+      int xx = x + (int)(footprint[i].first / _map.info.resolution);
+      int yy = y + (int)(footprint[i].second / _map.info.resolution);
+      
+      if(_map.data[ yy * _map.info.width + xx ] > 70)
+      {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
