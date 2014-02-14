@@ -203,7 +203,7 @@ namespace stdr_robot
     int x = xMapPrev;
     int y = yMapPrev;
     int d = 1;
-    while(pow(xMap - x,2) + pow(xMap - x,2) > 1)
+    while(pow(xMap - x,2) + pow(yMap - y,2) > 1)
     {
       x = xMapPrev + cos(angle) * d;
       y = yMapPrev + sin(angle) * d;
