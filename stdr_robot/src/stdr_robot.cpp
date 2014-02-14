@@ -165,7 +165,7 @@ namespace stdr_robot
     float angle = atan2(yMap - yMapPrev, xMap - xMapPrev);
     int x = xMapPrev;
     int y = yMapPrev;
-    int d = 0;
+    int d = 1;
     while(pow(xMap - x,2) + pow(xMap - x,2) > 1)
     {
       x = xMapPrev + cos(angle) * d;
@@ -184,8 +184,6 @@ namespace stdr_robot
           //~ collision_point.x *= _map.info.resolution;
           //~ collision_point.y = (int)(yMapPrev + sin(angle) * d); 
           //~ collision_point.y *= _map.info.resolution;
-          //~ ROS_ERROR("Prevpos [%d %d] collision pos [%f %f]",xMapPrev,yMapPrev,
-            //~ collision_point.x / _map.info.resolution, collision_point.y / _map.info.resolution);
           //~ collision_point.theta = previous_pose.theta;
           collision_point = previous_pose;
           return true;
