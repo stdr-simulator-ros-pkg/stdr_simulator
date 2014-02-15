@@ -20,6 +20,9 @@ include_directories( include
 
 link_directories(${catkin_LIBRARY_DIRS})
 
+# On Ubuntu 13.04 qt5 is the default, but we need qt4
+set(ENV{QT_SELECT} qt4)
+
 find_package(Qt4 REQUIRED COMPONENTS 
   QtCore 
   QtGui 
