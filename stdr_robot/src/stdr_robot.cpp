@@ -193,26 +193,40 @@ namespace stdr_robot
     {
       return false;
     }
-    int xMapPrev = previous_pose.x / _map.info.resolution;
-    int yMapPrev = previous_pose.y / _map.info.resolution;
-   
-    int xMap = new_pose.x / _map.info.resolution;
-    int yMap = new_pose.y / _map.info.resolution;
-    
+
+    int xMapPrev, xMap, yMapPrev, yMap;
+    bool movingForward = false, movingUpward = false;
+    if ( previous_pose.x < new_pose.x )
+      movingForward = true;
+    if ( previous_pose.y < new_pose.y )
+      movingUpward = true;
+
+    xMapPrev = movingForward? (int)( previous_pose.x / _map.info.resolution ): 
+                              ceil( previous_pose.x / _map.info.resolution );
+    xMap = movingForward? ceil( new_pose.x / _map.info.resolution ): 
+                          (int)( new_pose.x / _map.info.resolution );
+
+    yMapPrev = movingUpward? (int)( previous_pose.y / _map.info.resolution ):
+                              ceil( previous_pose.y / _map.info.resolution );
+    yMap = movingUpward? ceil( new_pose.y / _map.info.resolution ):
+                        (int)( new_pose.y / _map.info.resolution );
+
     float angle = atan2(yMap - yMapPrev, xMap - xMapPrev);
     int x = xMapPrev;
     int y = yMapPrev;
-    int d = 1;
+    int d = 2;
+
     while(pow(xMap - x,2) + pow(yMap - y,2) > 1)
     {
-      x = xMapPrev + cos(angle) * d;
-      y = yMapPrev + sin(angle) * d;
-
+      x = xMapPrev +
+        ( movingForward? ceil( cos(angle) * d ): (int)( cos(angle) * d ) );
+      y = yMapPrev +
+        ( movingUpward? ceil( sin(angle) * d ): (int)( sin(angle) * d ) );
       //Check all footprint points
       for(unsigned int i = 0 ; i < footprint.size() ; i++)
       {
-        int xx = x + (int)(footprint[i].first / _map.info.resolution);
-        int yy = y + (int)(footprint[i].second / _map.info.resolution);
+        int xx = x + footprint[i].first / _map.info.resolution;
+        int yy = y + footprint[i].second / _map.info.resolution;
         
         if(_map.data[ yy * _map.info.width + xx ] > 70)
         {
