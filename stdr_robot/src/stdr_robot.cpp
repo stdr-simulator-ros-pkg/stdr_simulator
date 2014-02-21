@@ -142,11 +142,9 @@ namespace stdr_robot
     
     _currentPosePtr->x = req.newPose.x;
     _currentPosePtr->y = req.newPose.y;
-    _currentPosePtr->theta = req.newPose.theta;
     
     previous_pose.x = _currentPosePtr->x;
     previous_pose.y = _currentPosePtr->y;
-    previous_pose.theta = _currentPosePtr->theta;
     return true;
   }
 
