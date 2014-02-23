@@ -145,6 +145,8 @@ namespace stdr_robot
 
     previous_pose.x = _currentPosePtr->x;
     previous_pose.y = _currentPosePtr->y;
+
+    _motionControllerPtr->setPose(previous_pose);
     return true;
   }
 
