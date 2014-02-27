@@ -1008,7 +1008,12 @@ namespace stdr_gui
     newPose.x = pnew.x() * map_msg_.info.resolution;
     newPose.y = pnew.y() * map_msg_.info.resolution;
     
-    robot_handler_.moveRobot(robotName,newPose);
+    bool success = robot_handler_.moveRobot(robotName,newPose);
+    if(!success)
+    {
+      gui_connector_.raiseMessage(
+        "STDR robot - Error", "Unable to relocate the robot");
+    }
   }
   
   /**
