@@ -76,7 +76,7 @@ namespace stdr_gui
     actionAddRobot = new QAction(this);
     actionAddRobot->setObjectName(QString::fromUtf8("actionNewRobot"));
     actionAddRobot->setCheckable(false);
-    actionAddRobot->setIconText(QString("Add robot"));
+    actionAddRobot->setIconText(QString("Load robot"));
     QIcon iconAddRobot;
     iconAddRobot.addFile(QString::fromUtf8((
       stdr_gui_tools::getRosPackagePath("stdr_gui") + 
