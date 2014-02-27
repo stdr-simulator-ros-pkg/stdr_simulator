@@ -82,8 +82,34 @@ namespace stdr_robot {
         const geometry_msgs::Pose2DPtr& pose, 
         tf::TransformBroadcaster& tf, 
         const std::string& name)
-          : _posePtr(pose), _tfBroadcaster(tf), _freq(0.1), _namespace(name) 
+          : _tfBroadcaster(tf), _freq(0.1), _namespace(name) 
       { 
+        _pose.x = pose->x;
+        _pose.y = pose->y;
+        _pose.theta = pose->theta;
+      }
+      
+    public:
+      
+      /**
+      @brief Returns the pose calculated by the motion controller
+      @return geometry_msgs::Pose2D
+      **/
+      geometry_msgs::Pose2D getPose(void)
+      {
+        return _pose;
+      }
+      
+      /**
+      @brief Sets the initial pose of the motion controller
+      @param new_pose [geometry_msgs::Pose2D] The new pose
+      @return void
+      **/
+      void setPose(geometry_msgs::Pose2D new_pose)
+      {
+        _pose.x = new_pose.x;
+        _pose.y = new_pose.y;
+        _pose.theta = new_pose.theta;
       }
     
     protected:
@@ -99,7 +125,7 @@ namespace stdr_robot {
       //!< Broadcaster of the robot tf transform
       tf::TransformBroadcaster& _tfBroadcaster;
       //!< Robot pose message
-      const geometry_msgs::Pose2DPtr& _posePtr;
+      geometry_msgs::Pose2D _pose;
       //!< Current motion command
       geometry_msgs::Twist _currentTwist;
   };
