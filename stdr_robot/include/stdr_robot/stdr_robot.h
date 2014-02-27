@@ -91,7 +91,14 @@ namespace stdr_robot {
         
       bool collisionExistsNoPath(
         geometry_msgs::Pose2D new_pose); 
-      
+
+      /**
+        @brief Checks the robot's reposition into unknown area
+        @param newPose [const geometry_msgs::Pose2D] The pose for the robot to be moved to
+        @return True when position is in unknown area
+       **/
+      bool checkUnknownOccupancy(geometry_msgs::Pose2D newPose);
+
       /**
       @brief Publishes the tf transforms every with 10Hz
       @return void

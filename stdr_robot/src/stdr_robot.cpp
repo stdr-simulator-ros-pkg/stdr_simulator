@@ -135,7 +135,8 @@ namespace stdr_robot
                 stdr_msgs::MoveRobot::Response& res)
   {
 
-    if(collisionExistsNoPath(req.newPose))
+    if( collisionExistsNoPath(req.newPose) ||
+        checkUnknownOccupancy(req.newPose) )
     {
       return false;
     }
@@ -178,6 +179,30 @@ namespace stdr_robot
         return true;
       }
     }
+    return false;
+  }
+
+  /**
+  @brief Checks the robot's reposition into unknown area
+  @param newPose [const geometry_msgs::Pose2D] The pose for the robot to be moved to
+  @return True when position is in unknown area
+  **/
+  bool Robot::checkUnknownOccupancy(
+    geometry_msgs::Pose2D newPose)
+  {
+    if(_map.info.width == 0 || _map.info.height == 0)
+    {
+      return false;
+    }
+
+    int xMap = newPose.x / _map.info.resolution;
+    int yMap = newPose.y / _map.info.resolution;
+
+    if( _map.data[ yMap * _map.info.width + xMap ] == -1 )
+    {
+      return true;
+    }
+
     return false;
   }
 
