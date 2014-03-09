@@ -12,20 +12,20 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   
-   Authors : 
+
+   Authors :
    * Manos Tsardoulias, etsardou@gmail.com
    * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+   * Chris Zalidis, zalidis@gmail.com
 ******************************************************************************/
 
 #include <stdr_robot/stdr_robot.h>
 #include <nodelet/NodeletUnload.h>
 #include <pluginlib/class_list_macros.h>
 
-PLUGINLIB_EXPORT_CLASS(stdr_robot::Robot, nodelet::Nodelet) 
+PLUGINLIB_EXPORT_CLASS(stdr_robot::Robot, nodelet::Nodelet)
 
-namespace stdr_robot 
+namespace stdr_robot
 {
   /**
   @brief Default constructor
@@ -33,35 +33,31 @@ namespace stdr_robot
   **/
   Robot::Robot(void)
   {
-    
+
   }
 
   /**
   @brief Initializes the robot and gets the environment occupancy grid map
   @return void
   **/
-  void Robot::onInit() 
+  void Robot::onInit()
   {
     ros::NodeHandle n = getMTNodeHandle();
-    _currentPosePtr.reset( new geometry_msgs::Pose2D );
-    
-    _registerClientPtr.reset( 
+
+    _registerClientPtr.reset(
       new RegisterRobotClient(n, "stdr_server/register_robot", true) );
-      
+
     _registerClientPtr->waitForServer();
-    
+
     stdr_msgs::RegisterRobotGoal goal;
     goal.name = getName();
-    _registerClientPtr->sendGoal(goal, 
+    _registerClientPtr->sendGoal(goal,
       boost::bind(&Robot::initializeRobot, this, _1, _2));	
-    
+
     _mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
     _moveRobotService = n.advertiseService(
       getName() + "/replace", &Robot::moveRobotCallback, this);
-      
-    _collisionTimer = n.createTimer(
-      ros::Duration(0.1), &Robot::checkCollision, this);
-      
+
     _tfTimer = n.createTimer(
       ros::Duration(0.1), &Robot::publishTransforms, this);
   }
@@ -73,37 +69,45 @@ namespace stdr_robot
   @return void
   **/
   void Robot::initializeRobot(
-    const actionlib::SimpleClientGoalState& state, 
-    const stdr_msgs::RegisterRobotResultConstPtr result) 
+    const actionlib::SimpleClientGoalState& state,
+    const stdr_msgs::RegisterRobotResultConstPtr result)
   {
-    
+
     if (state == state.ABORTED) {
       NODELET_ERROR("Something really bad happened...");
       return;
     }
-    
+
     NODELET_INFO("Loaded new robot, %s", getName().c_str());
     ros::NodeHandle n = getMTNodeHandle();
-    
-    _currentPosePtr->x = result->description.initialPose.x;
-    _currentPosePtr->y = result->description.initialPose.y;
-    _currentPosePtr->theta = result->description.initialPose.theta;
-    
-    for ( unsigned int laserIter = 0; 
+
+    _currentPose = result->description.initialPose;
+
+    _previousPose = _currentPose;
+
+    for ( unsigned int laserIter = 0;
       laserIter < result->description.laserSensors.size(); laserIter++ ){
-      _sensors.push_back( SensorPtr( 
-        new Laser( _map, 
+      _sensors.push_back( SensorPtr(
+        new Laser( _map,
           result->description.laserSensors[laserIter], getName(), n ) ) );
     }
-    for ( unsigned int sonarIter = 0; 
+    for ( unsigned int sonarIter = 0;
       sonarIter < result->description.sonarSensors.size(); sonarIter++ ){
-      _sensors.push_back( SensorPtr( 
-        new Sonar( _map, 
+      _sensors.push_back( SensorPtr(
+        new Sonar( _map,
           result->description.sonarSensors[sonarIter], getName(), n ) ) );
     }
-    
-    _motionControllerPtr.reset( 
-      new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()));
+
+    float radius = result->description.footprint.radius;
+    for(unsigned int i = 0 ; i < 360 ; i++)
+    {
+      float x = cos(i * 3.14159265359 / 180.0) * radius;
+      float y = sin(i * 3.14159265359 / 180.0) * radius;
+      _footprint.push_back( std::pair<float,float>(x,y));
+    }
+
+    _motionControllerPtr.reset(
+      new IdealMotionController(_currentPose, _tfBroadcaster, n, getName()));
   }
 
   /**
@@ -111,7 +115,7 @@ namespace stdr_robot
   @param msg [const nav_msgs::OccupancyGridConstPtr&] The occupancy grid map
   @return void
   **/
-  void Robot::mapCallback(const nav_msgs::OccupancyGridConstPtr& msg) 
+  void Robot::mapCallback(const nav_msgs::OccupancyGridConstPtr& msg)
   {
     _map = *msg;
   }
@@ -125,53 +129,173 @@ namespace stdr_robot
   bool Robot::moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
                 stdr_msgs::MoveRobot::Response& res)
   {
-    _currentPosePtr->x = req.newPose.x;
-    _currentPosePtr->y = req.newPose.y;
-    _currentPosePtr->theta = req.newPose.theta;
+
+    if( collisionExistsNoPath(req.newPose) ||
+        checkUnknownOccupancy(req.newPose) )
+    {
+      return false;
+    }
+
+    _currentPose = req.newPose;
+
+    _previousPose = _currentPose;
+
+    _motionControllerPtr->setPose(_previousPose);
     return true;
   }
 
   /**
   @brief Checks the robot collision -2b changed-
-  @return void
+  @return True on collision
   **/
-  void Robot::checkCollision(const ros::TimerEvent&) 
+  bool Robot::collisionExistsNoPath(
+    const geometry_msgs::Pose2D& newPose)
   {
-    //!< check if we have a collision and notify MotionController via stop() interface
+    if(_map.info.width == 0 || _map.info.height == 0)
+    {
+      return false;
+    }
+
+    int xMap = newPose.x / _map.info.resolution;
+    int yMap = newPose.y / _map.info.resolution;
+
+    int x = xMap;
+    int y = yMap;
+
+    for(unsigned int i = 0 ; i < _footprint.size() ; i++)
+    {
+      int xx = x + (int)(_footprint[i].first / _map.info.resolution);
+      int yy = y + (int)(_footprint[i].second / _map.info.resolution);
+
+      if(_map.data[ yy * _map.info.width + xx ] > 70)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+  @brief Checks the robot's reposition into unknown area
+  @param newPose [const geometry_msgs::Pose2D] The pose for the robot to be moved to
+  @return True when position is in unknown area
+  **/
+  bool Robot::checkUnknownOccupancy(
+    const geometry_msgs::Pose2D& newPose)
+  {
+    if(_map.info.width == 0 || _map.info.height == 0)
+    {
+      return false;
+    }
+
+    int xMap = newPose.x / _map.info.resolution;
+    int yMap = newPose.y / _map.info.resolution;
+
+    if( _map.data[ yMap * _map.info.width + xMap ] == -1 )
+    {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+  @brief Checks the robot collision -2b changed-
+  @return True on collision
+  **/
+  bool Robot::collisionExists(
+    const geometry_msgs::Pose2D& newPose,
+    const geometry_msgs::Pose2D& previousPose)
+  {
+    if(_map.info.width == 0 || _map.info.height == 0)
+    {
+      return false;
+    }
+
+    int xMapPrev, xMap, yMapPrev, yMap;
+    bool movingForward = false, movingUpward = false;
+    if ( previousPose.x < newPose.x )
+      movingForward = true;
+    if ( previousPose.y < newPose.y )
+      movingUpward = true;
+
+    xMapPrev = movingForward? (int)( previousPose.x / _map.info.resolution ):
+                              ceil( previousPose.x / _map.info.resolution );
+    xMap = movingForward? ceil( newPose.x / _map.info.resolution ):
+                          (int)( newPose.x / _map.info.resolution );
+
+    yMapPrev = movingUpward? (int)( previousPose.y / _map.info.resolution ):
+                              ceil( previousPose.y / _map.info.resolution );
+    yMap = movingUpward? ceil( newPose.y / _map.info.resolution ):
+                        (int)( newPose.y / _map.info.resolution );
+
+    float angle = atan2(yMap - yMapPrev, xMap - xMapPrev);
+    int x = xMapPrev;
+    int y = yMapPrev;
+    int d = 2;
+
+    while(pow(xMap - x,2) + pow(yMap - y,2) > 1)
+    {
+      x = xMapPrev +
+        ( movingForward? ceil( cos(angle) * d ): (int)( cos(angle) * d ) );
+      y = yMapPrev +
+        ( movingUpward? ceil( sin(angle) * d ): (int)( sin(angle) * d ) );
+      //Check all footprint points
+      for(unsigned int i = 0 ; i < _footprint.size() ; i++)
+      {
+        int xx = x + _footprint[i].first / _map.info.resolution;
+        int yy = y + _footprint[i].second / _map.info.resolution;
+
+        if(_map.data[ yy * _map.info.width + xx ] > 70)
+        {
+          return true;
+        }
+      }
+      d++;
+    }
+    return false;
   }
 
   /**
   @brief Publishes the tf transforms every with 10Hz
   @return void
   **/
-  void Robot::publishTransforms(const ros::TimerEvent&) 
+  void Robot::publishTransforms(const ros::TimerEvent&)
   {
-    
+    geometry_msgs::Pose2D pose = _motionControllerPtr->getPose();
+    if( ! collisionExists(pose, _previousPose) )
+    {
+      _previousPose = pose;
+    }
+    else
+    {
+      _motionControllerPtr->setPose(_previousPose);
+    }
     //!< Robot tf
-    tf::Vector3 translation(_currentPosePtr->x, _currentPosePtr->y, 0);
+    tf::Vector3 translation(_previousPose.x, _previousPose.y, 0);
     tf::Quaternion rotation;
-    rotation.setRPY(0, 0, _currentPosePtr->theta);
+    rotation.setRPY(0, 0, _previousPose.theta);
 
     tf::Transform mapToRobot(rotation, translation);
 
     _tfBroadcaster.sendTransform(tf::StampedTransform(
       mapToRobot, ros::Time::now(), "map_static", getName()));
-    
+
     //!< Sensors tf
     for (int i = 0; i < _sensors.size(); i++) {
       geometry_msgs::Pose2D sensorPose = _sensors[i]->getSensorPose();
-      
+
       tf::Vector3 trans(sensorPose.x, sensorPose.y, 0);
       tf::Quaternion rot;
       rot.setRPY(0, 0, sensorPose.theta);
-      
+
       tf::Transform robotToSensor(rot, trans);
-      
+
       _tfBroadcaster.sendTransform(
         tf::StampedTransform(
-          robotToSensor, 
-          ros::Time::now(), 
-          getName(), 
+          robotToSensor,
+          ros::Time::now(),
+          getName(),
           _sensors[i]->getFrameId()));
     }
   }
@@ -180,9 +304,9 @@ namespace stdr_robot
   @brief Default destructor
   @return void
   **/
-  Robot::~Robot() 
+  Robot::~Robot()
   {
     //!< Cleanup
   }
-    
+
 }

@@ -25,14 +25,14 @@ namespace stdr_robot {
     
   /**
   @brief Default constructor
-  @param pose [const geometry_msgs::Pose2DPtr&] The robot pose
+  @param pose [const geometry_msgs::Pose2D&] The robot pose
   @param tf [tf::TransformBroadcaster&] A ROS tf broadcaster
   @param n [ros::NodeHandle&] The ROS node handle
   @param name [const std::string&] The robot frame id
   @return void
   **/
   IdealMotionController::IdealMotionController(
-    const geometry_msgs::Pose2DPtr& pose, 
+    const geometry_msgs::Pose2D& pose, 
     tf::TransformBroadcaster& tf, 
     ros::NodeHandle& n, 
     const std::string& name)
@@ -83,23 +83,22 @@ namespace stdr_robot {
     
     if (_currentTwist.angular.z == 0) {
       
-      _posePtr->x += _currentTwist.linear.x*dt.toSec()*cosf(_posePtr->theta);
-      _posePtr->y += _currentTwist.linear.x*dt.toSec()*sinf(_posePtr->theta);
+      _pose.x += _currentTwist.linear.x * dt.toSec() * cosf(_pose.theta);
+      _pose.y += _currentTwist.linear.x * dt.toSec() * sinf(_pose.theta);
     }
     else {
       
-      _posePtr->x += - _currentTwist.linear.x / _currentTwist.angular.z * 
-        sinf(_posePtr->theta) + 
+      _pose.x += - _currentTwist.linear.x / _currentTwist.angular.z * 
+        sinf(_pose.theta) + 
         _currentTwist.linear.x / _currentTwist.angular.z * 
-        sinf(_posePtr->theta + dt.toSec() * _currentTwist.angular.z);
+        sinf(_pose.theta + dt.toSec() * _currentTwist.angular.z);
       
-      _posePtr->y -= - _currentTwist.linear.x / _currentTwist.angular.z * 
-        cosf(_posePtr->theta) + 
+      _pose.y -= - _currentTwist.linear.x / _currentTwist.angular.z * 
+        cosf(_pose.theta) + 
         _currentTwist.linear.x / _currentTwist.angular.z * 
-        cosf(_posePtr->theta + dt.toSec() * _currentTwist.angular.z);
+        cosf(_pose.theta + dt.toSec() * _currentTwist.angular.z);
     }
-    _posePtr->theta += _currentTwist.angular.z*dt.toSec();
-    
+    _pose.theta += _currentTwist.angular.z * dt.toSec();
   }
   
   /**
