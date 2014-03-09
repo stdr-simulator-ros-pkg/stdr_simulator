@@ -2,6 +2,9 @@
 Changelog for package stdr_resources
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.1.1 (2014-02-10)
 ------------------
 
