@@ -2,8 +2,8 @@
 Changelog for package stdr_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2014-03-09)
+------------------
 * add collision checking
 * fix minor issues with robot reposition
 

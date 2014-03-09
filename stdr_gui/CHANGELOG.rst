@@ -2,8 +2,8 @@
 Changelog for package stdr_gui
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2014-03-09)
+------------------
 * Minor changes. Added message when relocation is not possible.
 * Different labels for add and create robot
 
