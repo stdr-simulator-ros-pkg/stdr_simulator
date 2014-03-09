@@ -51,112 +51,117 @@ namespace stdr_robot {
   @brief Represents one robot in STDR. Inherts publicly from nodelet::Nodelet
   **/ 
   class Robot : public nodelet::Nodelet {
-    //------------------------------------------------------------------------//
-    private:
     
-      //!< ROS subscriber for map
-      ros::Subscriber _mapSubscriber;
-      //!< ROS timer to publish tf transforms (10Hz)
-      ros::Timer _tfTimer;
-      
-      //!< ROS service server to move robot
-      ros::ServiceServer _moveRobotService;
+   public: 
     
-      //!< Container for robot sensors
-      SensorPtrVector _sensors;
-      
-      //!< The occupancy grid map
-      nav_msgs::OccupancyGrid _map;
-      //!< ROS tf transform broadcaster
-      tf::TransformBroadcaster _tfBroadcaster;
-      
-      //!< Holds the robot current pose
-      geometry_msgs::Pose2DPtr _currentPosePtr;
-      
-      geometry_msgs::Pose2D previous_pose;
-      
-      //!< Pointer of a motion controller
-      MotionControllerPtr _motionControllerPtr;
-      
-      //!< Actionlib client for registering the robot
-      RegisterRobotClientPtr _registerClientPtr;
+    /**
+    @brief Default constructor
+    @return void
+    **/
+    Robot(void);
     
-      /**
-      @brief Checks the robot collision -2b changed-
-      @return void
-      **/
-      bool collisionExists(
-        geometry_msgs::Pose2D new_pose, 
-        geometry_msgs::Pose2D& collision_point);
-        
-      bool collisionExistsNoPath(
-        geometry_msgs::Pose2D new_pose); 
+    /**
+    @brief Initializes the robot and gets the environment occupancy grid map
+    @return void
+    **/
+    void onInit(void);
+    
+    /**
+    @brief Initializes the robot after on registering it to server
+    @param state [const actionlib::SimpleClientGoalState&] State of action
+    @param result [const stdr_msgs::RegisterRobotResultConstPtr] Action result of registering the robot
+    @return void
+    **/
+    void initializeRobot(const actionlib::SimpleClientGoalState& state, 
+      const stdr_msgs::RegisterRobotResultConstPtr result);
+      
+    /**
+    @brief Callback for getting the occupancy grid map
+    @param msg [const nav_msgs::OccupancyGridConstPtr&] The occupancy grid map
+    @return void
+    **/
+    void mapCallback(const nav_msgs::OccupancyGridConstPtr& msg);
+    
+    /**
+    @brief The callback of the re-place robot service
+    @param req [stdr_msgs::MoveRobot::Request&] The service request
+    @param res [stdr_msgs::MoveRobot::Response&] The service result
+    @return bool
+    **/
+    bool moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
+      stdr_msgs::MoveRobot::Response& res);
+      
+    /**
+    @brief Default destructor
+    @return void
+    **/
+    ~Robot(void);  
+    
+   private:
+   
+    /**
+    @brief Checks the robot collision -2b changed-
+    @return void
+    **/
+    bool collisionExists(
+      const geometry_msgs::Pose2D& newPose, 
+      const geometry_msgs::Pose2D& collisionPoint);
+      
+    bool collisionExistsNoPath(
+      const geometry_msgs::Pose2D& newPose); 
 
-      /**
-        @brief Checks the robot's reposition into unknown area
-        @param newPose [const geometry_msgs::Pose2D] The pose for the robot to be moved to
-        @return True when position is in unknown area
-       **/
-      bool checkUnknownOccupancy(geometry_msgs::Pose2D newPose);
+    /**
+    @brief Checks the robot's reposition into unknown area
+    @param newPose [const geometry_msgs::Pose2D] The pose for the robot to be moved to
+    @return True when position is in unknown area
+     y**/
+    bool checkUnknownOccupancy(const geometry_msgs::Pose2D& newPose);
 
-      /**
-      @brief Publishes the tf transforms every with 10Hz
-      @return void
-      **/
-      void publishTransforms(const ros::TimerEvent&);
-      
-      // The robot footprint in points (row * 10000 + col)
-      std::vector<std::pair<float,float> > footprint;
-    //------------------------------------------------------------------------//      
-    public: 
-      
-      /**
-      @brief Default constructor
-      @return void
-      **/
-      Robot(void);
-      
-      /**
-      @brief Default destructor
-      @return void
-      **/
-      ~Robot(void);
-      
-      /**
-      @brief Initializes the robot and gets the environment occupancy grid map
-      @return void
-      **/
-      void onInit(void);
-      
-      /**
-      @brief Initializes the robot after on registering it to server
-      @param state [const actionlib::SimpleClientGoalState&] State of action
-      @param result [const stdr_msgs::RegisterRobotResultConstPtr] Action result of registering the robot
-      @return void
-      **/
-      void initializeRobot(const actionlib::SimpleClientGoalState& state, 
-        const stdr_msgs::RegisterRobotResultConstPtr result);
-        
-      /**
-      @brief Callback for getting the occupancy grid map
-      @param msg [const nav_msgs::OccupancyGridConstPtr&] The occupancy grid map
-      @return void
-      **/
-      void mapCallback(const nav_msgs::OccupancyGridConstPtr& msg);
-      
-      /**
-      @brief The callback of the re-place robot service
-      @param req [stdr_msgs::MoveRobot::Request&] The service request
-      @param res [stdr_msgs::MoveRobot::Response&] The service result
-      @return bool
-      **/
-      bool moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
-        stdr_msgs::MoveRobot::Response& res);
-      
-      
+    /**
+    @brief Publishes the tf transforms every with 10Hz
+    @return void
+    **/
+    void publishTransforms(const ros::TimerEvent&);
+   
+   
+   private:
+  
+    //!< ROS subscriber for map
+    ros::Subscriber _mapSubscriber;
+    
+    //!< ROS timer to publish tf transforms (10Hz)
+    ros::Timer _tfTimer;
+    
+    //!< ROS service server to move robot
+    ros::ServiceServer _moveRobotService;
+  
+    //!< Container for robot sensors
+    SensorPtrVector _sensors;
+    
+    //!< The occupancy grid map
+    nav_msgs::OccupancyGrid _map;
+    
+    //!< ROS tf transform broadcaster
+    tf::TransformBroadcaster _tfBroadcaster;
+    
+    //!< Holds robots current pose
+    geometry_msgs::Pose2D _currentPose;
+    
+    //!< Holds robots previous pose
+    geometry_msgs::Pose2D _previousPose;
+    
+    //!< Pointer of a motion controller
+    MotionControllerPtr _motionControllerPtr;
+    
+    //!< Actionlib client for registering the robot
+    RegisterRobotClientPtr _registerClientPtr;
+  
+    //!< The robot footprint in points (row * 10000 + col)
+    std::vector<std::pair<float,float> > _footprint;
+    
   };  
   
-}
+} // namespace stdr_robot
 
 
 #endif

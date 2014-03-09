@@ -43,7 +43,6 @@ namespace stdr_robot
   void Robot::onInit()
   {
     ros::NodeHandle n = getMTNodeHandle();
-    _currentPosePtr.reset( new geometry_msgs::Pose2D );
 
     _registerClientPtr.reset(
       new RegisterRobotClient(n, "stdr_server/register_robot", true) );
@@ -82,13 +81,9 @@ namespace stdr_robot
     NODELET_INFO("Loaded new robot, %s", getName().c_str());
     ros::NodeHandle n = getMTNodeHandle();
 
-    _currentPosePtr->x = result->description.initialPose.x;
-    _currentPosePtr->y = result->description.initialPose.y;
-    _currentPosePtr->theta = result->description.initialPose.theta;
+    _currentPose = result->description.initialPose;
 
-    previous_pose.x = _currentPosePtr->x;
-    previous_pose.y = _currentPosePtr->y;
-    previous_pose.theta = _currentPosePtr->theta;
+    _previousPose = _currentPose;
 
     for ( unsigned int laserIter = 0;
       laserIter < result->description.laserSensors.size(); laserIter++ ){
@@ -108,11 +103,11 @@ namespace stdr_robot
     {
       float x = cos(i * 3.14159265359 / 180.0) * radius;
       float y = sin(i * 3.14159265359 / 180.0) * radius;
-      footprint.push_back( std::pair<float,float>(x,y));
+      _footprint.push_back( std::pair<float,float>(x,y));
     }
 
     _motionControllerPtr.reset(
-      new IdealMotionController(_currentPosePtr, _tfBroadcaster, n, getName()));
+      new IdealMotionController(_currentPose, _tfBroadcaster, n, getName()));
   }
 
   /**
@@ -141,13 +136,11 @@ namespace stdr_robot
       return false;
     }
 
-    _currentPosePtr->x = req.newPose.x;
-    _currentPosePtr->y = req.newPose.y;
+    _currentPose = req.newPose;
 
-    previous_pose.x = _currentPosePtr->x;
-    previous_pose.y = _currentPosePtr->y;
+    _previousPose = _currentPose;
 
-    _motionControllerPtr->setPose(previous_pose);
+    _motionControllerPtr->setPose(_previousPose);
     return true;
   }
 
@@ -156,23 +149,23 @@ namespace stdr_robot
   @return True on collision
   **/
   bool Robot::collisionExistsNoPath(
-    geometry_msgs::Pose2D new_pose)
+    const geometry_msgs::Pose2D& newPose)
   {
     if(_map.info.width == 0 || _map.info.height == 0)
     {
       return false;
     }
 
-    int xMap = new_pose.x / _map.info.resolution;
-    int yMap = new_pose.y / _map.info.resolution;
+    int xMap = newPose.x / _map.info.resolution;
+    int yMap = newPose.y / _map.info.resolution;
 
     int x = xMap;
     int y = yMap;
 
-    for(unsigned int i = 0 ; i < footprint.size() ; i++)
+    for(unsigned int i = 0 ; i < _footprint.size() ; i++)
     {
-      int xx = x + (int)(footprint[i].first / _map.info.resolution);
-      int yy = y + (int)(footprint[i].second / _map.info.resolution);
+      int xx = x + (int)(_footprint[i].first / _map.info.resolution);
+      int yy = y + (int)(_footprint[i].second / _map.info.resolution);
 
       if(_map.data[ yy * _map.info.width + xx ] > 70)
       {
@@ -188,7 +181,7 @@ namespace stdr_robot
   @return True when position is in unknown area
   **/
   bool Robot::checkUnknownOccupancy(
-    geometry_msgs::Pose2D newPose)
+    const geometry_msgs::Pose2D& newPose)
   {
     if(_map.info.width == 0 || _map.info.height == 0)
     {
@@ -211,8 +204,8 @@ namespace stdr_robot
   @return True on collision
   **/
   bool Robot::collisionExists(
-    geometry_msgs::Pose2D new_pose,
-    geometry_msgs::Pose2D& previous_pose)
+    const geometry_msgs::Pose2D& newPose,
+    const geometry_msgs::Pose2D& previousPose)
   {
     if(_map.info.width == 0 || _map.info.height == 0)
     {
@@ -221,20 +214,20 @@ namespace stdr_robot
 
     int xMapPrev, xMap, yMapPrev, yMap;
     bool movingForward = false, movingUpward = false;
-    if ( previous_pose.x < new_pose.x )
+    if ( previousPose.x < newPose.x )
       movingForward = true;
-    if ( previous_pose.y < new_pose.y )
+    if ( previousPose.y < newPose.y )
       movingUpward = true;
 
-    xMapPrev = movingForward? (int)( previous_pose.x / _map.info.resolution ):
-                              ceil( previous_pose.x / _map.info.resolution );
-    xMap = movingForward? ceil( new_pose.x / _map.info.resolution ):
-                          (int)( new_pose.x / _map.info.resolution );
+    xMapPrev = movingForward? (int)( previousPose.x / _map.info.resolution ):
+                              ceil( previousPose.x / _map.info.resolution );
+    xMap = movingForward? ceil( newPose.x / _map.info.resolution ):
+                          (int)( newPose.x / _map.info.resolution );
 
-    yMapPrev = movingUpward? (int)( previous_pose.y / _map.info.resolution ):
-                              ceil( previous_pose.y / _map.info.resolution );
-    yMap = movingUpward? ceil( new_pose.y / _map.info.resolution ):
-                        (int)( new_pose.y / _map.info.resolution );
+    yMapPrev = movingUpward? (int)( previousPose.y / _map.info.resolution ):
+                              ceil( previousPose.y / _map.info.resolution );
+    yMap = movingUpward? ceil( newPose.y / _map.info.resolution ):
+                        (int)( newPose.y / _map.info.resolution );
 
     float angle = atan2(yMap - yMapPrev, xMap - xMapPrev);
     int x = xMapPrev;
@@ -248,10 +241,10 @@ namespace stdr_robot
       y = yMapPrev +
         ( movingUpward? ceil( sin(angle) * d ): (int)( sin(angle) * d ) );
       //Check all footprint points
-      for(unsigned int i = 0 ; i < footprint.size() ; i++)
+      for(unsigned int i = 0 ; i < _footprint.size() ; i++)
       {
-        int xx = x + footprint[i].first / _map.info.resolution;
-        int yy = y + footprint[i].second / _map.info.resolution;
+        int xx = x + _footprint[i].first / _map.info.resolution;
+        int yy = y + _footprint[i].second / _map.info.resolution;
 
         if(_map.data[ yy * _map.info.width + xx ] > 70)
         {
@@ -270,18 +263,18 @@ namespace stdr_robot
   void Robot::publishTransforms(const ros::TimerEvent&)
   {
     geometry_msgs::Pose2D pose = _motionControllerPtr->getPose();
-    if( ! collisionExists(pose, previous_pose) )
+    if( ! collisionExists(pose, _previousPose) )
     {
-      previous_pose = pose;
+      _previousPose = pose;
     }
     else
     {
-      _motionControllerPtr->setPose(previous_pose);
+      _motionControllerPtr->setPose(_previousPose);
     }
     //!< Robot tf
-    tf::Vector3 translation(previous_pose.x, previous_pose.y, 0);
+    tf::Vector3 translation(_previousPose.x, _previousPose.y, 0);
     tf::Quaternion rotation;
-    rotation.setRPY(0, 0, previous_pose.theta);
+    rotation.setRPY(0, 0, _previousPose.theta);
 
     tf::Transform mapToRobot(rotation, translation);
 

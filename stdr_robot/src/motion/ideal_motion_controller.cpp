@@ -25,14 +25,14 @@ namespace stdr_robot {
     
   /**
   @brief Default constructor
-  @param pose [const geometry_msgs::Pose2DPtr&] The robot pose
+  @param pose [const geometry_msgs::Pose2D&] The robot pose
   @param tf [tf::TransformBroadcaster&] A ROS tf broadcaster
   @param n [ros::NodeHandle&] The ROS node handle
   @param name [const std::string&] The robot frame id
   @return void
   **/
   IdealMotionController::IdealMotionController(
-    const geometry_msgs::Pose2DPtr& pose, 
+    const geometry_msgs::Pose2D& pose, 
     tf::TransformBroadcaster& tf, 
     ros::NodeHandle& n, 
     const std::string& name)

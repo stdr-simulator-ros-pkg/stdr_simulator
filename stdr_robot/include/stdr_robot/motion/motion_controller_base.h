@@ -62,6 +62,27 @@ namespace stdr_robot {
       virtual void calculateMotion(const ros::TimerEvent& event) = 0;
       
       /**
+      @brief Returns the pose calculated by the motion controller
+      @return geometry_msgs::Pose2D
+      **/
+      inline geometry_msgs::Pose2D getPose(void)
+      {
+        return _pose;
+      }
+      
+      /**
+      @brief Sets the initial pose of the motion controller
+      @param new_pose [geometry_msgs::Pose2D] The new pose
+      @return void
+      **/
+      inline void setPose(geometry_msgs::Pose2D new_pose)
+      {
+        _pose.x = new_pose.x;
+        _pose.y = new_pose.y;
+        _pose.theta = new_pose.theta;
+      }
+      
+      /**
       @brief Default desctructor
       @return void
       **/
@@ -73,45 +94,21 @@ namespace stdr_robot {
       
       /**
       @brief Default constructor
-      @param pose [const geometry_msgs::Pose2DPtr&] The robot pose
+      @param pose [const geometry_msgs::Pose2D&] The robot pose
       @param tf [tf::TransformBroadcaster&] A ROS tf broadcaster
       @param name [const std::string&] The robot frame id
       @return void
       **/
       MotionController(
-        const geometry_msgs::Pose2DPtr& pose, 
+        const geometry_msgs::Pose2D& pose, 
         tf::TransformBroadcaster& tf, 
         const std::string& name)
-          : _tfBroadcaster(tf), _freq(0.1), _namespace(name) 
-      { 
-        _pose.x = pose->x;
-        _pose.y = pose->y;
-        _pose.theta = pose->theta;
-      }
-      
-    public:
-      
-      /**
-      @brief Returns the pose calculated by the motion controller
-      @return geometry_msgs::Pose2D
-      **/
-      geometry_msgs::Pose2D getPose(void)
-      {
-        return _pose;
-      }
-      
-      /**
-      @brief Sets the initial pose of the motion controller
-      @param new_pose [geometry_msgs::Pose2D] The new pose
-      @return void
-      **/
-      void setPose(geometry_msgs::Pose2D new_pose)
-      {
-        _pose.x = new_pose.x;
-        _pose.y = new_pose.y;
-        _pose.theta = new_pose.theta;
-      }
-    
+          : _tfBroadcaster(tf), 
+            _freq(0.1), 
+            _namespace(name),
+            _pose(pose) 
+        { }
+
     protected:
       
       //!< The base of the frame_id
