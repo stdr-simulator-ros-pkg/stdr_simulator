@@ -159,6 +159,9 @@ namespace stdr_robot {
     //!< The robot footprint in points (row * 10000 + col)
     std::vector<std::pair<float,float> > _footprint;
     
+    std::vector<std::pair<int,int> > getPointsBetween(
+      int x1, int y1, int x2, int y2) ;
+    
   };  
   
 } // namespace stdr_robot

@@ -209,9 +209,19 @@ namespace stdr_robot
     return false;
   }
   
-  std::vector<std::pair<int,int> > getPointsBetween(int x1, int y1, int x2, int y2) 
+  /**
+  @brief Returns the points between two points
+  @param x1 : The x coord of the first point
+  @param y1 : The y coord of the first point
+  @param x2 : The x coord of the second point
+  @param y2 : The y coord of the second point
+  @return The points inbetween
+  **/
+  std::vector<std::pair<int,int> > Robot::getPointsBetween(
+    int x1, int y1, int x2, int y2) 
   {
     std::vector<std::pair<int,int> > points;
+    
     float angle = atan2(y2 - y1, x2 - x1);
     float dist = sqrt( pow(x2 - x1, 2) + pow(y2 - y1, 2));
     
@@ -279,6 +289,8 @@ namespace stdr_robot
         int yy = y + footprint_y / _map.info.resolution;
         
         //Here check all the points between the vertexes
+        //~ std::vector<std::pair<int,int> > pts = getPointsBetween(
+          
 
         if(_map.data[ yy * _map.info.width + xx ] > 70)
         {
