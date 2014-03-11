@@ -138,13 +138,12 @@ namespace stdr_robot
   bool Robot::moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
                 stdr_msgs::MoveRobot::Response& res)
   {
-
     if( collisionExistsNoPath(req.newPose) ||
         checkUnknownOccupancy(req.newPose) )
     {
       return false;
     }
-
+    
     _currentPose = req.newPose;
 
     _previousPose = _currentPose;
@@ -285,6 +284,7 @@ namespace stdr_robot
     }
     else
     {
+      ROS_ERROR("Im hit");
       _motionControllerPtr->setPose(_previousPose);
     }
     //!< Robot tf
