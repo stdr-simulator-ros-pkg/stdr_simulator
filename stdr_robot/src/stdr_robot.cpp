@@ -98,12 +98,21 @@ namespace stdr_robot
           result->description.sonarSensors[sonarIter], getName(), n ) ) );
     }
 
-    float radius = result->description.footprint.radius;
-    for(unsigned int i = 0 ; i < 360 ; i++)
-    {
-      float x = cos(i * 3.14159265359 / 180.0) * radius;
-      float y = sin(i * 3.14159265359 / 180.0) * radius;
-      _footprint.push_back( std::pair<float,float>(x,y));
+    if( result->description.footprint.points.size() == 0 ) {
+      float radius = result->description.footprint.radius;
+      for(unsigned int i = 0 ; i < 360 ; i++)
+      {
+        float x = cos(i * 3.14159265359 / 180.0) * radius;
+        float y = sin(i * 3.14159265359 / 180.0) * radius;
+        _footprint.push_back( std::pair<float,float>(x,y));
+      }
+    } else {
+      for( unsigned int i = 0 ;
+          i < result->description.footprint.points.size() ; 
+          i++ ) {
+        geometry_msgs::Point p = result->description.footprint.points[i];
+        _footprint.push_back( std::pair<float,float>(p.x, p.y));
+      }
     }
 
     _motionControllerPtr.reset(
