@@ -208,6 +208,23 @@ namespace stdr_robot
 
     return false;
   }
+  
+  std::vector<std::pair<int,int> > getPointsBetween(int x1, int y1, int x2, int y2) 
+  {
+    std::vector<std::pair<int,int> > points;
+    float angle = atan2(y2 - y1, x2 - x1);
+    float dist = sqrt( pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    
+    int d = 0;
+    while(d < dist)
+    {
+      int x = x1 + d * cos(angle);
+      int y = y1 + d * sin(angle);
+      points.push_back(std::pair<int,int>(x,y));
+    }
+    
+    return points;
+  }
 
   /**
   @brief Checks the robot collision -2b changed-
@@ -260,6 +277,8 @@ namespace stdr_robot
                    
         int xx = x + footprint_x / _map.info.resolution;
         int yy = y + footprint_y / _map.info.resolution;
+        
+        //Here check all the points between the vertexes
 
         if(_map.data[ yy * _map.info.width + xx ] > 70)
         {
