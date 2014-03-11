@@ -168,13 +168,15 @@ namespace stdr_robot
     int xMap = newPose.x / _map.info.resolution;
     int yMap = newPose.y / _map.info.resolution;
 
-    int x = xMap;
-    int y = yMap;
-
     for(unsigned int i = 0 ; i < _footprint.size() ; i++)
     {
-      int xx = x + (int)(_footprint[i].first / _map.info.resolution);
-      int yy = y + (int)(_footprint[i].second / _map.info.resolution);
+      double x = _footprint[i].first * cos(newPose.theta) -
+                 _footprint[i].second * sin(newPose.theta);
+      double y = _footprint[i].first * sin(newPose.theta) +
+                 _footprint[i].second * cos(newPose.theta);
+                 
+      int xx = xMap + (int)(x / _map.info.resolution);
+      int yy = yMap + (int)(y / _map.info.resolution);
 
       if(_map.data[ yy * _map.info.width + xx ] > 70)
       {
@@ -252,8 +254,13 @@ namespace stdr_robot
       //Check all footprint points
       for(unsigned int i = 0 ; i < _footprint.size() ; i++)
       {
-        int xx = x + _footprint[i].first / _map.info.resolution;
-        int yy = y + _footprint[i].second / _map.info.resolution;
+        double footprint_x = _footprint[i].first * cos(newPose.theta) -
+                   _footprint[i].second * sin(newPose.theta);
+        double footprint_y = _footprint[i].first * sin(newPose.theta) +
+                   _footprint[i].second * cos(newPose.theta);
+                   
+        int xx = x + footprint_x / _map.info.resolution;
+        int yy = y + footprint_y / _map.info.resolution;
 
         if(_map.data[ yy * _map.info.width + xx ] > 70)
         {
