@@ -162,6 +162,11 @@ namespace stdr_robot {
     std::vector<std::pair<int,int> > getPointsBetween(
       int x1, int y1, int x2, int y2) ;
     
+    //!< Robot's previous movement direction in X Axis
+    bool _previousMovementXAxis;
+
+    //!< Robot's previous movement direction in Y Axis
+    bool _previousMovementYAxis;
   };  
   
 } // namespace stdr_robot
