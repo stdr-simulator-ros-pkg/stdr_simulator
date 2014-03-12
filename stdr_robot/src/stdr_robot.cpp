@@ -314,6 +314,11 @@ namespace stdr_robot
           }
         }
       }
+      if ( (movingForward && xMap < x) || (movingUpward && yMap < y) ||
+          (!movingForward && xMap > x) || (!movingUpward && yMap > y) )
+      {
+        break;
+      }
       d++;
     }
     return false;
