@@ -94,6 +94,7 @@ namespace stdr_gui
   {
     lock_ = true;
     QPainter painter(m);
+    //~ painter.setRenderHint(QPainter::Antialiasing, true);
     
     //!< Find transformation
     tf::StampedTransform transform;
