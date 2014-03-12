@@ -226,11 +226,13 @@ namespace stdr_robot
     float dist = sqrt( pow(x2 - x1, 2) + pow(y2 - y1, 2));
     
     int d = 0;
+
     while(d < dist)
     {
       int x = x1 + d * cos(angle);
       int y = y1 + d * sin(angle);
       points.push_back(std::pair<int,int>(x,y));
+      d++;
     }
     
     return points;
@@ -280,21 +282,36 @@ namespace stdr_robot
       //Check all footprint points
       for(unsigned int i = 0 ; i < _footprint.size() ; i++)
       {
-        double footprint_x = _footprint[i].first * cos(newPose.theta) -
-                   _footprint[i].second * sin(newPose.theta);
-        double footprint_y = _footprint[i].first * sin(newPose.theta) +
-                   _footprint[i].second * cos(newPose.theta);
+        int index_1 = i;
+        int index_2 = (i + 1) % _footprint.size();
+        
+        // Get two consecutive footprint points
+        double footprint_x_1 = _footprint[index_1].first * cos(newPose.theta) -
+                   _footprint[index_1].second * sin(newPose.theta);
+        double footprint_y_1 = _footprint[index_1].first * sin(newPose.theta) +
+                   _footprint[index_1].second * cos(newPose.theta);
                    
-        int xx = x + footprint_x / _map.info.resolution;
-        int yy = y + footprint_y / _map.info.resolution;
+        int xx1 = x + footprint_x_1 / _map.info.resolution;
+        int yy1 = y + footprint_y_1 / _map.info.resolution;
+        
+        double footprint_x_2 = _footprint[index_2].first * cos(newPose.theta) -
+                   _footprint[index_2].second * sin(newPose.theta);
+        double footprint_y_2 = _footprint[index_2].first * sin(newPose.theta) +
+                   _footprint[index_2].second * cos(newPose.theta);
+                   
+        int xx2 = x + footprint_x_2 / _map.info.resolution;
+        int yy2 = y + footprint_y_2 / _map.info.resolution;
         
         //Here check all the points between the vertexes
-        //~ std::vector<std::pair<int,int> > pts = getPointsBetween(
-          
-
-        if(_map.data[ yy * _map.info.width + xx ] > 70)
+        std::vector<std::pair<int,int> > pts = 
+          getPointsBetween(xx1,yy1,xx2,yy2);
+        
+        for(unsigned int j = 0 ; j < pts.size() ; j++)
         {
-          return true;
+          if(_map.data[ pts[j].second * _map.info.width + pts[j].first ] > 70)
+          {
+            return true;
+          }
         }
       }
       d++;
