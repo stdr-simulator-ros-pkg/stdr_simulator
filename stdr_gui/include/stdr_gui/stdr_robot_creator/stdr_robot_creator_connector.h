@@ -173,6 +173,12 @@ namespace stdr_gui
       void updateLaserTree(QTreeWidgetItem *item,stdr_msgs::LaserSensorMsg l);
       
       /**
+      @brief Adds a footprint point in the new robot 
+      @return void
+      **/
+      void addFootprintPoint(void);
+      
+      /**
       @brief Adds a sonar sensor in the new robot 
       @return void
       **/

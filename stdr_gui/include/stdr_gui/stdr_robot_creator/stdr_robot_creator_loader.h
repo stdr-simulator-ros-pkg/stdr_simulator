@@ -67,12 +67,15 @@ namespace stdr_gui
       QTreeWidgetItem rfidAntennasNode;
       //!< Tree item for the kinematic
       QTreeWidgetItem kinematicNode;
-      //!< Tree item for the robot shape
-      QTreeWidgetItem robotInfoShape;
       //!< Tree item for the robot orientation
       QTreeWidgetItem robotInfoOrientation;
       //!< Tree item for the robot radius
       QTreeWidgetItem robotInfoRadius;
+      
+      //!< Tree item for the robot footprint
+      QTreeWidgetItem robotInfoFootprint;
+      //!< Holds the tree items that contain the footprint points
+      std::vector<QTreeWidgetItem> footPoints;
       
       //!< Holds the robot preview image
       QImage robotPreviewImage;

@@ -114,16 +114,16 @@ namespace stdr_gui
     robotTreeWidget->addTopLevelItem(&sonarsNode);
     //~ robotTreeWidget->addTopLevelItem(&rfidAntennasNode);
     //~ robotTreeWidget->addTopLevelItem(&kinematicNode);
-    
-    robotInfoShape.setText(0,"Shape");
-    robotInfoShape.setText(1,"Circle");
+
     robotInfoOrientation.setText(0,"Orientation");
     robotInfoOrientation.setText(1,"0");
-
     
-    robotNode.addChild(&robotInfoShape);
+    robotInfoFootprint.setText(0,"Footprint");
+    robotInfoFootprint.setIcon(2,addIcon);
+    
     robotNode.addChild(&robotInfoRadius);
     robotNode.addChild(&robotInfoOrientation);
+    robotNode.addChild(&robotInfoFootprint);
     
     robotNode.setExpanded(true);
     lasersNode.setExpanded(true);

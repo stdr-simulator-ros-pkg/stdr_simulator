@@ -95,9 +95,7 @@ namespace stdr_gui
   void CRobotCreatorConnector::initialise(void)
   {
     new_robot_msg_ = stdr_msgs::RobotMsg();
-    
-    loader_.robotInfoShape.setText(0,"Shape");
-    loader_.robotInfoShape.setText(1,"Circle");
+
     loader_.robotInfoRadius.setText(0,"Radius");
     loader_.robotInfoRadius.setText(1,"0.15");
     loader_.robotInfoOrientation.setText(0,"Orientation");
@@ -108,6 +106,7 @@ namespace stdr_gui
     unsigned int laserCount = loader_.lasersNode.childCount();
     unsigned int sonarCount = loader_.sonarsNode.childCount();
     unsigned int rfidCount = loader_.rfidAntennasNode.childCount();
+    unsigned int footprintCount = loader_.robotInfoFootprint.childCount();
     
     for(int i = laserCount - 1 ; i >= 0 ; i--)
       deleteTreeNode(loader_.lasersNode.child(i));
@@ -115,6 +114,8 @@ namespace stdr_gui
       deleteTreeNode(loader_.sonarsNode.child(i));
     for(int i = rfidCount - 1 ; i >= 0 ; i--)
       deleteTreeNode(loader_.rfidAntennasNode.child(i));
+    for(int i = footprintCount - 1 ; i >= 0 ; i--)
+      deleteTreeNode(loader_.robotInfoFootprint.child(i));
     
     CRobotCreatorConnector::laser_number = 0;
     CRobotCreatorConnector::sonar_number = 0;
@@ -246,7 +247,38 @@ namespace stdr_gui
     {
       loadSonar(item);
     }
+    //!< Add point clicked
+    if(item == &loader_.robotInfoFootprint && column == 2)
+    {
+      addFootprintPoint();
+    }  
     
+  }
+
+  /**
+  @brief Adds a footprint point in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::addFootprintPoint(void)
+  {
+    geometry_msgs::Point pt;
+    pt.x = 0;
+    pt.y = 0;
+    
+    new_robot_msg_.footprint.points.push_back(pt);
+
+    QTreeWidgetItem  *new_point;
+      
+    new_point = new QTreeWidgetItem();
+    
+    new_point->setText(0,QString("[0,0]"));
+    new_point->setIcon(1,loader_.editIcon);
+    new_point->setIcon(2,loader_.removeIcon);
+    
+    loader_.robotInfoFootprint.addChild(new_point);
+
+    loader_.robotInfoFootprint.setExpanded(true);
+    updateRobotPreview();
   }
 
   /**
@@ -1116,6 +1148,11 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < new_robot_msg_.sonarSensors.size() ; i++)
     {
       addSonar(new_robot_msg_.sonarSensors[i]);
+    }
+    
+    for(unsigned int i = 0 ; i < new_robot_msg_.footprint.points.size() ; i++)
+    {
+      //~ addFootprintPoint(new_robot_msg_.footprint.points[i]);
     }
   }
   
