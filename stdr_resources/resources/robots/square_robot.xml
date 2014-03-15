@@ -1,0 +1,36 @@
+<robot>
+  <robot_specifications>
+    <initial_pose>
+      <x>0</x>
+      <y>0</y>
+      <theta>0</theta>
+    </initial_pose>
+    <footprint>
+      <footprint_specifications>
+        <points>
+          <point>
+            <x>-0.2</x>
+            <y>-0.2</y>
+          </point>
+          <point>
+            <x>0.2</x>
+            <y>-0.2</y>
+          </point>
+          <point>
+            <x>0.2</x>
+            <y>0.2</y>
+          </point>
+          <point>
+            <x>-0.2</x>
+            <y>0.2</y>
+          </point>
+        </points>
+      </footprint_specifications>
+    </footprint>
+    <laser>
+      <filename>
+        laser_sensors/hokuyo_laser_4L.xml
+      </filename>
+    </laser>
+  </robot_specifications>
+</robot>
