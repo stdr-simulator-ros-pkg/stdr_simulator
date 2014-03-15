@@ -298,29 +298,17 @@ namespace stdr_robot
                    _footprint[index_1].second * sin(newPose.theta);
         double footprint_y_1 = _footprint[index_1].first * sin(newPose.theta) +
                    _footprint[index_1].second * cos(newPose.theta);
-                   
-        int xx1 = x + ( movingForward?
-                      ceil(footprint_x_1 / _map.info.resolution):
-                      floor(footprint_x_1 / _map.info.resolution));
-        int yy1 = y + ( movingUpward?
-                      ceil(footprint_y_1 / _map.info.resolution):
-                      floor(footprint_y_1 / _map.info.resolution) );
-        //int xx1 = x + footprint_x_1 / _map.info.resolution;
-        //int yy1 = y + footprint_y_1 / _map.info.resolution;
+
+        int xx1 = x + footprint_x_1 / _map.info.resolution;
+        int yy1 = y + footprint_y_1 / _map.info.resolution;
         
         double footprint_x_2 = _footprint[index_2].first * cos(newPose.theta) -
                    _footprint[index_2].second * sin(newPose.theta);
         double footprint_y_2 = _footprint[index_2].first * sin(newPose.theta) +
                    _footprint[index_2].second * cos(newPose.theta);
-                   
-        int xx2 = x + ( movingForward?
-                      ceil(footprint_x_2 / _map.info.resolution):
-                      floor(footprint_x_2 / _map.info.resolution));
-        int yy2 = y + ( movingUpward?
-                      ceil(footprint_y_2 / _map.info.resolution):
-                      floor(footprint_y_2 / _map.info.resolution) );
-        //int xx2 = x + footprint_x_2 / _map.info.resolution;
-        //int yy2 = y + footprint_y_2 / _map.info.resolution;
+
+        int xx2 = x + footprint_x_2 / _map.info.resolution;
+        int yy2 = y + footprint_y_2 / _map.info.resolution;
         
         //Here check all the points between the vertexes
         std::vector<std::pair<int,int> > pts = 
@@ -328,7 +316,25 @@ namespace stdr_robot
         
         for(unsigned int j = 0 ; j < pts.size() ; j++)
         {
-          if(_map.data[ pts[j].second * _map.info.width + pts[j].first ] > 70)
+          static int OF = 1;
+          if(
+            _map.data[ (pts[j].second - OF) * 
+              _map.info.width + pts[j].first - OF ] > 70 ||
+            _map.data[ (pts[j].second - OF) * 
+              _map.info.width + pts[j].first ] > 70 ||
+            _map.data[ (pts[j].second - OF) *  
+              _map.info.width + pts[j].first + OF ] > 70 ||
+            _map.data[ (pts[j].second) * 
+              _map.info.width + pts[j].first - OF ] > 70 ||
+            _map.data[ (pts[j].second) * 
+              _map.info.width + pts[j].first + OF ] > 70 ||
+            _map.data[ (pts[j].second + OF) * 
+              _map.info.width + pts[j].first - OF ] > 70 ||
+            _map.data[ (pts[j].second + OF) * 
+              _map.info.width + pts[j].first ] > 70 ||
+            _map.data[ (pts[j].second + OF) * 
+              _map.info.width + pts[j].first + OF ] > 70
+          )
           {
             return true;
           }
@@ -357,7 +363,6 @@ namespace stdr_robot
     }
     else
     {
-      ROS_ERROR("Im hit");
       _motionControllerPtr->setPose(_previousPose);
     }
     //!< Robot tf
