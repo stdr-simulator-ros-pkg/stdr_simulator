@@ -201,6 +201,20 @@ namespace stdr_gui{
           }
         }
       }
+      else if(event->type() == QEvent::Wheel)
+      {
+        const QWheelEvent* const me = 
+          static_cast<const QWheelEvent*>( event );
+        QPoint p = me->pos();
+        if(me->delta() > 0)
+        {
+          Q_EMIT zoomInPressed(p);
+        }
+        else
+        {
+          Q_EMIT zoomOutPressed(p);
+        }
+      }
     }
     return false;
   }
