@@ -76,6 +76,21 @@ namespace stdr_parser
         out << YAML::Value;
         out << YAML::BeginMap;
           out << YAML::Key << "radius" << YAML::Value << msg.radius;
+          out << YAML::Key << "points";
+          out << YAML::Value;
+          out << YAML::BeginSeq;
+            for(unsigned int i = 0 ; i < msg.points.size() ; i++)
+            {
+              out << YAML::BeginMap;
+                out << YAML::Key << "point";
+                out << YAML::Value;
+                out << YAML::BeginMap;
+                  out << YAML::Key << "x" << YAML::Value << msg.points[i].x;
+                  out << YAML::Key << "y" << YAML::Value << msg.points[i].y;
+                out << YAML::EndMap;
+              out << YAML::EndMap;
+            }
+          out << YAML::EndSeq;
         out << YAML::EndMap;
       out << YAML::EndMap;
     out << YAML::EndMap;

@@ -181,6 +181,12 @@ namespace stdr_gui
       void addFootprintPoint(void);
       
       /**
+      @brief Adds a footprint point in the new robot 
+      @return void
+      **/
+      void addFootprintPoint(geometry_msgs::Point pt);
+      
+      /**
       @brief Erases a footprint point in the new robot 
       @return void
       **/

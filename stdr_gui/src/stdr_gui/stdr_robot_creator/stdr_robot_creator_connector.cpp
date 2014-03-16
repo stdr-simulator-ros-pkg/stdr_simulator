@@ -271,6 +271,27 @@ namespace stdr_gui
   @brief Adds a footprint point in the new robot 
   @return void
   **/
+  void CRobotCreatorConnector::addFootprintPoint(geometry_msgs::Point pt)
+  {
+    QTreeWidgetItem  *new_point;
+      
+    new_point = new QTreeWidgetItem();
+    
+    new_point->setText(0,QString("[") + QString().setNum(pt.x) + QString(",") + 
+      QString().setNum(pt.y) + QString("]"));
+    new_point->setIcon(1,loader_.editIcon);
+    new_point->setIcon(2,loader_.removeIcon);
+    
+    loader_.robotInfoFootprint.addChild(new_point);
+
+    loader_.robotInfoFootprint.setExpanded(true);
+    updateRobotPreview();
+  }
+
+  /**
+  @brief Adds a footprint point in the new robot 
+  @return void
+  **/
   void CRobotCreatorConnector::addFootprintPoint(void)
   {
     geometry_msgs::Point pt;
@@ -1291,7 +1312,7 @@ namespace stdr_gui
     
     for(unsigned int i = 0 ; i < new_robot_msg_.footprint.points.size() ; i++)
     {
-      //~ addFootprintPoint(new_robot_msg_.footprint.points[i]);
+      addFootprintPoint(new_robot_msg_.footprint.points[i]);
     }
   }
   
@@ -2359,7 +2380,7 @@ namespace stdr_gui
       {
         float x = new_robot_msg_.footprint.points
           [i % new_robot_msg_.footprint.points.size()].x;
-        float y = new_robot_msg_.footprint.points
+        float y = - new_robot_msg_.footprint.points
           [i % new_robot_msg_.footprint.points.size()].y;
         
         points[i] = QPointF(
@@ -2572,6 +2593,12 @@ namespace stdr_gui
 
     CRobotCreatorConnector::laser_number = -1;
     CRobotCreatorConnector::sonar_number = -1;
+    
+    for(int i = loader_.robotInfoFootprint.childCount() - 1 ; i >=0 ; i--)
+    {
+      delete loader_.robotInfoFootprint.child(i);
+    }
+    
     updateRobotTree();
 
     updateRobotPreview(); 
