@@ -179,6 +179,12 @@ namespace stdr_gui
       void addFootprintPoint(void);
       
       /**
+      @brief Erases a footprint point in the new robot 
+      @return void
+      **/
+      void eraseFootprintPoint(QTreeWidgetItem *item);
+      
+      /**
       @brief Adds a sonar sensor in the new robot 
       @return void
       **/

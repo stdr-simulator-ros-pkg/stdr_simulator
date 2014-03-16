@@ -252,7 +252,11 @@ namespace stdr_gui
     {
       addFootprintPoint();
     }  
-    
+    //!< Erase a footprint point
+    if(item->parent() == &loader_.robotInfoFootprint && column == 2)
+    {
+      eraseFootprintPoint(item);
+    } 
   }
 
   /**
@@ -278,6 +282,25 @@ namespace stdr_gui
     loader_.robotInfoFootprint.addChild(new_point);
 
     loader_.robotInfoFootprint.setExpanded(true);
+    updateRobotPreview();
+  }
+  
+  /**
+  @brief Erases a footprint point in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::eraseFootprintPoint(QTreeWidgetItem *item)
+  {
+    
+    for(unsigned int i = 0 ; i < loader_.robotInfoFootprint.childCount() ; i++)
+    {
+      if(loader_.robotInfoFootprint.child(i) == item)
+      {
+        delete item;
+        new_robot_msg_.footprint.points.erase(
+          new_robot_msg_.footprint.points.begin() + i);
+      }
+    }
     updateRobotPreview();
   }
 
