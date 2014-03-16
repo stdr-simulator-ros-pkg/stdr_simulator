@@ -31,6 +31,7 @@ namespace stdr_gui
   **/
   CRobotCreatorLoader::CRobotCreatorLoader(int argc, char **argv):
     robotPropLoader(argc,argv),
+    robotFootLoader(argc,argv),
     laserPropLoader(argc,argv),
     sonarPropLoader(argc,argv),
     kinematicPropLoader(argc,argv),
