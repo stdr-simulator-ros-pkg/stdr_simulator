@@ -55,7 +55,14 @@ catkin_package(
 )
 
 #----------------------------------------------------------------------------------------------------#
-file(GLOB QT_FORMS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ui/*.ui)
+set(QT_FORMS 
+  ui/information.ui             ui/kinematicProperties.ui
+  ui/laserProperties.ui         ui/laserVisualization.ui
+  ui/map.ui                     ui/rfidAntennaProperties.ui
+  ui/robotCreator.ui            ui/robotFootprint.ui
+  ui/robotProperties.ui         ui/robotVisualization.ui
+  ui/simulator.ui               ui/sonarProperties.ui
+  ui/sonarVisualization.ui )
 
 QT4_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
 
