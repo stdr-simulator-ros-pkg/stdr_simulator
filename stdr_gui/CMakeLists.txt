@@ -85,6 +85,7 @@ add_executable(stdr_gui_node
   src/stdr_gui/stdr_robot_creator/stdr_laser_properties_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_properties_loader.cpp
+  src/stdr_gui/stdr_robot_creator/stdr_robot_footprint_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_rfid_antenna_properties_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_creator_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.cpp
