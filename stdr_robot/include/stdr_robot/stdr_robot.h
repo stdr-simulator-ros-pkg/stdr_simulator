@@ -33,6 +33,7 @@
 #include <stdr_robot/motion/motion_controller_base.h>
 #include <stdr_robot/motion/ideal_motion_controller.h>
 #include <nav_msgs/OccupancyGrid.h>
+#include <nav_msgs/Odometry.h>
 #include <actionlib/client/simple_action_client.h>
 #include <stdr_msgs/RegisterRobotAction.h>
 
@@ -143,6 +144,9 @@ namespace stdr_robot {
     
     //!< ROS tf transform broadcaster
     tf::TransformBroadcaster _tfBroadcaster;
+
+    //!< Odometry Publisher
+    ros::Publisher _odomPublisher;
     
     //!< Holds robots current pose
     geometry_msgs::Pose2D _currentPose;
