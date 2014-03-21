@@ -44,6 +44,8 @@ namespace stdr_robot
   {
     ros::NodeHandle n = getMTNodeHandle();
 
+    _odomPublisher = n.advertise<nav_msgs::Odometry>(getName() + "/odom", 10);
+
     _registerClientPtr.reset(
       new RegisterRobotClient(n, "stdr_server/register_robot", true) );
 
@@ -374,6 +376,19 @@ namespace stdr_robot
 
     _tfBroadcaster.sendTransform(tf::StampedTransform(
       mapToRobot, ros::Time::now(), "map_static", getName()));
+
+    //!< Odometry
+    nav_msgs::Odometry odom;
+    odom.header.stamp = ros::Time::now();
+    odom.header.frame_id = "map_static";
+    odom.child_frame_id = getName();
+    odom.pose.pose.position.x = _previousPose.x;
+    odom.pose.pose.position.y = _previousPose.y;
+    odom.pose.pose.orientation = tf::createQuaternionMsgFromYaw(
+        _previousPose.theta);
+    odom.twist.twist = _motionControllerPtr->getVelocity();
+
+    _odomPublisher.publish(odom);
 
     //!< Sensors tf
     for (int i = 0; i < _sensors.size(); i++) {
