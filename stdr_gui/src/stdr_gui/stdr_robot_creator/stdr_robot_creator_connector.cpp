@@ -64,10 +64,13 @@ namespace stdr_gui
     QObject::connect(
       loader_.sonarPropLoader.refresh_sonar,SIGNAL(clicked(bool)),
       this,SLOT(updateSonarOpen()));
-    
-    //~ QObject::connect(
-      //~ loader_.rfidAntennaPropLoader.pushButton,SIGNAL(clicked(bool)),
-      //~ this,SLOT(updateRfid()));
+      
+    QObject::connect(
+      loader_.robotFootLoader.updateButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateFootprintPoint()));
+    QObject::connect(
+      loader_.robotFootLoader.refresh_robot,SIGNAL(clicked(bool)),
+      this,SLOT(updateFootprintPointOpen()));
     
     QObject::connect(
       loader_.loadRobotButton,SIGNAL(clicked(bool)),
@@ -95,9 +98,7 @@ namespace stdr_gui
   void CRobotCreatorConnector::initialise(void)
   {
     new_robot_msg_ = stdr_msgs::RobotMsg();
-    
-    loader_.robotInfoShape.setText(0,"Shape");
-    loader_.robotInfoShape.setText(1,"Circle");
+
     loader_.robotInfoRadius.setText(0,"Radius");
     loader_.robotInfoRadius.setText(1,"0.15");
     loader_.robotInfoOrientation.setText(0,"Orientation");
@@ -108,6 +109,7 @@ namespace stdr_gui
     unsigned int laserCount = loader_.lasersNode.childCount();
     unsigned int sonarCount = loader_.sonarsNode.childCount();
     unsigned int rfidCount = loader_.rfidAntennasNode.childCount();
+    unsigned int footprintCount = loader_.robotInfoFootprint.childCount();
     
     for(int i = laserCount - 1 ; i >= 0 ; i--)
       deleteTreeNode(loader_.lasersNode.child(i));
@@ -115,6 +117,8 @@ namespace stdr_gui
       deleteTreeNode(loader_.sonarsNode.child(i));
     for(int i = rfidCount - 1 ; i >= 0 ; i--)
       deleteTreeNode(loader_.rfidAntennasNode.child(i));
+    for(int i = footprintCount - 1 ; i >= 0 ; i--)
+      deleteTreeNode(loader_.robotInfoFootprint.child(i));
     
     CRobotCreatorConnector::laser_number = 0;
     CRobotCreatorConnector::sonar_number = 0;
@@ -246,7 +250,157 @@ namespace stdr_gui
     {
       loadSonar(item);
     }
+    //!< Add point clicked
+    if(item == &loader_.robotInfoFootprint && column == 2)
+    {
+      addFootprintPoint();
+    }  
+    //!< Erase a footprint point
+    if(item->parent() == &loader_.robotInfoFootprint && column == 2)
+    {
+      eraseFootprintPoint(item);
+    } 
+    //!< Edit a footprint point
+    if(item->parent() == &loader_.robotInfoFootprint && column == 1)
+    {
+      editFootprintPoint(item);
+    }  
+  }
+
+  /**
+  @brief Adds a footprint point in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::addFootprintPoint(geometry_msgs::Point pt)
+  {
+    QTreeWidgetItem  *new_point;
+      
+    new_point = new QTreeWidgetItem();
     
+    new_point->setText(0,QString("[") + QString().setNum(pt.x) + QString(",") + 
+      QString().setNum(pt.y) + QString("]"));
+    new_point->setIcon(1,loader_.editIcon);
+    new_point->setIcon(2,loader_.removeIcon);
+    
+    loader_.robotInfoFootprint.addChild(new_point);
+
+    loader_.robotInfoFootprint.setExpanded(true);
+    updateRobotPreview();
+  }
+
+  /**
+  @brief Adds a footprint point in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::addFootprintPoint(void)
+  {
+    geometry_msgs::Point pt;
+    pt.x = 0;
+    pt.y = 0;
+    
+    new_robot_msg_.footprint.points.push_back(pt);
+
+    QTreeWidgetItem  *new_point;
+      
+    new_point = new QTreeWidgetItem();
+    
+    new_point->setText(0,QString("[0,0]"));
+    new_point->setIcon(1,loader_.editIcon);
+    new_point->setIcon(2,loader_.removeIcon);
+    
+    loader_.robotInfoFootprint.addChild(new_point);
+
+    loader_.robotInfoFootprint.setExpanded(true);
+    updateRobotPreview();
+  }
+  
+  /**
+  @brief Erases a footprint point in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::eraseFootprintPoint(QTreeWidgetItem *item)
+  {
+    
+    for(unsigned int i = 0 ; i < loader_.robotInfoFootprint.childCount() ; i++)
+    {
+      if(loader_.robotInfoFootprint.child(i) == item)
+      {
+        delete item;
+        new_robot_msg_.footprint.points.erase(
+          new_robot_msg_.footprint.points.begin() + i);
+      }
+    }
+    updateRobotPreview();
+  }
+  
+  /**
+  @brief Called when the update button of the footprint widget is clicked 
+  @return void
+  **/ 
+  void CRobotCreatorConnector::updateFootprintPoint(void)
+  {
+    QString xstr = loader_.robotFootLoader.robotFootprintX->text();
+    QString ystr = loader_.robotFootLoader.robotFootprintY->text();
+    float x = xstr.toFloat();
+    float y = ystr.toFloat();
+    
+    int index = -1;
+    for(unsigned int i = 0 ; i < loader_.robotInfoFootprint.childCount() ; i++)
+    {
+      if(loader_.robotInfoFootprint.child(i) == current_footprint_point_)
+      {
+        index = i;
+        break;
+      }
+    }
+    if( index == -1 )
+    {
+      return;
+    }
+    
+    new_robot_msg_.footprint.points[index].x = x;
+    new_robot_msg_.footprint.points[index].y = y;
+    
+    current_footprint_point_->setText(0,QString("[") + xstr + QString(",") +
+      ystr + QString("]"));
+
+    loader_.robotFootLoader.hide();
+    
+    updateRobotPreview();
+  }
+  
+  /**
+  @brief Called when the refresh button of the properties widget is clicked 
+  @return void
+  **/ 
+  void CRobotCreatorConnector::updateFootprintPointOpen(void)
+  {
+    QString xstr = loader_.robotFootLoader.robotFootprintX->text();
+    QString ystr = loader_.robotFootLoader.robotFootprintY->text();
+    float x = xstr.toFloat();
+    float y = ystr.toFloat();
+
+    int index = -1;
+    for(unsigned int i = 0 ; i < loader_.robotInfoFootprint.childCount() ; i++)
+    {
+      if(loader_.robotInfoFootprint.child(i) == current_footprint_point_)
+      {
+        index = i;
+        break;
+      }
+    }
+    if( index == -1 )
+    {
+      return;
+    }
+    
+    new_robot_msg_.footprint.points[index].x = x;
+    new_robot_msg_.footprint.points[index].y = y;
+    
+    current_footprint_point_->setText(0,QString("[") + xstr + QString(",") +
+      ystr + QString("]"));
+
+    updateRobotPreview();
   }
 
   /**
@@ -722,6 +876,44 @@ namespace stdr_gui
   }
   
   /**
+  @brief Edits a specific footprint point based on a tree item. Initiates the footprint editor widget
+  @param item [QTreeWidgetItem*] Tree item that holds the specific footprint point 
+  @return void
+  **/
+  void CRobotCreatorConnector::editFootprintPoint(QTreeWidgetItem *item)
+  {
+    int index = -1;
+    for(unsigned int i = 0 ; i < loader_.robotInfoFootprint.childCount() ; i++)
+    {
+      if(loader_.robotInfoFootprint.child(i) == item)
+      {
+        index = i;
+        break;
+      }
+    }
+    if( index == -1 )
+    {
+      return;
+    }
+    
+    loader_.robotFootLoader.robotFootprintX->setText(
+      QString().setNum(new_robot_msg_.footprint.points[index].x));
+    loader_.robotFootLoader.robotFootprintY->setText(
+      QString().setNum(new_robot_msg_.footprint.points[index].y));
+    
+    loader_.robotFootLoader.setWindowTitle(
+      QApplication::translate(
+        "Footprint point", 
+        item->text(0).toStdString().c_str(), 
+        0, 
+        QApplication::UnicodeUTF8));
+    
+    current_footprint_point_ = item;
+    
+    loader_.robotFootLoader.show();
+  }
+  
+  /**
   @brief Edits a specific laser sensor based on a tree item. Initiates the laser sensor editor widget
   @param item [QTreeWidgetItem*] Tree item that holds the specific laser sensor 
   @return void
@@ -1116,6 +1308,11 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < new_robot_msg_.sonarSensors.size() ; i++)
     {
       addSonar(new_robot_msg_.sonarSensors[i]);
+    }
+    
+    for(unsigned int i = 0 ; i < new_robot_msg_.footprint.points.size() ; i++)
+    {
+      addFootprintPoint(new_robot_msg_.footprint.points[i]);
     }
   }
   
@@ -2044,6 +2241,17 @@ namespace stdr_gui
     {
       climax_ = new_robot_msg_.footprint.radius;
     }
+    for(unsigned int i = 0 ; i < new_robot_msg_.footprint.points.size() ; i++)
+    {
+      if(climax_ < new_robot_msg_.footprint.points[i].x)
+      {
+        climax_ = new_robot_msg_.footprint.points[i].x;
+      }
+      if(climax_ < new_robot_msg_.footprint.points[i].y)
+      {
+        climax_ = new_robot_msg_.footprint.points[i].y;
+      }
+    }
     for(unsigned int i = 0 ; i < new_robot_msg_.laserSensors.size() ; i++)
     {
       if(climax_ < (new_robot_msg_.laserSensors[i].maxRange + 
@@ -2127,7 +2335,7 @@ namespace stdr_gui
     }
     
     climax_ = 230.0 / climax_;
-    drawRobot(new_robot_msg_.footprint.radius);
+    drawRobot();
     drawLasers();
     drawSonars();
     drawRfidAntennas();
@@ -2141,38 +2349,58 @@ namespace stdr_gui
   
   /**
   @brief Draws a circular robot
-  @param radius [float] The robot radius 
   @return void
   **/
-  void CRobotCreatorConnector::drawRobot(float radius)
+  void CRobotCreatorConnector::drawRobot(void)
   {
     QPainter painter(&loader_.robotPreviewImage);
     painter.setPen(Qt::blue);
-    painter.drawEllipse(
-              250 - radius * climax_,
-              250 - radius * climax_,
-              radius * climax_ * 2,
-              radius * climax_ * 2);
-    painter.drawLine(  
-              250,
-              250,
-              250 + radius * climax_ * 1.05 * cos(
-                new_robot_msg_.initialPose.theta / 180.0 * STDR_PI),
-              250 - radius * climax_ * 1.05 * sin(
-                new_robot_msg_.initialPose.theta / 180.0 * STDR_PI));
+    
+    if(new_robot_msg_.footprint.points.size() == 0)
+    {
+      painter.drawEllipse(
+        250 - new_robot_msg_.footprint.radius * climax_,
+        250 - new_robot_msg_.footprint.radius * climax_,
+        new_robot_msg_.footprint.radius * climax_ * 2,
+        new_robot_msg_.footprint.radius * climax_ * 2);
+      painter.drawLine(  
+        250,
+        250,
+        250 + new_robot_msg_.footprint.radius * climax_ * 1.05 * cos(
+          new_robot_msg_.initialPose.theta / 180.0 * STDR_PI),
+        250 - new_robot_msg_.footprint.radius * climax_ * 1.05 * sin(
+          new_robot_msg_.initialPose.theta / 180.0 * STDR_PI));
+    }
+    else
+    {
+      QPointF *points = new QPointF[new_robot_msg_.footprint.points.size() + 1];
+      
+      for(unsigned int i = 0 ; 
+        i < new_robot_msg_.footprint.points.size() + 1 ; i++)
+      {
+        float x = new_robot_msg_.footprint.points
+          [i % new_robot_msg_.footprint.points.size()].x;
+        float y = - new_robot_msg_.footprint.points
+          [i % new_robot_msg_.footprint.points.size()].y;
+        
+        points[i] = QPointF(
+          250 + 
+            x * climax_ * 
+              cos(new_robot_msg_.initialPose.theta / 180.0 * STDR_PI) 
+            + y * climax_ * 
+              sin(new_robot_msg_.initialPose.theta / 180.0 * STDR_PI),
+      
+          250 + 
+            x * climax_ * 
+              sin(new_robot_msg_.initialPose.theta / 180.0 * STDR_PI) 
+            + y * climax_ * 
+              cos(new_robot_msg_.initialPose.theta / 180.0 * STDR_PI));
+      }
+      painter.drawPolyline(points, new_robot_msg_.footprint.points.size() + 1);
+    }
+    
     loader_.robotPreviewLabel->setPixmap(
       QPixmap().fromImage(loader_.robotPreviewImage));
-  }
-  
-  /**
-  @brief Draws a robot with a specific footprint
-  @param geometry [std::vector<std::pair<float,float> >] The robot footprint 
-  @return void
-  **/
-  void CRobotCreatorConnector::drawRobot(
-    std::vector<std::pair<float,float> > geometry)
-  {
-    
   }
 
   /**
@@ -2365,6 +2593,12 @@ namespace stdr_gui
 
     CRobotCreatorConnector::laser_number = -1;
     CRobotCreatorConnector::sonar_number = -1;
+    
+    for(int i = loader_.robotInfoFootprint.childCount() - 1 ; i >=0 ; i--)
+    {
+      delete loader_.robotInfoFootprint.child(i);
+    }
+    
     updateRobotTree();
 
     updateRobotPreview(); 

@@ -55,7 +55,14 @@ catkin_package(
 )
 
 #----------------------------------------------------------------------------------------------------#
-file(GLOB QT_FORMS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ui/*.ui)
+set(QT_FORMS 
+  ui/information.ui             ui/kinematicProperties.ui
+  ui/laserProperties.ui         ui/laserVisualization.ui
+  ui/map.ui                     ui/rfidAntennaProperties.ui
+  ui/robotCreator.ui            ui/robotFootprint.ui
+  ui/robotProperties.ui         ui/robotVisualization.ui
+  ui/simulator.ui               ui/sonarProperties.ui
+  ui/sonarVisualization.ui )
 
 QT4_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
 
@@ -65,7 +72,6 @@ QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_info_connector.h
 QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_map_connector.h)
 QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.h)
 
-file(GLOB_RECURSE QT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINKS src/stdr_gui/*.cpp)
 #----------------------------------------------------------------------------------------------------#
 
 set(CMAKE_BUILD_TYPE Release)
@@ -85,6 +91,7 @@ add_executable(stdr_gui_node
   src/stdr_gui/stdr_robot_creator/stdr_laser_properties_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_properties_loader.cpp
+  src/stdr_gui/stdr_robot_creator/stdr_robot_footprint_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_rfid_antenna_properties_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_creator_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.cpp
@@ -98,7 +105,7 @@ add_executable(stdr_gui_node
   src/stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.cpp
   src/stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.cpp
   src/stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.cpp
-  ${QT_SOURCES} ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
+  ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
 )
 add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)  # Wait for std messages to build
 target_link_libraries(stdr_gui_node
@@ -115,3 +122,4 @@ install(DIRECTORY launch resources
 install(TARGETS stdr_gui_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+

@@ -130,22 +130,68 @@ namespace stdr_gui
   void CGuiRobot::drawSelf(QImage *m)
   {
     QPainter painter(m);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    
     painter.setPen(QColor(0,0,200,50 + 100 * (2 - visualization_status_)));
     
-    painter.drawEllipse(
-      (current_pose_.x - radius_) / resolution_,
-      (current_pose_.y - radius_) / resolution_,
-      radius_ * 2.0 / resolution_,
-      radius_ * 2.0 / resolution_);
+    if(footprint_.points.size() == 0)
+    {
+      painter.drawEllipse(
+        (current_pose_.x - radius_) / resolution_,
+        (current_pose_.y - radius_) / resolution_,
+        radius_ * 2.0 / resolution_,
+        radius_ * 2.0 / resolution_);
+      
+      painter.drawLine(	
+        current_pose_.x / resolution_,
+        current_pose_.y / resolution_,
+        current_pose_.x / resolution_ + 
+          radius_ / resolution_ * 1.05 * cos(current_pose_.theta),
+        current_pose_.y / resolution_ + 
+          radius_ / resolution_ * 1.05 * sin(current_pose_.theta));
+    }
+    else
+    {
+      float max = -1;
+      
+      static QPointF *points = new QPointF[footprint_.points.size() + 1];
+      
+      for(unsigned int i = 0 ; i < footprint_.points.size() + 1; i++)
+      {
+        
+        float x = footprint_.points[i % footprint_.points.size()].x;
+        float y = footprint_.points[i % footprint_.points.size()].y;
+        
+        points[i] = QPointF(
+          current_pose_.x / resolution_ + 
+            x / resolution_ * cos(- current_pose_.theta) 
+            + y / resolution_ * sin(- current_pose_.theta),
+              
+          current_pose_.y / resolution_ + 
+            x / resolution_ * sin(current_pose_.theta) 
+            + y / resolution_ * cos(- current_pose_.theta));
     
-    painter.drawLine(	
-      current_pose_.x / resolution_,
-      current_pose_.y / resolution_,
-      current_pose_.x / resolution_ + 
-        radius_ / resolution_ * 1.05 * cos(current_pose_.theta),
-      current_pose_.y / resolution_ + 
-        radius_ / resolution_ * 1.05 * sin(current_pose_.theta));
-  
+        if(max < footprint_.points[i].y)
+        {
+          max = footprint_.points[i].y;
+        }
+        if(max < footprint_.points[i].x)
+        {
+          max = footprint_.points[i].x;
+        }
+      }
+      
+      painter.drawPolyline(points, footprint_.points.size() + 1);
+      
+      painter.drawLine(
+        QPointF(  current_pose_.x / resolution_,
+                  current_pose_.y / resolution_),
+        QPointF(  current_pose_.x / resolution_ + 
+                    max / resolution_ * 1.05 * cos(current_pose_.theta),
+                  current_pose_.y / resolution_ + 
+                    max / resolution_ * 1.05 * sin(current_pose_.theta)));
+    }
+    
     if(show_circles_)
     {
       painter.setPen(QColor(255,0,0,50 + 100 * (2 - visualization_status_)));

@@ -65,6 +65,8 @@ namespace stdr_gui
       QTreeWidgetItem* current_sonar_;
       //!< Tree item of the currently clicked rfid
       QTreeWidgetItem* current_rfid_;
+      //!< Tree item of the currently clicked footprint point
+      QTreeWidgetItem* current_footprint_point_;
       
       /**
       @brief Pops up a message box with a specific message
@@ -173,6 +175,24 @@ namespace stdr_gui
       void updateLaserTree(QTreeWidgetItem *item,stdr_msgs::LaserSensorMsg l);
       
       /**
+      @brief Adds a footprint point in the new robot 
+      @return void
+      **/
+      void addFootprintPoint(void);
+      
+      /**
+      @brief Adds a footprint point in the new robot 
+      @return void
+      **/
+      void addFootprintPoint(geometry_msgs::Point pt);
+      
+      /**
+      @brief Erases a footprint point in the new robot 
+      @return void
+      **/
+      void eraseFootprintPoint(QTreeWidgetItem *item);
+      
+      /**
       @brief Adds a sonar sensor in the new robot 
       @return void
       **/
@@ -249,6 +269,13 @@ namespace stdr_gui
       void editRfid(QTreeWidgetItem *item);
       
       /**
+      @brief Edits a specific footprint point based on a tree item. Initiates the footprint editor widget
+      @param item [QTreeWidgetItem*] Tree item that holds the specific footprint point 
+      @return void
+      **/
+      void editFootprintPoint(QTreeWidgetItem *item);
+      
+      /**
       @brief Returns the ID of an rfid antenna sensor
       @param frameId [QString] The frame id of the rfid antenna sensor 
       @return int
@@ -256,18 +283,10 @@ namespace stdr_gui
       int searchRfid(QString frameId);
       
       /**
-      @brief Draws a circular robot
-      @param radius [float] The robot radius 
+      @brief Draws a robot
       @return void
       **/
-      void drawRobot(float radius);
-
-      /**
-      @brief Draws a robot with a specific footprint
-      @param geometry [std::vector<std::pair<float,float> >] The robot footprint 
-      @return void
-      **/
-      void drawRobot(std::vector<std::pair<float,float> > geometry);
+      void drawRobot(void);
       
       /**
       @brief Draws the robot's lasers
@@ -372,6 +391,18 @@ namespace stdr_gui
       @return void
       **/ 
       void updateRobotOpen(void);
+      
+      /**
+      @brief Called when the update button of the footprint widget is clicked 
+      @return void
+      **/ 
+      void updateFootprintPoint(void);
+      
+      /**
+      @brief Called when the refresh button of the properties widget is clicked 
+      @return void
+      **/ 
+      void updateFootprintPointOpen(void);
       
       /**
       @brief Called when the save robot button is clicked 

@@ -52,7 +52,7 @@ namespace stdr_robot
     stdr_msgs::RegisterRobotGoal goal;
     goal.name = getName();
     _registerClientPtr->sendGoal(goal,
-      boost::bind(&Robot::initializeRobot, this, _1, _2));	
+      boost::bind(&Robot::initializeRobot, this, _1, _2));
 
     _mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
     _moveRobotService = n.advertiseService(
@@ -98,12 +98,21 @@ namespace stdr_robot
           result->description.sonarSensors[sonarIter], getName(), n ) ) );
     }
 
-    float radius = result->description.footprint.radius;
-    for(unsigned int i = 0 ; i < 360 ; i++)
-    {
-      float x = cos(i * 3.14159265359 / 180.0) * radius;
-      float y = sin(i * 3.14159265359 / 180.0) * radius;
-      _footprint.push_back( std::pair<float,float>(x,y));
+    if( result->description.footprint.points.size() == 0 ) {
+      float radius = result->description.footprint.radius;
+      for(unsigned int i = 0 ; i < 360 ; i++)
+      {
+        float x = cos(i * 3.14159265359 / 180.0) * radius;
+        float y = sin(i * 3.14159265359 / 180.0) * radius;
+        _footprint.push_back( std::pair<float,float>(x,y));
+      }
+    } else {
+      for( unsigned int i = 0 ;
+          i < result->description.footprint.points.size() ; 
+          i++ ) {
+        geometry_msgs::Point p = result->description.footprint.points[i];
+        _footprint.push_back( std::pair<float,float>(p.x, p.y));
+      }
     }
 
     _motionControllerPtr.reset(
@@ -129,13 +138,12 @@ namespace stdr_robot
   bool Robot::moveRobotCallback(stdr_msgs::MoveRobot::Request& req,
                 stdr_msgs::MoveRobot::Response& res)
   {
-
     if( collisionExistsNoPath(req.newPose) ||
         checkUnknownOccupancy(req.newPose) )
     {
       return false;
     }
-
+    
     _currentPose = req.newPose;
 
     _previousPose = _currentPose;
@@ -159,13 +167,15 @@ namespace stdr_robot
     int xMap = newPose.x / _map.info.resolution;
     int yMap = newPose.y / _map.info.resolution;
 
-    int x = xMap;
-    int y = yMap;
-
     for(unsigned int i = 0 ; i < _footprint.size() ; i++)
     {
-      int xx = x + (int)(_footprint[i].first / _map.info.resolution);
-      int yy = y + (int)(_footprint[i].second / _map.info.resolution);
+      double x = _footprint[i].first * cos(newPose.theta) -
+                 _footprint[i].second * sin(newPose.theta);
+      double y = _footprint[i].first * sin(newPose.theta) +
+                 _footprint[i].second * cos(newPose.theta);
+                 
+      int xx = xMap + (int)(x / _map.info.resolution);
+      int yy = yMap + (int)(y / _map.info.resolution);
 
       if(_map.data[ yy * _map.info.width + xx ] > 70)
       {
@@ -198,6 +208,35 @@ namespace stdr_robot
 
     return false;
   }
+  
+  /**
+  @brief Returns the points between two points
+  @param x1 : The x coord of the first point
+  @param y1 : The y coord of the first point
+  @param x2 : The x coord of the second point
+  @param y2 : The y coord of the second point
+  @return The points inbetween
+  **/
+  std::vector<std::pair<int,int> > Robot::getPointsBetween(
+    int x1, int y1, int x2, int y2) 
+  {
+    std::vector<std::pair<int,int> > points;
+    
+    float angle = atan2(y2 - y1, x2 - x1);
+    float dist = sqrt( pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    
+    int d = 0;
+
+    while(d < dist)
+    {
+      int x = x1 + d * cos(angle);
+      int y = y1 + d * sin(angle);
+      points.push_back(std::pair<int,int>(x,y));
+      d++;
+    }
+    
+    return points;
+  }
 
   /**
   @brief Checks the robot collision -2b changed-
@@ -208,16 +247,24 @@ namespace stdr_robot
     const geometry_msgs::Pose2D& previousPose)
   {
     if(_map.info.width == 0 || _map.info.height == 0)
-    {
       return false;
-    }
 
     int xMapPrev, xMap, yMapPrev, yMap;
-    bool movingForward = false, movingUpward = false;
-    if ( previousPose.x < newPose.x )
-      movingForward = true;
-    if ( previousPose.y < newPose.y )
-      movingUpward = true;
+    bool movingForward, movingUpward;
+
+    //Check robot's previous direction to prevent getting stuck when colliding
+    movingForward = _previousMovementXAxis? false: true;
+    if ( fabs(previousPose.x - newPose.x) > 0.001)
+    {
+      movingForward = (previousPose.x > newPose.x)? false: true;
+      _previousMovementXAxis = movingForward;
+    }
+    movingUpward = _previousMovementYAxis? false: true;
+    if ( fabs(previousPose.y - newPose.y) > 0.001)
+    {
+      movingUpward = (previousPose.y > newPose.y)? false: true;
+      _previousMovementYAxis = movingUpward;
+    }
 
     xMapPrev = movingForward? (int)( previousPose.x / _map.info.resolution ):
                               ceil( previousPose.x / _map.info.resolution );
@@ -243,13 +290,60 @@ namespace stdr_robot
       //Check all footprint points
       for(unsigned int i = 0 ; i < _footprint.size() ; i++)
       {
-        int xx = x + _footprint[i].first / _map.info.resolution;
-        int yy = y + _footprint[i].second / _map.info.resolution;
+        int index_1 = i;
+        int index_2 = (i + 1) % _footprint.size();
+        
+        // Get two consecutive footprint points
+        double footprint_x_1 = _footprint[index_1].first * cos(newPose.theta) -
+                   _footprint[index_1].second * sin(newPose.theta);
+        double footprint_y_1 = _footprint[index_1].first * sin(newPose.theta) +
+                   _footprint[index_1].second * cos(newPose.theta);
 
-        if(_map.data[ yy * _map.info.width + xx ] > 70)
+        int xx1 = x + footprint_x_1 / _map.info.resolution;
+        int yy1 = y + footprint_y_1 / _map.info.resolution;
+        
+        double footprint_x_2 = _footprint[index_2].first * cos(newPose.theta) -
+                   _footprint[index_2].second * sin(newPose.theta);
+        double footprint_y_2 = _footprint[index_2].first * sin(newPose.theta) +
+                   _footprint[index_2].second * cos(newPose.theta);
+
+        int xx2 = x + footprint_x_2 / _map.info.resolution;
+        int yy2 = y + footprint_y_2 / _map.info.resolution;
+        
+        //Here check all the points between the vertexes
+        std::vector<std::pair<int,int> > pts = 
+          getPointsBetween(xx1,yy1,xx2,yy2);
+        
+        for(unsigned int j = 0 ; j < pts.size() ; j++)
         {
-          return true;
+          static int OF = 1;
+          if(
+            _map.data[ (pts[j].second - OF) * 
+              _map.info.width + pts[j].first - OF ] > 70 ||
+            _map.data[ (pts[j].second - OF) * 
+              _map.info.width + pts[j].first ] > 70 ||
+            _map.data[ (pts[j].second - OF) *  
+              _map.info.width + pts[j].first + OF ] > 70 ||
+            _map.data[ (pts[j].second) * 
+              _map.info.width + pts[j].first - OF ] > 70 ||
+            _map.data[ (pts[j].second) * 
+              _map.info.width + pts[j].first + OF ] > 70 ||
+            _map.data[ (pts[j].second + OF) * 
+              _map.info.width + pts[j].first - OF ] > 70 ||
+            _map.data[ (pts[j].second + OF) * 
+              _map.info.width + pts[j].first ] > 70 ||
+            _map.data[ (pts[j].second + OF) * 
+              _map.info.width + pts[j].first + OF ] > 70
+          )
+          {
+            return true;
+          }
         }
+      }
+      if ( (movingForward && xMap < x) || (movingUpward && yMap < y) ||
+          (!movingForward && xMap > x) || (!movingUpward && yMap > y) )
+      {
+        break;
       }
       d++;
     }

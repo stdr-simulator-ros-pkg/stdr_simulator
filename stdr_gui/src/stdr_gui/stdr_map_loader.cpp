@@ -145,8 +145,8 @@ namespace stdr_gui
     }
     float intW = internal_img_->width();
     float intH = internal_img_->height();
-    float newWidth = internal_img_->width() / pow(2,zoom_);
-    float newHeight = internal_img_->height() / pow(2,zoom_);
+    float newWidth = internal_img_->width() / pow(ZOOM_RATIO,zoom_);
+    float newHeight = internal_img_->height() / pow(ZOOM_RATIO,zoom_);
     QPoint evOriginal = np;
     
     float xmin,xmax,ymin,ymax;
@@ -190,8 +190,8 @@ namespace stdr_gui
 
     float intW = internal_img_->width();
     float intH = internal_img_->height();
-    float newWidth = internal_img_->width() / pow(2,zoom_);
-    float newHeight = internal_img_->height() / pow(2,zoom_);
+    float newWidth = internal_img_->width() / pow(ZOOM_RATIO,zoom_);
+    float newHeight = internal_img_->height() / pow(ZOOM_RATIO,zoom_);
     QPoint evOriginal = p;
     evOriginal.setY(internal_img_->height() - evOriginal.y());
     
@@ -265,35 +265,10 @@ namespace stdr_gui
     //~ ROS_ERROR("Robot place set (loader) : %d %d",p.x(),p.y());
     QPoint np = pointUnscaled(p);
     //~ ROS_ERROR("Robot place set (unscaled): %d %d",np.x(),np.y());
-    int xev = np.x() / pow(2,zoom_) + map_min_.x();
-    int yev = np.y() / pow(2,zoom_) + map_min_.y();
+    int xev = np.x() / pow(ZOOM_RATIO,zoom_) + map_min_.x();
+    int yev = np.y() / pow(ZOOM_RATIO,zoom_) + map_min_.y();
     //~ ROS_ERROR("Robot place set (unzoomed): %d %d",xev,yev);
     return QPoint(xev,internal_img_->height() - yev);
-  }
-  
-  /**
-  @brief Captures the mouse wheel event
-  @param event [QWheelEvent *] The wheel event
-  @return void
-  **/
-  void CMapLoader::wheelEvent ( QWheelEvent * event )
-  {
-    if(event->delta() > 0)
-    {
-      if(map_max_.y() + 30 < internal_img_->height())
-      {
-        map_max_.setY(map_max_.y() + 30);
-        map_min_.setY(map_min_.y() + 30);
-      }
-    }
-    if(event->delta() < 0)
-    {
-      if(map_min_.y() - 30 >= 0)
-      {
-        map_max_.setY(map_max_.y() - 30);
-        map_min_.setY(map_min_.y() - 30);
-      }
-    }
   }
   
   /**

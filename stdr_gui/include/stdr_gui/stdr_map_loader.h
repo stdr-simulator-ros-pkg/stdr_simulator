@@ -25,6 +25,8 @@
 #include "ui_map.h"
 #include "stdr_gui/stdr_tools.h"
 
+#define ZOOM_RATIO 1.05
+
 /**
 @namespace stdr_gui
 @brief The main namespace for STDR GUI
@@ -142,13 +144,7 @@ namespace stdr_gui
       @return QPoint : The new point
       **/
       QPoint getGlobalPoint(QPoint p);
-      
-      /**
-      @brief Captures the mouse wheel event
-      @param event [QWheelEvent *] The wheel event
-      @return void
-      **/
-      void wheelEvent ( QWheelEvent * event );
+
   };  
 }
 

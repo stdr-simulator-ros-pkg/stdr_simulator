@@ -86,6 +86,40 @@ namespace stdr_parser
   }
   
   /**
+  @brief Creates a message from a parsed file - template specialization for geometry_msgs::Point
+  @param n [Node*] The root node
+  @return The message
+   */
+  template <>
+  geometry_msgs::Point MessageCreator::createMessage(Node *n, unsigned int id)
+  {
+    geometry_msgs::Point msg;
+    std::vector<int> indexes;
+    // x
+    indexes = n->getTag("x");
+    if( indexes.size() == 0) {
+      msg.x = atof(Specs::specs["x"].default_value.c_str());
+    } else {
+      msg.x = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
+    }
+    // y
+    indexes = n->getTag("y");
+    if( indexes.size() == 0) {
+      msg.y = atof(Specs::specs["y"].default_value.c_str());
+    } else {
+      msg.y = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
+    }
+    // z
+    indexes = n->getTag("z");
+    if( indexes.size() == 0) {
+      msg.z = atof(Specs::specs["z"].default_value.c_str());
+    } else {
+      msg.z = atof(n->elements[indexes[0]]->elements[0]->value.c_str());
+    }
+    return msg;
+  }
+
+  /**
   @brief Creates a message from a parsed file - template specialization for stdr_msgs::Noise
   @param n [Node*] The root node
   @return The message
@@ -151,6 +185,16 @@ namespace stdr_parser
     {
       msg.radius = atof(specs->elements[indexes[0]]->elements[0]->
         value.c_str());
+    }
+    // search for points
+    indexes = specs->getTag("points");
+    if( indexes.size() != 0 ) {
+      specs = specs->elements[indexes[0]];
+      std::vector<int> points = specs->getTag("point");
+      for( unsigned int i = 0; i < points.size(); i++ ) {
+        msg.points.push_back(createMessage<geometry_msgs::Point>(
+              specs->elements[points[i]], i));
+      }
     }
     return msg;
   }

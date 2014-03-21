@@ -93,9 +93,32 @@ namespace stdr_parser
     TiXmlElement* radius;
     radius = new TiXmlElement("radius");
     footprint_specs->LinkEndChild(radius);
-    
     TiXmlText * radius_text = new TiXmlText(SSTR(msg.radius));
     radius->LinkEndChild(radius_text);
+    
+    //!< Create footprint radius
+    TiXmlElement* points;
+    points = new TiXmlElement("points");
+    footprint_specs->LinkEndChild(points);
+    
+    for(unsigned int i = 0 ; i < msg.points.size() ; i++)
+    {
+      TiXmlElement* point;
+      point = new TiXmlElement("point");
+      points->LinkEndChild(point);
+      
+      TiXmlElement* x;
+      x = new TiXmlElement("x");
+      point->LinkEndChild(x);
+      TiXmlText * x_text = new TiXmlText(SSTR(msg.points[i].x));
+      x->LinkEndChild(x_text);
+      
+      TiXmlElement* y;
+      y = new TiXmlElement("y");
+      point->LinkEndChild(y);
+      TiXmlText * y_text = new TiXmlText(SSTR(msg.points[i].y));
+      y->LinkEndChild(y_text);
+    }
   }
   
   //!------------------------------------------------------------------

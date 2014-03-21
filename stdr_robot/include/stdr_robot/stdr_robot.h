@@ -159,6 +159,14 @@ namespace stdr_robot {
     //!< The robot footprint in points (row * 10000 + col)
     std::vector<std::pair<float,float> > _footprint;
     
+    std::vector<std::pair<int,int> > getPointsBetween(
+      int x1, int y1, int x2, int y2) ;
+    
+    //!< Robot's previous movement direction in X Axis
+    bool _previousMovementXAxis;
+
+    //!< Robot's previous movement direction in Y Axis
+    bool _previousMovementYAxis;
   };  
   
 } // namespace stdr_robot

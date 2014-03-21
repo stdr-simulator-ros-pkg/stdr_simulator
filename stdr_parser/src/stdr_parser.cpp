@@ -57,7 +57,7 @@ namespace stdr_parser
       {
         YamlParser::parse(file_name,base_node_);
       }
-      
+      //~ base_node_->printParsedXml(base_node_,"");
       Validator::parseMergableSpecifications();
       
       while(!eliminateFilenames(base_node_));

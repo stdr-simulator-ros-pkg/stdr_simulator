@@ -26,6 +26,7 @@
 #include "stdr_gui/stdr_robot_creator/stdr_kinematic_properties_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_rfid_antenna_properties_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_robot_properties_loader.h"
+#include "stdr_gui/stdr_robot_creator/stdr_robot_footprint_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_laser_properties_loader.h"
 #include "stdr_gui/stdr_tools.h"
@@ -67,12 +68,15 @@ namespace stdr_gui
       QTreeWidgetItem rfidAntennasNode;
       //!< Tree item for the kinematic
       QTreeWidgetItem kinematicNode;
-      //!< Tree item for the robot shape
-      QTreeWidgetItem robotInfoShape;
       //!< Tree item for the robot orientation
       QTreeWidgetItem robotInfoOrientation;
       //!< Tree item for the robot radius
       QTreeWidgetItem robotInfoRadius;
+      
+      //!< Tree item for the robot footprint
+      QTreeWidgetItem robotInfoFootprint;
+      //!< Holds the tree items that contain the footprint points
+      std::vector<QTreeWidgetItem> footPoints;
       
       //!< Holds the robot preview image
       QImage robotPreviewImage;
@@ -90,6 +94,8 @@ namespace stdr_gui
           
       //!< Object of robot properties widget
       CRobotPropertiesLoader robotPropLoader;
+      //!< Object of robot footprint widget
+      CRobotFootprintLoader robotFootLoader;
       //!< Object of laser properties widget
       CLaserPropertiesLoader laserPropLoader;
       //!< Object of sonar properties widget
