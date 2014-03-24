@@ -83,6 +83,14 @@ namespace stdr_robot {
       }
       
       /**
+      @brief Get the current velocity of the motion controller
+      @return geometry_msgs::Twist
+      */
+      inline geometry_msgs::Twist getVelocity() {
+        return _currentTwist;
+      }
+
+      /**
       @brief Default desctructor
       @return void
       **/
