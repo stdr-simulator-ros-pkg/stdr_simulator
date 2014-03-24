@@ -2386,15 +2386,15 @@ namespace stdr_gui
         points[i] = QPointF(
           250 + 
             x * climax_ * 
-              cos(new_robot_msg_.initialPose.theta / 180.0 * STDR_PI) 
-            + y * climax_ * 
-              sin(new_robot_msg_.initialPose.theta / 180.0 * STDR_PI),
+              cos(-new_robot_msg_.initialPose.theta / 180.0 * STDR_PI) 
+            - y * climax_ * 
+              sin(-new_robot_msg_.initialPose.theta / 180.0 * STDR_PI),
       
           250 + 
             x * climax_ * 
-              sin(new_robot_msg_.initialPose.theta / 180.0 * STDR_PI) 
+              sin(-new_robot_msg_.initialPose.theta / 180.0 * STDR_PI) 
             + y * climax_ * 
-              cos(new_robot_msg_.initialPose.theta / 180.0 * STDR_PI));
+              cos(-new_robot_msg_.initialPose.theta / 180.0 * STDR_PI));
       }
       painter.drawPolyline(points, new_robot_msg_.footprint.points.size() + 1);
     }
