@@ -2363,6 +2363,9 @@ namespace stdr_gui
         250 - new_robot_msg_.footprint.radius * climax_,
         new_robot_msg_.footprint.radius * climax_ * 2,
         new_robot_msg_.footprint.radius * climax_ * 2);
+        
+      painter.setPen(Qt::red);
+      
       painter.drawLine(  
         250,
         250,
@@ -2375,6 +2378,8 @@ namespace stdr_gui
     {
       QPointF *points = new QPointF[new_robot_msg_.footprint.points.size() + 1];
       
+      float max_val = 0;
+      
       for(unsigned int i = 0 ; 
         i < new_robot_msg_.footprint.points.size() + 1 ; i++)
       {
@@ -2382,6 +2387,11 @@ namespace stdr_gui
           [i % new_robot_msg_.footprint.points.size()].x;
         float y = - new_robot_msg_.footprint.points
           [i % new_robot_msg_.footprint.points.size()].y;
+        
+        if( pow(x,2) + pow(y,2) > max_val )
+        {
+          max_val = pow(x,2) + pow(y,2);
+        }
         
         points[i] = QPointF(
           250 + 
@@ -2397,6 +2407,18 @@ namespace stdr_gui
               cos(-new_robot_msg_.initialPose.theta / 180.0 * STDR_PI));
       }
       painter.drawPolyline(points, new_robot_msg_.footprint.points.size() + 1);
+      
+      painter.setPen(Qt::red);
+      
+      max_val = sqrt(max_val);
+      
+      painter.drawLine(  
+        250,
+        250,
+        250 + max_val * climax_ * 1.05 * cos(
+          new_robot_msg_.initialPose.theta / 180.0 * STDR_PI),
+        250 - max_val * climax_ * 1.05 * sin(
+          new_robot_msg_.initialPose.theta / 180.0 * STDR_PI));
     }
     
     loader_.robotPreviewLabel->setPixmap(
