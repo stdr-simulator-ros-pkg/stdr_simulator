@@ -1008,6 +1008,15 @@ namespace stdr_gui
     newPose.x = pnew.x() * map_msg_.info.resolution;
     newPose.y = pnew.y() * map_msg_.info.resolution;
     
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      if(registered_robots_[i].getFrameId() == robotName)
+      {
+        newPose.theta = registered_robots_[i].getCurrentPoseM().theta;
+        break;  
+      }
+    }
+    
     bool success = robot_handler_.moveRobot(robotName,newPose);
     if(!success)
     {
