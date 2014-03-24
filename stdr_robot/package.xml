@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>stdr_robot</name>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <description>Provides robot, sensor implementation, using nodelets for stdr_server to load them.</description>
 
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>

@@ -2,8 +2,8 @@
 Changelog for package stdr_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2014-03-25)
+------------------
 * Publish odometry
 * Collision detection works decently with random shaped robots
 * Fixed bug preventing robot from turning after collision with obstacle

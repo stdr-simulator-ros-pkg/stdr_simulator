@@ -2,8 +2,8 @@
 Changelog for package stdr_gui
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2014-03-25)
+------------------
 * fixed `#143 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/143>`_
 * fixed `#142 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/142>`_
 * fixed `#125 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/125>`_

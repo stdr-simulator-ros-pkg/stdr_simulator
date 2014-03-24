@@ -2,8 +2,8 @@
 Changelog for package stdr_parser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2014-03-25)
+------------------
 * Load and save robot in robot creator works
 * Add points parsing for footprints
   This adds support for parsing a list of points for footprints:
