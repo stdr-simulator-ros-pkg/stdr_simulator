@@ -2,6 +2,9 @@
 Changelog for package stdr_launchers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.1.2 (2014-03-09)
 ------------------
 

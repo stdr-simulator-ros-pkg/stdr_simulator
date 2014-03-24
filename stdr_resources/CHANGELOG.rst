@@ -2,6 +2,10 @@
 Changelog for package stdr_resources
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add more footprint files.
+
 0.1.2 (2014-03-09)
 ------------------
 
