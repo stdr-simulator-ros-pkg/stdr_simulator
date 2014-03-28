@@ -83,6 +83,47 @@ namespace stdr_server {
     _robotsPublisher = 
       _nh.advertise<stdr_msgs::RobotIndexedVectorMsg>
         ("stdr_server/active_robots", 10, true);
+        
+    _addRfidTagServiceServer = _nh.advertiseService("stdr_server/add_rfid_tag",
+      &Server::addRfidTagCallback, this);
+      
+    _rfidTagVectorPublisher = _nh.advertise<stdr_msgs::RfidTagVector>(
+      "stdr_server/rfid_list", 1);
+  }
+  
+  /**
+  @brief Service callback for adding new rfid tag to the environment
+  **/
+  bool Server::addRfidTagCallback(
+    stdr_msgs::AddRfidTag::Request &req, 
+    stdr_msgs::AddRfidTag::Response &res)
+  {
+    //!< Sanity check for the RFID tag
+    stdr_msgs::RfidTag new_rfid = req.newTag;
+    if(_rfidTagMap.find(new_rfid.tag_id) != _rfidTagMap.end())
+    { //!< A rfid tag exists with the same tag_id
+      res.success = false;
+      res.message = "Duplicate rfid_id";
+      return 1;
+    }
+    
+    //!< Add RFID tag to the environment 
+    _rfidTagMap.insert(std::pair<std::string, stdr_msgs::RfidTag>(
+      new_rfid.tag_id, new_rfid));
+    
+    //!< Publish the new RFID tag list
+    stdr_msgs::RfidTagVector rfidTagList;
+    for(RfidTagMapIt it = _rfidTagMap.begin() ; it != _rfidTagMap.end() ; it++)
+    {
+      rfidTagList.rfid_tags.push_back(it->second);
+    }
+    _rfidTagVectorPublisher.publish(rfidTagList);
+    
+    //!< Publish the tf of the rfid tags (?)
+    
+    //!< Return success
+    res.success = true;
+    return 0;
   }
 
   /**

@@ -1,0 +1,4 @@
+stdr_msgs/RfidTag newTag
+---
+bool success
+string message

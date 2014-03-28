@@ -20,6 +20,8 @@ add_message_files(
     RobotMsg.msg
     RobotIndexedMsg.msg
     RobotIndexedVectorMsg.msg
+    RfidTag.msg
+    RfidTagVector.msg
 )
 
 add_service_files( 
@@ -28,6 +30,7 @@ add_service_files(
     LoadExternalMap.srv
     RegisterGui.srv
     MoveRobot.srv
+    AddRfidTag.srv
 )
 
 add_action_files(
