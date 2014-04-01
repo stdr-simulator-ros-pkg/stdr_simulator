@@ -262,12 +262,14 @@ namespace stdr_gui
   {
     QPainter painter(m);
     
+    int text_size = frame_id_.size();
+    
     painter.setPen(QColor(0,0,0,100 * (2 - visualization_status_)));
     
     painter.drawRect(
       current_pose_.x / ocgd + 10,
       m->height() - (current_pose_.y / ocgd) - 30,
-      100,
+      3 + text_size * 9,
       20);
     
     painter.setPen(QColor(255,255,255,100 * (2 - visualization_status_)));
@@ -275,10 +277,11 @@ namespace stdr_gui
     painter.fillRect(
       current_pose_.x / ocgd + 10,
       m->height() - (current_pose_.y / ocgd) - 30,
-      100,
+      3 + text_size * 9,
       20,
       QBrush(QColor(0,0,0,100 * (2 - visualization_status_))));
     
+    painter.setFont(QFont("Courier New"));
     painter.drawText(
       current_pose_.x / ocgd + 12,
       m->height() - (current_pose_.y / ocgd) - 15,
