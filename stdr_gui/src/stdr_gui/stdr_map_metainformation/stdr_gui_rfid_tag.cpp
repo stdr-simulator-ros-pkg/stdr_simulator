@@ -83,6 +83,36 @@ namespace stdr_gui{
         2 * i * step, 
         2 * i * step);
     }
+    
+    //!< Draws the label
+    
+    int text_size = name_.size();
+    
+    //~ painter.setPen(QColor(0,0,0,100 * (2 - visualization_status_)));
+    painter.setPen(QColor(0,0,0,100 * (2)));
+    
+    painter.drawRect(
+      position_.x() + 10,
+      img->height() - position_.y() - 30,
+      3 + text_size * 9,
+      20);
+    
+    //~ painter.setPen(QColor(255,255,255,100 * (2 - visualization_status_)));
+    painter.setPen(QColor(255,255,255,100 * (2)));
+    
+    painter.fillRect(
+      position_.x() + 10,
+      img->height() - position_.y() - 30,
+      3 + text_size * 9,
+      20,
+      QBrush(QColor(0,0,0,100 * (2))));
+      //~ QBrush(QColor(0,0,0,100 * (2 - visualization_status_))));
+    
+    painter.setFont(QFont("Courier New"));
+    painter.drawText(
+      position_.x() + 12,
+      img->height() - position_.y() - 15,
+      QString(name_.c_str()));
   }
   
   /**

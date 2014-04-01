@@ -63,11 +63,14 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QTimeEdit>
 #include <QtGui/QInputDialog>
+#include <QtGui/QFont>
 
 #include <stdr_msgs/RobotIndexedVectorMsg.h>
 #include <stdr_msgs/RobotIndexedMsg.h>
 #include <stdr_msgs/RobotMsg.h>
 #include <stdr_msgs/Noise.h>
+#include <stdr_msgs/RfidTagVector.h>
+#include <stdr_msgs/AddRfidTag.h>
 
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/Point.h>

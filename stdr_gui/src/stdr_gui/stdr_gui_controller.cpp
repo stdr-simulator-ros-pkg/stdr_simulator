@@ -84,6 +84,15 @@ namespace stdr_gui
       1, 
       &CGuiController::receiveMap,
       this);
+      
+    rfids_subscriber_ = n_.subscribe(
+      "stdr_server/rfid_list", 
+      1, 
+      &CGuiController::receiveRfids,
+      this);
+
+    new_rfid_tag_client_ = 
+      n_.serviceClient<stdr_msgs::AddRfidTag>("stdr_server/add_rfid_tag");
     
     QObject::connect(
       &gui_connector_,SIGNAL(setZoomInCursor(bool)),
@@ -219,6 +228,8 @@ namespace stdr_gui
     QObject::connect(
       this, SIGNAL(setSonarVisibility(QString,QString,char)),
       &info_connector_, SLOT(setSonarVisibility(QString,QString,char)));
+      
+    
   }
   
   /**
@@ -265,7 +276,25 @@ namespace stdr_gui
   }
 
   /**
-  @brief Receives the occupancy grid map from stdr_server. Connects to "map" ROS topic
+  @brief Receives the existent rfid tags
+  **/
+  void CGuiController::receiveRfids(const stdr_msgs::RfidTagVector& msg)
+  {
+    rfid_tags_.clear();
+    for(unsigned int i = 0 ; i < msg.rfid_tags.size() ; i++)
+    {
+      QPoint p(msg.rfid_tags[i].pose.x / map_msg_.info.resolution,
+        msg.rfid_tags[i].pose.y / map_msg_.info.resolution);
+      CGuiRfidTag temp_tag(p, msg.rfid_tags[i].tag_id);
+      temp_tag.setMessage(QString(msg.rfid_tags[i].message.c_str()));
+      rfid_tags_.insert(std::pair<QString, CGuiRfidTag>(
+        QString(temp_tag.getName().c_str()), temp_tag));
+    }
+  }
+
+  /**
+  @brief Receives the occupancy grid map from stdr_server. Connects to "map" \
+  ROS topic
   @param msg [const nav_msgs::OccupancyGrid&] The OGM message
   @return void
   **/
@@ -572,7 +601,8 @@ namespace stdr_gui
   }
   
   /**
-  @brief Gets the point at which the new RFID tag is placed. Connects to the CMapConnector::robotPlaceSet signal
+  @brief Gets the point at which the new RFID tag is placed. Connects to \
+  the CMapConnector::robotPlaceSet signal
   @param p [QPoint] The event point in the OGM
   @return void
   **/
@@ -582,32 +612,47 @@ namespace stdr_gui
     {
       return;
     }
-    while(map_lock_)
-    {	
-      usleep(100);
-    }
-    map_lock_ = true;
     
     QPoint pnew = map_connector_.getGlobalPoint(p);
     QString name=QString("rfid_tag_") + QString().setNum(rfid_tags_.size());
-    CGuiRfidTag new_tag(pnew,name.toStdString());
     
     bool ok;
-            
-    //~ QString message = QInputDialog::getText(
-      //~ this, tr("QInputDialog::getText()"),
-      //~ tr("User name:"), QLineEdit::Normal,
-      //~ QDir::home().dirName(), &ok);
-    //~ if ( ok && !message.isEmpty() ) {
-        //~ new_tag.setMessage(message);
-    //~ }
-
-    rfid_tags_.insert(std::pair<QString,CGuiRfidTag>(name,new_tag));
-    map_lock_ = false;
+    stdr_msgs::RfidTag new_tag;
+    
+    //!< Getting RFID tag id
+    QString rfid_id = QInputDialog::getText(
+      &(info_connector_.loader), tr("QInputDialog::getText()"),
+      tr("RFID tag id:"), QLineEdit::Normal,
+      "", &ok);
+    if ( ok && !rfid_id.isEmpty() ) {
+        new_tag.tag_id = rfid_id.toStdString();
+    }
+    //!< Getting RFID tag optional message
+    QString rfid_message = QInputDialog::getText(
+      &(info_connector_.loader), tr("QInputDialog::getText()"),
+      tr("RFID tag message (optional):"), QLineEdit::Normal,
+      "", &ok);
+    if ( ok && !rfid_message.isEmpty() ) {
+        new_tag.message = rfid_message.toStdString();
+    }
+    
+    new_tag.pose.x = pnew.x() * map_msg_.info.resolution ;
+    new_tag.pose.y = pnew.y() * map_msg_.info.resolution ;
+    new_tag.pose.theta = 0;
+    
+    stdr_msgs::AddRfidTag srv;
+    srv.request.newTag = new_tag;
+    if (new_rfid_tag_client_.call(srv))
+    {
+      gui_connector_.raiseMessage(
+        "STDR robot - Error", QString(srv.response.message.c_str()));
+    }
+    
   }
   
   /**
-  @brief Gets the point at which the new CO2 source is placed. Connects to the CMapConnector::co2PlaceSet signal
+  @brief Gets the point at which the new CO2 source is placed. Connects to the\
+   CMapConnector::co2PlaceSet signal
   @param p [QPoint] The event point in the OGM
   @return void
   **/

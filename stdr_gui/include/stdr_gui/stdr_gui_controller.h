@@ -104,6 +104,8 @@ namespace stdr_gui
       ros::Subscriber map_subscriber_;
       //!< ROS subscriber to get all robots
       ros::Subscriber robot_subscriber_;
+      //!< ROS subscriber for rfids
+      ros::Subscriber rfids_subscriber_;
       //!< The ROS node handle
       ros::NodeHandle n_;
       //!< ROS tf transform listener
@@ -161,6 +163,9 @@ namespace stdr_gui
         
       //!< Frame id of the following robot
       std::string robot_following_;
+      
+      //!< Service client for inserting a new rfid tag
+      ros::ServiceClient new_rfid_tag_client_;
     
     //------------------------------------------------------------------------//  
     public:
@@ -197,6 +202,13 @@ namespace stdr_gui
       @return void
       **/
       void receiveMap(const nav_msgs::OccupancyGrid& msg);
+      
+      /**
+      @brief Receives the existent rfid tags
+      @param msg [const stdr_msgs::RfidTagVector&] The rfid tags message
+      @return void
+      **/
+      void receiveRfids(const stdr_msgs::RfidTagVector& msg);
       
       /**
       @brief Receives the robots from stdr_server. Connects to "stdr_server/active_robots" ROS topic
