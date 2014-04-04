@@ -15,6 +15,7 @@ add_message_files(
     LaserSensorMsg.msg
     SonarSensorMsg.msg
     RfidSensorMsg.msg
+    RfidSensorMeasurementMsg.msg
     KinematicMsg.msg
     FootprintMsg.msg
     RobotMsg.msg
