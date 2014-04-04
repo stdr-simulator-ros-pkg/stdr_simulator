@@ -38,6 +38,7 @@
 #include <stdr_msgs/RobotIndexedVectorMsg.h>
 #include <stdr_msgs/RfidTagVector.h>
 #include <stdr_msgs/AddRfidTag.h>
+#include <stdr_msgs/DeleteRfidTag.h>
 #include <nodelet/NodeletLoad.h>
 #include <nodelet/NodeletUnload.h>
 
@@ -160,6 +161,16 @@ namespace stdr_server {
       bool addRfidTagCallback(
         stdr_msgs::AddRfidTag::Request &req, 
         stdr_msgs::AddRfidTag::Response &res);
+        
+      /**
+      @brief Service callback for deleting an rfid tag from the environment
+      @param req [stdr_msgs::DeleteRfidTag::Request &] The request
+      @param res [stdr_msgs::DeleteRfidTag::Response &] The Response
+      @return bool
+      **/
+      bool deleteRfidTagCallback(
+        stdr_msgs::DeleteRfidTag::Request &req, 
+        stdr_msgs::DeleteRfidTag::Response &res);
       
     private:
     
@@ -204,6 +215,8 @@ namespace stdr_server {
       
       //!< The addRfidTag srv server
       ros::ServiceServer _addRfidTagServiceServer;
+      //!< The deleteRfidTag srv server
+      ros::ServiceServer _deleteRfidTagServiceServer;
       //!< The rfid tag list publisher
       ros::Publisher _rfidTagVectorPublisher;
   };

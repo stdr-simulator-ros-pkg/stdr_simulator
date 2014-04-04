@@ -87,6 +87,10 @@ namespace stdr_server {
     _addRfidTagServiceServer = _nh.advertiseService("stdr_server/add_rfid_tag",
       &Server::addRfidTagCallback, this);
       
+    _deleteRfidTagServiceServer = 
+      _nh.advertiseService("stdr_server/delete_rfid_tag",
+      &Server::deleteRfidTagCallback, this);
+      
     _rfidTagVectorPublisher = _nh.advertise<stdr_msgs::RfidTagVector>(
       "stdr_server/rfid_list", 1);
   }
@@ -123,6 +127,35 @@ namespace stdr_server {
     
     //!< Return success
     res.success = true;
+    return 0;
+  }
+  
+  /**
+  @brief Service callback for deleting an rfid tag from the environment
+  **/
+  bool Server::deleteRfidTagCallback(
+    stdr_msgs::DeleteRfidTag::Request &req, 
+    stdr_msgs::DeleteRfidTag::Response &res)
+  {
+    
+    std::string name = req.name;
+    if(_rfidTagMap.find(name) != _rfidTagMap.end())
+    {
+      _rfidTagMap.erase(name);
+      
+      //!< Publish the new RFID tag list
+      stdr_msgs::RfidTagVector rfidTagList;
+      for(RfidTagMapIt it = _rfidTagMap.begin() ; 
+        it != _rfidTagMap.end() ; it++)
+      {
+        rfidTagList.rfid_tags.push_back(it->second);
+      }
+      _rfidTagVectorPublisher.publish(rfidTagList);
+    }
+    else  //!< Tag does not exist
+    {
+      return 1;
+    }
     return 0;
   }
 

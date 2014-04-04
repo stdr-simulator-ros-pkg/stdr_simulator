@@ -31,6 +31,7 @@ add_service_files(
     RegisterGui.srv
     MoveRobot.srv
     AddRfidTag.srv
+    DeleteRfidTag.srv
 )
 
 add_action_files(

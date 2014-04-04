@@ -71,6 +71,7 @@
 #include <stdr_msgs/Noise.h>
 #include <stdr_msgs/RfidTagVector.h>
 #include <stdr_msgs/AddRfidTag.h>
+#include <stdr_msgs/DeleteRfidTag.h>
 
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/Point.h>

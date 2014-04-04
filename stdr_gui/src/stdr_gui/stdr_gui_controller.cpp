@@ -93,6 +93,9 @@ namespace stdr_gui
 
     new_rfid_tag_client_ = 
       n_.serviceClient<stdr_msgs::AddRfidTag>("stdr_server/add_rfid_tag");
+      
+    delete_rfid_tag_client_ = 
+      n_.serviceClient<stdr_msgs::DeleteRfidTag>("stdr_server/delete_rfid_tag");
     
     QObject::connect(
       &gui_connector_,SIGNAL(setZoomInCursor(bool)),
@@ -1062,8 +1065,9 @@ namespace stdr_gui
           QAction* selectedItem = myMenu.exec(map_connector_.mapToGlobal(p));
           if(selectedItem == deleteTag)
           {
-            //~ robot_handler_.deleteRobot(
-              //~ registered_robots_[i].getFrameId());
+            stdr_msgs::DeleteRfidTag srv;
+            srv.request.name = i->first.toStdString();
+            delete_rfid_tag_client_.call(srv);
           }
         }
       }

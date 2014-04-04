@@ -166,6 +166,8 @@ namespace stdr_gui
       
       //!< Service client for inserting a new rfid tag
       ros::ServiceClient new_rfid_tag_client_;
+      //!< Service client for deleting a rfid tag
+      ros::ServiceClient delete_rfid_tag_client_;
     
     //------------------------------------------------------------------------//  
     public:
