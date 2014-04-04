@@ -29,9 +29,10 @@ namespace stdr_gui{
   @param name [std::string] The "name" of the rfid tag
   @return void
   **/
-  CGuiRfidTag::CGuiRfidTag(QPoint p,std::string name):
+  CGuiRfidTag::CGuiRfidTag(QPoint p,std::string name, float resolution):
     position_(p),
     name_(name),
+    resolution_(resolution),
     message_("")
   {
   
@@ -62,7 +63,10 @@ namespace stdr_gui{
   **/
   bool CGuiRfidTag::checkProximity(QPoint p)
   {
-    return false;  // 2b changed
+    float dx = p.x() * resolution_ - position_.x() * resolution_;
+    float dy = p.y() * resolution_ - position_.y() * resolution_;
+    float dist = sqrt( pow(dx,2) + pow(dy,2) );
+    return dist <= 0.3;
   }
   
   /**

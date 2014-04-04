@@ -285,8 +285,12 @@ namespace stdr_gui
     {
       QPoint p(msg.rfid_tags[i].pose.x / map_msg_.info.resolution,
         msg.rfid_tags[i].pose.y / map_msg_.info.resolution);
-      CGuiRfidTag temp_tag(p, msg.rfid_tags[i].tag_id);
+      
+      CGuiRfidTag temp_tag(p, msg.rfid_tags[i].tag_id, 
+        map_msg_.info.resolution);
+      
       temp_tag.setMessage(QString(msg.rfid_tags[i].message.c_str()));
+      
       rfid_tags_.insert(std::pair<QString, CGuiRfidTag>(
         QString(temp_tag.getName().c_str()), temp_tag));
     }
@@ -1030,6 +1034,37 @@ namespace stdr_gui
         else if(b == Qt::LeftButton)
         {
           registered_robots_[i].toggleShowLabel();
+        }
+      }
+    }
+    for(RfidTagIterator i = rfid_tags_.begin() ; i != rfid_tags_.end() ; i++)
+    {
+      if(i->second.checkProximity(pointClicked))
+      {
+        if(b == Qt::RightButton)
+        {
+          QMenu myMenu;
+          
+          QAction *name = myMenu.addAction(
+            QString("RFID tag : ") + QString(i->first)
+            );
+          name->setCheckable(false);
+          name->setEnabled(false);
+          
+          QAction *message = myMenu.addAction(
+            QString("Message : ") + QString(i->second.getMessage())
+            );
+          message->setCheckable(false);
+          message->setEnabled(false);
+          
+          QAction *deleteTag = myMenu.addAction(icon_delete_,"Delete RFID tag");
+          
+          QAction* selectedItem = myMenu.exec(map_connector_.mapToGlobal(p));
+          if(selectedItem == deleteTag)
+          {
+            //~ robot_handler_.deleteRobot(
+              //~ registered_robots_[i].getFrameId());
+          }
         }
       }
     }
