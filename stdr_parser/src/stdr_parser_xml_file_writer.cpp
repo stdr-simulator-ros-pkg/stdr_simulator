@@ -278,6 +278,59 @@ namespace stdr_parser
   }
   
   //!------------------------------------------------------------------
+  //!< Template declaration for stdr_msgs::RfidSensorMsg
+  template void XmlFileWriter::messageToFile
+    (stdr_msgs::RfidSensorMsg msg,std::string file_name);
+    
+  //!< Template specialization for stdr_msgs::RfidSensorMsg
+  template <>
+  void XmlFileWriter::messageToXmlElement<stdr_msgs::RfidSensorMsg>
+    (stdr_msgs::RfidSensorMsg msg,TiXmlNode* base){
+      
+    //!< Create rfid reader
+    TiXmlElement* rfidReader = new TiXmlElement("rfid_reader");
+    base->LinkEndChild(rfidReader);
+        
+    //!< Create rfid reader specifications
+    TiXmlElement* rfid_reader_specifications = 
+      new TiXmlElement("rfid_reader_specifications");
+    rfidReader->LinkEndChild(rfid_reader_specifications);
+
+    //!< Create max_range
+    TiXmlElement* maxRange = new TiXmlElement("maxRange");
+    rfid_reader_specifications->LinkEndChild(maxRange);
+    TiXmlText * maxRange_text = new TiXmlText(SSTR(msg.maxRange));
+    maxRange->LinkEndChild(maxRange_text);
+    
+    //!< Create angleSpan
+    TiXmlElement* angleSpan = new TiXmlElement("angleSpan");
+    rfid_reader_specifications->LinkEndChild(angleSpan);
+    TiXmlText * angleSpan_text = new TiXmlText(SSTR(msg.angleSpan));
+    angleSpan->LinkEndChild(angleSpan_text);
+    
+    //!< Create signalCutoff
+    TiXmlElement* signalCutoff = new TiXmlElement("signalCutoff");
+    rfid_reader_specifications->LinkEndChild(signalCutoff);
+    TiXmlText * signalCutoff_text = new TiXmlText(SSTR(msg.signalCutoff));
+    signalCutoff->LinkEndChild(signalCutoff_text);
+    
+    //!< Create frequency
+    TiXmlElement* frequency = new TiXmlElement("frequency");
+    rfid_reader_specifications->LinkEndChild(frequency);
+    TiXmlText * frequency_text = new TiXmlText(SSTR(msg.frequency));
+    frequency->LinkEndChild(frequency_text);
+    
+    //!< Create frame id
+    TiXmlElement* frame_id = new TiXmlElement("frame_id");
+    rfid_reader_specifications->LinkEndChild(frame_id);
+    TiXmlText * frame_id_text = new TiXmlText(SSTR(msg.frame_id));
+    frame_id->LinkEndChild(frame_id_text);
+    
+    //!< Create pose
+    messageToXmlElement(msg.pose,rfid_reader_specifications);
+  }
+  
+  //!------------------------------------------------------------------
   //!< Template declaration for stdr_msgs::RobotMsg
   template void XmlFileWriter::messageToFile
     (stdr_msgs::RobotMsg msg,std::string file_name);
@@ -335,6 +388,12 @@ namespace stdr_parser
     for(unsigned int i = 0 ; i < msg.sonarSensors.size() ; i++)
     {
       messageToXmlElement(msg.sonarSensors[i],robot_specifications);
+    }
+    
+    //!< Create rfid readers
+    for(unsigned int i = 0 ; i < msg.rfidSensors.size() ; i++)
+    {
+      messageToXmlElement(msg.rfidSensors[i],robot_specifications);
     }
   }
   
