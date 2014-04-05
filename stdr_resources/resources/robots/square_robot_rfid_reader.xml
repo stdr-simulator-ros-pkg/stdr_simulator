@@ -37,14 +37,14 @@
     
     <rfid_reader>
       <rfid_reader_specifications>
-        <angle_span>360.0</angle_span>
+        <angle_span>2.0</angle_span>
         <signal_cutoff>0</signal_cutoff>
         <max_range>3.0</max_range>
         <frequency>10.0</frequency>
-        <frame_id>rfid_reader_0</frame_id>
         <pose>
           <x>0</x>
           <y>0</y>
+          <theta>3.0</theta>
         </pose>
       </rfid_reader_specifications>
     </rfid_reader>

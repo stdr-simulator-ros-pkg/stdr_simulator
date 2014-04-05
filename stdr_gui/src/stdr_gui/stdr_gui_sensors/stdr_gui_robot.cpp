@@ -50,6 +50,11 @@ namespace stdr_gui
       CGuiSonar *l = new CGuiSonar(msg.robot.sonarSensors[i], frame_id_);
       sonars_.push_back(l);
     }
+    for(unsigned int i = 0 ; i < msg.robot.rfidSensors.size() ; i++)
+    {
+      CGuiRfid *l = new CGuiRfid(msg.robot.rfidSensors[i], frame_id_);
+      rfids_.push_back(l);
+    }
     robot_initialized_ = true;
   }
   
@@ -117,6 +122,10 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < sonars_.size() ; i++)
     {
       sonars_[i]->paint(m,resolution_,listener);
+    }
+    for(unsigned int i = 0 ; i < rfids_.size() ; i++)
+    {
+      rfids_[i]->paint(m,resolution_,listener);
     }
     
     drawSelf(m);

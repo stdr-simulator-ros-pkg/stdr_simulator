@@ -84,7 +84,7 @@
 
 #include <stdr_parser/stdr_parser.h>
 
-#define STDR_PI 3.14159
+#define STDR_PI 3.14159265359
 
 /**
 @namespace stdr_gui_tools

@@ -27,6 +27,8 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/Pose2D.h>
 
+#define PI 3.141592653589793
+
 /**
 @namespace stdr_robot
 @brief The main namespace for STDR Robot

@@ -22,6 +22,46 @@
 #include <stdr_robot/sensors/rfid_reader.h>
 
 namespace stdr_robot {
+  
+  /**
+  @brief Checks if an angle is between two others. Supposes that min < max
+  @param target_ [float] The target angle
+  @param min_ [float] min angle
+  @param max_ [float] max angle
+  @return true on success
+  **/ 
+  bool angCheck(float target_, float min_, float max_) 
+  {
+    int c = 0;
+    c = (target_ + 2 * PI) / (2 * PI);
+    float target = target_ + (1 - c) * PI * 2;
+    c = (min_ + 2 * PI) / (2 * PI);
+    float min = min_ + (1 - c) * PI * 2;
+    c = (max_ + 2 * PI) / (2 * PI);
+    float max = max_ + (1 - c) * PI * 2;
+    
+    if(min_ * max_ > 0) //!< Same sign
+    {
+      if(target > min && target < max)
+      {
+        return true;
+      }
+    }
+    else
+    {
+      max += 2 * PI;
+      if(target > min && target < max)
+      {
+        return true;
+      }
+      target += 2 * PI;
+      if(target > min && target < max)
+      {
+        return true;
+      }
+    }
+    return false;
+  } 
 
   /**
   @brief Default constructor
@@ -49,6 +89,12 @@ namespace stdr_robot {
 
     _publisher = n.advertise<stdr_msgs::RfidSensorMeasurementMsg>
       ( _namespace + "/" + msg.frame_id, 1 );
+      
+    rfids_subscriber_ = n.subscribe(
+      "stdr_server/rfid_list", 
+      1, 
+      &RfidReader::receiveRfids,
+      this);
   }
   
   /**
@@ -69,77 +115,51 @@ namespace stdr_robot {
     if (!_gotTransform) { //!< wait for transform 
       return;
     }
-    ROS_ERROR("RFID Reader triggered");
+    stdr_msgs::RfidSensorMeasurementMsg measuredTagsMsg;
+
+    measuredTagsMsg.frame_id = _description.frame_id;
+
+    if ( _map.info.height == 0 || _map.info.width == 0 )
+    {
+      ROS_DEBUG("In rfid reader : Outside limits\n");
+      return;
+    }
     
-    //~ float angle;
-    //~ int distance;
-    //~ int xMap, yMap;
-    //~ sensor_msgs::Range sonarRangeMsg;
-//~ 
-    //~ sonarRangeMsg.max_range = _description.maxRange;
-    //~ sonarRangeMsg.min_range = _description.minRange;
-    //~ sonarRangeMsg.radiation_type = 0;
-    //~ sonarRangeMsg.field_of_view = _description.coneAngle;
-//~ 
-    //~ if ( _map.info.height == 0 || _map.info.width == 0 )
-    //~ {
-      //~ ROS_DEBUG("Outside limits\n");
-      //~ return;
-    //~ }
-//~ 
-    //~ sonarRangeMsg.range = _description.maxRange;
-//~ 
-    //~ float angleStep = 3.14159 / 180.0;
-    //~ float angleMin = - ( _description.coneAngle / 2.0 ); 
-    //~ float angleMax = _description.coneAngle / 2.0 ; 
-    //~ ////float angleStep = _description.coneAngle * 180.0 / 3.14159;
-    //~ //float angleMin = -( _description.coneAngle * 180.0 / 3.14159 / 2.0 ); 
-    //~ //float angleMax = _description.coneAngle * 180.0 / 3.14159 / 2.0 ; 
-//~ 
-    //~ for ( float sonarIter = angleMin; sonarIter < angleMax; 
-      //~ sonarIter += angleStep )
-    //~ {
-//~ 
-      //~ distance = 1;
-//~ 
-      //~ while ( distance <= _description.maxRange / _map.info.resolution )
-      //~ {
-        //~ xMap = _sensorTransform.getOrigin().x() / _map.info.resolution + 
-          //~ cos( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) 
-            //~ * distance;
-        //~ yMap = _sensorTransform.getOrigin().y() / _map.info.resolution + 
-          //~ sin( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) 
-            //~ * distance;
-        //~ 
-        //~ if (yMap * _map.info.width + xMap > _map.info.height*_map.info.width)
-          //~ return;
-        //~ 
-        //~ //!< Found obstacle
-        //~ if ( _map.data[ yMap * _map.info.width + xMap ] > 70 )
-        //~ {
-          //~ break;
-        //~ }
-        //~ distance ++;
-      //~ }
-//~ 
-      //~ if ( distance * _map.info.resolution < sonarRangeMsg.range )
-      //~ {
-        //~ sonarRangeMsg.range = distance * _map.info.resolution;
-      //~ }
-    //~ }
-    //~ 
-    //~ if ( sonarRangeMsg.range < _description.minRange )
-    //~ {
-      //~ sonarRangeMsg.range = -std::numeric_limits<float>::infinity();
-    //~ }
-    //~ else if ( sonarRangeMsg.range >= _description.maxRange )
-    //~ {
-      //~ sonarRangeMsg.range = std::numeric_limits<float>::infinity();
-    //~ }
-//~ 
-    //~ sonarRangeMsg.header.stamp = ros::Time::now();
-    //~ sonarRangeMsg.header.frame_id = _namespace + "_" + _description.frame_id;
-    //~ _publisher.publish( sonarRangeMsg );
+    float max_range = _description.maxRange;
+    float sensor_th = tf::getYaw(_sensorTransform.getRotation());
+    float min_angle = sensor_th - _description.angleSpan / 2.0;
+    float max_angle = sensor_th + _description.angleSpan / 2.0;
+    
+    //!< Must implement the functionality
+    for(unsigned int i = 0 ; i < rfid_tags_.rfid_tags.size() ; i++)
+    {
+      //!< Check for max distance
+      float sensor_x = _sensorTransform.getOrigin().x();
+      float sensor_y = _sensorTransform.getOrigin().y();
+      float dist = sqrt(
+        pow(sensor_x - rfid_tags_.rfid_tags[i].pose.x, 2) +
+        pow(sensor_y - rfid_tags_.rfid_tags[i].pose.y, 2)
+      );
+      if(dist > max_range)
+      {
+        continue;
+      }
+      
+      //!< Check for correct angle
+      float ang = atan2(rfid_tags_.rfid_tags[i].pose.y - sensor_y,
+        rfid_tags_.rfid_tags[i].pose.x - sensor_x);
+      
+      if(!angCheck(ang, min_angle, max_angle))
+      {
+        continue;
+      }
+      
+      measuredTagsMsg.rfid_tags.push_back(rfid_tags_.rfid_tags[i]);
+    }
+    
+    measuredTagsMsg.header.stamp = ros::Time::now();
+    measuredTagsMsg.header.frame_id = _namespace + "_" + _description.frame_id;
+    _publisher.publish( measuredTagsMsg );
   }
 
   /**
@@ -186,5 +206,13 @@ namespace stdr_robot {
     {
       ROS_DEBUG("%s", ex.what());
     }
+  }
+  
+  /**
+  @brief Receives the existent rfid tags
+  **/
+  void RfidReader::receiveRfids(const stdr_msgs::RfidTagVector& msg)
+  {
+    rfid_tags_ = msg;
   }
 }

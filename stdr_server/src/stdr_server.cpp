@@ -92,7 +92,7 @@ namespace stdr_server {
       &Server::deleteRfidTagCallback, this);
       
     _rfidTagVectorPublisher = _nh.advertise<stdr_msgs::RfidTagVector>(
-      "stdr_server/rfid_list", 1);
+      "stdr_server/rfid_list", 1, true);
   }
   
   /**

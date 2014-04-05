@@ -25,6 +25,7 @@
 #include <stdr_robot/sensors/sensor_base.h>
 #include <stdr_msgs/RfidSensorMsg.h>
 #include <stdr_msgs/RfidSensorMeasurementMsg.h>
+#include <stdr_msgs/RfidTagVector.h>
 
 /**
 @namespace stdr_robot
@@ -82,11 +83,24 @@ namespace stdr_robot {
       @return void
       **/ 
       ~RfidReader(void);
+      
+      /**
+      @brief Receives the existent rfid tags
+      @param msg [const stdr_msgs::RfidTagVector&] The rfid tags message
+      @return void
+      **/
+      void receiveRfids(const stdr_msgs::RfidTagVector& msg);
 
     private:
 
       //!< Sonar rfid reader description
       stdr_msgs::RfidSensorMsg _description;
+      
+      //!< ROS subscriber for rfids
+      ros::Subscriber rfids_subscriber_;
+      
+      //!< The currently existent RFID tags
+      stdr_msgs::RfidTagVector rfid_tags_;
   };
 
 }
