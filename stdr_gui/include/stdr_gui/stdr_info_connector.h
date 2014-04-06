@@ -132,6 +132,16 @@ namespace stdr_gui
       void setSonarVisibility(QString robotName,QString sonarName,char vs);
       
       /**
+      @brief Changes a rfid reader visibility icon
+      @param robotName [QString] The robot frame id
+      @param rfidReaderName [QString] The rfidReader frame id
+      @param vs [char] The visibility state
+      @return void
+      **/
+      void setRfidReaderVisibility(QString robotName,
+        QString rfidReaderName, char vs);
+      
+      /**
       @brief Changes a robot visibility icon
       @param robotName [QString] The robot frame id
       @param vs [char] The visibility state
@@ -180,6 +190,15 @@ namespace stdr_gui
       @return void
       **/
       void sonarVisibilityClicked(QString robotName,QString sonarName);
+      
+      /**
+      @brief Emmited when a rfid reader visibility icon is clicked
+      @param robotName [QString] The robot frame id
+      @param rfidReaderName [QString] The rfid reader frame id
+      @return void
+      **/
+      void rfidReaderVisibilityClicked(
+        QString robotName, QString rfidReaderName);
       
       /**
       @brief Emmited when a robot visibility icon is clicked

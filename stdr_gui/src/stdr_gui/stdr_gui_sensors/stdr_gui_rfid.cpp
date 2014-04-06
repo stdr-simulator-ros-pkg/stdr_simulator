@@ -25,9 +25,6 @@ namespace stdr_gui
 {
   /**
   @brief Default contructor
-  @param msg [stdr_msgs::RfidSensorMsg] The rfid antenna description msg
-  @param baseTopic [std::string] The ros topic for subscription
-  @return void
   **/
   CGuiRfid::CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic):
     msg_(msg)
@@ -42,8 +39,6 @@ namespace stdr_gui
   
   /**
   @brief Callback for the rfid measurements message
-  @param msg [const stdr_msgs::RfidSensorMeasurement&] The new sonar range message
-  @return void
   **/
   void CGuiRfid::callback(const stdr_msgs::RfidSensorMeasurementMsg& msg)
   {
@@ -122,10 +117,42 @@ namespace stdr_gui
   
   /**
   @brief Default destructor
-  @return void
   **/
   CGuiRfid::~CGuiRfid(void)
   {
 
+  }
+  
+  /**
+  @brief Returns the visibility status of the specific sensor
+  **/
+  char CGuiRfid::getVisualizationStatus(void)
+  {
+    return visualization_status_;
+  }
+  
+  /**
+  @brief Toggles the visibility status of the specific sensor
+  **/
+  void CGuiRfid::toggleVisualizationStatus(void)
+  {
+    visualization_status_ = (visualization_status_ + 1) % 3;
+  }
+  
+  /**
+  @brief Sets the visibility status of the specific sensor
+  **/
+  void CGuiRfid::setVisualizationStatus(char vs)
+  {
+    visualization_status_ = vs;
+  }
+  
+  /**
+  @brief Returns the frame id of the specific sensor
+  @return std::string : The sensor's frame id
+  **/
+  std::string CGuiRfid::getFrameId(void)
+  {
+    return msg_.frame_id;
   }
 }

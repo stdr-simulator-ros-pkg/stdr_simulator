@@ -217,6 +217,10 @@ namespace stdr_gui
       this, SLOT(sonarVisibilityClicked(QString,QString)));
       
     QObject::connect(
+      &info_connector_,SIGNAL(rfidReaderVisibilityClicked(QString,QString)),
+      this, SLOT(rfidReaderVisibilityClicked(QString,QString)));
+      
+    QObject::connect(
       &info_connector_,SIGNAL(robotVisibilityClicked(QString)),
       this, SLOT(robotVisibilityClicked(QString)));
     
@@ -232,7 +236,9 @@ namespace stdr_gui
       this, SIGNAL(setSonarVisibility(QString,QString,char)),
       &info_connector_, SLOT(setSonarVisibility(QString,QString,char)));
       
-    
+    QObject::connect(
+      this, SIGNAL(setRfidReaderVisibility(QString,QString,char)),
+      &info_connector_, SLOT(setRfidReaderVisibility(QString,QString,char)));
   }
   
   /**
@@ -1150,6 +1156,28 @@ namespace stdr_gui
         Q_EMIT setSonarVisibility(robotName,sonarName,(vs + 1) % 3);
         registered_robots_[i].toggleSonarVisualizationStatus(
           sonarName.toStdString());
+        break;
+      }
+    }
+  }
+  
+  /**
+  @brief Informs CGuiController that a rfidReader visibility status has \
+  been clicked. Connects to the CInfoConnector::rfidReaderVisibilityClicked\
+  signal
+  **/
+  void CGuiController::rfidReaderVisibilityClicked
+    (QString robotName,QString rfidReaderName)
+  {
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      if(registered_robots_[i].getFrameId() == robotName.toStdString())
+      {
+        char vs = registered_robots_[i].getRfidReaderVisualizationStatus(
+          rfidReaderName.toStdString());
+        Q_EMIT setRfidReaderVisibility(robotName,rfidReaderName,(vs + 1) % 3);
+        registered_robots_[i].toggleRfidReaderVisualizationStatus(
+          rfidReaderName.toStdString());
         break;
       }
     }

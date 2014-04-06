@@ -89,6 +89,31 @@ namespace stdr_gui
       @return void
       **/
       ~CGuiRfid(void);
+      
+      /**
+      @brief Returns the visibility status of the specific sensor
+      @return char : The visibility status
+      **/
+      char getVisualizationStatus(void);
+      
+      /**
+      @brief Toggles the visibility status of the specific sensor
+      @return void
+      **/
+      void toggleVisualizationStatus(void);
+      
+      /**
+      @brief Sets the visibility status of the specific sensor
+      @param vs [char] The new visibility status
+      @return void
+      **/
+      void setVisualizationStatus(char vs);
+      
+      /**
+      @brief Returns the frame id of the specific sensor
+      @return std::string : The sensor's frame id
+      **/
+      std::string getFrameId(void);
   };  
 }
 

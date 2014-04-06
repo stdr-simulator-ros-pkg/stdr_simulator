@@ -320,10 +320,10 @@ namespace stdr_gui{
         sname->setText(0,
           msg.robots[i].robot.rfidSensors[l].frame_id.c_str());
         sname->setIcon(2,visible_icon_on_);
-        sname->setIcon(3,visible_icon_);
+        //~ sname->setIcon(3,visible_icon_);
         
         sname->setToolTip(2,"Visibility status");
-        sname->setToolTip(3,"Visualize topic");
+        //~ sname->setToolTip(3,"Visualize topic");
 
         QTreeWidgetItem *smaxrange = new QTreeWidgetItem();
         QTreeWidgetItem *sspan = new QTreeWidgetItem();

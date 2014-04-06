@@ -423,6 +423,23 @@ namespace stdr_gui
     }
     return 0;
   }
+  
+  /**
+  @brief Returns the rfid reader visibility status
+  @param frame_id [std::string] The rfid reader frame id
+  @return char
+  **/
+  char CGuiRobot::getRfidReaderVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < rfids_.size() ; i++)
+    {
+      if(rfids_[i]->getFrameId() == frame_id)
+      {
+        return rfids_[i]->getVisualizationStatus();
+      }
+    }
+    return 0;
+  }
     
   /**
   @brief Toggles the laser visibility status
@@ -474,6 +491,22 @@ namespace stdr_gui
   }
   
   /**
+  @brief Toggles the rfid reader visibility status
+  @param frame_id [std::string] The rfid reader frame id
+  @return void
+  **/
+  void CGuiRobot::toggleRfidReaderVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < rfids_.size() ; i++)
+    {
+      if(rfids_[i]->getFrameId() == frame_id)
+      {
+        rfids_[i]->toggleVisualizationStatus();
+      }
+    }
+  }
+  
+  /**
   @brief Returns the visibility status
   @return char
   **/
@@ -496,6 +529,10 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < sonars_.size() ; i++)
     {
       sonars_[i]->setVisualizationStatus(visualization_status_);
+    }
+    for(unsigned int i = 0 ; i < rfids_.size() ; i++)
+    {
+      rfids_[i]->setVisualizationStatus(visualization_status_);
     }
   }
   

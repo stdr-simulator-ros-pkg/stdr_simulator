@@ -160,6 +160,11 @@ namespace stdr_gui
       Q_EMIT sonarVisibilityClicked(
         item->parent()->parent()->text(0),item->text(0));
     }
+    else if(item->parent()->text(0) == QString("RFID readers") && column == 2)
+    {
+      Q_EMIT rfidReaderVisibilityClicked(
+        item->parent()->parent()->text(0), item->text(0));
+    }
     else if(item->parent() == &loader.robotsInfo && column == 3)
     {
       Q_EMIT robotVisualizerClicked(
@@ -256,6 +261,58 @@ namespace stdr_gui
             for(int k = 0 ; k < it->child(j)->childCount() ; k++)
             {
               if(it->child(j)->child(k)->text(0) == sonarName)
+              {
+                QTreeWidgetItem *inIt = it->child(j)->child(k);
+                switch(vs)
+                {
+                  case 0:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_on_);
+                    break;
+                  }
+                  case 1:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_trans_);
+                    break;
+                  }
+                  case 2:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_off_);
+                    break;
+                  }
+                }
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }  
+  
+  /**
+  @brief Changes a rfid reader visibility icon
+  @param robotName [QString] The robot frame id
+  @param rfidReaderName [QString] The rfid reader frame id
+  @param vs [char] The visibility state
+  @return void
+  **/
+  void CInfoConnector::setRfidReaderVisibility(
+    QString robotName,QString rfidReaderName,char vs)
+  {
+    for(int i = 0 ; i < loader.robotsInfo.childCount() ; i++)
+    {
+      QString text = loader.robotsInfo.child(i)->text(0);
+      if(text == robotName)
+      {
+        QTreeWidgetItem *it = loader.robotsInfo.child(i);
+        for(int j = 0 ; j < it->childCount() ; j++)
+        {
+          if(it->child(j)->text(0) == QString("RFID readers"))
+          {
+            for(int k = 0 ; k < it->child(j)->childCount() ; k++)
+            {
+              if(it->child(j)->child(k)->text(0) == rfidReaderName)
               {
                 QTreeWidgetItem *inIt = it->child(j)->child(k);
                 switch(vs)

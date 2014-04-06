@@ -216,6 +216,20 @@ namespace stdr_gui
       void toggleLaserVisualizationStatus(std::string frame_id);
       
       /**
+      @brief Returns the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return char
+      **/
+      char getRfidReaderVisualizationStatus(std::string frame_id);
+      
+      /**
+      @brief Toggles the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return void
+      **/
+      void toggleRfidReaderVisualizationStatus(std::string frame_id);
+      
+      /**
       @brief Returns the sonar visibility status
       @param frame_id [std::string] The sonar frame id
       @return char

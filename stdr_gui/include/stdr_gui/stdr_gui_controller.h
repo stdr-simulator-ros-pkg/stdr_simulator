@@ -379,6 +379,16 @@ namespace stdr_gui
       void sonarVisibilityClicked(QString robotName,QString sonarName);
       
       /**
+      @brief Informs CGuiController that a rfidReader visibility status has \
+      been clicked. Connects to the CInfoConnector::rfidReaderVisibilityClicked\
+      signal
+      @param robotName [QString] Frame id of the robot
+      @param rfidReaderName [QString] Frame id of the rfidReader
+      @return void
+      **/
+      void rfidReaderVisibilityClicked(QString robotName,QString rfidReaderName);
+      
+      /**
       @brief Informs CGuiController that a robot visibility status has been clicked. Connects to the CInfoConnector::robotVisibilityClicked signal
       @param robotName [QString] Frame id of the robot
       @return void
@@ -436,6 +446,17 @@ namespace stdr_gui
       @return void
       **/
       void setSonarVisibility(QString robotName,QString sonarName,char vs);
+      
+      /**
+      @brief Is emitted when a rfid sensor's visibility status is going to be \
+      changed. Connects to the CInfoConnector::setRfidReaderVisibility slot
+      @param robotName [QString] The frame id of the robot containing the specific rfid reader
+      @param rfidReaderName [QString] The frame id of the rfidReader
+      @param vs [char] The new visibility status
+      @return void
+      **/
+      void setRfidReaderVisibility(QString robotName, 
+        QString rfidReaderName, char vs);
       
       /**
       @brief Is emitted when a robot's visibility status is going to be changed. Connects to the CInfoConnector::setRobotVisibility slot
