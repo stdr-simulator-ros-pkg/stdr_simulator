@@ -297,19 +297,19 @@ namespace stdr_parser
     rfidReader->LinkEndChild(rfid_reader_specifications);
 
     //!< Create max_range
-    TiXmlElement* maxRange = new TiXmlElement("maxRange");
+    TiXmlElement* maxRange = new TiXmlElement("max_range");
     rfid_reader_specifications->LinkEndChild(maxRange);
     TiXmlText * maxRange_text = new TiXmlText(SSTR(msg.maxRange));
     maxRange->LinkEndChild(maxRange_text);
     
     //!< Create angleSpan
-    TiXmlElement* angleSpan = new TiXmlElement("angleSpan");
+    TiXmlElement* angleSpan = new TiXmlElement("angle_span");
     rfid_reader_specifications->LinkEndChild(angleSpan);
     TiXmlText * angleSpan_text = new TiXmlText(SSTR(msg.angleSpan));
     angleSpan->LinkEndChild(angleSpan_text);
     
     //!< Create signalCutoff
-    TiXmlElement* signalCutoff = new TiXmlElement("signalCutoff");
+    TiXmlElement* signalCutoff = new TiXmlElement("signal_cutoff");
     rfid_reader_specifications->LinkEndChild(signalCutoff);
     TiXmlText * signalCutoff_text = new TiXmlText(SSTR(msg.signalCutoff));
     signalCutoff->LinkEndChild(signalCutoff_text);

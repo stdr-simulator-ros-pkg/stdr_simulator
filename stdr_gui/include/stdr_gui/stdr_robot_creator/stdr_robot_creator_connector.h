@@ -58,6 +58,8 @@ namespace stdr_gui
       unsigned int laser_hightlight_id_;
       //!< Current sonar for highlight
       unsigned int sonar_hightlight_id_;
+      //!< Current rfid antenna for highlight
+      unsigned int rfid_antenna_hightlight_id_;
       
       //!< Tree item of the currently clicked laser 
       QTreeWidgetItem* current_laser_;
@@ -234,11 +236,25 @@ namespace stdr_gui
       void saveSonar(QTreeWidgetItem *item);
       
       /**
+      @brief Saves a specific rfid reader sensor in a file
+      @param item [QTreeWidgetItem*] The tree item that holds the sensor 
+      @return void
+      **/
+      void saveRfidAntenna(QTreeWidgetItem *item);
+      
+      /**
       @brief Loads a specific sonar sensor from a file
       @param item [QTreeWidgetItem*] The tree item that holds the sonar sensor 
       @return void
       **/
       void loadSonar(QTreeWidgetItem *item);
+      
+      /**
+      @brief Loads a specific rfid reader sensor from a file
+      @param item [QTreeWidgetItem*] The tree item that holds the sensor 
+      @return void
+      **/
+      void loadRfidAntenna(QTreeWidgetItem *item);
       
       /**
       @brief Updates a tree item with a specific sonar sensor
@@ -249,10 +265,25 @@ namespace stdr_gui
       void updateSonarTree(QTreeWidgetItem *item,stdr_msgs::SonarSensorMsg l);
       
       /**
+      @brief Updates a tree item with a specific rfid reader sensor
+      @param item [QTreeWidgetItem*] The tree item that will be updated
+      @param l [stdr_msgs::RfidSensorMsg] The rfid reader sensor message
+      @return void
+      **/
+      void updateRfidTree(QTreeWidgetItem *item,stdr_msgs::RfidSensorMsg l);
+      
+      /**
       @brief Adds an rfid antenna sensor in the new robot 
       @return void
       **/
       void addRfidAntenna(void);
+      
+      /**
+      @brief Adds an rfid antenna sensor in the new robot 
+      @param rmsg [stdr_msgs::RfidSensorMsg] The rfid antenna sensor message
+      @return void
+      **/
+      void addRfidAntenna(stdr_msgs::RfidSensorMsg rmsg);
       
       /**
       @brief Erases a specific rfid antenna sensor based on a tree item
@@ -378,7 +409,13 @@ namespace stdr_gui
       @brief Called when the update button of the properties widget is clicked 
       @return void
       **/ 
-      void updateRfid(void);
+      void updateRfidAntenna(void);
+      
+      /**
+      @brief Called when the update button of the properties widget is clicked 
+      @return void
+      **/ 
+      void updateRfidAntennaOpen(void);
       
       /**
       @brief Called when the update button of the properties widget is clicked 

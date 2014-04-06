@@ -184,6 +184,21 @@ namespace stdr_gui_tools
   **/
   stdr_msgs::SonarSensorMsg fixSonarAnglesToDegrees(
     stdr_msgs::SonarSensorMsg rmsg);
+    
+  /**
+  @brief Takes a stdr_msgs::RfidSensorMsg and converts its angles to rads
+  @param rmsg [stdr_msgs::RfidSensorMsg] The rfid reader message
+  @return stdr_msgs::RfidSensorMsg : The recreated rfid reader message
+  **/
+  stdr_msgs::RfidSensorMsg fixRfidAnglesToRad(stdr_msgs::RfidSensorMsg rmsg);
+  
+  /**
+  @brief Takes a stdr_msgs::RfidSensorMsg and converts its angles to degrees
+  @param rmsg [stdr_msgs::RfidSensorMsg] The rfid reader message
+  @return stdr_msgs::RfidSensorMsg : The recreated rfid reader message
+  **/
+  stdr_msgs::RfidSensorMsg fixRfidAnglesToDegrees(
+    stdr_msgs::RfidSensorMsg rmsg);
 }
 
 #endif
