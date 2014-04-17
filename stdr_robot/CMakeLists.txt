@@ -39,17 +39,20 @@ catkin_package(
 )
 
 ######################### Sensors ######################################
+add_library(stdr_sensor_base src/sensors/sensor_base.cpp)
+target_link_libraries(stdr_sensor_base ${catkin_LIBRARIES})
+
 add_library(stdr_sonar src/sensors/sonar.cpp)
 add_dependencies(stdr_sonar stdr_msgs_gencpp) # wait for stdr_msgs to be build
-target_link_libraries(stdr_sonar ${catkin_LIBRARIES})
+target_link_libraries(stdr_sonar ${catkin_LIBRARIES} stdr_sensor_base)
 
 add_library(stdr_rfid_reader src/sensors/rfid_reader.cpp)
 add_dependencies(stdr_rfid_reader stdr_msgs_gencpp) # wait for stdr_msgs to be build
-target_link_libraries(stdr_rfid_reader ${catkin_LIBRARIES})
+target_link_libraries(stdr_rfid_reader ${catkin_LIBRARIES} stdr_sensor_base)
 
 add_library(stdr_laser src/sensors/laser.cpp)
 add_dependencies(stdr_laser stdr_msgs_gencpp) # wait for stdr_msgs to be build
-target_link_libraries(stdr_laser ${catkin_LIBRARIES})
+target_link_libraries(stdr_laser ${catkin_LIBRARIES} stdr_sensor_base)
 
 ###################### Motion Controller ###############################
 add_library(stdr_ideal_motion_controller src/motion/ideal_motion_controller.cpp)
@@ -89,7 +92,8 @@ install(FILES robot_plugins.xml
 )
 
 # Insall libraries
-install(TARGETS 
+install(TARGETS
+    stdr_sensor_base
     stdr_sonar
     stdr_rfid_reader
     stdr_laser

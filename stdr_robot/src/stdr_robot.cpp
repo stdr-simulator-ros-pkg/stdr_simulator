@@ -428,4 +428,4 @@ namespace stdr_robot
     //!< Cleanup
   }
 
-}
+}  // namespace stdr_robot

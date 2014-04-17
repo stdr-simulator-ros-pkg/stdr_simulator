@@ -44,30 +44,29 @@ namespace stdr_robot {
     public:
       
       /**
-      @brief Pure virtual function for sensor value callback
-      @param ev [const ros::TimerEvent&] A ROS timer event
+      @brief Virtual function for sensor value callback. Implement this function
+      on derived class to publish sensor measurements.
       @return void
       **/ 
-      virtual void updateSensorCallback(const ros::TimerEvent& ev) = 0;
+      virtual void updateSensorCallback(void) = 0;
       
       /**
-      @brief Pure virtual function for returning the sensor pose relatively to robot
+      @brief Getter function for returning the sensor pose relatively to robot
       @return geometry_msgs::Pose2D
       **/ 
-      virtual geometry_msgs::Pose2D getSensorPose(void) = 0;
+      inline geometry_msgs::Pose2D getSensorPose(void) const
+      {
+        return _sensorPose;
+      }
       
       /**
-      @brief Pure virtual function for returning the sensor frame id
+      @brief Getter function for returning the sensor frame id
       @return std::string
       **/ 
-      virtual std::string getFrameId(void) = 0; 
-      
-      /**
-      @brief Pure virtual function for updating the sensor tf transform
-      @param ev [const ros::TimerEvent&] A ROS timer event
-      @return void
-      **/ 
-      virtual void updateTransform(const ros::TimerEvent& ev) = 0;
+      inline std::string getFrameId(void) const
+      {
+        return _namespace + "_" + _sensorFrameId;
+      } 
       
       /**
       @brief Default destructor
@@ -83,14 +82,33 @@ namespace stdr_robot {
       @brief Default constructor
       @param map [const nav_msgs::OccupancyGrid&] An occupancy grid map
       @param name [const std::string&] The sensor frame id without the base
+      @param n [ros::NodeHandle& n] A ROS NodeHandle to create timers
+      @param sensorPose [const geometry_msgs::Pose2D&] The sensor's pose relative to robot
+      @param sensorFrameId [const std::string&] The sensor's frame id
+      @param updateFrequency [float] The sensor's update frequnecy
       @return void
       **/ 
-      Sensor(const nav_msgs::OccupancyGrid& map,const std::string& name): 
-        _map(map), 
-        _namespace(name), 
-        _gotTransform(false) 
-      {
-      }
+      Sensor(
+            const nav_msgs::OccupancyGrid& map,
+            const std::string& name,
+            ros::NodeHandle& n,
+            const geometry_msgs::Pose2D& sensorPose,
+            const std::string& sensorFrameId,
+            float updateFrequency);
+      
+      /**
+      @brief Checks if transform is available and calls updateSensorCallback()
+      @param ev [const ros::TimerEvent&] A ROS timer event
+      @return void
+      **/
+      void checkAndUpdateSensor(const ros::TimerEvent& ev);
+      
+      /**
+      @brief Function for updating the sensor tf transform
+      @param ev [const ros::TimerEvent&] A ROS timer event
+      @return void
+      **/ 
+      void updateTransform(const ros::TimerEvent& ev);
       
     protected:
     
@@ -98,6 +116,13 @@ namespace stdr_robot {
       const std::string& _namespace;
       //!< The environment occupancy grid map
       const nav_msgs::OccupancyGrid& _map;
+      
+      //!< Sensor pose relative to robot
+      const geometry_msgs::Pose2D _sensorPose;
+      //!< Update frequency of _timer
+      const float _updateFrequency;
+      //!< Sensor frame id
+      const std::string _sensorFrameId;
       
       //!< A ROS timer for updating the sensor values
       ros::Timer _timer;

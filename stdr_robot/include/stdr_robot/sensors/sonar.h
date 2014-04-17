@@ -56,26 +56,8 @@ namespace stdr_robot {
       @brief Updates the sensor measurements
       @return void
       **/ 
-      virtual void updateSensorCallback(const ros::TimerEvent&);
+      virtual void updateSensorCallback();
       
-      /**
-      @brief Returns the sensor pose relatively to robot
-      @return geometry_msgs::Pose2D
-      **/ 
-      virtual geometry_msgs::Pose2D getSensorPose();
-      
-      /**
-      @brief Returns the sensor frame id
-      @return std::string
-      **/ 
-      virtual std::string getFrameId();
-      
-      /**
-      @brief Updates the sensor tf transform
-      @return void
-      **/ 
-      virtual void updateTransform(const ros::TimerEvent&);
-
       /**
       @brief Default destructor
       @return void
