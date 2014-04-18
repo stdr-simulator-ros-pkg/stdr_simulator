@@ -69,7 +69,7 @@ namespace stdr_robot {
 
     stdr_msgs::RfidSensorMeasurementMsg measuredTagsMsg;
 
-    measuredTagsMsg.frame_id = _description.frame_id;
+    measuredTagsMsg.header.frame_id = _description.frame_id;
 
     
     float max_range = _description.maxRange;
