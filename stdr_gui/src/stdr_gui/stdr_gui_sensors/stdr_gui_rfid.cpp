@@ -85,13 +85,21 @@ namespace stdr_gui
     //!< Draw measurement stuff
     QBrush brush(QColor(50,100,50,75 * (2 - visualization_status_)));
     painter.setBrush(brush);
-    for(unsigned int i = 0 ; i < tags_.rfid_tags.size() ; i++)
+    
+    for(unsigned int j = 0 ; j < tags_.rfid_tags_ids.size() ; j++)
     {
-      int x1 = pose_x / ocgd;
-      int y1 = pose_y / ocgd;
-      int x2 = tags_.rfid_tags[i].pose.x / ocgd;
-      int y2 = tags_.rfid_tags[i].pose.y / ocgd;
-      painter.drawLine(x1, y1, x2, y2);
+      for(unsigned int i = 0 ; i < env_tags_.rfid_tags.size() ; i++)
+      {
+        if(tags_.rfid_tags_ids[j] == env_tags_.rfid_tags[i].tag_id)
+        {
+          int x1 = pose_x / ocgd;
+          int y1 = pose_y / ocgd;
+          int x2 = env_tags_.rfid_tags[i].pose.x / ocgd;
+          int y2 = env_tags_.rfid_tags[i].pose.y / ocgd;
+          painter.drawLine(x1, y1, x2, y2);
+          break;
+        }
+      }
     }
     
     QBrush brush_cone(QColor(50,100,50, 20 * (2 - visualization_status_)));
@@ -154,5 +162,21 @@ namespace stdr_gui
   std::string CGuiRfid::getFrameId(void)
   {
     return msg_.frame_id;
+  }
+  
+  /**
+  @brief Sets the tags existent in the environment
+  @param env_tags [stdr_msgs::RfidTagVector] The tag vector
+  @return void
+  **/
+  void CGuiRfid::setEnvironmentalTags(stdr_msgs::RfidTagVector env_tags)
+  {
+    while(lock_)
+    {
+      usleep(100);
+    }
+    lock_ = true;
+    env_tags_ = env_tags;
+    lock_ = false;
   }
 }

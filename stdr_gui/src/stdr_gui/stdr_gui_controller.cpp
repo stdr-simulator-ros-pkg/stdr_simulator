@@ -289,6 +289,7 @@ namespace stdr_gui
   **/
   void CGuiController::receiveRfids(const stdr_msgs::RfidTagVector& msg)
   {
+    rfid_tag_pure_ = msg;
     rfid_tags_.clear();
     for(unsigned int i = 0 ; i < msg.rfid_tags.size() ; i++)
     {
@@ -302,6 +303,10 @@ namespace stdr_gui
       
       rfid_tags_.insert(std::pair<QString, CGuiRfidTag>(
         QString(temp_tag.getName().c_str()), temp_tag));
+    }
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      registered_robots_[i].setEnvironmentalTags(rfid_tag_pure_);
     }
   }
 
@@ -571,6 +576,11 @@ namespace stdr_gui
       registered_robots_.push_back(CGuiRobot(msg.robots[i]));
     }
     info_connector_.updateTree(msg);
+    
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      registered_robots_[i].setEnvironmentalTags(rfid_tag_pure_);
+    }
     map_lock_ = false;
   }
   
@@ -1074,6 +1084,7 @@ namespace stdr_gui
             stdr_msgs::DeleteRfidTag srv;
             srv.request.name = i->first.toStdString();
             delete_rfid_tag_client_.call(srv);
+            break; //!< To avoid crashes as rfid_tags_ changes size
           }
         }
       }

@@ -56,6 +56,9 @@ namespace stdr_gui
       //!< The stdr rfid sensor measurement msg
       stdr_msgs::RfidSensorMeasurementMsg tags_;
       
+      //!< The tags that exist in the environment
+      stdr_msgs::RfidTagVector env_tags_;
+      
     //------------------------------------------------------------------------//
     public:
       
@@ -114,6 +117,13 @@ namespace stdr_gui
       @return std::string : The sensor's frame id
       **/
       std::string getFrameId(void);
+      
+      /**
+      @brief Sets the tags existent in the environment
+      @param env_tags [stdr_msgs::RfidTagVector] The tag vector
+      @return void
+      **/
+      void setEnvironmentalTags(stdr_msgs::RfidTagVector env_tags);
   };  
 }
 

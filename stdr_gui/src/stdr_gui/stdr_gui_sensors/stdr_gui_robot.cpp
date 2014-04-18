@@ -544,4 +544,17 @@ namespace stdr_gui
   {
     return std::pair<float,float>(linear_speed_,angular_speed_);
   }
+  
+  /**
+  @brief Sets the tags existent in the environment
+  @param env_tags [stdr_msgs::RfidTagVector] The tag vector
+  @return void
+  **/
+  void CGuiRobot::setEnvironmentalTags(stdr_msgs::RfidTagVector env_tags)
+  {
+    for(unsigned int i = 0 ; i < rfids_.size() ; i++)
+    {
+      rfids_[i]->setEnvironmentalTags(env_tags);
+    }
+  }
 }

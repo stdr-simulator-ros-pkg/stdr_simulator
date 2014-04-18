@@ -101,7 +101,9 @@ namespace stdr_robot {
         continue;
       }
       
-      measuredTagsMsg.rfid_tags.push_back(rfid_tags_.rfid_tags[i]);
+      measuredTagsMsg.rfid_tags_ids.push_back(rfid_tags_.rfid_tags[i].tag_id);
+      measuredTagsMsg.rfid_tags_msgs.push_back(rfid_tags_.rfid_tags[i].message);
+      measuredTagsMsg.rfid_tags_dbs.push_back(1.0); //!< Needs to change into a realistic measurement
     }
     
     measuredTagsMsg.header.stamp = ros::Time::now();

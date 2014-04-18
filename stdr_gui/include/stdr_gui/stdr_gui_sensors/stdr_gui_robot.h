@@ -268,6 +268,13 @@ namespace stdr_gui
       @return std::pair<float,float> : The linear and angular speeds
       **/
       std::pair<float,float> getSpeeds(void);
+      
+      /**
+      @brief Sets the tags existent in the environment
+      @param env_tags [stdr_msgs::RfidTagVector] The tag vector
+      @return void
+      **/
+      void setEnvironmentalTags(stdr_msgs::RfidTagVector env_tags);
   };  
 }
 

@@ -1,4 +1,6 @@
-# Rfid sensor measurement description
+# Rfid sensor measurement description - all vectors must have the same size
 Header header
 
-stdr_msgs/RfidTag[] rfid_tags
+string[] rfid_tags_ids
+string[] rfid_tags_msgs
+float32[] rfid_tags_dbs

@@ -95,6 +95,8 @@ namespace stdr_gui
 
       //!< RFID tags in the environment
       std::map<QString,CGuiRfidTag> rfid_tags_;
+      //!< The original rfid vector
+      stdr_msgs::RfidTagVector rfid_tag_pure_;
       //!< Thermal sources in the environment
       std::map<QString,CGuiThermalSource> thermal_sources_;
       //!< CO2 sources in the environment
