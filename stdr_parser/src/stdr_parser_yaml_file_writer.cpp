@@ -214,6 +214,40 @@ namespace stdr_parser
     out << YAML::EndMap;
     return out;
   }
+  //!<----------------------------------------------------------------
+  //!< Template declaration for stdr_msgs::RfidSensorMsg
+  template void YamlFileWriter::messageToFile
+    (stdr_msgs::RfidSensorMsg msg,std::string file_name);
+  
+  //!< Template specialization for stdr_msgs::RfidSensorMsg
+  template <>
+  YAML::Emitter& operator << <stdr_msgs::RfidSensorMsg>
+    (YAML::Emitter& out, const stdr_msgs::RfidSensorMsg& msg)
+  {
+    out << YAML::BeginMap;
+      out << YAML::Key << "rfid_reader";
+      out << YAML::Value;
+      out << YAML::BeginMap;
+        out << YAML::Key << "rfid_reader_specifications";
+        out << YAML::Value;
+        out << YAML::BeginMap;
+          out << YAML::Key << "angle_span" << YAML::Value << msg.angleSpan;
+          out << YAML::Key << "max_range" << YAML::Value << msg.maxRange;
+          out << YAML::Key << "signal_cutoff" << YAML::Value << msg.signalCutoff;
+          out << YAML::Key << "frequency" << YAML::Value << msg.frequency;
+          out << YAML::Key << "frame_id" << YAML::Value << msg.frame_id;
+          out << YAML::Key << "pose";
+          out << YAML::Value;
+          out << YAML::BeginMap;
+            out << YAML::Key << "x" << YAML::Value << msg.pose.x;
+            out << YAML::Key << "y" << YAML::Value << msg.pose.y;
+            out << YAML::Key << "theta" << YAML::Value << msg.pose.theta;
+          out << YAML::EndMap;
+        out << YAML::EndMap;
+      out << YAML::EndMap;
+    out << YAML::EndMap;
+    return out;
+  }
   
   //!<----------------------------------------------------------------
   //!< Template declaration for stdr_msgs::RobotMsg
@@ -249,6 +283,10 @@ namespace stdr_parser
           for(unsigned int i = 0 ; i < msg.sonarSensors.size() ; i++)
           {
             out << msg.sonarSensors[i];
+          }
+          for(unsigned int i = 0 ; i < msg.rfidSensors.size() ; i++)
+          {
+            out << msg.rfidSensors[i];
           }
         out << YAML::EndSeq;
       out << YAML::EndMap;

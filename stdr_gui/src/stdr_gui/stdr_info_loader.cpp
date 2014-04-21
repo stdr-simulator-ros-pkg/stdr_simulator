@@ -168,7 +168,7 @@ namespace stdr_gui{
 
       lasers->setText(0,"Lasers");
       sonars->setText(0,"Sonars");
-      rfids->setText(0,"RFID antennas");
+      rfids->setText(0,"RFID readers");
       kinematics->setText(0,"Kinematic");
       
       for(unsigned int l = 0 ; l < msg.robots[i].robot.laserSensors.size() ; 
@@ -207,10 +207,10 @@ namespace stdr_gui{
           msg.robots[i].robot.laserSensors[l].minRange) + QString(" m")));
         lmaxangle->setText(0,"Max angle");
         lmaxangle->setText(1,(QString().setNum(
-          msg.robots[i].robot.laserSensors[l].maxAngle) + QString(" deg")));
+          msg.robots[i].robot.laserSensors[l].maxAngle) + QString(" rad")));
         lminangle->setText(0,"Min angle");
         lminangle->setText(1,(QString().setNum(
-          msg.robots[i].robot.laserSensors[l].minAngle) + QString(" deg")));
+          msg.robots[i].robot.laserSensors[l].minAngle) + QString(" rad")));
         lnoisemean->setText(0,"Noise (mean)");
         lnoisemean->setText(1,(QString().setNum(
           msg.robots[i].robot.laserSensors[l].noise.noiseMean) + QString(" m")));
@@ -277,10 +277,10 @@ namespace stdr_gui{
           msg.robots[i].robot.sonarSensors[l].minRange) + QString(" m")));
         scone->setText(0,"Cone");
         scone->setText(1,(QString().setNum(
-          msg.robots[i].robot.sonarSensors[l].coneAngle) + QString(" deg")));
+          msg.robots[i].robot.sonarSensors[l].coneAngle) + QString(" rad")));
         sorientation->setText(0,"Orientation");
         sorientation->setText(1,(QString().setNum(
-          msg.robots[i].robot.sonarSensors[l].pose.theta) + QString(" deg")));
+          msg.robots[i].robot.sonarSensors[l].pose.theta) + QString(" rad")));
         snoisemean->setText(0,"Noise (mean)");
         snoisemean->setText(1,(QString().setNum(
           msg.robots[i].robot.sonarSensors[l].noise.noiseMean) + 
@@ -310,6 +310,69 @@ namespace stdr_gui{
         sname->addChild(sposey);
         
         sonars->addChild(sname);
+      }
+      
+      for(unsigned int l = 0; l < msg.robots[i].robot.rfidSensors.size() ; 
+        l++)
+      {
+        QTreeWidgetItem *sname;
+        sname = new QTreeWidgetItem();
+        sname->setText(0,
+          msg.robots[i].robot.rfidSensors[l].frame_id.c_str());
+        sname->setIcon(2,visible_icon_on_);
+        //~ sname->setIcon(3,visible_icon_);
+        
+        sname->setToolTip(2,"Visibility status");
+        //~ sname->setToolTip(3,"Visualize topic");
+
+        QTreeWidgetItem *smaxrange = new QTreeWidgetItem();
+        QTreeWidgetItem *sspan = new QTreeWidgetItem();
+        QTreeWidgetItem *sorientation = new QTreeWidgetItem();
+        QTreeWidgetItem *sfreq = new QTreeWidgetItem();
+        QTreeWidgetItem *scutoff = new QTreeWidgetItem();
+        QTreeWidgetItem *sposex = new QTreeWidgetItem();
+        QTreeWidgetItem *sposey = new QTreeWidgetItem();
+        
+        smaxrange->setText(0,"Max dist");
+        smaxrange->setText(1,(QString().setNum(
+          msg.robots[i].robot.rfidSensors[l].maxRange) + QString(" m")));
+       
+        sspan->setText(0,"Angle span");
+        sspan->setText(1,(QString().setNum(
+          msg.robots[i].robot.rfidSensors[l].angleSpan) 
+            + QString(" rad")));
+          
+        sorientation->setText(0,"Orientation");
+        sorientation->setText(1,(QString().setNum(
+          msg.robots[i].robot.rfidSensors[l].pose.theta) + 
+            QString(" rad")));
+          
+        scutoff->setText(0,"Signal Cutoff");
+        scutoff->setText(1,(QString().setNum(
+          msg.robots[i].robot.rfidSensors[l].signalCutoff) + 
+            QString("")));
+
+        sfreq->setText(0,"Frequency");
+        sfreq->setText(1,(QString().setNum(
+          msg.robots[i].robot.rfidSensors[l].frequency) + QString(" Hz")));
+            
+        sposex->setText(0,"x pose");
+        sposex->setText(1,(QString().setNum(
+          msg.robots[i].robot.rfidSensors[l].pose.x) + QString(" m")));
+          
+        sposey->setText(0,"y pose");
+        sposey->setText(1,(QString().setNum(
+          msg.robots[i].robot.rfidSensors[l].pose.y) + QString(" m")));
+                  
+        sname->addChild(smaxrange);
+        sname->addChild(sspan);
+        sname->addChild(sorientation);
+        sname->addChild(scutoff);
+        sname->addChild(sfreq);
+        sname->addChild(sposex);
+        sname->addChild(sposey);
+        
+        rfids->addChild(sname);
       }
       
       rnode->addChild(lasers);

@@ -45,15 +45,18 @@ namespace stdr_gui
       std::string name_;  
       //!< The message of the rfid tag
       QString message_;
+      //!< The OGM resolution
+      float resolution_;
     //------------------------------------------------------------------------//
     public:
       /**
       @brief Default contructor
       @param p [QPoint] The pose of the rfid tag
       @param name [std::string] The "name" of the rfid tag
+      @param resolution [float] The map's resolution
       @return void
       **/
-      CGuiRfidTag(QPoint p,std::string name);
+      CGuiRfidTag(QPoint p,std::string name, float resolution);
       
       /**
       @brief Default destructor

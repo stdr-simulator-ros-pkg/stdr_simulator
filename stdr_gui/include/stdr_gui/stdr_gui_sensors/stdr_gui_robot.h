@@ -216,6 +216,20 @@ namespace stdr_gui
       void toggleLaserVisualizationStatus(std::string frame_id);
       
       /**
+      @brief Returns the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return char
+      **/
+      char getRfidReaderVisualizationStatus(std::string frame_id);
+      
+      /**
+      @brief Toggles the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return void
+      **/
+      void toggleRfidReaderVisualizationStatus(std::string frame_id);
+      
+      /**
       @brief Returns the sonar visibility status
       @param frame_id [std::string] The sonar frame id
       @return char
@@ -254,6 +268,13 @@ namespace stdr_gui
       @return std::pair<float,float> : The linear and angular speeds
       **/
       std::pair<float,float> getSpeeds(void);
+      
+      /**
+      @brief Sets the tags existent in the environment
+      @param env_tags [stdr_msgs::RfidTagVector] The tag vector
+      @return void
+      **/
+      void setEnvironmentalTags(stdr_msgs::RfidTagVector env_tags);
   };  
 }
 

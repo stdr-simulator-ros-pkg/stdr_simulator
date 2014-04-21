@@ -24,6 +24,7 @@
 
 #include "stdr_gui/stdr_tools.h"
 #include "stdr_msgs/RfidSensorMsg.h"
+#include "stdr_msgs/RfidSensorMeasurementMsg.h"
 
 /**
 @namespace stdr_gui
@@ -42,12 +43,22 @@ namespace stdr_gui
     
       //!< The topic from which the new RFID tags will be got
       std::string topic_;
-      
       //!< The description for the rfid antenna message
       stdr_msgs::RfidSensorMsg msg_;
-      
       //!< A ros subscriber
       ros::Subscriber subscriber_;
+      //!< Used to avoid drawing when a new sonar message arives
+      bool lock_;
+      //!< The ROS tf frame
+      std::string tf_frame_;
+      //!< Visualization status of the specific sonar
+      char visualization_status_;
+      //!< The stdr rfid sensor measurement msg
+      stdr_msgs::RfidSensorMeasurementMsg tags_;
+      
+      //!< The tags that exist in the environment
+      stdr_msgs::RfidTagVector env_tags_;
+      
     //------------------------------------------------------------------------//
     public:
       
@@ -60,10 +71,59 @@ namespace stdr_gui
       CGuiRfid(stdr_msgs::RfidSensorMsg msg,std::string baseTopic);
       
       /**
+      @brief Callback for the rfid measurement message
+      @param msg [const stdr_msgs::RfidSensorMeasurementMsg&] The new rfid\
+       sensor measurement message
+      @return void
+      **/
+      void callback(const stdr_msgs::RfidSensorMeasurementMsg& msg); 
+      
+      /**
+      @brief Paints the rfid measurements in the map image
+      @param m [QImage*] The image to be drawn
+      @param ocgd [float] The map's resolution
+      @param listener [tf::TransformListener *] ROS tf transform listener
+      @return void
+      **/
+      void paint(QImage *m,float ocgd,tf::TransformListener *listener);
+      
+      /**
       @brief Default destructor
       @return void
       **/
       ~CGuiRfid(void);
+      
+      /**
+      @brief Returns the visibility status of the specific sensor
+      @return char : The visibility status
+      **/
+      char getVisualizationStatus(void);
+      
+      /**
+      @brief Toggles the visibility status of the specific sensor
+      @return void
+      **/
+      void toggleVisualizationStatus(void);
+      
+      /**
+      @brief Sets the visibility status of the specific sensor
+      @param vs [char] The new visibility status
+      @return void
+      **/
+      void setVisualizationStatus(char vs);
+      
+      /**
+      @brief Returns the frame id of the specific sensor
+      @return std::string : The sensor's frame id
+      **/
+      std::string getFrameId(void);
+      
+      /**
+      @brief Sets the tags existent in the environment
+      @param env_tags [stdr_msgs::RfidTagVector] The tag vector
+      @return void
+      **/
+      void setEnvironmentalTags(stdr_msgs::RfidTagVector env_tags);
   };  
 }
 

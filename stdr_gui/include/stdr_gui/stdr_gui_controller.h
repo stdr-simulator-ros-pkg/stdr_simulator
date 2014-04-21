@@ -95,6 +95,8 @@ namespace stdr_gui
 
       //!< RFID tags in the environment
       std::map<QString,CGuiRfidTag> rfid_tags_;
+      //!< The original rfid vector
+      stdr_msgs::RfidTagVector rfid_tag_pure_;
       //!< Thermal sources in the environment
       std::map<QString,CGuiThermalSource> thermal_sources_;
       //!< CO2 sources in the environment
@@ -104,6 +106,8 @@ namespace stdr_gui
       ros::Subscriber map_subscriber_;
       //!< ROS subscriber to get all robots
       ros::Subscriber robot_subscriber_;
+      //!< ROS subscriber for rfids
+      ros::Subscriber rfids_subscriber_;
       //!< The ROS node handle
       ros::NodeHandle n_;
       //!< ROS tf transform listener
@@ -161,6 +165,11 @@ namespace stdr_gui
         
       //!< Frame id of the following robot
       std::string robot_following_;
+      
+      //!< Service client for inserting a new rfid tag
+      ros::ServiceClient new_rfid_tag_client_;
+      //!< Service client for deleting a rfid tag
+      ros::ServiceClient delete_rfid_tag_client_;
     
     //------------------------------------------------------------------------//  
     public:
@@ -197,6 +206,13 @@ namespace stdr_gui
       @return void
       **/
       void receiveMap(const nav_msgs::OccupancyGrid& msg);
+      
+      /**
+      @brief Receives the existent rfid tags
+      @param msg [const stdr_msgs::RfidTagVector&] The rfid tags message
+      @return void
+      **/
+      void receiveRfids(const stdr_msgs::RfidTagVector& msg);
       
       /**
       @brief Receives the robots from stdr_server. Connects to "stdr_server/active_robots" ROS topic
@@ -365,6 +381,16 @@ namespace stdr_gui
       void sonarVisibilityClicked(QString robotName,QString sonarName);
       
       /**
+      @brief Informs CGuiController that a rfidReader visibility status has \
+      been clicked. Connects to the CInfoConnector::rfidReaderVisibilityClicked\
+      signal
+      @param robotName [QString] Frame id of the robot
+      @param rfidReaderName [QString] Frame id of the rfidReader
+      @return void
+      **/
+      void rfidReaderVisibilityClicked(QString robotName,QString rfidReaderName);
+      
+      /**
       @brief Informs CGuiController that a robot visibility status has been clicked. Connects to the CInfoConnector::robotVisibilityClicked signal
       @param robotName [QString] Frame id of the robot
       @return void
@@ -422,6 +448,17 @@ namespace stdr_gui
       @return void
       **/
       void setSonarVisibility(QString robotName,QString sonarName,char vs);
+      
+      /**
+      @brief Is emitted when a rfid sensor's visibility status is going to be \
+      changed. Connects to the CInfoConnector::setRfidReaderVisibility slot
+      @param robotName [QString] The frame id of the robot containing the specific rfid reader
+      @param rfidReaderName [QString] The frame id of the rfidReader
+      @param vs [char] The new visibility status
+      @return void
+      **/
+      void setRfidReaderVisibility(QString robotName, 
+        QString rfidReaderName, char vs);
       
       /**
       @brief Is emitted when a robot's visibility status is going to be changed. Connects to the CInfoConnector::setRobotVisibility slot

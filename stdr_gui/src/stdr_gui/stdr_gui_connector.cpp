@@ -218,6 +218,7 @@ namespace stdr_gui
       stdr_msgs::RobotMsg new_robot_msg = 
         stdr_parser::Parser::createMessage<stdr_msgs::RobotMsg>
           (file_name.toStdString());
+          
       Q_EMIT robotFromFile(new_robot_msg);
     }
     catch(stdr_parser::ParserException ex)

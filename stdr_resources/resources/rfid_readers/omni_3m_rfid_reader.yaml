@@ -1,0 +1,11 @@
+rfid_reader:
+  rfid_reader_specifications:
+    angle_span: 6.28318977355957
+    max_range: 3
+    signal_cutoff: 0
+    frequency: 10
+    frame_id: rfid_reader_0
+    pose:
+      x: 0
+      y: 0
+      theta: 0

@@ -406,7 +406,90 @@ namespace stdr_parser
     return msg;
   }
   
-  
+  /**
+  @brief Creates a message from a parsed file - template specialization for \
+  stdr_msgs::RfidSensorMsg
+  @param n [Node*] The root node
+  @return The message
+  **/
+  template <> stdr_msgs::RfidSensorMsg MessageCreator::createMessage(
+    Node *n,unsigned int id)
+  {
+    stdr_msgs::RfidSensorMsg msg;
+    Node* specs = n->elements[0];
+    if(specs->tag == "rfid_reader")
+    {
+      specs = specs->elements[0];
+    }
+    std::vector<int> indexes;
+    
+    //!< Search for angle span
+    indexes = specs->getTag("angle_span");
+    if(indexes.size() == 0)
+    {
+      msg.angleSpan = atof(Specs::specs["angle_span"].default_value.c_str());
+    }
+    else
+    {
+      msg.angleSpan = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    
+    //!< Search for max range
+    indexes = specs->getTag("max_range");
+    if(indexes.size() == 0)
+    {
+      msg.maxRange = atof(Specs::specs["max_range"].default_value.c_str());
+    }
+    else
+    {
+      msg.maxRange = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    
+    //!< Search for signal cutoff
+    indexes = specs->getTag("signal_cutoff");
+    if(indexes.size() == 0)
+    {
+      msg.signalCutoff = 
+        atof(Specs::specs["signal_cutoff"].default_value.c_str());
+    }
+    else
+    {
+      msg.signalCutoff = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    
+    //!< Search for frequency
+    indexes = specs->getTag("frequency");
+    if(indexes.size() == 0)
+    {
+      msg.frequency = atof(Specs::specs["frequency"].default_value.c_str());
+    }
+    else
+    {
+      msg.frequency = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    
+    //!< Set up frame id based on id input
+    msg.frame_id = std::string("rfid_reader_") + SSTR(id);
+    
+    //!< Search for pose
+    indexes = specs->getTag("pose");
+    if(indexes.size() != 0)
+    {
+      msg.pose = 
+        createMessage<geometry_msgs::Pose2D>(specs->elements[indexes[0]],0);
+    }
+    else
+    {
+      msg.pose.x = atof(Specs::specs["x"].default_value.c_str());
+      msg.pose.y = atof(Specs::specs["y"].default_value.c_str());
+      msg.pose.theta = atof(Specs::specs["theta"].default_value.c_str());
+    }
+    return msg;
+  }
   
   /**
   @brief Creates a message from a parsed file - template specialization for stdr_msgs::RobotMsg
@@ -470,6 +553,18 @@ namespace stdr_parser
       {
         msg.sonarSensors.push_back(
           createMessage<stdr_msgs::SonarSensorMsg>(
+            specs->elements[indexes[i]] , i));
+      }
+    }
+    
+    //!< Search for rfid reader sensors
+    indexes = specs->getTag("rfid_reader");
+    if(indexes.size() != 0)
+    {
+      for(unsigned int i = 0 ; i < indexes.size() ; i++)
+      {
+        msg.rfidSensors.push_back(
+          createMessage<stdr_msgs::RfidSensorMsg>(
             specs->elements[indexes[i]] , i));
       }
     }

@@ -24,7 +24,7 @@
   </robot>
 
   <robot_specifications>
-    <allowed>initial_pose,footprint,laser,sonar,rfid,kinematic</allowed>
+    <allowed>initial_pose,footprint,laser,sonar,rfid_reader,kinematic</allowed>
   </robot_specifications>
 
   <initial_pose>
@@ -81,14 +81,14 @@
     <allowed>cone_angle,max_range,min_range,frequency,frame_id,pose,noise</allowed>
   </sonar_specifications>
 
-  <rfid>
-    <allowed>filename,rfid_specifications</allowed>
-    <required>rfid_specifications</required>
-  </rfid>
+  <rfid_reader>
+    <allowed>filename,rfid_reader_specifications</allowed>
+    <required>rfid_reader_specifications</required>
+  </rfid_reader>
 
-  <rfid_specifications>
+  <rfid_reader_specifications>
     <allowed>angle_span,signal_cutoff,max_range,frequency,frame_id,pose</allowed>
-  </rfid_specifications>
+  </rfid_reader_specifications>
 
   <kinematic>
     <allowed>filename,kinematic_specifications</allowed>
@@ -145,6 +145,14 @@
   <noise_std>
     <default>0</default>
   </noise_std>
+  
+  <angle_span>
+    <default>360.0</default>
+  </angle_span>
+  
+  <signal_cutoff>
+    <default>0.0</default>
+  </signal_cutoff>
   
   <radius>
     <default>0.3</default>

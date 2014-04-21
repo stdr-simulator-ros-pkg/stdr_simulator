@@ -15,11 +15,14 @@ add_message_files(
     LaserSensorMsg.msg
     SonarSensorMsg.msg
     RfidSensorMsg.msg
+    RfidSensorMeasurementMsg.msg
     KinematicMsg.msg
     FootprintMsg.msg
     RobotMsg.msg
     RobotIndexedMsg.msg
     RobotIndexedVectorMsg.msg
+    RfidTag.msg
+    RfidTagVector.msg
 )
 
 add_service_files( 
@@ -28,6 +31,8 @@ add_service_files(
     LoadExternalMap.srv
     RegisterGui.srv
     MoveRobot.srv
+    AddRfidTag.srv
+    DeleteRfidTag.srv
 )
 
 add_action_files(

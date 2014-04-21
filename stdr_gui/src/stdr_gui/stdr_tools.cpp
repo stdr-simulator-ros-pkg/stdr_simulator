@@ -262,4 +262,29 @@ namespace stdr_gui_tools
     rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
     return rmsg;
   }
+  
+  /**
+  @brief Takes a stdr_msgs::RfidSensorMsg and converts its angles to rads
+  @param rmsg [stdr_msgs::RfidSensorMsg] The rfid reader message
+  @return stdr_msgs::RfidSensorMsg : The recreated rfid reader message
+  **/
+  stdr_msgs::RfidSensorMsg fixRfidAnglesToRad(stdr_msgs::RfidSensorMsg rmsg)
+  {
+    rmsg.angleSpan = rmsg.angleSpan / 180.0 * STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta / 180.0 * STDR_PI;
+    return rmsg;
+  }
+  
+  /**
+  @brief Takes a stdr_msgs::RfidSensorMsg and converts its angles to degrees
+  @param rmsg [stdr_msgs::RfidSensorMsg] The rfid reader message
+  @return stdr_msgs::RfidSensorMsg : The recreated rfid reader message
+  **/
+  stdr_msgs::RfidSensorMsg fixRfidAnglesToDegrees(
+    stdr_msgs::RfidSensorMsg rmsg)
+  {
+    rmsg.angleSpan = rmsg.angleSpan * 180.0 / STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
+    return rmsg;
+  }
 }

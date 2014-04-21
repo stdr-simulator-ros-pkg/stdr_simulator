@@ -19,12 +19,13 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef SONAR_H
-#define SONAR_H
+#ifndef RFID_READER_H
+#define RFID_READER_H
 
 #include <stdr_robot/sensors/sensor_base.h>
-#include <sensor_msgs/Range.h>
-#include <stdr_msgs/SonarSensorMsg.h>
+#include <stdr_msgs/RfidSensorMsg.h>
+#include <stdr_msgs/RfidSensorMeasurementMsg.h>
+#include <stdr_msgs/RfidTagVector.h>
 
 /**
 @namespace stdr_robot
@@ -36,19 +37,20 @@ namespace stdr_robot {
   @class Sonar
   @brief A class that provides sonar implementation. Inherits publicly Sensor
   **/ 
-  class Sonar : public Sensor {
+  class RfidReader : public Sensor {
 
     public:
       /**
       @brief Default constructor
       @param map [const nav_msgs::OccupancyGrid&] An occupancy grid map
-      @param msg [const stdr_msgs::SonarSensorMsg&] The sonar description message
+      @param msg [const stdr_msgs::RfidSensorMsg&] The rfid reader \
+      description message
       @param name [const std::string&] The sensor frame id without the base
       @param n [ros::NodeHandle&] The ROS node handle
       @return void
       **/ 
-      Sonar(const nav_msgs::OccupancyGrid& map,
-        const stdr_msgs::SonarSensorMsg& msg, 
+      RfidReader(const nav_msgs::OccupancyGrid& map,
+        const stdr_msgs::RfidSensorMsg& msg, 
         const std::string& name, 
         ros::NodeHandle& n);
       
@@ -62,13 +64,28 @@ namespace stdr_robot {
       @brief Default destructor
       @return void
       **/ 
-      ~Sonar(void);
+      ~RfidReader(void);
+      
+      /**
+      @brief Receives the existent rfid tags
+      @param msg [const stdr_msgs::RfidTagVector&] The rfid tags message
+      @return void
+      **/
+      void receiveRfids(const stdr_msgs::RfidTagVector& msg);
 
     private:
 
-      //!< Sonar sensor description
-      stdr_msgs::SonarSensorMsg _description;
+      //!< Sonar rfid reader description
+      stdr_msgs::RfidSensorMsg _description;
+      
+      //!< ROS subscriber for rfids
+      ros::Subscriber rfids_subscriber_;
+      
+      //!< The currently existent RFID tags
+      stdr_msgs::RfidTagVector rfid_tags_;
   };
+
+  static bool angCheck(float target_, float min_, float max_);
 
 }
 

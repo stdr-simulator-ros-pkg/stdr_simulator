@@ -35,14 +35,10 @@ namespace stdr_robot {
       const stdr_msgs::LaserSensorMsg& msg, 
       const std::string& name,
       ros::NodeHandle& n)
-    : Sensor(map, name)
+  : 
+    Sensor(map, name, n, msg.pose, msg.frame_id, msg.frequency)
   {
     _description = msg;
-
-    _timer = n.createTimer(
-      ros::Duration(1/msg.frequency), &Laser::updateSensorCallback, this);	
-    _tfTimer = n.createTimer(
-      ros::Duration(1/(2*msg.frequency)), &Laser::updateTransform, this);	
 
     _publisher = n.advertise<sensor_msgs::LaserScan>
       ( _namespace + "/" + msg.frame_id, 1 );
@@ -50,16 +46,10 @@ namespace stdr_robot {
 
   /**
   @brief Updates the sensor measurements
-  @param ev [const ros::TimerEvent&] A ROS timer event
   @return void
   **/ 
-  void Laser::updateSensorCallback(const ros::TimerEvent&) 
+  void Laser::updateSensorCallback() 
   {
-    
-    if (!_gotTransform) { //!< wait for transform 
-      return;
-    }
-    
     float angle;
     int distance;
     int xMap, yMap;
@@ -121,42 +111,4 @@ namespace stdr_robot {
     _publisher.publish( _laserScan );
   }
 
-  /**
-  @brief Returns the sensor pose relatively to robot
-  @return geometry_msgs::Pose2D
-  **/ 
-  geometry_msgs::Pose2D Laser::getSensorPose() 
-  {
-    return _description.pose;
-  }
-  
-  /**
-  @brief Returns the sensor frame id
-  @return std::string
-  **/ 
-  std::string Laser::getFrameId()
-  {
-    return _namespace + "_" + _description.frame_id;
-  }
-  
-  /**
-  @brief Updates the sensor tf transform
-  @return void
-  **/ 
-  void Laser::updateTransform(const ros::TimerEvent&)
-  {
-    try {
-      _tfListener.waitForTransform("map_static",
-                                  _namespace + "_" + _description.frame_id,
-                                  ros::Time(0),
-                                  ros::Duration(0.2));
-      _tfListener.lookupTransform("map_static",
-                                  _namespace + "_" + _description.frame_id,
-                                  ros::Time(0), _sensorTransform);
-      _gotTransform = true;
-    }
-    catch (tf::TransformException ex) {
-      ROS_DEBUG("%s",ex.what());
-    }
-  }
-}
+}  // namespace stdr_robot

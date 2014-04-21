@@ -84,6 +84,18 @@ namespace stdr_gui
       1, 
       &CGuiController::receiveMap,
       this);
+      
+    rfids_subscriber_ = n_.subscribe(
+      "stdr_server/rfid_list", 
+      1, 
+      &CGuiController::receiveRfids,
+      this);
+
+    new_rfid_tag_client_ = 
+      n_.serviceClient<stdr_msgs::AddRfidTag>("stdr_server/add_rfid_tag");
+      
+    delete_rfid_tag_client_ = 
+      n_.serviceClient<stdr_msgs::DeleteRfidTag>("stdr_server/delete_rfid_tag");
     
     QObject::connect(
       &gui_connector_,SIGNAL(setZoomInCursor(bool)),
@@ -205,6 +217,10 @@ namespace stdr_gui
       this, SLOT(sonarVisibilityClicked(QString,QString)));
       
     QObject::connect(
+      &info_connector_,SIGNAL(rfidReaderVisibilityClicked(QString,QString)),
+      this, SLOT(rfidReaderVisibilityClicked(QString,QString)));
+      
+    QObject::connect(
       &info_connector_,SIGNAL(robotVisibilityClicked(QString)),
       this, SLOT(robotVisibilityClicked(QString)));
     
@@ -219,6 +235,10 @@ namespace stdr_gui
     QObject::connect(
       this, SIGNAL(setSonarVisibility(QString,QString,char)),
       &info_connector_, SLOT(setSonarVisibility(QString,QString,char)));
+      
+    QObject::connect(
+      this, SIGNAL(setRfidReaderVisibility(QString,QString,char)),
+      &info_connector_, SLOT(setRfidReaderVisibility(QString,QString,char)));
   }
   
   /**
@@ -265,7 +285,34 @@ namespace stdr_gui
   }
 
   /**
-  @brief Receives the occupancy grid map from stdr_server. Connects to "map" ROS topic
+  @brief Receives the existent rfid tags
+  **/
+  void CGuiController::receiveRfids(const stdr_msgs::RfidTagVector& msg)
+  {
+    rfid_tag_pure_ = msg;
+    rfid_tags_.clear();
+    for(unsigned int i = 0 ; i < msg.rfid_tags.size() ; i++)
+    {
+      QPoint p(msg.rfid_tags[i].pose.x / map_msg_.info.resolution,
+        msg.rfid_tags[i].pose.y / map_msg_.info.resolution);
+      
+      CGuiRfidTag temp_tag(p, msg.rfid_tags[i].tag_id, 
+        map_msg_.info.resolution);
+      
+      temp_tag.setMessage(QString(msg.rfid_tags[i].message.c_str()));
+      
+      rfid_tags_.insert(std::pair<QString, CGuiRfidTag>(
+        QString(temp_tag.getName().c_str()), temp_tag));
+    }
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      registered_robots_[i].setEnvironmentalTags(rfid_tag_pure_);
+    }
+  }
+
+  /**
+  @brief Receives the occupancy grid map from stdr_server. Connects to "map" \
+  ROS topic
   @param msg [const nav_msgs::OccupancyGrid&] The OGM message
   @return void
   **/
@@ -529,6 +576,11 @@ namespace stdr_gui
       registered_robots_.push_back(CGuiRobot(msg.robots[i]));
     }
     info_connector_.updateTree(msg);
+    
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      registered_robots_[i].setEnvironmentalTags(rfid_tag_pure_);
+    }
     map_lock_ = false;
   }
   
@@ -572,7 +624,8 @@ namespace stdr_gui
   }
   
   /**
-  @brief Gets the point at which the new RFID tag is placed. Connects to the CMapConnector::robotPlaceSet signal
+  @brief Gets the point at which the new RFID tag is placed. Connects to \
+  the CMapConnector::robotPlaceSet signal
   @param p [QPoint] The event point in the OGM
   @return void
   **/
@@ -582,32 +635,47 @@ namespace stdr_gui
     {
       return;
     }
-    while(map_lock_)
-    {	
-      usleep(100);
-    }
-    map_lock_ = true;
     
     QPoint pnew = map_connector_.getGlobalPoint(p);
     QString name=QString("rfid_tag_") + QString().setNum(rfid_tags_.size());
-    CGuiRfidTag new_tag(pnew,name.toStdString());
     
     bool ok;
-            
-    //~ QString message = QInputDialog::getText(
-      //~ this, tr("QInputDialog::getText()"),
-      //~ tr("User name:"), QLineEdit::Normal,
-      //~ QDir::home().dirName(), &ok);
-    //~ if ( ok && !message.isEmpty() ) {
-        //~ new_tag.setMessage(message);
-    //~ }
-
-    rfid_tags_.insert(std::pair<QString,CGuiRfidTag>(name,new_tag));
-    map_lock_ = false;
+    stdr_msgs::RfidTag new_tag;
+    
+    //!< Getting RFID tag id
+    QString rfid_id = QInputDialog::getText(
+      &(info_connector_.loader), tr("QInputDialog::getText()"),
+      tr("RFID tag id:"), QLineEdit::Normal,
+      "", &ok);
+    if ( ok && !rfid_id.isEmpty() ) {
+        new_tag.tag_id = rfid_id.toStdString();
+    }
+    //!< Getting RFID tag optional message
+    QString rfid_message = QInputDialog::getText(
+      &(info_connector_.loader), tr("QInputDialog::getText()"),
+      tr("RFID tag message (optional):"), QLineEdit::Normal,
+      "", &ok);
+    if ( ok && !rfid_message.isEmpty() ) {
+        new_tag.message = rfid_message.toStdString();
+    }
+    
+    new_tag.pose.x = pnew.x() * map_msg_.info.resolution ;
+    new_tag.pose.y = pnew.y() * map_msg_.info.resolution ;
+    new_tag.pose.theta = 0;
+    
+    stdr_msgs::AddRfidTag srv;
+    srv.request.newTag = new_tag;
+    if (new_rfid_tag_client_.call(srv))
+    {
+      gui_connector_.raiseMessage(
+        "STDR robot - Error", QString(srv.response.message.c_str()));
+    }
+    
   }
   
   /**
-  @brief Gets the point at which the new CO2 source is placed. Connects to the CMapConnector::co2PlaceSet signal
+  @brief Gets the point at which the new CO2 source is placed. Connects to the\
+   CMapConnector::co2PlaceSet signal
   @param p [QPoint] The event point in the OGM
   @return void
   **/
@@ -988,6 +1056,39 @@ namespace stdr_gui
         }
       }
     }
+    for(RfidTagIterator i = rfid_tags_.begin() ; i != rfid_tags_.end() ; i++)
+    {
+      if(i->second.checkProximity(pointClicked))
+      {
+        if(b == Qt::RightButton)
+        {
+          QMenu myMenu;
+          
+          QAction *name = myMenu.addAction(
+            QString("RFID tag : ") + QString(i->first)
+            );
+          name->setCheckable(false);
+          name->setEnabled(false);
+          
+          QAction *message = myMenu.addAction(
+            QString("Message : ") + QString(i->second.getMessage())
+            );
+          message->setCheckable(false);
+          message->setEnabled(false);
+          
+          QAction *deleteTag = myMenu.addAction(icon_delete_,"Delete RFID tag");
+          
+          QAction* selectedItem = myMenu.exec(map_connector_.mapToGlobal(p));
+          if(selectedItem == deleteTag)
+          {
+            stdr_msgs::DeleteRfidTag srv;
+            srv.request.name = i->first.toStdString();
+            delete_rfid_tag_client_.call(srv);
+            break; //!< To avoid crashes as rfid_tags_ changes size
+          }
+        }
+      }
+    }
   }
   
   /**
@@ -1066,6 +1167,28 @@ namespace stdr_gui
         Q_EMIT setSonarVisibility(robotName,sonarName,(vs + 1) % 3);
         registered_robots_[i].toggleSonarVisualizationStatus(
           sonarName.toStdString());
+        break;
+      }
+    }
+  }
+  
+  /**
+  @brief Informs CGuiController that a rfidReader visibility status has \
+  been clicked. Connects to the CInfoConnector::rfidReaderVisibilityClicked\
+  signal
+  **/
+  void CGuiController::rfidReaderVisibilityClicked
+    (QString robotName,QString rfidReaderName)
+  {
+    for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
+    {
+      if(registered_robots_[i].getFrameId() == robotName.toStdString())
+      {
+        char vs = registered_robots_[i].getRfidReaderVisualizationStatus(
+          rfidReaderName.toStdString());
+        Q_EMIT setRfidReaderVisibility(robotName,rfidReaderName,(vs + 1) % 3);
+        registered_robots_[i].toggleRfidReaderVisualizationStatus(
+          rfidReaderName.toStdString());
         break;
       }
     }

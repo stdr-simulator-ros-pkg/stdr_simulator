@@ -66,6 +66,13 @@ namespace stdr_gui
       this,SLOT(updateSonarOpen()));
       
     QObject::connect(
+      loader_.rfidAntennaPropLoader.pushButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateRfidAntenna()));
+    QObject::connect(
+      loader_.rfidAntennaPropLoader.refreshRfid,SIGNAL(clicked(bool)),
+      this,SLOT(updateRfidAntennaOpen()));
+      
+    QObject::connect(
       loader_.robotFootLoader.updateButton,SIGNAL(clicked(bool)),
       this,SLOT(updateFootprintPoint()));
     QObject::connect(
@@ -80,6 +87,7 @@ namespace stdr_gui
     climax_ = - 1;
     sonar_hightlight_id_ = -1;
     laser_hightlight_id_ = -1;
+    rfid_antenna_hightlight_id_ = -1;
   }
   
   /**
@@ -150,8 +158,9 @@ namespace stdr_gui
       }
       laser_hightlight_id_ = laserFrameId;
       sonar_hightlight_id_ = -1;
+      rfid_antenna_hightlight_id_ = -1;
     }  
-    //!< Laser clicked
+    //!< Sonar clicked
     if(item->parent() == &loader_.sonarsNode)
     {
       unsigned int sonarFrameId = searchSonar(item->text(0));
@@ -161,6 +170,19 @@ namespace stdr_gui
       }
       sonar_hightlight_id_ = sonarFrameId;
       laser_hightlight_id_ = -1;
+      rfid_antenna_hightlight_id_ = -1;
+    }  
+    //!< Rfid antenna clicked
+    if(item->parent() == &loader_.rfidAntennasNode)
+    {
+      unsigned int frameId = searchRfid(item->text(0));
+      if(frameId == -1) 
+      {
+        ROS_ERROR("Something went terribly wrong...");
+      }
+      rfid_antenna_hightlight_id_ = frameId;
+      laser_hightlight_id_ = -1;
+      sonar_hightlight_id_ = -1;
     }  
     
     updateRobotPreview();
@@ -208,7 +230,7 @@ namespace stdr_gui
     //!< Add a rfid antenna
     if(item == &loader_.rfidAntennasNode && column == 2)
     {
-      //~ addRfidAntenna();
+      addRfidAntenna();
     }  
     //!< Erase a sonar
     if(item->parent() == &loader_.sonarsNode && column == 2)
@@ -218,7 +240,7 @@ namespace stdr_gui
     //!< Erase a rfid antenna
     if(item->parent() == &loader_.rfidAntennasNode && column == 2)
     {
-      //~ eraseRfid(item);
+      eraseRfid(item);
     }  
     //!< Edit a sonar
     if(item->parent() == &loader_.sonarsNode && column == 1)
@@ -228,7 +250,7 @@ namespace stdr_gui
     //!< Edit a rfid antenna  
     if(item->parent() == &loader_.rfidAntennasNode && column == 1)
     {
-      //~ editRfid(item);
+      editRfid(item);
     }
     //!< Save a laser  
     if(item->parent() == &loader_.lasersNode && column == 3)
@@ -239,6 +261,16 @@ namespace stdr_gui
     if(item->parent() == &loader_.lasersNode && column == 4)
     {
       loadLaser(item);
+    }
+    //!< Save a rfid  
+    if(item->parent() == &loader_.rfidAntennasNode && column == 3)
+    {
+      saveRfidAntenna(item);
+    }
+    //!< Load a rfid  
+    if(item->parent() == &loader_.rfidAntennasNode && column == 4)
+    {
+      loadRfidAntenna(item);
     }
     //!< Save a sonar  
     if(item->parent() == &loader_.sonarsNode && column == 3)
@@ -750,7 +782,7 @@ namespace stdr_gui
   **/
   void CRobotCreatorConnector::addRfidAntenna(void)
   {
-    QString rfidFrameId=QString("rfid_antenna_") + 
+    QString rfidFrameId=QString("rfid_reader_") + 
       QString().setNum(CRobotCreatorConnector::rfid_number++);
     
     stdr_msgs::RfidSensorMsg smsg;
@@ -765,6 +797,71 @@ namespace stdr_gui
     
     new_robot_msg_.rfidSensors.push_back(smsg);
     
+    QTreeWidgetItem  *snode;
+    snode = new QTreeWidgetItem();
+    snode->setText(0,rfidFrameId);
+    snode->setIcon(1,loader_.editIcon);
+    snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      *angleSpan,
+      *orientation,
+      *maxRange,
+      *poseX,
+      *poseY,
+      *signalCutoff,
+      *frequency;
+      
+    angleSpan = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    signalCutoff = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    angleSpan->setText(0,QString("Angle span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    signalCutoff->setText(0,QString("Signal cutoff"));
+    frequency->setText(0,QString("Frequency"));
+    
+    angleSpan->setText(1,QString().setNum(smsg.angleSpan));
+    orientation->setText(1,QString().setNum(smsg.pose.theta));
+    maxRange->setText(1,QString().setNum(smsg.maxRange));
+    poseX->setText(1,QString().setNum(smsg.pose.x));
+    poseY->setText(1,QString().setNum(smsg.pose.y));
+    signalCutoff->setText(1,QString().setNum(smsg.signalCutoff));
+    frequency->setText(1,QString().setNum(smsg.frequency));
+    
+    snode->addChild(angleSpan);
+    snode->addChild(orientation);
+    snode->addChild(maxRange);
+    snode->addChild(poseX);
+    snode->addChild(poseY);
+    snode->addChild(signalCutoff);
+    snode->addChild(frequency);
+    
+    loader_.rfidAntennasNode.addChild(snode);
+    
+    snode->setExpanded(false);
+    loader_.rfidAntennasNode.setExpanded(true);
+    updateRobotPreview();
+  }
+  
+  /**
+  @brief Adds an rfid antenna sensor in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::addRfidAntenna(stdr_msgs::RfidSensorMsg smsg)
+  {
+    CRobotCreatorConnector::rfid_number++;
+    QString rfidFrameId=QString(smsg.frame_id.c_str());
+
     QTreeWidgetItem  *snode;
     snode = new QTreeWidgetItem();
     snode->setText(0,rfidFrameId);
@@ -1044,6 +1141,42 @@ namespace stdr_gui
   }
   
   /**
+  @brief Saves a specific rfid reader sensor in a file
+  @param item [QTreeWidgetItem*] The tree item that holds the sensor 
+  @return void
+  **/
+  void CRobotCreatorConnector::saveRfidAntenna(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchRfid(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getSaveFileName(&loader_, 
+      tr("Save RFID reader sensor"),
+        QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"),
+        tr("Resource files (*.yaml *.xml)"));
+    
+    std::string file_name_str=file_name.toStdString();
+    stdr_msgs::RfidSensorMsg smsg = new_robot_msg_.rfidSensors[frameId];
+
+    try {
+      stdr_parser::Parser::saveMessage(
+        stdr_gui_tools::fixRfidAnglesToRad(smsg), file_name_str);
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+  }
+  
+  /**
   @brief Loads a specific laser sensor from a file
   @param item [QTreeWidgetItem*] The tree item that holds the laser sensor 
   @return void
@@ -1130,6 +1263,51 @@ namespace stdr_gui
     smsg.frame_id = old_frame_id;
     new_robot_msg_.sonarSensors[sonarFrameId]=smsg;
     updateSonarTree(item,smsg);
+    updateRobotPreview(); 
+  }
+  
+  /**
+  @brief Loads a specific rfid antenna sensor from a file
+  @param item [QTreeWidgetItem*] The tree item that holds the sensor 
+  @return void
+  **/
+  void CRobotCreatorConnector::loadRfidAntenna(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchRfid(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load RFID reader sensor"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
+        tr("Resource Files (*.yaml *.xml)"));
+    
+    if (file_name.isEmpty()) {
+      return;
+    }
+    stdr_msgs::RfidSensorMsg smsg;
+    std::string old_frame_id = item->text(0).toStdString();
+    try {
+      smsg = 
+        stdr_parser::Parser::createMessage<stdr_msgs::RfidSensorMsg>
+          (file_name.toStdString());
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+    smsg = stdr_gui_tools::fixRfidAnglesToDegrees(smsg);
+    smsg.frame_id = old_frame_id;
+    new_robot_msg_.rfidSensors[frameId]=smsg;
+    updateRfidTree(item,smsg);
     updateRobotPreview(); 
   }
   
@@ -1301,9 +1479,35 @@ namespace stdr_gui
           setText(1,QString().setNum(new_robot_msg_.footprint.radius));
       }
     }
+    int count = 0;
+    
+    count = loader_.lasersNode.childCount();
+    for(int i = count - 1 ; i >= 0 ; i--)
+    {
+      QTreeWidgetItem *child = loader_.lasersNode.child(i);
+      loader_.lasersNode.removeChild(loader_.lasersNode.child(i));
+    }
     for(unsigned int i = 0 ; i < new_robot_msg_.laserSensors.size() ; i++)
     {
       addLaser(new_robot_msg_.laserSensors[i]);
+    }
+    
+    count = loader_.rfidAntennasNode.childCount();
+    for(int i = count - 1 ; i >= 0 ; i--)
+    {
+      QTreeWidgetItem *child = loader_.rfidAntennasNode.child(i);
+      loader_.rfidAntennasNode.removeChild(loader_.rfidAntennasNode.child(i));
+    }
+    for(unsigned int i = 0 ; i < new_robot_msg_.rfidSensors.size() ; i++)
+    {
+      addRfidAntenna(new_robot_msg_.rfidSensors[i]);
+    }
+    
+    count = loader_.sonarsNode.childCount();
+    for(int i = count - 1 ; i >= 0 ; i--)
+    {
+      QTreeWidgetItem *child = loader_.sonarsNode.child(i);
+      loader_.sonarsNode.removeChild(loader_.sonarsNode.child(i));
     }
     for(unsigned int i = 0 ; i < new_robot_msg_.sonarSensors.size() ; i++)
     {
@@ -2040,10 +2244,58 @@ namespace stdr_gui
   }
   
   /**
+  @brief Updates a tree item with a specific rfid antenna sensor
+  @param item [QTreeWidgetItem*] The tree item that will be updated
+  @param l [stdr_msgs::RfidSensorMsg] The rfid antenna sensor message
+  @return void
+  **/
+  void CRobotCreatorConnector::updateRfidTree(
+    QTreeWidgetItem *item,
+    stdr_msgs::RfidSensorMsg l)
+  {
+    unsigned int frameId=searchRfid(item->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < item->childCount() ; i++)
+    {
+      if(item->child(i)->text(0) == QString("Angle span"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.angleSpan));
+      }
+      else if(item->child(i)->text(0) == QString("Orientation"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.theta));
+      }
+      else if(item->child(i)->text(0) == QString("Max range"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.maxRange));
+      }
+      else if(item->child(i)->text(0) == QString("Signal cutoff"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.signalCutoff));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - x"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.x));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - y"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.y));
+      }
+      else if(item->child(i)->text(0) == QString("Frequency"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.frequency));
+      }
+    }
+  }
+  
+  /**
   @brief Called when the update button of the properties widget is clicked 
   @return void
   **/ 
-  void CRobotCreatorConnector::updateRfid(void)
+  void CRobotCreatorConnector::updateRfidAntenna(void)
   {
     unsigned int frameId = searchRfid(current_rfid_->text(0));
     if(frameId == -1)
@@ -2139,6 +2391,108 @@ namespace stdr_gui
     }
 
     loader_.rfidAntennaPropLoader.hide();
+    
+    updateRobotPreview();
+  }
+  
+  /**
+  @brief Called when the refresh button of the properties widget is clicked 
+  @return void
+  **/ 
+  void CRobotCreatorConnector::updateRfidAntennaOpen(void)
+  {
+    unsigned int frameId = searchRfid(current_rfid_->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < current_rfid_->childCount() ; i++)
+    {
+      
+      //!< Rfid antenna angle span
+      if(current_rfid_->child(i)->text(0) == QString("Angle span"))
+      {
+        float angle_span = 
+          loader_.rfidAntennaPropLoader.rfidAngleSpan->text().toFloat();
+        if( angle_span <= 0 )
+        {
+          showMessage(QString("Rfid antenna angle span invalid :") + 
+            QString().setNum(angle_span));
+          return;
+        }
+        current_rfid_->child(i)->setText(1,QString().setNum(angle_span));
+        new_robot_msg_.rfidSensors[frameId].angleSpan = angle_span;
+      }
+      
+      //!< Rfid antenna orientation
+      else if(current_rfid_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = 
+          loader_.rfidAntennaPropLoader.rfidOrientation->
+            text().toFloat();
+        current_rfid_->child(i)->
+          setText(1,QString().setNum(orientation));
+        new_robot_msg_.rfidSensors[frameId].pose.theta = orientation;
+      }
+      
+      //!< Rfid antenna max range
+      else if(current_rfid_->child(i)->text(0) == QString("Max range"))
+      {
+        float maxRange = 
+          loader_.rfidAntennaPropLoader.rfidMaxDistance->
+            text().toFloat();
+        if( maxRange <= 0 )
+        {
+          showMessage(QString("Rfid antenna maximum range invalid :") + 
+            QString().setNum(maxRange));
+          return;
+        }
+        current_rfid_->child(i)->setText(1,QString().setNum(maxRange));
+        new_robot_msg_.rfidSensors[frameId].maxRange = maxRange;
+      }
+      
+      //!< Rfid antenna pose - x coordinate
+      else if(current_rfid_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.rfidAntennaPropLoader.rfidX->text().toFloat();
+        current_rfid_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.rfidSensors[frameId].pose.x = dx;
+      }
+      
+      //!< Rfid antenna pose - y coordinate
+      else if(current_rfid_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.rfidAntennaPropLoader.rfidY->text().toFloat();
+        current_rfid_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.rfidSensors[frameId].pose.y = dy;
+      }
+      
+      //!< Rfid antenna signal cutoff
+      else if(current_rfid_->child(i)->text(0) == QString("Signal cutoff"))
+      {
+        float signal = 
+          loader_.rfidAntennaPropLoader.rfidSignalCutoff->
+            text().toFloat();
+        current_rfid_->child(i)->setText(1,QString().setNum(signal));
+        new_robot_msg_.rfidSensors[frameId].signalCutoff = signal;
+      }
+      
+      //!< Rfid antenna publishing frequency
+      else if(current_rfid_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = 
+          loader_.rfidAntennaPropLoader.rfidFrequency->
+            text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Rfid antenna publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_rfid_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.rfidSensors[frameId].frequency = frequency;
+      }
+    }
     
     updateRobotPreview();
   }
@@ -2540,6 +2894,15 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < new_robot_msg_.rfidSensors.size() ; i++)
     {
       
+      if(sonar_hightlight_id_ == i)
+      {
+        brush = QBrush(QColor(0,0,200,30));
+      }
+      else
+      {
+        brush = QBrush(QColor(0,0,200,10));
+      }
+      
       float rfidx = new_robot_msg_.rfidSensors[i].pose.x;
       float rfidy = new_robot_msg_.rfidSensors[i].pose.y;
       float newx = 
@@ -2596,7 +2959,7 @@ namespace stdr_gui
     if (file_name.isEmpty()) { 
       return;
     }
-    
+
     try {
       new_robot_msg_ = 
         stdr_parser::Parser::createMessage<stdr_msgs::RobotMsg>
@@ -2615,6 +2978,7 @@ namespace stdr_gui
 
     CRobotCreatorConnector::laser_number = -1;
     CRobotCreatorConnector::sonar_number = -1;
+    CRobotCreatorConnector::rfid_number = -1;
     
     for(int i = loader_.robotInfoFootprint.childCount() - 1 ; i >=0 ; i--)
     {
