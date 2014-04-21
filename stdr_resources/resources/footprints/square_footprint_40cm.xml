@@ -1,0 +1,22 @@
+<footprint>
+  <footprint_specifications>
+    <points>
+      <point>
+        <x>-0.2</x>
+        <y>-0.2</y>
+      </point>
+      <point>
+        <x>0.2</x>
+        <y>-0.2</y>
+      </point>
+      <point>
+        <x>0.2</x>
+        <y>0.2</y>
+      </point>
+      <point>
+        <x>-0.2</x>
+        <y>0.2</y>
+      </point>
+    </points>
+  </footprint_specifications>
+</footprint>

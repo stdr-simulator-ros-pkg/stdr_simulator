@@ -12,7 +12,7 @@
       <theta>1.57</theta>
     </initial_pose>
     <laser>
-      <filename>laser_sensors/hokuyo_laser_4L.xml</filename>
+      <filename>laser_sensors/hokuyo/hokuyo_URG_04LX.xml</filename>
       <laser_specifications>
         <pose>
           <theta>-3.1415</theta>

@@ -37,7 +37,7 @@
     </footprint>
     <laser>
       <filename>
-        laser_sensors/hokuyo_laser_4L.xml
+        laser_sensors/hokuyo/hokuyo_URG_04LX.xml
       </filename>
     </laser>
   </robot_specifications>
