@@ -191,6 +191,12 @@ namespace stdr_gui
       void actionNewCo2Triggered(void);
       
       /**
+      @brief Qt slot that is called when the NewSound tool button is pressed
+      @return void
+      **/
+      void actionNewSoundTriggered(void);
+      
+      /**
       @brief Qt slot that is called when the NewThermal tool button is pressed
       @return void
       **/
@@ -273,6 +279,12 @@ namespace stdr_gui
       @return void
       **/
       void loadCo2Pressed(void);
+      
+      /**
+      @brief Signal emmited on load sound source pressed
+      @return void
+      **/
+      void loadSoundPressed(void);
       
       /**
       @brief Signal emmited on load robot from file pressed

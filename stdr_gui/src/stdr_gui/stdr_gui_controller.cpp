@@ -162,6 +162,11 @@ namespace stdr_gui
       &(gui_connector_),
         SIGNAL(loadCo2Pressed()),
       this, SLOT(loadCo2Pressed()));
+      
+    QObject::connect(
+      &(gui_connector_),
+        SIGNAL(loadSoundPressed()),
+      this, SLOT(loadSoundPressed()));
     
     QObject::connect(
       this,SIGNAL(waitForRobotPose()),
@@ -203,10 +208,14 @@ namespace stdr_gui
     QObject::connect(
       this,SIGNAL(waitForCo2Pose()),
       &map_connector_, SLOT(waitForCo2Place()));
+      
+    QObject::connect(
+      this,SIGNAL(waitForSoundPose()),
+      &map_connector_, SLOT(waitForSoundPlace()));
     
     QObject::connect(
-      &map_connector_,SIGNAL(co2PlaceSet(QPoint)),
-      this, SLOT(co2PlaceSet(QPoint)));
+      &map_connector_,SIGNAL(soundPlaceSet(QPoint)),
+      this, SLOT(soundPlaceSet(QPoint)));
       
     QObject::connect(
       &info_connector_,SIGNAL(laserVisibilityClicked(QString,QString)),
@@ -460,6 +469,19 @@ namespace stdr_gui
   }
   
   /**
+  @brief Informs CGuiController that a sound source is going to be placed in the environment. Connects to the CGuiConnector::loadSoundPressed signal
+  @return void
+  **/
+  void CGuiController::loadSoundPressed(void)
+  {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
+    Q_EMIT waitForSoundPose();
+  }
+  
+  /**
   @brief Performs zoom in when the button is pressed. Connects to the CMapConnector::zoomInPressed signal
   @param p [QPoint] The event point in the OGM
   @return void
@@ -698,6 +720,30 @@ namespace stdr_gui
   }
   
   /**
+  @brief Gets the point at which the new sound source is placed. Connects to the\
+   CMapConnector::soundPlaceSet signal
+  @param p [QPoint] The event point in the OGM
+  @return void
+  **/
+  void CGuiController::soundPlaceSet(QPoint p)
+  {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
+    while(map_lock_)
+    {	
+      usleep(100);
+    }
+    map_lock_ = true;
+    QPoint pnew = map_connector_.getGlobalPoint(p);
+    QString name=QString("sound_source_") + QString().setNum(sound_sources_.size());
+    CGuiSoundSource new_source(pnew,name.toStdString());
+    sound_sources_.insert(std::pair<QString,CGuiSoundSource>(name,new_source));
+    map_lock_ = false;
+  }
+  
+  /**
   @brief Gets the point at which the new thermal source is placed. Connects to the CMapConnector::thermalPlaceSet signal
   @param p [QPoint] The event point in the OGM
   @return void
@@ -768,6 +814,12 @@ namespace stdr_gui
     
     for(Co2SourcesIterator it = co2_sources_.begin() ; 
       it != co2_sources_.end() ; it++)
+    {
+      it->second.draw(&running_map_);
+    }
+    
+    for(SoundSourcesIterator it = sound_sources_.begin() ; 
+      it != sound_sources_.end() ; it++)
     {
       it->second.draw(&running_map_);
     }

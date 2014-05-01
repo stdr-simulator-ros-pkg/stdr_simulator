@@ -42,6 +42,7 @@ namespace stdr_gui
     SETPLACE,
     SETREPLACE,
     SETPLACECO2,
+    SETPLACESOUND,
     SETPLACERFID,
     SETPLACETHERMAL
   };
@@ -219,6 +220,12 @@ namespace stdr_gui
       void waitForCo2Place(void);
       
       /**
+      @brief Changes the map state. Waits for a sound source to be placed
+      @return void
+      **/
+      void waitForSoundPlace(void);
+      
+      /**
       @brief Changes the map state. Waits for an RFID tag to be placed
       @return void
       **/
@@ -275,6 +282,13 @@ namespace stdr_gui
       @return void
       **/
       void co2PlaceSet(QPoint p);
+      
+      /**
+      @brief Emmited when click is captured and state is SETSOUNDPLACE
+      @param p [QPoint] The event point
+      @return void
+      **/
+      void soundPlaceSet(QPoint p);
       
       /**
       @brief Emmited when click is captured and state is SETRFIDPLACE

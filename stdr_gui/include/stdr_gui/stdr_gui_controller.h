@@ -36,6 +36,7 @@
 #include "stdr_gui/stdr_visualization/stdr_robot_visualization.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.h"
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_sound_source.h"
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.h"
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.h"
 
@@ -68,6 +69,7 @@ namespace stdr_gui
         RobotVisIterator;
       typedef std::map<QString,CGuiRfidTag>::iterator RfidTagIterator;
       typedef std::map<QString,CGuiCo2Source>::iterator Co2SourcesIterator;
+      typedef std::map<QString,CGuiSoundSource>::iterator SoundSourcesIterator;
       typedef std::map<QString,CGuiThermalSource>::iterator 
         ThermalSourcesIterator;
       
@@ -101,6 +103,8 @@ namespace stdr_gui
       std::map<QString,CGuiThermalSource> thermal_sources_;
       //!< CO2 sources in the environment
       std::map<QString,CGuiCo2Source> co2_sources_;
+      //!< Sound sources in the environment
+      std::map<QString,CGuiSoundSource> sound_sources_;
       
       //!< ROS subscriber for occupancy grid map
       ros::Subscriber map_subscriber_;
@@ -272,6 +276,12 @@ namespace stdr_gui
       void loadCo2Pressed(void);
       
       /**
+      @brief Informs CGuiController that a sound source is going to be placed in the environment. Connects to the CGuiConnector::loadSoundPressed signal
+      @return void
+      **/
+      void loadSoundPressed(void);
+      
+      /**
       @brief Informs CGuiController that a thermal source is going to be placed in the environment. Connects to the CGuiConnector::loadThermalPressed signal
       @return void
       **/
@@ -318,6 +328,13 @@ namespace stdr_gui
       @return void
       **/
       void co2PlaceSet(QPoint p);
+      
+      /**
+      @brief Gets the point at which the new sound source is placed. Connects to the CMapConnector::soundPlaceSet signal
+      @param p [QPoint] The event point in the OGM
+      @return void
+      **/
+      void soundPlaceSet(QPoint p);
       
       /**
       @brief Updates the map to be shown in GUI. Connects to the timeout signal of timer_
@@ -417,6 +434,12 @@ namespace stdr_gui
       @return void
       **/
       void waitForCo2Pose(void);
+      
+      /**
+      @brief Is emitted when a new sound source is going to be placed. Connects to the CMapConnector::waitForSOundPose slot
+      @return void
+      **/
+      void waitForSoundPose(void);
       
       /**
       @brief Is emitted when a new rfid tag is going to be placed. Connects to the CMapConnector::waitForRfidPose slot
