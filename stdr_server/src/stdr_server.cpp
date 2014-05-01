@@ -84,6 +84,8 @@ namespace stdr_server {
       _nh.advertise<stdr_msgs::RobotIndexedVectorMsg>
         ("stdr_server/active_robots", 10, true);
         
+    //!< Rfid tags    
+        
     _addRfidTagServiceServer = _nh.advertiseService("stdr_server/add_rfid_tag",
       &Server::addRfidTagCallback, this);
       
@@ -93,6 +95,42 @@ namespace stdr_server {
       
     _rfidTagVectorPublisher = _nh.advertise<stdr_msgs::RfidTagVector>(
       "stdr_server/rfid_list", 1, true);
+      
+    //!< CO2 sources    
+        
+    _addCO2SourceServiceServer = _nh.advertiseService("stdr_server/add_co2_source",
+      &Server::addCO2SourceCallback, this);
+      
+    _deleteCO2SourceServiceServer = 
+      _nh.advertiseService("stdr_server/delete_co2_source",
+      &Server::deleteCO2SourceCallback, this);
+      
+    _CO2SourceVectorPublisher = _nh.advertise<stdr_msgs::CO2SourceVector>(
+      "stdr_server/co2_sources_list", 1, true);
+      
+    //!< Thermal sources    
+        
+    _addThermalSourceServiceServer = _nh.advertiseService("stdr_server/add_thermal_source",
+      &Server::addThermalSourceCallback, this);
+      
+    _deleteThermalSourceServiceServer = 
+      _nh.advertiseService("stdr_server/delete_thermal_source",
+      &Server::deleteThermalSourceCallback, this);
+      
+    _thermalSourceVectorPublisher = _nh.advertise<stdr_msgs::ThermalSourceVector>(
+      "stdr_server/thermal_sources_list", 1, true);
+    
+    //!< Sound sources    
+        
+    _addSoundSourceServiceServer = _nh.advertiseService("stdr_server/add_sound_source",
+      &Server::addSoundSourceCallback, this);
+      
+    _deleteSoundSourceServiceServer = 
+      _nh.advertiseService("stdr_server/delete_sound_source",
+      &Server::deleteSoundSourceCallback, this);
+      
+    _soundSourceVectorPublisher = _nh.advertise<stdr_msgs::SoundSourceVector>(
+      "stdr_server/sound_sources_list", 1, true);
   }
   
   /**
@@ -122,13 +160,46 @@ namespace stdr_server {
       rfidTagList.rfid_tags.push_back(it->second);
     }
     _rfidTagVectorPublisher.publish(rfidTagList);
+
+    //!< Return success
+    res.success = true;
+    return 0;
+  }
+  
+  /**
+  @brief Service callback for adding new CO2 source to the environment
+  **/
+  bool Server::addCO2SourceCallback(
+    stdr_msgs::AddCO2Source::Request &req, 
+    stdr_msgs::AddCO2Source::Response &res)
+  {
+    //!< Sanity check for the source
+    stdr_msgs::CO2Source new_source = req.newSource;
+    if(_CO2SourceMap.find(new_source.id) != _CO2SourceMap.end())
+    { //!< A source exists with the same id
+      res.success = false;
+      res.message = "Duplicate CO2 is";
+      return 1;
+    }
     
-    //!< Publish the tf of the rfid tags (?)
+    //!< Add CO2 source to the environment 
+    _CO2SourceMap.insert(std::pair<std::string, stdr_msgs::CO2Source>(
+      new_source.id, new_source));
+    
+    //!< Publish the new source list
+    stdr_msgs::CO2SourceVector CO2SourceList;
+    for(CO2SourceMapIt it = _CO2SourceMap.begin() ; it != _CO2SourceMap.end() ; it++)
+    {
+      CO2SourceList.co2_sources.push_back(it->second);
+    }
+    _CO2SourceVectorPublisher.publish(CO2SourceList);
     
     //!< Return success
     res.success = true;
     return 0;
   }
+  
+  //!------------------I am here!!
   
   /**
   @brief Service callback for deleting an rfid tag from the environment
