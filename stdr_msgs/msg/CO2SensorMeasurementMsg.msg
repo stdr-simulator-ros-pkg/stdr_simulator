@@ -1,0 +1,7 @@
+# Sensor measurement description
+# All vectors must have the same size
+
+Header header
+
+string[] co2_source_ids
+float32[] co2_source_ppms
