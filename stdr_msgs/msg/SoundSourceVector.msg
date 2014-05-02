@@ -1,2 +1,2 @@
 # Sound sources list
-stdr_msgs/SoundSource[] rfid_tags
+stdr_msgs/SoundSource[] sound_sources

@@ -82,10 +82,12 @@ namespace stdr_server {
   typedef std::map<std::string, stdr_msgs::CO2Source>::iterator CO2SourceMapIt;
 
   typedef std::map<std::string, stdr_msgs::ThermalSource> ThermalSourceMap;
-  typedef std::map<std::string, stdr_msgs::ThermalSource>::iterator ThermalSourceMapIt;
+  typedef std::map<std::string, stdr_msgs::ThermalSource>::iterator 
+    ThermalSourceMapIt;
   
   typedef std::map<std::string, stdr_msgs::SoundSource> SoundSourceMap;
-  typedef std::map<std::string, stdr_msgs::SoundSource>::iterator SoundSourceMapIt;
+  typedef std::map<std::string, stdr_msgs::SoundSource>::iterator 
+    SoundSourceMapIt;
 
   /**
   @class Server
@@ -314,6 +316,20 @@ namespace stdr_server {
       ros::ServiceServer _deleteCO2SourceServiceServer;
       //!< The CO2 source list publisher
       ros::Publisher _CO2SourceVectorPublisher;
+      
+      //!< The addThermalSource srv server
+      ros::ServiceServer _addThermalSourceServiceServer;
+      //!< The deleteThermalSource srv server
+      ros::ServiceServer _deleteThermalSourceServiceServer;
+      //!< The thermal source list publisher
+      ros::Publisher _thermalSourceVectorPublisher;
+      
+      //!< The addSoundSource srv server
+      ros::ServiceServer _addSoundSourceServiceServer;
+      //!< The deleteSoundSource srv server
+      ros::ServiceServer _deleteSoundSourceServiceServer;
+      //!< The sound source list publisher
+      ros::Publisher _soundSourceVectorPublisher;
   };
 }
 

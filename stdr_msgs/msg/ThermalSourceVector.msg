@@ -1,2 +1,2 @@
 # Thermal sources list
-stdr_msgs/ThermalSource[] rfid_tags
+stdr_msgs/ThermalSource[] thermal_sources

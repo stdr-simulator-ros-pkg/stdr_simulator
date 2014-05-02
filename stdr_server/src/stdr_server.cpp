@@ -98,7 +98,8 @@ namespace stdr_server {
       
     //!< CO2 sources    
         
-    _addCO2SourceServiceServer = _nh.advertiseService("stdr_server/add_co2_source",
+    _addCO2SourceServiceServer = _nh.advertiseService(
+      "stdr_server/add_co2_source",
       &Server::addCO2SourceCallback, this);
       
     _deleteCO2SourceServiceServer = 
@@ -110,19 +111,22 @@ namespace stdr_server {
       
     //!< Thermal sources    
         
-    _addThermalSourceServiceServer = _nh.advertiseService("stdr_server/add_thermal_source",
+    _addThermalSourceServiceServer = _nh.advertiseService(
+      "stdr_server/add_thermal_source",
       &Server::addThermalSourceCallback, this);
       
     _deleteThermalSourceServiceServer = 
       _nh.advertiseService("stdr_server/delete_thermal_source",
       &Server::deleteThermalSourceCallback, this);
       
-    _thermalSourceVectorPublisher = _nh.advertise<stdr_msgs::ThermalSourceVector>(
+    _thermalSourceVectorPublisher = 
+      _nh.advertise<stdr_msgs::ThermalSourceVector>(
       "stdr_server/thermal_sources_list", 1, true);
     
     //!< Sound sources    
         
-    _addSoundSourceServiceServer = _nh.advertiseService("stdr_server/add_sound_source",
+    _addSoundSourceServiceServer = _nh.advertiseService(
+      "stdr_server/add_sound_source",
       &Server::addSoundSourceCallback, this);
       
     _deleteSoundSourceServiceServer = 
@@ -188,7 +192,8 @@ namespace stdr_server {
     
     //!< Publish the new source list
     stdr_msgs::CO2SourceVector CO2SourceList;
-    for(CO2SourceMapIt it = _CO2SourceMap.begin() ; it != _CO2SourceMap.end() ; it++)
+    for(CO2SourceMapIt it = _CO2SourceMap.begin() 
+      ; it != _CO2SourceMap.end() ; it++)
     {
       CO2SourceList.co2_sources.push_back(it->second);
     }
@@ -199,7 +204,73 @@ namespace stdr_server {
     return 0;
   }
   
-  //!------------------I am here!!
+  /**
+  @brief Service callback for adding new thermal source to the environment
+  **/
+  bool Server::addThermalSourceCallback(
+    stdr_msgs::AddThermalSource::Request &req, 
+    stdr_msgs::AddThermalSource::Response &res)
+  {
+    //!< Sanity check for the source
+    stdr_msgs::ThermalSource new_source = req.newSource;
+    if(_thermalSourceMap.find(new_source.id) != _thermalSourceMap.end())
+    { //!< A source exists with the same id
+      res.success = false;
+      res.message = "Duplicate thermal source is";
+      return 1;
+    }
+    
+    //!< Add source to the environment 
+    _thermalSourceMap.insert(std::pair<std::string, stdr_msgs::ThermalSource>(
+      new_source.id, new_source));
+    
+    //!< Publish the new source list
+    stdr_msgs::ThermalSourceVector thermalSourceList;
+    for(ThermalSourceMapIt it = _thermalSourceMap.begin() 
+      ; it != _thermalSourceMap.end() ; it++)
+    {
+      thermalSourceList.thermal_sources.push_back(it->second);
+    }
+    _thermalSourceVectorPublisher.publish(thermalSourceList);
+    
+    //!< Return success
+    res.success = true;
+    return 0;
+  }
+  
+  /**
+  @brief Service callback for adding new sound source to the environment
+  **/
+  bool Server::addSoundSourceCallback(
+    stdr_msgs::AddSoundSource::Request &req, 
+    stdr_msgs::AddSoundSource::Response &res)
+  {
+    //!< Sanity check for the source
+    stdr_msgs::SoundSource new_source = req.newSource;
+    if(_soundSourceMap.find(new_source.id) != _soundSourceMap.end())
+    { //!< A source exists with the same id
+      res.success = false;
+      res.message = "Duplicate sound source is";
+      return 1;
+    }
+    
+    //!< Add source to the environment 
+    _soundSourceMap.insert(std::pair<std::string, stdr_msgs::SoundSource>(
+      new_source.id, new_source));
+    
+    //!< Publish the new source list
+    stdr_msgs::SoundSourceVector soundSourceList;
+    for(SoundSourceMapIt it = _soundSourceMap.begin() 
+      ; it != _soundSourceMap.end() ; it++)
+    {
+      soundSourceList.sound_sources.push_back(it->second);
+    }
+    _soundSourceVectorPublisher.publish(soundSourceList);
+    
+    //!< Return success
+    res.success = true;
+    return 0;
+  }
   
   /**
   @brief Service callback for deleting an rfid tag from the environment
@@ -224,6 +295,93 @@ namespace stdr_server {
       _rfidTagVectorPublisher.publish(rfidTagList);
     }
     else  //!< Tag does not exist
+    {
+      return 1;
+    }
+    return 0;
+  }
+  
+  /**
+  @brief Service callback for deleting a CO2 source from the environment
+  **/
+  bool Server::deleteCO2SourceCallback(
+    stdr_msgs::DeleteCO2Source::Request &req, 
+    stdr_msgs::DeleteCO2Source::Response &res)
+  {
+    
+    std::string name = req.name;
+    if(_CO2SourceMap.find(name) != _CO2SourceMap.end())
+    {
+      _CO2SourceMap.erase(name);
+      
+      //!< Publish the new sources list
+      stdr_msgs::CO2SourceVector CO2SourceList;
+      for(CO2SourceMapIt it = _CO2SourceMap.begin() ; 
+        it != _CO2SourceMap.end() ; it++)
+      {
+        CO2SourceList.co2_sources.push_back(it->second);
+      }
+      _CO2SourceVectorPublisher.publish(CO2SourceList);
+    }
+    else  //!< Source does not exist
+    {
+      return 1;
+    }
+    return 0;
+  }
+  
+  /**
+  @brief Service callback for deleting a thermal source from the environment
+  **/
+  bool Server::deleteThermalSourceCallback(
+    stdr_msgs::DeleteThermalSource::Request &req, 
+    stdr_msgs::DeleteThermalSource::Response &res)
+  {
+    
+    std::string name = req.name;
+    if(_thermalSourceMap.find(name) != _thermalSourceMap.end())
+    {
+      _thermalSourceMap.erase(name);
+      
+      //!< Publish the new sources list
+      stdr_msgs::ThermalSourceVector thermalSourceList;
+      for(ThermalSourceMapIt it = _thermalSourceMap.begin() ; 
+        it != _thermalSourceMap.end() ; it++)
+      {
+        thermalSourceList.thermal_sources.push_back(it->second);
+      }
+      _thermalSourceVectorPublisher.publish(thermalSourceList);
+    }
+    else  //!< Source does not exist
+    {
+      return 1;
+    }
+    return 0;
+  }
+  
+  /**
+  @brief Service callback for deleting a sound source from the environment
+  **/
+  bool Server::deleteSoundSourceCallback(
+    stdr_msgs::DeleteSoundSource::Request &req, 
+    stdr_msgs::DeleteSoundSource::Response &res)
+  {
+    
+    std::string name = req.name;
+    if(_soundSourceMap.find(name) != _soundSourceMap.end())
+    {
+      _soundSourceMap.erase(name);
+      
+      //!< Publish the new sources list
+      stdr_msgs::SoundSourceVector soundSourceList;
+      for(SoundSourceMapIt it = _soundSourceMap.begin() ; 
+        it != _soundSourceMap.end() ; it++)
+      {
+        soundSourceList.sound_sources.push_back(it->second);
+      }
+      _soundSourceVectorPublisher.publish(soundSourceList);
+    }
+    else  //!< Source does not exist
     {
       return 1;
     }

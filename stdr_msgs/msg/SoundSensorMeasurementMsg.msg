@@ -3,5 +3,4 @@
 
 Header header
 
-string[] sound_source_ids
-float32[] sound_source_dbs
+float32 sound_source_dbs
