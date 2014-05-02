@@ -89,6 +89,33 @@
   <rfid_reader_specifications>
     <allowed>angle_span,signal_cutoff,max_range,frequency,frame_id,pose</allowed>
   </rfid_reader_specifications>
+  
+  <co2_sensor>
+    <allowed>filename,co2_sensor_specifications</allowed>
+    <required>co2_sensor_specifications</required>
+  </co2_sensor>
+
+  <co2_sensor_specifications>
+    <allowed>max_range,frequency,frame_id,pose</allowed>
+  </co2_sensor_specifications>
+  
+  <thermal_sensor>
+    <allowed>filename,thermal_sensor_specifications</allowed>
+    <required>thermal_sensor_specifications</required>
+  </thermal_sensor>
+
+  <thermal_sensor_specifications>
+    <allowed>max_range,angle_span,frequency,frame_id,pose</allowed>
+  </thermal_sensor_specifications>
+  
+  <sound_sensor>
+    <allowed>filename,sound_sensor_specifications</allowed>
+    <required>sound_sensor_specifications</required>
+  </sound_sensor>
+
+  <sound_sensor_specifications>
+    <allowed>max_range,angle_span,frequency,frame_id,pose</allowed>
+  </sound_sensor_specifications>
 
   <kinematic>
     <allowed>filename,kinematic_specifications</allowed>

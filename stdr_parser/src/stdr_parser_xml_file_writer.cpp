@@ -329,6 +329,162 @@ namespace stdr_parser
     //!< Create pose
     messageToXmlElement(msg.pose,rfid_reader_specifications);
   }
+  //!------------------------------------------------------------------
+  //!< Template declaration for stdr_msgs::CO2SensorMsg
+  template void XmlFileWriter::messageToFile
+    (stdr_msgs::CO2SensorMsg msg,std::string file_name);
+    
+  //!< Template specialization for stdr_msgs::CO2SensorMsg
+  template <>
+  void XmlFileWriter::messageToXmlElement<stdr_msgs::CO2SensorMsg>
+    (stdr_msgs::CO2SensorMsg msg,TiXmlNode* base){
+      
+    //!< Create sensor
+    TiXmlElement* sensor = new TiXmlElement("co2_sensor");
+    base->LinkEndChild(sensor);
+        
+    //!< Create sensor specifications
+    TiXmlElement* sensor_specifications = 
+      new TiXmlElement("co2_sensor_specifications");
+    sensor->LinkEndChild(sensor_specifications);
+
+    //!< Create max_range
+    TiXmlElement* maxRange = new TiXmlElement("max_range");
+    sensor_specifications->LinkEndChild(maxRange);
+    TiXmlText * maxRange_text = new TiXmlText(SSTR(msg.maxRange));
+    maxRange->LinkEndChild(maxRange_text);
+    
+    //!< Create angleSpan
+    //~ TiXmlElement* angleSpan = new TiXmlElement("angle_span");
+    //~ rfid_reader_specifications->LinkEndChild(angleSpan);
+    //~ TiXmlText * angleSpan_text = new TiXmlText(SSTR(msg.angleSpan));
+    //~ angleSpan->LinkEndChild(angleSpan_text);
+    
+    //!< Create signalCutoff
+    //~ TiXmlElement* signalCutoff = new TiXmlElement("signal_cutoff");
+    //~ rfid_reader_specifications->LinkEndChild(signalCutoff);
+    //~ TiXmlText * signalCutoff_text = new TiXmlText(SSTR(msg.signalCutoff));
+    //~ signalCutoff->LinkEndChild(signalCutoff_text);
+    
+    //!< Create frequency
+    TiXmlElement* frequency = new TiXmlElement("frequency");
+    sensor_specifications->LinkEndChild(frequency);
+    TiXmlText * frequency_text = new TiXmlText(SSTR(msg.frequency));
+    frequency->LinkEndChild(frequency_text);
+    
+    //!< Create frame id
+    TiXmlElement* frame_id = new TiXmlElement("frame_id");
+    sensor_specifications->LinkEndChild(frame_id);
+    TiXmlText * frame_id_text = new TiXmlText(SSTR(msg.frame_id));
+    frame_id->LinkEndChild(frame_id_text);
+    
+    //!< Create pose
+    messageToXmlElement(msg.pose,sensor_specifications);
+  }
+  //!------------------------------------------------------------------
+  //!< Template declaration for stdr_msgs::ThermalSensorMsg
+  template void XmlFileWriter::messageToFile
+    (stdr_msgs::ThermalSensorMsg msg,std::string file_name);
+    
+  //!< Template specialization for stdr_msgs::ThermalSensorMsg
+  template <>
+  void XmlFileWriter::messageToXmlElement<stdr_msgs::ThermalSensorMsg>
+    (stdr_msgs::ThermalSensorMsg msg,TiXmlNode* base){
+      
+    //!< Create sensor
+    TiXmlElement* sensor = new TiXmlElement("thermal_sensor");
+    base->LinkEndChild(sensor);
+        
+    //!< Create sensor specifications
+    TiXmlElement* sensor_specifications = 
+      new TiXmlElement("thermal_sensor_specifications");
+    sensor->LinkEndChild(sensor_specifications);
+
+    //!< Create max_range
+    TiXmlElement* maxRange = new TiXmlElement("max_range");
+    sensor_specifications->LinkEndChild(maxRange);
+    TiXmlText * maxRange_text = new TiXmlText(SSTR(msg.maxRange));
+    maxRange->LinkEndChild(maxRange_text);
+    
+    //!< Create angleSpan
+    TiXmlElement* angleSpan = new TiXmlElement("angle_span");
+    sensor_specifications->LinkEndChild(angleSpan);
+    TiXmlText * angleSpan_text = new TiXmlText(SSTR(msg.angleSpan));
+    angleSpan->LinkEndChild(angleSpan_text);
+    
+    //!< Create signalCutoff
+    //~ TiXmlElement* signalCutoff = new TiXmlElement("signal_cutoff");
+    //~ rfid_reader_specifications->LinkEndChild(signalCutoff);
+    //~ TiXmlText * signalCutoff_text = new TiXmlText(SSTR(msg.signalCutoff));
+    //~ signalCutoff->LinkEndChild(signalCutoff_text);
+    
+    //!< Create frequency
+    TiXmlElement* frequency = new TiXmlElement("frequency");
+    sensor_specifications->LinkEndChild(frequency);
+    TiXmlText * frequency_text = new TiXmlText(SSTR(msg.frequency));
+    frequency->LinkEndChild(frequency_text);
+    
+    //!< Create frame id
+    TiXmlElement* frame_id = new TiXmlElement("frame_id");
+    sensor_specifications->LinkEndChild(frame_id);
+    TiXmlText * frame_id_text = new TiXmlText(SSTR(msg.frame_id));
+    frame_id->LinkEndChild(frame_id_text);
+    
+    //!< Create pose
+    messageToXmlElement(msg.pose,sensor_specifications);
+  }
+  //!------------------------------------------------------------------
+  //!< Template declaration for stdr_msgs::SoundSensorMsg
+  template void XmlFileWriter::messageToFile
+    (stdr_msgs::SoundSensorMsg msg,std::string file_name);
+    
+  //!< Template specialization for stdr_msgs::SoundSensorMsg
+  template <>
+  void XmlFileWriter::messageToXmlElement<stdr_msgs::SoundSensorMsg>
+    (stdr_msgs::SoundSensorMsg msg,TiXmlNode* base){
+      
+    //!< Create sensor
+    TiXmlElement* sensor = new TiXmlElement("sound_sensor");
+    base->LinkEndChild(sensor);
+        
+    //!< Create sensor specifications
+    TiXmlElement* sensor_specifications = 
+      new TiXmlElement("sound_sensor_specifications");
+    sensor->LinkEndChild(sensor_specifications);
+
+    //!< Create max_range
+    TiXmlElement* maxRange = new TiXmlElement("max_range");
+    sensor_specifications->LinkEndChild(maxRange);
+    TiXmlText * maxRange_text = new TiXmlText(SSTR(msg.maxRange));
+    maxRange->LinkEndChild(maxRange_text);
+    
+    //!< Create angleSpan
+    TiXmlElement* angleSpan = new TiXmlElement("angle_span");
+    sensor_specifications->LinkEndChild(angleSpan);
+    TiXmlText * angleSpan_text = new TiXmlText(SSTR(msg.angleSpan));
+    angleSpan->LinkEndChild(angleSpan_text);
+    
+    //!< Create signalCutoff
+    //~ TiXmlElement* signalCutoff = new TiXmlElement("signal_cutoff");
+    //~ rfid_reader_specifications->LinkEndChild(signalCutoff);
+    //~ TiXmlText * signalCutoff_text = new TiXmlText(SSTR(msg.signalCutoff));
+    //~ signalCutoff->LinkEndChild(signalCutoff_text);
+    
+    //!< Create frequency
+    TiXmlElement* frequency = new TiXmlElement("frequency");
+    sensor_specifications->LinkEndChild(frequency);
+    TiXmlText * frequency_text = new TiXmlText(SSTR(msg.frequency));
+    frequency->LinkEndChild(frequency_text);
+    
+    //!< Create frame id
+    TiXmlElement* frame_id = new TiXmlElement("frame_id");
+    sensor_specifications->LinkEndChild(frame_id);
+    TiXmlText * frame_id_text = new TiXmlText(SSTR(msg.frame_id));
+    frame_id->LinkEndChild(frame_id_text);
+    
+    //!< Create pose
+    messageToXmlElement(msg.pose,sensor_specifications);
+  }
   
   //!------------------------------------------------------------------
   //!< Template declaration for stdr_msgs::RobotMsg
@@ -394,6 +550,21 @@ namespace stdr_parser
     for(unsigned int i = 0 ; i < msg.rfidSensors.size() ; i++)
     {
       messageToXmlElement(msg.rfidSensors[i],robot_specifications);
+    }
+    
+    for(unsigned int i = 0 ; i < msg.co2Sensors.size() ; i++)
+    {
+      messageToXmlElement(msg.co2Sensors[i],robot_specifications);
+    }
+    
+    for(unsigned int i = 0 ; i < msg.thermalSensors.size() ; i++)
+    {
+      messageToXmlElement(msg.thermalSensors[i],robot_specifications);
+    }
+    
+    for(unsigned int i = 0 ; i < msg.soundSensors.size() ; i++)
+    {
+      messageToXmlElement(msg.soundSensors[i],robot_specifications);
     }
   }
   
