@@ -3,5 +3,4 @@
 
 Header header
 
-string[] co2_source_ids
-float32[] co2_source_ppms
+float32 co2_ppms
