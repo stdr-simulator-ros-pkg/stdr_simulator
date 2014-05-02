@@ -3,4 +3,4 @@
 
 Header header
 
-float32 co2_ppms
+float32 co2_ppm

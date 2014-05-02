@@ -25,6 +25,9 @@
 #include "stdr_gui/stdr_tools.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_laser.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_rfid.h"
+#include "stdr_gui/stdr_gui_sensors/stdr_gui_co2.h"
+#include "stdr_gui/stdr_gui_sensors/stdr_gui_thermal.h"
+#include "stdr_gui/stdr_gui_sensors/stdr_gui_sound.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sonar.h"
 
 /**
@@ -70,7 +73,13 @@ namespace stdr_gui
       //!< Robot sonar sensors
       std::vector<CGuiSonar*>   sonars_;
       //!< Robot Rfid antenna sensors
-      std::vector<CGuiRfid*>     rfids_;
+      std::vector<CGuiRfid*>    rfids_;
+      //!< Robot Rfid antenna sensors
+      std::vector<CGuiCO2*>     co2_sensors_;
+      //!< Robot Rfid antenna sensors
+      std::vector<CGuiThermal*> thermal_sensors_;
+      //!< Robot Rfid antenna sensors
+      std::vector<CGuiSound*>   sound_sensors_;
       
       //!< Robot frame id
       std::string frame_id_;
@@ -221,6 +230,24 @@ namespace stdr_gui
       @return char
       **/
       char getRfidReaderVisualizationStatus(std::string frame_id);
+      /**
+      @brief Returns the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return char
+      **/
+      char getCO2SensorVisualizationStatus(std::string frame_id);
+      /**
+      @brief Returns the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return char
+      **/
+      char getThermalSensorVisualizationStatus(std::string frame_id);
+      /**
+      @brief Returns the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return char
+      **/
+      char getSoundSensorVisualizationStatus(std::string frame_id);
       
       /**
       @brief Toggles the rfid reader visibility status
@@ -228,6 +255,24 @@ namespace stdr_gui
       @return void
       **/
       void toggleRfidReaderVisualizationStatus(std::string frame_id);
+      /**
+      @brief Toggles the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return void
+      **/
+      void toggleCO2SensorVisualizationStatus(std::string frame_id);
+      /**
+      @brief Toggles the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return void
+      **/
+      void toggleThermalSensorVisualizationStatus(std::string frame_id);
+      /**
+      @brief Toggles the rfid reader visibility status
+      @param frame_id [std::string] The rfid reader frame id
+      @return void
+      **/
+      void toggleSoundSensorVisualizationStatus(std::string frame_id);
       
       /**
       @brief Returns the sonar visibility status
@@ -275,6 +320,14 @@ namespace stdr_gui
       @return void
       **/
       void setEnvironmentalTags(stdr_msgs::RfidTagVector env_tags);
+      /**
+      @brief Sets the tags existent in the environment
+      @param env_tags [stdr_msgs::RfidTagVector] The tag vector
+      @return void
+      **/
+      void setEnvironmentalCO2Sources(stdr_msgs::CO2SourceVector env_co2_sources);
+      void setEnvironmentalThermalSources(stdr_msgs::ThermalSourceVector env_thermal_sources);
+      void setEnvironmentalSoundSources(stdr_msgs::SoundSourceVector env_sound_sources);
   };  
 }
 

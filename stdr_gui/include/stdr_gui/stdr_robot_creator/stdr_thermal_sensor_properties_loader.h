@@ -18,9 +18,11 @@
    * Aris Thallas, aris.thallas@gmail.com
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
-#ifndef STDR_GUI_SOUND_SOURCE_CONTAINER
-#define STDR_GUI_SOUND_SOURCE_CONTAINER
 
+#ifndef STDR_THERMAL_SENSOR_LOADER
+#define STDR_THERMAL_SENSOR_LOADER
+
+#include "ui_thermalSensorProperties.h"
 #include "stdr_gui/stdr_tools.h"
 
 /**
@@ -30,72 +32,35 @@
 namespace stdr_gui
 {
   /**
-  @class CGuiSoundSource
-  @brief Implements the functionalities of a sound source
+  @class CRfidAntennaPropertiesLoader
+  @brief Implements the low level functionalities of the Rfid antenna properties widget. Inherits form QWidget and Ui_RfidAntennaProperties (auto created from ui file)
   **/ 
-  class CGuiSoundSource
+  class CThermalSensorPropertiesLoader : 
+    public QWidget, 
+    public Ui_ThermalSensorProperties
   {
     //------------------------------------------------------------------------//
     private:
-      //!< The position of the rfid tag in the map
-      QPoint position_; 
-      //!< The "name" of the rfid tag 
-      std::string name_;  
-      //!< The message of the rfid tag
-      float db_;
-      //!< The OGM resolution
-      float resolution_;
+      //!< Number of input arguments
+      int   argc_;
+      //!< Input arguments
+      char**  argv_;
     //------------------------------------------------------------------------//
     public:
       /**
       @brief Default contructor
-      @param p [QPoint] The pose of the rfid tag
-      @param name [std::string] The "name" of the rfid tag
-      @param resolution [float] The map's resolution
+      @param argc [int] Number of input arguments
+      @param argv [char**] Input arguments
       @return void
       **/
-      CGuiSoundSource(QPoint p,std::string name, float resolution);
+      CThermalSensorPropertiesLoader(int argc, char **argv);
       
       /**
       @brief Default destructor
       @return void
       **/
-      ~CGuiSoundSource(void);
-      
-      /**
-      @brief Returns the "name" of the rfid tag
-      @return std::string 
-      **/
-      std::string getName(void);
-      
-      /**
-      @brief Checks proximity to a point
-      @param p [QPoint] The proximity point to check
-      @return bool : True if tag is close to p
-      **/
-      bool checkProximity(QPoint p);
-      
-      /**
-      @brief Draws the tag in the map
-      @param img [QImage*] The image to draw to
-      @return void
-      **/
-      void draw(QImage *img);
-      
-      /**
-      @brief Sets the tag message
-      @param msg [QString] The message to be set
-      @return void
-      **/
-      void setDb(float db);
-      
-      /**
-      @brief Returns the tag message
-      @return QString
-      **/
-      float getDb(void);
+      ~CThermalSensorPropertiesLoader(void);
   };  
 }
 
 #endif
-

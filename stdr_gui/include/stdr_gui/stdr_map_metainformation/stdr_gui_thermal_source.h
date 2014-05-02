@@ -39,19 +39,24 @@ namespace stdr_gui
   {
     //------------------------------------------------------------------------//
     private:
-      //!< The position of the thermal source in the map
+      //!< The position of the rfid tag in the map
       QPoint position_; 
-      //!< The "name" of the thermal source   
+      //!< The "name" of the rfid tag 
       std::string name_;  
+      //!< The message of the rfid tag
+      float degrees_;
+      //!< The OGM resolution
+      float resolution_;
     //------------------------------------------------------------------------//
     public:
       /**
       @brief Default contructor
-      @param p [QPoint] The pose of the thermal source
-      @param name [std::string] The "name" of the source
+      @param p [QPoint] The pose of the rfid tag
+      @param name [std::string] The "name" of the rfid tag
+      @param resolution [float] The map's resolution
       @return void
       **/
-      CGuiThermalSource(QPoint p,std::string name);
+      CGuiThermalSource(QPoint p,std::string name, float resolution);
       
       /**
       @brief Default destructor
@@ -60,7 +65,7 @@ namespace stdr_gui
       ~CGuiThermalSource(void);
       
       /**
-      @brief Returns the "name" of the thermal source
+      @brief Returns the "name" of the rfid tag
       @return std::string 
       **/
       std::string getName(void);
@@ -68,16 +73,29 @@ namespace stdr_gui
       /**
       @brief Checks proximity to a point
       @param p [QPoint] The proximity point to check
-      @return bool : True if thermal source is close to p
+      @return bool : True if tag is close to p
       **/
       bool checkProximity(QPoint p);
       
       /**
-      @brief Draws the source in the map
+      @brief Draws the tag in the map
       @param img [QImage*] The image to draw to
       @return void
       **/
       void draw(QImage *img);
+      
+      /**
+      @brief Sets the tag message
+      @param msg [QString] The message to be set
+      @return void
+      **/
+      void setDegrees(float degrees);
+      
+      /**
+      @brief Returns the tag message
+      @return QString
+      **/
+      float getDegrees(void);
   };  
 }
 

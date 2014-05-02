@@ -55,6 +55,21 @@ namespace stdr_gui
       CGuiRfid *l = new CGuiRfid(msg.robot.rfidSensors[i], frame_id_);
       rfids_.push_back(l);
     }
+    for(unsigned int i = 0 ; i < msg.robot.co2Sensors.size() ; i++)
+    {
+      CGuiCO2 *l = new CGuiCO2(msg.robot.co2Sensors[i], frame_id_);
+      co2_sensors_.push_back(l);
+    }
+    for(unsigned int i = 0 ; i < msg.robot.thermalSensors.size() ; i++)
+    {
+      CGuiThermal *l = new CGuiThermal(msg.robot.thermalSensors[i], frame_id_);
+      thermal_sensors_.push_back(l);
+    }
+    for(unsigned int i = 0 ; i < msg.robot.soundSensors.size() ; i++)
+    {
+      CGuiSound *l = new CGuiSound(msg.robot.soundSensors[i], frame_id_);
+      sound_sensors_.push_back(l);
+    }
     robot_initialized_ = true;
   }
   
@@ -126,6 +141,18 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < rfids_.size() ; i++)
     {
       rfids_[i]->paint(m,resolution_,listener);
+    }
+    for(unsigned int i = 0 ; i < co2_sensors_.size() ; i++)
+    {
+      co2_sensors_[i]->paint(m,resolution_,listener);
+    }
+    for(unsigned int i = 0 ; i < thermal_sensors_.size() ; i++)
+    {
+      thermal_sensors_[i]->paint(m,resolution_,listener);
+    }
+    for(unsigned int i = 0 ; i < sound_sensors_.size() ; i++)
+    {
+      sound_sensors_[i]->paint(m,resolution_,listener);
     }
     
     drawSelf(m);
@@ -440,6 +467,57 @@ namespace stdr_gui
     }
     return 0;
   }
+  
+  /**
+  @brief Returns the co2 sensor visibility status
+  @param frame_id [std::string] The co2 sensor frame id
+  @return char
+  **/
+  char CGuiRobot::getCO2SensorVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < co2_sensors_.size() ; i++)
+    {
+      if(co2_sensors_[i]->getFrameId() == frame_id)
+      {
+        return co2_sensors_[i]->getVisualizationStatus();
+      }
+    }
+    return 0;
+  }
+  
+  /**
+  @brief Returns the thermal sensor visibility status
+  @param frame_id [std::string] The thermal sensor frame id
+  @return char
+  **/
+  char CGuiRobot::getThermalSensorVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < thermal_sensors_.size() ; i++)
+    {
+      if(thermal_sensors_[i]->getFrameId() == frame_id)
+      {
+        return thermal_sensors_[i]->getVisualizationStatus();
+      }
+    }
+    return 0;
+  }
+  
+  /**
+  @brief Returns the sound sensor visibility status
+  @param frame_id [std::string] The sound sensor frame id
+  @return char
+  **/
+  char CGuiRobot::getSoundSensorVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < sound_sensors_.size() ; i++)
+    {
+      if(sound_sensors_[i]->getFrameId() == frame_id)
+      {
+        return sound_sensors_[i]->getVisualizationStatus();
+      }
+    }
+    return 0;
+  }
     
   /**
   @brief Toggles the laser visibility status
@@ -505,6 +583,51 @@ namespace stdr_gui
       }
     }
   }
+  /**
+  @brief Toggles the co2 sensor visibility status
+  @param frame_id [std::string] The co2 sensor frame id
+  @return void
+  **/
+  void CGuiRobot::toggleCO2SensorVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < co2_sensors_.size() ; i++)
+    {
+      if(co2_sensors_[i]->getFrameId() == frame_id)
+      {
+        co2_sensors_[i]->toggleVisualizationStatus();
+      }
+    }
+  }
+  /**
+  @brief Toggles the thermal sensor visibility status
+  @param frame_id [std::string] The thermal sensor frame id
+  @return void
+  **/
+  void CGuiRobot::toggleThermalSensorVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < thermal_sensors_.size() ; i++)
+    {
+      if(thermal_sensors_[i]->getFrameId() == frame_id)
+      {
+        thermal_sensors_[i]->toggleVisualizationStatus();
+      }
+    }
+  }
+  /**
+  @brief Toggles the sound sensor visibility status
+  @param frame_id [std::string] The sound sensor frame id
+  @return void
+  **/
+  void CGuiRobot::toggleSoundSensorVisualizationStatus(std::string frame_id)
+  {
+    for(unsigned int i = 0 ; i < sound_sensors_.size() ; i++)
+    {
+      if(sound_sensors_[i]->getFrameId() == frame_id)
+      {
+        sound_sensors_[i]->toggleVisualizationStatus();
+      }
+    }
+  }
   
   /**
   @brief Returns the visibility status
@@ -534,6 +657,18 @@ namespace stdr_gui
     {
       rfids_[i]->setVisualizationStatus(visualization_status_);
     }
+    for(unsigned int i = 0 ; i < co2_sensors_.size() ; i++)
+    {
+      co2_sensors_[i]->setVisualizationStatus(visualization_status_);
+    }
+    for(unsigned int i = 0 ; i < thermal_sensors_.size() ; i++)
+    {
+      thermal_sensors_[i]->setVisualizationStatus(visualization_status_);
+    }
+    for(unsigned int i = 0 ; i < sound_sensors_.size() ; i++)
+    {
+      sound_sensors_[i]->setVisualizationStatus(visualization_status_);
+    }
   }
   
   /**
@@ -555,6 +690,37 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < rfids_.size() ; i++)
     {
       rfids_[i]->setEnvironmentalTags(env_tags);
+    }
+  }
+  
+  /**
+  @brief Sets the co2 sources existent in the environment
+  **/
+  void CGuiRobot::setEnvironmentalCO2Sources(stdr_msgs::CO2SourceVector env_)
+  {
+    for(unsigned int i = 0 ; i < co2_sensors_.size() ; i++)
+    {
+      co2_sensors_[i]->setEnvironmentalCO2Sources(env_);
+    }
+  }
+  /**
+  @brief Sets the thermal sources existent in the environment
+  **/
+  void CGuiRobot::setEnvironmentalThermalSources(stdr_msgs::ThermalSourceVector env_)
+  {
+    for(unsigned int i = 0 ; i < thermal_sensors_.size() ; i++)
+    {
+      thermal_sensors_[i]->setEnvironmentalThermalSources(env_);
+    }
+  }
+  /**
+  @brief Sets the sound sources existent in the environment
+  **/
+  void CGuiRobot::setEnvironmentalSoundSources(stdr_msgs::SoundSourceVector env_)
+  {
+    for(unsigned int i = 0 ; i < sound_sensors_.size() ; i++)
+    {
+      sound_sensors_[i]->setEnvironmentalSoundSources(env_);
     }
   }
 }

@@ -27,6 +27,9 @@ namespace stdr_gui
   int CRobotCreatorConnector::laser_number = -1;
   int CRobotCreatorConnector::sonar_number = -1;
   int CRobotCreatorConnector::rfid_number = -1;
+  int CRobotCreatorConnector::co2_sensors_number = -1;
+  int CRobotCreatorConnector::thermal_sensors_number = -1;
+  int CRobotCreatorConnector::sound_sensors_number = -1;
   
   /**
   @brief Default contructor
@@ -73,6 +76,27 @@ namespace stdr_gui
       this,SLOT(updateRfidAntennaOpen()));
       
     QObject::connect(
+      loader_.co2SensorPropLoader.pushButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateCO2Sensor()));
+    QObject::connect(
+      loader_.co2SensorPropLoader.refreshButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateCO2SensorOpen()));
+
+    QObject::connect(
+      loader_.thermalSensorPropLoader.pushButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateThermalSensor()));
+    QObject::connect(
+      loader_.thermalSensorPropLoader.refreshButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateThermalSensorOpen()));
+    
+    QObject::connect(
+      loader_.soundSensorPropLoader.pushButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateSoundSensor()));
+    QObject::connect(
+      loader_.soundSensorPropLoader.refreshButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateSoundSensorOpen()));
+      
+    QObject::connect(
       loader_.robotFootLoader.updateButton,SIGNAL(clicked(bool)),
       this,SLOT(updateFootprintPoint()));
     QObject::connect(
@@ -88,6 +112,9 @@ namespace stdr_gui
     sonar_hightlight_id_ = -1;
     laser_hightlight_id_ = -1;
     rfid_antenna_hightlight_id_ = -1;
+    co2_sensor_hightlight_id_ = -1;
+    thermal_sensor_hightlight_id_ = -1;
+    sound_sensor_hightlight_id_ = -1;
   }
   
   /**
@@ -117,6 +144,9 @@ namespace stdr_gui
     unsigned int laserCount = loader_.lasersNode.childCount();
     unsigned int sonarCount = loader_.sonarsNode.childCount();
     unsigned int rfidCount = loader_.rfidAntennasNode.childCount();
+    unsigned int co2SensorsCount = loader_.co2SensorsNode.childCount();
+    unsigned int thermalSensorsCount = loader_.thermalSensorsNode.childCount();
+    unsigned int soundSensorsCount = loader_.soundSensorsNode.childCount();
     unsigned int footprintCount = loader_.robotInfoFootprint.childCount();
     
     for(int i = laserCount - 1 ; i >= 0 ; i--)
@@ -125,12 +155,21 @@ namespace stdr_gui
       deleteTreeNode(loader_.sonarsNode.child(i));
     for(int i = rfidCount - 1 ; i >= 0 ; i--)
       deleteTreeNode(loader_.rfidAntennasNode.child(i));
+    for(int i = co2SensorsCount - 1 ; i >= 0 ; i--)
+      deleteTreeNode(loader_.co2SensorsNode.child(i));
+    for(int i = thermalSensorsCount - 1 ; i >= 0 ; i--)
+      deleteTreeNode(loader_.thermalSensorsNode.child(i));
+    for(int i = soundSensorsCount - 1 ; i >= 0 ; i--)
+      deleteTreeNode(loader_.soundSensorsNode.child(i));
     for(int i = footprintCount - 1 ; i >= 0 ; i--)
       deleteTreeNode(loader_.robotInfoFootprint.child(i));
     
     CRobotCreatorConnector::laser_number = 0;
     CRobotCreatorConnector::sonar_number = 0;
     CRobotCreatorConnector::rfid_number = 0;
+    CRobotCreatorConnector::co2_sensors_number = 0;
+    CRobotCreatorConnector::thermal_sensors_number = 0;
+    CRobotCreatorConnector::sound_sensors_number = 0;
     
     updateRobotPreview();
     
@@ -159,6 +198,9 @@ namespace stdr_gui
       laser_hightlight_id_ = laserFrameId;
       sonar_hightlight_id_ = -1;
       rfid_antenna_hightlight_id_ = -1;
+      co2_sensor_hightlight_id_ = -1;
+      thermal_sensor_hightlight_id_ = -1;
+      sound_sensor_hightlight_id_ = -1;
     }  
     //!< Sonar clicked
     if(item->parent() == &loader_.sonarsNode)
@@ -171,6 +213,9 @@ namespace stdr_gui
       sonar_hightlight_id_ = sonarFrameId;
       laser_hightlight_id_ = -1;
       rfid_antenna_hightlight_id_ = -1;
+      co2_sensor_hightlight_id_ = -1;
+      thermal_sensor_hightlight_id_ = -1;
+      sound_sensor_hightlight_id_ = -1;
     }  
     //!< Rfid antenna clicked
     if(item->parent() == &loader_.rfidAntennasNode)
@@ -183,6 +228,54 @@ namespace stdr_gui
       rfid_antenna_hightlight_id_ = frameId;
       laser_hightlight_id_ = -1;
       sonar_hightlight_id_ = -1;
+      co2_sensor_hightlight_id_ = -1;
+      thermal_sensor_hightlight_id_ = -1;
+      sound_sensor_hightlight_id_ = -1;
+    }  
+    //!< CO2 sensor clicked
+    if(item->parent() == &loader_.co2SensorsNode)
+    {
+      unsigned int frameId = searchCO2Sensor(item->text(0));
+      if(frameId == -1) 
+      {
+        ROS_ERROR("Something went terribly wrong...");
+      }
+      rfid_antenna_hightlight_id_ = -1;
+      laser_hightlight_id_ = -1;
+      sonar_hightlight_id_ = -1;
+      co2_sensor_hightlight_id_ = frameId;
+      thermal_sensor_hightlight_id_ = -1;
+      sound_sensor_hightlight_id_ = -1;
+    }  
+    //!< Thermal sensor clicked
+    if(item->parent() == &loader_.thermalSensorsNode)
+    {
+      unsigned int frameId = searchThermalSensor(item->text(0));
+      if(frameId == -1) 
+      {
+        ROS_ERROR("Something went terribly wrong...");
+      }
+      rfid_antenna_hightlight_id_ = -1;
+      laser_hightlight_id_ = -1;
+      sonar_hightlight_id_ = -1;
+      co2_sensor_hightlight_id_ = -1;
+      thermal_sensor_hightlight_id_ = frameId;
+      sound_sensor_hightlight_id_ = -1;
+    }  
+    //!< Sound sensor clicked
+    if(item->parent() == &loader_.soundSensorsNode)
+    {
+      unsigned int frameId = searchSoundSensor(item->text(0));
+      if(frameId == -1) 
+      {
+        ROS_ERROR("Something went terribly wrong...");
+      }
+      rfid_antenna_hightlight_id_ = -1;
+      laser_hightlight_id_ = -1;
+      sonar_hightlight_id_ = -1;
+      co2_sensor_hightlight_id_ = -1;
+      thermal_sensor_hightlight_id_ = -1;
+      sound_sensor_hightlight_id_ = frameId;
     }  
     
     updateRobotPreview();
@@ -232,6 +325,21 @@ namespace stdr_gui
     {
       addRfidAntenna();
     }  
+    //!< Add a CO2 sensor
+    if(item == &loader_.co2SensorsNode && column == 2)
+    {
+      addCO2Sensor();
+    }  
+    //!< Add a thermal sensor
+    if(item == &loader_.thermalSensorsNode && column == 2)
+    {
+      addThermalSensor();
+    }  
+    //!< Add a sound sensor
+    if(item == &loader_.soundSensorsNode && column == 2)
+    {
+      addSoundSensor();
+    }  
     //!< Erase a sonar
     if(item->parent() == &loader_.sonarsNode && column == 2)
     {
@@ -242,6 +350,21 @@ namespace stdr_gui
     {
       eraseRfid(item);
     }  
+    //!< Erase a co2 sensor
+    if(item->parent() == &loader_.co2SensorsNode && column == 2)
+    {
+      eraseCO2Sensor(item);
+    }  
+    //!< Erase a thermal sensor
+    if(item->parent() == &loader_.thermalSensorsNode && column == 2)
+    {
+      eraseThermalSensor(item);
+    }  
+    //!< Erase a sound sensor
+    if(item->parent() == &loader_.soundSensorsNode && column == 2)
+    {
+      eraseSoundSensor(item);
+    }  
     //!< Edit a sonar
     if(item->parent() == &loader_.sonarsNode && column == 1)
     {
@@ -251,6 +374,21 @@ namespace stdr_gui
     if(item->parent() == &loader_.rfidAntennasNode && column == 1)
     {
       editRfid(item);
+    }
+    //!< Edit a co2 sensor
+    if(item->parent() == &loader_.co2SensorsNode && column == 1)
+    {
+      editCO2Sensor(item);
+    }
+    //!< Edit a thermal sensor
+    if(item->parent() == &loader_.thermalSensorsNode && column == 1)
+    {
+      editThermalSensor(item);
+    }
+    //!< Edit a sound sensor
+    if(item->parent() == &loader_.soundSensorsNode && column == 1)
+    {
+      editSoundSensor(item);
     }
     //!< Save a laser  
     if(item->parent() == &loader_.lasersNode && column == 3)
@@ -267,10 +405,40 @@ namespace stdr_gui
     {
       saveRfidAntenna(item);
     }
+    //!< Save a co2 sensor  
+    if(item->parent() == &loader_.co2SensorsNode && column == 3)
+    {
+      saveCO2Sensor(item);
+    }
+    //!< Save a thermal sensor  
+    if(item->parent() == &loader_.thermalSensorsNode && column == 3)
+    {
+      saveThermalSensor(item);
+    }
+    //!< Save a sound sensor  
+    if(item->parent() == &loader_.soundSensorsNode && column == 3)
+    {
+      saveSoundSensor(item);
+    }
     //!< Load a rfid  
     if(item->parent() == &loader_.rfidAntennasNode && column == 4)
     {
       loadRfidAntenna(item);
+    }
+    //!< Load a co2 sensor  
+    if(item->parent() == &loader_.co2SensorsNode && column == 4)
+    {
+      loadCO2Sensor(item);
+    }
+    //!< Load a thermal sensor  
+    if(item->parent() == &loader_.thermalSensorsNode && column == 4)
+    {
+      loadThermalSensor(item);
+    }
+    //!< Load a sound sensor  
+    if(item->parent() == &loader_.soundSensorsNode && column == 4)
+    {
+      loadSoundSensor(item);
     }
     //!< Save a sonar  
     if(item->parent() == &loader_.sonarsNode && column == 3)
@@ -852,6 +1020,231 @@ namespace stdr_gui
     loader_.rfidAntennasNode.setExpanded(true);
     updateRobotPreview();
   }
+  /**
+  @brief Adds a co2 sensor in the new robot 
+  **/
+  void CRobotCreatorConnector::addCO2Sensor(void)
+  {
+    QString co2SensorFrameId=QString("co2_sensor_") + 
+      QString().setNum(CRobotCreatorConnector::co2_sensors_number++);
+    
+    stdr_msgs::CO2SensorMsg smsg;
+    smsg.frame_id = co2SensorFrameId.toStdString();
+    smsg.maxRange = 3.0;
+    //~ smsg.angleSpan = 360.0;
+    smsg.pose.x = 0;
+    smsg.pose.y = 0;
+    smsg.pose.theta = 0;
+    //~ smsg.signalCutoff = 0;
+    smsg.frequency = 10;
+    
+    new_robot_msg_.co2Sensors.push_back(smsg);
+    
+    QTreeWidgetItem  *snode;
+    snode = new QTreeWidgetItem();
+    snode->setText(0,co2SensorFrameId);
+    snode->setIcon(1,loader_.editIcon);
+    snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      //~ *angleSpan,
+      *orientation,
+      *maxRange,
+      *poseX,
+      *poseY,
+      //~ *signalCutoff,
+      *frequency;
+      
+    //~ angleSpan = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    //~ signalCutoff = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    //~ angleSpan->setText(0,QString("Angle span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    //~ signalCutoff->setText(0,QString("Signal cutoff"));
+    frequency->setText(0,QString("Frequency"));
+    
+    //~ angleSpan->setText(1,QString().setNum(smsg.angleSpan));
+    orientation->setText(1,QString().setNum(smsg.pose.theta));
+    maxRange->setText(1,QString().setNum(smsg.maxRange));
+    poseX->setText(1,QString().setNum(smsg.pose.x));
+    poseY->setText(1,QString().setNum(smsg.pose.y));
+    //~ signalCutoff->setText(1,QString().setNum(smsg.signalCutoff));
+    frequency->setText(1,QString().setNum(smsg.frequency));
+    
+    //~ snode->addChild(angleSpan);
+    snode->addChild(orientation);
+    snode->addChild(maxRange);
+    snode->addChild(poseX);
+    snode->addChild(poseY);
+    //~ snode->addChild(signalCutoff);
+    snode->addChild(frequency);
+    
+    loader_.co2SensorsNode.addChild(snode);
+    
+    snode->setExpanded(false);
+    loader_.co2SensorsNode.setExpanded(true);
+    updateRobotPreview();
+  }
+  /**
+  @brief Adds a thermal sensor in the new robot 
+  **/
+  void CRobotCreatorConnector::addThermalSensor(void)
+  {
+    QString thermalSensorFrameId=QString("thermal_sensor_") + 
+      QString().setNum(CRobotCreatorConnector::thermal_sensors_number++);
+    
+    stdr_msgs::ThermalSensorMsg smsg;
+    smsg.frame_id = thermalSensorFrameId.toStdString();
+    smsg.maxRange = 3.0;
+    smsg.angleSpan = 10.0;
+    smsg.pose.x = 0;
+    smsg.pose.y = 0;
+    smsg.pose.theta = 0;
+    //~ smsg.signalCutoff = 0;
+    smsg.frequency = 10;
+    
+    new_robot_msg_.thermalSensors.push_back(smsg);
+    
+    QTreeWidgetItem  *snode;
+    snode = new QTreeWidgetItem();
+    snode->setText(0,thermalSensorFrameId);
+    snode->setIcon(1,loader_.editIcon);
+    snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      *angleSpan,
+      *orientation,
+      *maxRange,
+      *poseX,
+      *poseY,
+      //~ *signalCutoff,
+      *frequency;
+      
+    angleSpan = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    //~ signalCutoff = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    angleSpan->setText(0,QString("Angle span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    //~ signalCutoff->setText(0,QString("Signal cutoff"));
+    frequency->setText(0,QString("Frequency"));
+    
+    angleSpan->setText(1,QString().setNum(smsg.angleSpan));
+    orientation->setText(1,QString().setNum(smsg.pose.theta));
+    maxRange->setText(1,QString().setNum(smsg.maxRange));
+    poseX->setText(1,QString().setNum(smsg.pose.x));
+    poseY->setText(1,QString().setNum(smsg.pose.y));
+    //~ signalCutoff->setText(1,QString().setNum(smsg.signalCutoff));
+    frequency->setText(1,QString().setNum(smsg.frequency));
+    
+    snode->addChild(angleSpan);
+    snode->addChild(orientation);
+    snode->addChild(maxRange);
+    snode->addChild(poseX);
+    snode->addChild(poseY);
+    //~ snode->addChild(signalCutoff);
+    snode->addChild(frequency);
+    
+    loader_.thermalSensorsNode.addChild(snode);
+    
+    snode->setExpanded(false);
+    loader_.thermalSensorsNode.setExpanded(true);
+    updateRobotPreview();
+  }
+  /**
+  @brief Adds a sound sensor in the new robot 
+  **/
+  void CRobotCreatorConnector::addSoundSensor(void)
+  {
+    QString soundSensorFrameId=QString("sound_sensor_") + 
+      QString().setNum(CRobotCreatorConnector::sound_sensors_number++);
+    
+    stdr_msgs::SoundSensorMsg smsg;
+    smsg.frame_id = soundSensorFrameId.toStdString();
+    smsg.maxRange = 3.0;
+    smsg.angleSpan = 10.0;
+    smsg.pose.x = 0;
+    smsg.pose.y = 0;
+    smsg.pose.theta = 0;
+    //~ smsg.signalCutoff = 0;
+    smsg.frequency = 10;
+    
+    new_robot_msg_.soundSensors.push_back(smsg);
+    
+    QTreeWidgetItem  *snode;
+    snode = new QTreeWidgetItem();
+    snode->setText(0,soundSensorFrameId);
+    snode->setIcon(1,loader_.editIcon);
+    snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      *angleSpan,
+      *orientation,
+      *maxRange,
+      *poseX,
+      *poseY,
+      //~ *signalCutoff,
+      *frequency;
+      
+    angleSpan = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    //~ signalCutoff = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    angleSpan->setText(0,QString("Angle span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    //~ signalCutoff->setText(0,QString("Signal cutoff"));
+    frequency->setText(0,QString("Frequency"));
+    
+    angleSpan->setText(1,QString().setNum(smsg.angleSpan));
+    orientation->setText(1,QString().setNum(smsg.pose.theta));
+    maxRange->setText(1,QString().setNum(smsg.maxRange));
+    poseX->setText(1,QString().setNum(smsg.pose.x));
+    poseY->setText(1,QString().setNum(smsg.pose.y));
+    //~ signalCutoff->setText(1,QString().setNum(smsg.signalCutoff));
+    frequency->setText(1,QString().setNum(smsg.frequency));
+    
+    snode->addChild(angleSpan);
+    snode->addChild(orientation);
+    snode->addChild(maxRange);
+    snode->addChild(poseX);
+    snode->addChild(poseY);
+    //~ snode->addChild(signalCutoff);
+    snode->addChild(frequency);
+    
+    loader_.soundSensorsNode.addChild(snode);
+    
+    snode->setExpanded(false);
+    loader_.soundSensorsNode.setExpanded(true);
+    updateRobotPreview();
+  }
   
   /**
   @brief Adds an rfid antenna sensor in the new robot 
@@ -917,6 +1310,198 @@ namespace stdr_gui
     loader_.rfidAntennasNode.setExpanded(true);
     updateRobotPreview();
   }
+  /**
+  @brief Adds a co2 sensor in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::addCO2Sensor(stdr_msgs::CO2SensorMsg smsg)
+  {
+    CRobotCreatorConnector::co2_sensors_number++;
+    QString co2SensorFrameId=QString(smsg.frame_id.c_str());
+
+    QTreeWidgetItem  *snode;
+    snode = new QTreeWidgetItem();
+    snode->setText(0,co2SensorFrameId);
+    snode->setIcon(1,loader_.editIcon);
+    snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      //~ *angleSpan,
+      *orientation,
+      *maxRange,
+      *poseX,
+      *poseY,
+      //~ *signalCutoff,
+      *frequency;
+      
+    //~ angleSpan = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    //~ signalCutoff = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    //~ angleSpan->setText(0,QString("Angle span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    //~ signalCutoff->setText(0,QString("Signal cutoff"));
+    frequency->setText(0,QString("Frequency"));
+    
+    //~ angleSpan->setText(1,QString().setNum(smsg.angleSpan));
+    orientation->setText(1,QString().setNum(smsg.pose.theta));
+    maxRange->setText(1,QString().setNum(smsg.maxRange));
+    poseX->setText(1,QString().setNum(smsg.pose.x));
+    poseY->setText(1,QString().setNum(smsg.pose.y));
+    //~ signalCutoff->setText(1,QString().setNum(smsg.signalCutoff));
+    frequency->setText(1,QString().setNum(smsg.frequency));
+    
+    //~ snode->addChild(angleSpan);
+    snode->addChild(orientation);
+    snode->addChild(maxRange);
+    snode->addChild(poseX);
+    snode->addChild(poseY);
+    //~ snode->addChild(signalCutoff);
+    snode->addChild(frequency);
+    
+    loader_.co2SensorsNode.addChild(snode);
+    
+    snode->setExpanded(false);
+    loader_.co2SensorsNode.setExpanded(true);
+    updateRobotPreview();
+  }
+  /**
+  @brief Adds a thermal sensor in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::addThermalSensor(stdr_msgs::ThermalSensorMsg smsg)
+  {
+    CRobotCreatorConnector::thermal_sensors_number++;
+    QString thermalSensorFrameId=QString(smsg.frame_id.c_str());
+
+    QTreeWidgetItem  *snode;
+    snode = new QTreeWidgetItem();
+    snode->setText(0,thermalSensorFrameId);
+    snode->setIcon(1,loader_.editIcon);
+    snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      *angleSpan,
+      *orientation,
+      *maxRange,
+      *poseX,
+      *poseY,
+      //~ *signalCutoff,
+      *frequency;
+      
+    angleSpan = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    //~ signalCutoff = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    angleSpan->setText(0,QString("Angle span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    //~ signalCutoff->setText(0,QString("Signal cutoff"));
+    frequency->setText(0,QString("Frequency"));
+    
+    angleSpan->setText(1,QString().setNum(smsg.angleSpan));
+    orientation->setText(1,QString().setNum(smsg.pose.theta));
+    maxRange->setText(1,QString().setNum(smsg.maxRange));
+    poseX->setText(1,QString().setNum(smsg.pose.x));
+    poseY->setText(1,QString().setNum(smsg.pose.y));
+    //~ signalCutoff->setText(1,QString().setNum(smsg.signalCutoff));
+    frequency->setText(1,QString().setNum(smsg.frequency));
+    
+    snode->addChild(angleSpan);
+    snode->addChild(orientation);
+    snode->addChild(maxRange);
+    snode->addChild(poseX);
+    snode->addChild(poseY);
+    //~ snode->addChild(signalCutoff);
+    snode->addChild(frequency);
+    
+    loader_.thermalSensorsNode.addChild(snode);
+    
+    snode->setExpanded(false);
+    loader_.thermalSensorsNode.setExpanded(true);
+    updateRobotPreview();
+  }
+  /**
+  @brief Adds a sound sensor in the new robot 
+  @return void
+  **/
+  void CRobotCreatorConnector::addSoundSensor(stdr_msgs::SoundSensorMsg smsg)
+  {
+    CRobotCreatorConnector::sound_sensors_number++;
+    QString soundSensorFrameId=QString(smsg.frame_id.c_str());
+
+    QTreeWidgetItem  *snode;
+    snode = new QTreeWidgetItem();
+    snode->setText(0,soundSensorFrameId);
+    snode->setIcon(1,loader_.editIcon);
+    snode->setIcon(2,loader_.removeIcon);
+    snode->setIcon(3,loader_.saveIcon);
+    snode->setIcon(4,loader_.loadIcon);
+
+    QTreeWidgetItem 
+      *angleSpan,
+      *orientation,
+      *maxRange,
+      *poseX,
+      *poseY,
+      //~ *signalCutoff,
+      *frequency;
+      
+    angleSpan = new QTreeWidgetItem();
+    orientation = new QTreeWidgetItem();
+    maxRange = new QTreeWidgetItem();
+    poseX = new QTreeWidgetItem();
+    poseY = new QTreeWidgetItem();
+    //~ signalCutoff = new QTreeWidgetItem();
+    frequency = new QTreeWidgetItem();
+    
+    angleSpan->setText(0,QString("Angle span"));
+    orientation->setText(0,QString("Orientation"));
+    maxRange->setText(0,QString("Max range"));
+    poseX->setText(0,QString("Pose - x"));
+    poseY->setText(0,QString("Pose - y"));
+    //~ signalCutoff->setText(0,QString("Signal cutoff"));
+    frequency->setText(0,QString("Frequency"));
+    
+    angleSpan->setText(1,QString().setNum(smsg.angleSpan));
+    orientation->setText(1,QString().setNum(smsg.pose.theta));
+    maxRange->setText(1,QString().setNum(smsg.maxRange));
+    poseX->setText(1,QString().setNum(smsg.pose.x));
+    poseY->setText(1,QString().setNum(smsg.pose.y));
+    //~ signalCutoff->setText(1,QString().setNum(smsg.signalCutoff));
+    frequency->setText(1,QString().setNum(smsg.frequency));
+    
+    snode->addChild(angleSpan);
+    snode->addChild(orientation);
+    snode->addChild(maxRange);
+    snode->addChild(poseX);
+    snode->addChild(poseY);
+    //~ snode->addChild(signalCutoff);
+    snode->addChild(frequency);
+    
+    loader_.soundSensorsNode.addChild(snode);
+    
+    snode->setExpanded(false);
+    loader_.soundSensorsNode.setExpanded(true);
+    updateRobotPreview();
+  }
   
   /**
   @brief Erases a specific laser sensor based on a tree item
@@ -968,6 +1553,51 @@ namespace stdr_gui
     }
     new_robot_msg_.rfidSensors.erase(
       new_robot_msg_.rfidSensors.begin() + rfidFrameId);
+    deleteTreeNode(item);
+    updateRobotPreview();
+  }
+  /**
+  @brief Erases a specific co2 sensor based on a tree item
+  **/
+  void CRobotCreatorConnector::eraseCO2Sensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchCO2Sensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }
+    new_robot_msg_.co2Sensors.erase(
+      new_robot_msg_.co2Sensors.begin() + frameId);
+    deleteTreeNode(item);
+    updateRobotPreview();
+  }
+  /**
+  @brief Erases a specific thermal sensor based on a tree item
+  **/
+  void CRobotCreatorConnector::eraseThermalSensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchThermalSensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }
+    new_robot_msg_.thermalSensors.erase(
+      new_robot_msg_.thermalSensors.begin() + frameId);
+    deleteTreeNode(item);
+    updateRobotPreview();
+  }
+  /**
+  @brief Erases a specific sound sensor based on a tree item
+  **/
+  void CRobotCreatorConnector::eraseSoundSensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchSoundSensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }
+    new_robot_msg_.soundSensors.erase(
+      new_robot_msg_.soundSensors.begin() + frameId);
     deleteTreeNode(item);
     updateRobotPreview();
   }
@@ -1177,6 +1807,106 @@ namespace stdr_gui
   }
   
   /**
+  @brief Saves a specific co2 sensor in a file
+  **/
+  void CRobotCreatorConnector::saveCO2Sensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchCO2Sensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getSaveFileName(&loader_, 
+      tr("Save CO2 sensor"),
+        QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"),
+        tr("Resource files (*.yaml *.xml)"));
+    
+    std::string file_name_str=file_name.toStdString();
+    stdr_msgs::CO2SensorMsg smsg = new_robot_msg_.co2Sensors[frameId];
+
+    try {
+      stdr_parser::Parser::saveMessage(
+        stdr_gui_tools::fixCO2AnglesToRad(smsg), file_name_str);
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+  }
+  /**
+  @brief Saves a specific thermal sensor in a file
+  **/
+  void CRobotCreatorConnector::saveThermalSensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchThermalSensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getSaveFileName(&loader_, 
+      tr("Save Thermal sensor"),
+        QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"),
+        tr("Resource files (*.yaml *.xml)"));
+    
+    std::string file_name_str=file_name.toStdString();
+    stdr_msgs::ThermalSensorMsg smsg = new_robot_msg_.thermalSensors[frameId];
+
+    try {
+      stdr_parser::Parser::saveMessage(
+        stdr_gui_tools::fixThermalAnglesToRad(smsg), file_name_str);
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+  }
+  /**
+  @brief Saves a specific sound sensor in a file
+  **/
+  void CRobotCreatorConnector::saveSoundSensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchSoundSensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getSaveFileName(&loader_, 
+      tr("Save Sound sensor"),
+        QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"),
+        tr("Resource files (*.yaml *.xml)"));
+    
+    std::string file_name_str=file_name.toStdString();
+    stdr_msgs::SoundSensorMsg smsg = new_robot_msg_.soundSensors[frameId];
+
+    try {
+      stdr_parser::Parser::saveMessage(
+        stdr_gui_tools::fixSoundAnglesToRad(smsg), file_name_str);
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+  }
+  
+  /**
   @brief Loads a specific laser sensor from a file
   @param item [QTreeWidgetItem*] The tree item that holds the laser sensor 
   @return void
@@ -1310,6 +2040,132 @@ namespace stdr_gui
     updateRfidTree(item,smsg);
     updateRobotPreview(); 
   }
+  /**
+  @brief Loads a specific co2 sensor from a file
+  **/
+  void CRobotCreatorConnector::loadCO2Sensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchCO2Sensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load CO2 sensor"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
+        tr("Resource Files (*.yaml *.xml)"));
+    
+    if (file_name.isEmpty()) {
+      return;
+    }
+    stdr_msgs::CO2SensorMsg smsg;
+    std::string old_frame_id = item->text(0).toStdString();
+    try {
+      smsg = 
+        stdr_parser::Parser::createMessage<stdr_msgs::CO2SensorMsg>
+          (file_name.toStdString());
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+    smsg = stdr_gui_tools::fixCO2AnglesToDegrees(smsg);
+    smsg.frame_id = old_frame_id;
+    new_robot_msg_.co2Sensors[frameId]=smsg;
+    updateCO2SensorTree(item,smsg);
+    updateRobotPreview(); 
+  }
+  /**
+  @brief Loads a specific thermal sensor from a file
+  **/
+  void CRobotCreatorConnector::loadThermalSensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchThermalSensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load thermal sensor"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
+        tr("Resource Files (*.yaml *.xml)"));
+    
+    if (file_name.isEmpty()) {
+      return;
+    }
+    stdr_msgs::ThermalSensorMsg smsg;
+    std::string old_frame_id = item->text(0).toStdString();
+    try {
+      smsg = 
+        stdr_parser::Parser::createMessage<stdr_msgs::ThermalSensorMsg>
+          (file_name.toStdString());
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+    smsg = stdr_gui_tools::fixThermalAnglesToDegrees(smsg);
+    smsg.frame_id = old_frame_id;
+    new_robot_msg_.thermalSensors[frameId]=smsg;
+    updateThermalSensorTree(item,smsg);
+    updateRobotPreview(); 
+  }
+  /**
+  @brief Loads a specific sound sensor from a file
+  **/
+  void CRobotCreatorConnector::loadSoundSensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchSoundSensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    QString file_name = QFileDialog::getOpenFileName(
+      &loader_,
+      tr("Load sound sensor"), 
+      QString().fromStdString(
+        stdr_gui_tools::getRosPackagePath("stdr_resources")) + 
+        QString("/resources/"), 
+        tr("Resource Files (*.yaml *.xml)"));
+    
+    if (file_name.isEmpty()) {
+      return;
+    }
+    stdr_msgs::SoundSensorMsg smsg;
+    std::string old_frame_id = item->text(0).toStdString();
+    try {
+      smsg = 
+        stdr_parser::Parser::createMessage<stdr_msgs::SoundSensorMsg>
+          (file_name.toStdString());
+    }
+    catch(stdr_parser::ParserException ex)
+    {
+      QMessageBox msg;
+      msg.setWindowTitle(QString("STDR Parser - Error"));
+      msg.setText(QString(ex.what()));
+      msg.exec();
+      return;
+    }
+    smsg = stdr_gui_tools::fixSoundAnglesToDegrees(smsg);
+    smsg.frame_id = old_frame_id;
+    new_robot_msg_.soundSensors[frameId]=smsg;
+    updateSoundSensorTree(item,smsg);
+    updateRobotPreview(); 
+  }
   
   /**
   @brief Edits a specific sonar sensor based on a tree item. Initiates the sonar sensor editor widget
@@ -1408,6 +2264,129 @@ namespace stdr_gui
     
     loader_.rfidAntennaPropLoader.show();
   }
+  /**
+  @brief Edits a specific co2 sensor based on a tree item. \
+  Initiates the co2 sensor editor widget
+  **/
+  void CRobotCreatorConnector::editCO2Sensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchCO2Sensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    loader_.co2SensorPropLoader.maxDistance->setText(
+      QString().setNum(new_robot_msg_.co2Sensors[frameId].maxRange));
+  
+    loader_.co2SensorPropLoader.x_->setText(
+      QString().setNum(new_robot_msg_.co2Sensors[frameId].pose.x));
+  
+    loader_.co2SensorPropLoader.y_->setText(
+      QString().setNum(new_robot_msg_.co2Sensors[frameId].pose.y));
+  
+    //~ loader_.co2SensorPropLoader.angleSpan->setText(
+      //~ QString().setNum(new_robot_msg_.co2Sensors[frameId].angleSpan));
+  
+    loader_.co2SensorPropLoader.orientation->setText(
+      QString().setNum(new_robot_msg_.co2Sensors[frameId].pose.theta));
+  
+    //~ loader_.co2SensorPropLoader.signalCutoff->setText(
+      //~ QString().setNum(new_robot_msg_.co2Sensors[frameId].signalCutoff));
+  
+    loader_.co2SensorPropLoader.frequency->setText(
+      QString().setNum(new_robot_msg_.co2Sensors[frameId].frequency));
+    
+    loader_.co2SensorPropLoader.setWindowTitle(
+      QApplication::translate(
+        "CO2SensorProperties", 
+        item->text(0).toStdString().c_str(), 
+        0, 
+        QApplication::UnicodeUTF8));
+    
+    current_co2_sensor_ = item;
+    
+    loader_.co2SensorPropLoader.show();
+  }
+  /**
+  @brief Edits a specific thermal sensor based on a tree item. \
+  Initiates the thermal sensor editor widget
+  **/
+  void CRobotCreatorConnector::editThermalSensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchThermalSensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    loader_.thermalSensorPropLoader.maxDistance->setText(
+      QString().setNum(new_robot_msg_.thermalSensors[frameId].maxRange));
+  
+    loader_.thermalSensorPropLoader.x_->setText(
+      QString().setNum(new_robot_msg_.thermalSensors[frameId].pose.x));
+  
+    loader_.thermalSensorPropLoader.y_->setText(
+      QString().setNum(new_robot_msg_.thermalSensors[frameId].pose.y));
+  
+    loader_.thermalSensorPropLoader.angleSpan->setText(
+      QString().setNum(new_robot_msg_.thermalSensors[frameId].angleSpan));
+  
+    loader_.thermalSensorPropLoader.orientation->setText(
+      QString().setNum(new_robot_msg_.thermalSensors[frameId].pose.theta));
+
+    loader_.thermalSensorPropLoader.frequency->setText(
+      QString().setNum(new_robot_msg_.thermalSensors[frameId].frequency));
+    
+    loader_.thermalSensorPropLoader.setWindowTitle(
+      QApplication::translate(
+        "ThermalSensorProperties", 
+        item->text(0).toStdString().c_str(), 
+        0, 
+        QApplication::UnicodeUTF8));
+    
+    current_thermal_sensor_ = item;
+    
+    loader_.thermalSensorPropLoader.show();
+  }
+  /**
+  @brief Edits a specific sound sensor based on a tree item. \
+  Initiates the sound sensor editor widget
+  **/
+  void CRobotCreatorConnector::editSoundSensor(QTreeWidgetItem *item)
+  {
+    unsigned int frameId = searchSoundSensor(item->text(0));
+    if(frameId == -1) 
+    {
+      return;
+    }  
+    loader_.soundSensorPropLoader.maxDistance->setText(
+      QString().setNum(new_robot_msg_.soundSensors[frameId].maxRange));
+  
+    loader_.soundSensorPropLoader.x_->setText(
+      QString().setNum(new_robot_msg_.soundSensors[frameId].pose.x));
+  
+    loader_.soundSensorPropLoader.y_->setText(
+      QString().setNum(new_robot_msg_.soundSensors[frameId].pose.y));
+  
+    loader_.soundSensorPropLoader.angleSpan->setText(
+      QString().setNum(new_robot_msg_.soundSensors[frameId].angleSpan));
+  
+    loader_.soundSensorPropLoader.orientation->setText(
+      QString().setNum(new_robot_msg_.soundSensors[frameId].pose.theta));
+
+    loader_.soundSensorPropLoader.frequency->setText(
+      QString().setNum(new_robot_msg_.soundSensors[frameId].frequency));
+    
+    loader_.soundSensorPropLoader.setWindowTitle(
+      QApplication::translate(
+        "SoundSensorProperties", 
+        item->text(0).toStdString().c_str(), 
+        0, 
+        QApplication::UnicodeUTF8));
+    
+    current_sound_sensor_ = item;
+    
+    loader_.soundSensorPropLoader.show();
+  }
   
   /**
   @brief Returns the ID of a laser sensor
@@ -1459,6 +2438,54 @@ namespace stdr_gui
     }
     return -1;
   }
+  /**
+  @brief Returns the ID of an co2 sensor
+  @param frameId [QString] The frame id of the co2 sensor 
+  @return int
+  **/
+  int CRobotCreatorConnector::searchCO2Sensor(QString frameId)
+  {
+    for(unsigned int i = 0 ; i < new_robot_msg_.co2Sensors.size() ; i++)
+    {
+      if(new_robot_msg_.co2Sensors[i].frame_id == frameId.toStdString())
+      {
+        return i;
+      }
+    }
+    return -1;
+  }
+  /**
+  @brief Returns the ID of a thermal sensor
+  @param frameId [QString] The frame id of the thermal sensor 
+  @return int
+  **/
+  int CRobotCreatorConnector::searchThermalSensor(QString frameId)
+  {
+    for(unsigned int i = 0 ; i < new_robot_msg_.thermalSensors.size() ; i++)
+    {
+      if(new_robot_msg_.thermalSensors[i].frame_id == frameId.toStdString())
+      {
+        return i;
+      }
+    }
+    return -1;
+  }
+  /**
+  @brief Returns the ID of a sound sensor
+  @param frameId [QString] The frame id of the sound sensor 
+  @return int
+  **/
+  int CRobotCreatorConnector::searchSoundSensor(QString frameId)
+  {
+    for(unsigned int i = 0 ; i < new_robot_msg_.soundSensors.size() ; i++)
+    {
+      if(new_robot_msg_.soundSensors[i].frame_id == frameId.toStdString())
+      {
+        return i;
+      }
+    }
+    return -1;
+  }
   
   /**
   @brief Updates the robot's tree widget
@@ -1501,6 +2528,28 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < new_robot_msg_.rfidSensors.size() ; i++)
     {
       addRfidAntenna(new_robot_msg_.rfidSensors[i]);
+    }
+    
+    count = loader_.thermalSensorsNode.childCount();
+    for(int i = count - 1 ; i >= 0 ; i--)
+    {
+      QTreeWidgetItem *child = loader_.thermalSensorsNode.child(i);
+      loader_.thermalSensorsNode.removeChild(loader_.thermalSensorsNode.child(i));
+    }
+    for(unsigned int i = 0 ; i < new_robot_msg_.thermalSensors.size() ; i++)
+    {
+      addThermalSensor(new_robot_msg_.thermalSensors[i]);
+    }
+    
+    count = loader_.soundSensorsNode.childCount();
+    for(int i = count - 1 ; i >= 0 ; i--)
+    {
+      QTreeWidgetItem *child = loader_.soundSensorsNode.child(i);
+      loader_.soundSensorsNode.removeChild(loader_.soundSensorsNode.child(i));
+    }
+    for(unsigned int i = 0 ; i < new_robot_msg_.soundSensors.size() ; i++)
+    {
+      addSoundSensor(new_robot_msg_.soundSensors[i]);
     }
     
     count = loader_.sonarsNode.childCount();
@@ -2290,6 +3339,138 @@ namespace stdr_gui
       }
     }
   }
+  /**
+  @brief Updates a tree item with a specific co2 sensor
+  **/
+  void CRobotCreatorConnector::updateCO2SensorTree(
+    QTreeWidgetItem *item,
+    stdr_msgs::CO2SensorMsg l)
+  {
+    unsigned int frameId=searchCO2Sensor(item->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < item->childCount() ; i++)
+    {
+      //~ if(item->child(i)->text(0) == QString("Angle span"))
+      //~ {
+        //~ item->child(i)->setText(1,QString().setNum(l.angleSpan));
+      //~ }
+      if(item->child(i)->text(0) == QString("Orientation"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.theta));
+      }
+      else if(item->child(i)->text(0) == QString("Max range"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.maxRange));
+      }
+      //~ else if(item->child(i)->text(0) == QString("Signal cutoff"))
+      //~ {
+        //~ item->child(i)->setText(1,QString().setNum(l.signalCutoff));
+      //~ }
+      else if(item->child(i)->text(0) == QString("Pose - x"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.x));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - y"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.y));
+      }
+      else if(item->child(i)->text(0) == QString("Frequency"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.frequency));
+      }
+    }
+  }
+  /**
+  @brief Updates a tree item with a specific thermal sensor
+  **/
+  void CRobotCreatorConnector::updateThermalSensorTree(
+    QTreeWidgetItem *item,
+    stdr_msgs::ThermalSensorMsg l)
+  {
+    unsigned int frameId=searchThermalSensor(item->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < item->childCount() ; i++)
+    {
+      if(item->child(i)->text(0) == QString("Angle span"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.angleSpan));
+      }
+      else if(item->child(i)->text(0) == QString("Orientation"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.theta));
+      }
+      else if(item->child(i)->text(0) == QString("Max range"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.maxRange));
+      }
+      //~ else if(item->child(i)->text(0) == QString("Signal cutoff"))
+      //~ {
+        //~ item->child(i)->setText(1,QString().setNum(l.signalCutoff));
+      //~ }
+      else if(item->child(i)->text(0) == QString("Pose - x"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.x));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - y"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.y));
+      }
+      else if(item->child(i)->text(0) == QString("Frequency"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.frequency));
+      }
+    }
+  }
+  /**
+  @brief Updates a tree item with a specific sound sensor
+  **/
+  void CRobotCreatorConnector::updateSoundSensorTree(
+    QTreeWidgetItem *item,
+    stdr_msgs::SoundSensorMsg l)
+  {
+    unsigned int frameId=searchSoundSensor(item->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < item->childCount() ; i++)
+    {
+      if(item->child(i)->text(0) == QString("Angle span"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.angleSpan));
+      }
+      else if(item->child(i)->text(0) == QString("Orientation"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.theta));
+      }
+      else if(item->child(i)->text(0) == QString("Max range"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.maxRange));
+      }
+      //~ else if(item->child(i)->text(0) == QString("Signal cutoff"))
+      //~ {
+        //~ item->child(i)->setText(1,QString().setNum(l.signalCutoff));
+      //~ }
+      else if(item->child(i)->text(0) == QString("Pose - x"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.x));
+      }
+      else if(item->child(i)->text(0) == QString("Pose - y"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.pose.y));
+      }
+      else if(item->child(i)->text(0) == QString("Frequency"))
+      {
+        item->child(i)->setText(1,QString().setNum(l.frequency));
+      }
+    }
+  }
   
   /**
   @brief Called when the update button of the properties widget is clicked 
@@ -2394,6 +3575,282 @@ namespace stdr_gui
     
     updateRobotPreview();
   }
+  /**
+  @brief Called when the update button of the properties widget is clicked 
+  **/ 
+  void CRobotCreatorConnector::updateCO2Sensor(void)
+  {
+    unsigned int frameId = searchCO2Sensor(current_co2_sensor_->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < current_co2_sensor_->childCount() ; i++)
+    {
+      
+      //!< Rfid antenna angle span
+      //~ if(current_rfid_->child(i)->text(0) == QString("Angle span"))
+      //~ {
+        //~ float angle_span = 
+          //~ loader_.rfidAntennaPropLoader.rfidAngleSpan->text().toFloat();
+        //~ if( angle_span <= 0 )
+        //~ {
+          //~ showMessage(QString("Rfid antenna angle span invalid :") + 
+            //~ QString().setNum(angle_span));
+          //~ return;
+        //~ }
+        //~ current_rfid_->child(i)->setText(1,QString().setNum(angle_span));
+        //~ new_robot_msg_.rfidSensors[frameId].angleSpan = angle_span;
+      //~ }
+      
+      //!< Orientation
+      if(current_co2_sensor_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = 
+          loader_.co2SensorPropLoader.orientation->
+            text().toFloat();
+        current_co2_sensor_->child(i)->
+          setText(1,QString().setNum(orientation));
+        new_robot_msg_.co2Sensors[frameId].pose.theta = orientation;
+      }
+      
+      //!< Rfid antenna max range
+      else if(current_co2_sensor_->child(i)->text(0) == QString("Max range"))
+      {
+        float maxRange = 
+          loader_.co2SensorPropLoader.maxDistance->
+            text().toFloat();
+        if( maxRange <= 0 )
+        {
+          showMessage(QString("CO2 sensor maximum range invalid :") + 
+            QString().setNum(maxRange));
+          return;
+        }
+        current_co2_sensor_->child(i)->setText(1,QString().setNum(maxRange));
+        new_robot_msg_.co2Sensors[frameId].maxRange = maxRange;
+      }
+      
+      //!< Sensor pose - x coordinate
+      else if(current_co2_sensor_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.co2SensorPropLoader.x_->text().toFloat();
+        current_co2_sensor_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.co2Sensors[frameId].pose.x = dx;
+      }
+      
+      //!< Sensor pose - y coordinate
+      else if(current_co2_sensor_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.co2SensorPropLoader.y_->text().toFloat();
+        current_co2_sensor_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.co2Sensors[frameId].pose.y = dy;
+      }
+
+      //!< Publishing frequency
+      else if(current_co2_sensor_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = 
+          loader_.co2SensorPropLoader.frequency->
+            text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("CO2 sensor publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_co2_sensor_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.co2Sensors[frameId].frequency = frequency;
+      }
+    }
+
+    loader_.co2SensorPropLoader.hide();
+    
+    updateRobotPreview();
+  }
+  /**
+  @brief Called when the update button of the properties widget is clicked 
+  **/ 
+  void CRobotCreatorConnector::updateThermalSensor(void)
+  {
+    unsigned int frameId = searchThermalSensor(current_thermal_sensor_->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < current_thermal_sensor_->childCount() ; i++)
+    {
+      
+      //~ Sensor angle span
+      if(current_thermal_sensor_->child(i)->text(0) == QString("Angle span"))
+      {
+        float angle_span = 
+          loader_.thermalSensorPropLoader.angleSpan->text().toFloat();
+        if( angle_span <= 0 )
+        {
+          showMessage(QString("Thermal sensor angle span invalid :") + 
+            QString().setNum(angle_span));
+          return;
+        }
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(angle_span));
+        new_robot_msg_.thermalSensors[frameId].angleSpan = angle_span;
+      }
+      
+      //!< Orientation
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = 
+          loader_.thermalSensorPropLoader.orientation->
+            text().toFloat();
+        current_thermal_sensor_->child(i)->
+          setText(1,QString().setNum(orientation));
+        new_robot_msg_.thermalSensors[frameId].pose.theta = orientation;
+      }
+      
+      //!< Rfid antenna max range
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Max range"))
+      {
+        float maxRange = 
+          loader_.thermalSensorPropLoader.maxDistance->
+            text().toFloat();
+        if( maxRange <= 0 )
+        {
+          showMessage(QString("Thermal sensor maximum range invalid :") + 
+            QString().setNum(maxRange));
+          return;
+        }
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(maxRange));
+        new_robot_msg_.thermalSensors[frameId].maxRange = maxRange;
+      }
+      
+      //!< Sensor pose - x coordinate
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.thermalSensorPropLoader.x_->text().toFloat();
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.thermalSensors[frameId].pose.x = dx;
+      }
+      
+      //!< Sensor pose - y coordinate
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.thermalSensorPropLoader.y_->text().toFloat();
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.thermalSensors[frameId].pose.y = dy;
+      }
+
+      //!< Publishing frequency
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = 
+          loader_.thermalSensorPropLoader.frequency->
+            text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Thermal sensor publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.thermalSensors[frameId].frequency = frequency;
+      }
+    }
+
+    loader_.thermalSensorPropLoader.hide();
+    
+    updateRobotPreview();
+  }
+  /**
+  @brief Called when the update button of the properties widget is clicked 
+  **/ 
+  void CRobotCreatorConnector::updateSoundSensor(void)
+  {
+    unsigned int frameId = searchSoundSensor(current_sound_sensor_->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < current_sound_sensor_->childCount() ; i++)
+    {
+      
+      //~ Sensor angle span
+      if(current_sound_sensor_->child(i)->text(0) == QString("Angle span"))
+      {
+        float angle_span = 
+          loader_.soundSensorPropLoader.angleSpan->text().toFloat();
+        if( angle_span <= 0 )
+        {
+          showMessage(QString("Sound sensor angle span invalid :") + 
+            QString().setNum(angle_span));
+          return;
+        }
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(angle_span));
+        new_robot_msg_.soundSensors[frameId].angleSpan = angle_span;
+      }
+      
+      //!< Orientation
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = 
+          loader_.soundSensorPropLoader.orientation->
+            text().toFloat();
+        current_sound_sensor_->child(i)->
+          setText(1,QString().setNum(orientation));
+        new_robot_msg_.soundSensors[frameId].pose.theta = orientation;
+      }
+      
+      //!< Rfid antenna max range
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Max range"))
+      {
+        float maxRange = 
+          loader_.soundSensorPropLoader.maxDistance->
+            text().toFloat();
+        if( maxRange <= 0 )
+        {
+          showMessage(QString("Sound sensor maximum range invalid :") + 
+            QString().setNum(maxRange));
+          return;
+        }
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(maxRange));
+        new_robot_msg_.soundSensors[frameId].maxRange = maxRange;
+      }
+      
+      //!< Sensor pose - x coordinate
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.soundSensorPropLoader.x_->text().toFloat();
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.soundSensors[frameId].pose.x = dx;
+      }
+      
+      //!< Sensor pose - y coordinate
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.soundSensorPropLoader.y_->text().toFloat();
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.soundSensors[frameId].pose.y = dy;
+      }
+
+      //!< Publishing frequency
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = 
+          loader_.soundSensorPropLoader.frequency->
+            text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Sound sensor publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.soundSensors[frameId].frequency = frequency;
+      }
+    }
+
+    loader_.soundSensorPropLoader.hide();
+    
+    updateRobotPreview();
+  }
   
   /**
   @brief Called when the refresh button of the properties widget is clicked 
@@ -2491,6 +3948,276 @@ namespace stdr_gui
         }
         current_rfid_->child(i)->setText(1,QString().setNum(frequency));
         new_robot_msg_.rfidSensors[frameId].frequency = frequency;
+      }
+    }
+    
+    updateRobotPreview();
+  }
+  /**
+  @brief Called when the refresh button of the properties widget is clicked 
+  **/ 
+  void CRobotCreatorConnector::updateCO2SensorOpen(void)
+  {
+    unsigned int frameId = searchCO2Sensor(current_co2_sensor_->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < current_co2_sensor_->childCount() ; i++)
+    {
+      
+      //~ //!< Angle span
+      //~ if(current_co2_sensor_->child(i)->text(0) == QString("Angle span"))
+      //~ {
+        //~ float angle_span = 
+          //~ loader_.co2SensorPropLoader.angleSpan->text().toFloat();
+        //~ if( angle_span <= 0 )
+        //~ {
+          //~ showMessage(QString("Rfid antenna angle span invalid :") + 
+            //~ QString().setNum(angle_span));
+          //~ return;
+        //~ }
+        //~ current_rfid_->child(i)->setText(1,QString().setNum(angle_span));
+        //~ new_robot_msg_.rfidSensors[frameId].angleSpan = angle_span;
+      //~ }
+      
+      //!< Rfid antenna orientation
+      if(current_co2_sensor_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = 
+          loader_.co2SensorPropLoader.orientation->
+            text().toFloat();
+        current_co2_sensor_->child(i)->
+          setText(1,QString().setNum(orientation));
+        new_robot_msg_.co2Sensors[frameId].pose.theta = orientation;
+      }
+      
+      //!< Max range
+      else if(current_co2_sensor_->child(i)->text(0) == QString("Max range"))
+      {
+        float maxRange = 
+          loader_.co2SensorPropLoader.maxDistance->
+            text().toFloat();
+        if( maxRange <= 0 )
+        {
+          showMessage(QString("CO2 source maximum range invalid :") + 
+            QString().setNum(maxRange));
+          return;
+        }
+        current_co2_sensor_->child(i)->setText(1,QString().setNum(maxRange));
+        new_robot_msg_.co2Sensors[frameId].maxRange = maxRange;
+      }
+      
+      //!< Pose - x coordinate
+      else if(current_co2_sensor_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.co2SensorPropLoader.x_->text().toFloat();
+        current_co2_sensor_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.co2Sensors[frameId].pose.x = dx;
+      }
+      
+      //!< Pose - y coordinate
+      else if(current_co2_sensor_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.co2SensorPropLoader.y_->text().toFloat();
+        current_co2_sensor_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.co2Sensors[frameId].pose.y = dy;
+      }
+      
+      //!< Publishing frequency
+      else if(current_co2_sensor_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = 
+          loader_.co2SensorPropLoader.frequency->
+            text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("CO2 sensor publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_co2_sensor_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.co2Sensors[frameId].frequency = frequency;
+      }
+    }
+    
+    updateRobotPreview();
+  }
+  /**
+  @brief Called when the refresh button of the properties widget is clicked 
+  **/ 
+  void CRobotCreatorConnector::updateThermalSensorOpen(void)
+  {
+    unsigned int frameId = searchThermalSensor(current_thermal_sensor_->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < current_thermal_sensor_->childCount() ; i++)
+    {
+      
+      //!< Angle span
+      if(current_thermal_sensor_->child(i)->text(0) == QString("Angle span"))
+      {
+        float angle_span = 
+          loader_.thermalSensorPropLoader.angleSpan->text().toFloat();
+        if( angle_span <= 0 )
+        {
+          showMessage(QString("Thermal sensor angle span invalid :") + 
+            QString().setNum(angle_span));
+          return;
+        }
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(angle_span));
+        new_robot_msg_.thermalSensors[frameId].angleSpan = angle_span;
+      }
+      
+      //!< Orientation
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = 
+          loader_.thermalSensorPropLoader.orientation->
+            text().toFloat();
+        current_thermal_sensor_->child(i)->
+          setText(1,QString().setNum(orientation));
+        new_robot_msg_.thermalSensors[frameId].pose.theta = orientation;
+      }
+      
+      //!< Max range
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Max range"))
+      {
+        float maxRange = 
+          loader_.thermalSensorPropLoader.maxDistance->
+            text().toFloat();
+        if( maxRange <= 0 )
+        {
+          showMessage(QString("Thermal sensor maximum range invalid :") + 
+            QString().setNum(maxRange));
+          return;
+        }
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(maxRange));
+        new_robot_msg_.thermalSensors[frameId].maxRange = maxRange;
+      }
+      
+      //!< Pose - x coordinate
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.thermalSensorPropLoader.x_->text().toFloat();
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.thermalSensors[frameId].pose.x = dx;
+      }
+      
+      //!< Pose - y coordinate
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.thermalSensorPropLoader.y_->text().toFloat();
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.thermalSensors[frameId].pose.y = dy;
+      }
+      
+      //!< Publishing frequency
+      else if(current_thermal_sensor_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = 
+          loader_.thermalSensorPropLoader.frequency->
+            text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Thermal sensor publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_thermal_sensor_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.thermalSensors[frameId].frequency = frequency;
+      }
+    }
+    
+    updateRobotPreview();
+  }
+  /**
+  @brief Called when the refresh button of the properties widget is clicked 
+  **/ 
+  void CRobotCreatorConnector::updateSoundSensorOpen(void)
+  {
+    unsigned int frameId = searchSoundSensor(current_sound_sensor_->text(0));
+    if(frameId == -1)
+    {
+      return;
+    }
+    for(unsigned int i = 0 ; i < current_sound_sensor_->childCount() ; i++)
+    {
+      
+      //!< Angle span
+      if(current_sound_sensor_->child(i)->text(0) == QString("Angle span"))
+      {
+        float angle_span = 
+          loader_.soundSensorPropLoader.angleSpan->text().toFloat();
+        if( angle_span <= 0 )
+        {
+          showMessage(QString("Sound sensor angle span invalid :") + 
+            QString().setNum(angle_span));
+          return;
+        }
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(angle_span));
+        new_robot_msg_.soundSensors[frameId].angleSpan = angle_span;
+      }
+      
+      //!< Orientation
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Orientation"))
+      {
+        float orientation = 
+          loader_.soundSensorPropLoader.orientation->
+            text().toFloat();
+        current_sound_sensor_->child(i)->
+          setText(1,QString().setNum(orientation));
+        new_robot_msg_.soundSensors[frameId].pose.theta = orientation;
+      }
+      
+      //!< Max range
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Max range"))
+      {
+        float maxRange = 
+          loader_.soundSensorPropLoader.maxDistance->
+            text().toFloat();
+        if( maxRange <= 0 )
+        {
+          showMessage(QString("Sound sensor maximum range invalid :") + 
+            QString().setNum(maxRange));
+          return;
+        }
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(maxRange));
+        new_robot_msg_.soundSensors[frameId].maxRange = maxRange;
+      }
+      
+      //!< Pose - x coordinate
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Pose - x"))
+      {
+        float dx = loader_.soundSensorPropLoader.x_->text().toFloat();
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(dx));
+        new_robot_msg_.soundSensors[frameId].pose.x = dx;
+      }
+      
+      //!< Pose - y coordinate
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Pose - y"))
+      {
+        float dy = loader_.soundSensorPropLoader.y_->text().toFloat();
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(dy));
+        new_robot_msg_.soundSensors[frameId].pose.y = dy;
+      }
+      
+      //!< Publishing frequency
+      else if(current_sound_sensor_->child(i)->text(0) == QString("Frequency"))
+      {
+        float frequency = 
+          loader_.soundSensorPropLoader.frequency->
+            text().toFloat();
+        if( frequency <= 0 )
+        {
+          showMessage(QString("Sound sensor publishing frequency invalid :") + 
+            QString().setNum(frequency));
+          return;
+        }
+        current_sound_sensor_->child(i)->setText(1,QString().setNum(frequency));
+        new_robot_msg_.soundSensors[frameId].frequency = frequency;
       }
     }
     
@@ -2687,12 +4414,96 @@ namespace stdr_gui
           new_robot_msg_.rfidSensors[i].pose.y;  
       }
     }
+    for(unsigned int i = 0 ; i < new_robot_msg_.co2Sensors.size() ; i++)
+    {
+      if(climax_ < (new_robot_msg_.co2Sensors[i].maxRange + 
+          new_robot_msg_.co2Sensors[i].pose.x) )
+      {
+        climax_ = new_robot_msg_.co2Sensors[i].maxRange + 
+          new_robot_msg_.co2Sensors[i].pose.x;
+      }
+      if(climax_ < (new_robot_msg_.co2Sensors[i].maxRange + 
+          new_robot_msg_.co2Sensors[i].pose.y) )
+      {
+        climax_ = new_robot_msg_.co2Sensors[i].maxRange + 
+          new_robot_msg_.co2Sensors[i].pose.y;  
+      }
+      if(climax_ < (new_robot_msg_.co2Sensors[i].maxRange - 
+          new_robot_msg_.co2Sensors[i].pose.x) )
+      {
+        climax_ = new_robot_msg_.co2Sensors[i].maxRange - 
+          new_robot_msg_.co2Sensors[i].pose.x;
+      }
+      if(climax_ < (new_robot_msg_.co2Sensors[i].maxRange - 
+          new_robot_msg_.co2Sensors[i].pose.y) )
+      {
+        climax_ = new_robot_msg_.co2Sensors[i].maxRange - 
+          new_robot_msg_.co2Sensors[i].pose.y;  
+      }
+    }
+    for(unsigned int i = 0 ; i < new_robot_msg_.thermalSensors.size() ; i++)
+    {
+      if(climax_ < (new_robot_msg_.thermalSensors[i].maxRange + 
+          new_robot_msg_.thermalSensors[i].pose.x) )
+      {
+        climax_ = new_robot_msg_.thermalSensors[i].maxRange + 
+          new_robot_msg_.thermalSensors[i].pose.x;
+      }
+      if(climax_ < (new_robot_msg_.thermalSensors[i].maxRange + 
+          new_robot_msg_.thermalSensors[i].pose.y) )
+      {
+        climax_ = new_robot_msg_.thermalSensors[i].maxRange + 
+          new_robot_msg_.thermalSensors[i].pose.y;  
+      }
+      if(climax_ < (new_robot_msg_.thermalSensors[i].maxRange - 
+          new_robot_msg_.thermalSensors[i].pose.x) )
+      {
+        climax_ = new_robot_msg_.thermalSensors[i].maxRange - 
+          new_robot_msg_.thermalSensors[i].pose.x;
+      }
+      if(climax_ < (new_robot_msg_.thermalSensors[i].maxRange - 
+          new_robot_msg_.thermalSensors[i].pose.y) )
+      {
+        climax_ = new_robot_msg_.thermalSensors[i].maxRange - 
+          new_robot_msg_.thermalSensors[i].pose.y;  
+      }
+    }
+    for(unsigned int i = 0 ; i < new_robot_msg_.soundSensors.size() ; i++)
+    {
+      if(climax_ < (new_robot_msg_.soundSensors[i].maxRange + 
+          new_robot_msg_.thermalSensors[i].pose.x) )
+      {
+        climax_ = new_robot_msg_.soundSensors[i].maxRange + 
+          new_robot_msg_.thermalSensors[i].pose.x;
+      }
+      if(climax_ < (new_robot_msg_.soundSensors[i].maxRange + 
+          new_robot_msg_.thermalSensors[i].pose.y) )
+      {
+        climax_ = new_robot_msg_.soundSensors[i].maxRange + 
+          new_robot_msg_.thermalSensors[i].pose.y;  
+      }
+      if(climax_ < (new_robot_msg_.soundSensors[i].maxRange - 
+          new_robot_msg_.thermalSensors[i].pose.x) )
+      {
+        climax_ = new_robot_msg_.soundSensors[i].maxRange - 
+          new_robot_msg_.thermalSensors[i].pose.x;
+      }
+      if(climax_ < (new_robot_msg_.soundSensors[i].maxRange - 
+          new_robot_msg_.thermalSensors[i].pose.y) )
+      {
+        climax_ = new_robot_msg_.soundSensors[i].maxRange - 
+          new_robot_msg_.thermalSensors[i].pose.y;  
+      }
+    }
     
     climax_ = 230.0 / climax_;
     drawRobot();
     drawLasers();
     drawSonars();
     drawRfidAntennas();
+    drawCO2Sensors();
+    drawThermalSensors();
+    drawSoundSensors();
     
     loader_.robotTreeWidget->resizeColumnToContents(0);
     loader_.robotTreeWidget->resizeColumnToContents(1);
@@ -2894,7 +4705,7 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < new_robot_msg_.rfidSensors.size() ; i++)
     {
       
-      if(sonar_hightlight_id_ == i)
+      if(rfid_antenna_hightlight_id_ == i)
       {
         brush = QBrush(QColor(0,0,200,30));
       }
@@ -2919,6 +4730,137 @@ namespace stdr_gui
           new_robot_msg_.rfidSensors[i].angleSpan / 2.0+
           new_robot_msg_.initialPose.theta) * 16,
         (new_robot_msg_.rfidSensors[i].angleSpan) * 16);
+    }
+    loader_.robotPreviewLabel->setPixmap(
+      QPixmap().fromImage(loader_.robotPreviewImage));
+  }
+  /**
+  @brief Draws the robot's rfid antennas
+  **/
+  void CRobotCreatorConnector::drawCO2Sensors(void)
+  {
+    QPainter painter(&loader_.robotPreviewImage);
+    QBrush brush(QColor(0,0,200,20));
+    painter.setBrush(brush);
+    float robotOrientation = 
+      new_robot_msg_.initialPose.theta / 180.0 * STDR_PI;
+    
+    for(unsigned int i = 0 ; i < new_robot_msg_.co2Sensors.size() ; i++)
+    {
+      
+      if(co2_sensor_hightlight_id_ == i)
+      {
+        brush = QBrush(QColor(0,0,200,30));
+      }
+      else
+      {
+        brush = QBrush(QColor(0,0,200,10));
+      }
+      
+      float x = new_robot_msg_.co2Sensors[i].pose.x;
+      float y = new_robot_msg_.co2Sensors[i].pose.y;
+      float newx = 
+        x * cos(robotOrientation) - y * sin(robotOrientation);
+      float newy = 
+        x * sin(robotOrientation) + y * cos(robotOrientation);
+      
+      painter.drawPie(  
+        250 - new_robot_msg_.co2Sensors[i].maxRange * climax_ + newx * climax_,
+        250 - new_robot_msg_.co2Sensors[i].maxRange * climax_ - newy * climax_,
+        new_robot_msg_.co2Sensors[i].maxRange * climax_ * 2,
+        new_robot_msg_.co2Sensors[i].maxRange * climax_ * 2,
+        (new_robot_msg_.co2Sensors[i].pose.theta - 
+          STDR_PI +
+          new_robot_msg_.initialPose.theta) * 16,
+        (2 * STDR_PI) * 16);
+    }
+    loader_.robotPreviewLabel->setPixmap(
+      QPixmap().fromImage(loader_.robotPreviewImage));
+  }
+  /**
+  @brief Draws the robot's rfid antennas
+  @return void
+  **/
+  void CRobotCreatorConnector::drawThermalSensors(void)
+  {
+    QPainter painter(&loader_.robotPreviewImage);
+    QBrush brush(QColor(0,0,200,20));
+    painter.setBrush(brush);
+    float robotOrientation = 
+      new_robot_msg_.initialPose.theta / 180.0 * STDR_PI;
+    
+    for(unsigned int i = 0 ; i < new_robot_msg_.thermalSensors.size() ; i++)
+    {
+      
+      if(thermal_sensor_hightlight_id_ == i)
+      {
+        brush = QBrush(QColor(0,0,200,30));
+      }
+      else
+      {
+        brush = QBrush(QColor(0,0,200,10));
+      }
+      
+      float x = new_robot_msg_.thermalSensors[i].pose.x;
+      float y = new_robot_msg_.thermalSensors[i].pose.y;
+      float newx = 
+        x * cos(robotOrientation) - y * sin(robotOrientation);
+      float newy = 
+        x * sin(robotOrientation) + y * cos(robotOrientation);
+      
+      painter.drawPie(  
+        250 - new_robot_msg_.thermalSensors[i].maxRange * climax_ + newx * climax_,
+        250 - new_robot_msg_.thermalSensors[i].maxRange * climax_ - newy * climax_,
+        new_robot_msg_.thermalSensors[i].maxRange * climax_ * 2,
+        new_robot_msg_.thermalSensors[i].maxRange * climax_ * 2,
+        (new_robot_msg_.thermalSensors[i].pose.theta - 
+          new_robot_msg_.thermalSensors[i].angleSpan / 2.0+
+          new_robot_msg_.initialPose.theta) * 16,
+        (new_robot_msg_.thermalSensors[i].angleSpan) * 16);
+    }
+    loader_.robotPreviewLabel->setPixmap(
+      QPixmap().fromImage(loader_.robotPreviewImage));
+  }
+  /**
+  @brief Draws the robot's rfid antennas
+  @return void
+  **/
+  void CRobotCreatorConnector::drawSoundSensors(void)
+  {
+    QPainter painter(&loader_.robotPreviewImage);
+    QBrush brush(QColor(0,0,200,20));
+    painter.setBrush(brush);
+    float robotOrientation = 
+      new_robot_msg_.initialPose.theta / 180.0 * STDR_PI;
+    
+    for(unsigned int i = 0 ; i < new_robot_msg_.soundSensors.size() ; i++)
+    {
+      
+      if(sound_sensor_hightlight_id_ == i)
+      {
+        brush = QBrush(QColor(0,0,200,30));
+      }
+      else
+      {
+        brush = QBrush(QColor(0,0,200,10));
+      }
+      
+      float x = new_robot_msg_.soundSensors[i].pose.x;
+      float y = new_robot_msg_.soundSensors[i].pose.y;
+      float newx = 
+        x * cos(robotOrientation) - y * sin(robotOrientation);
+      float newy = 
+        x * sin(robotOrientation) + y * cos(robotOrientation);
+      
+      painter.drawPie(  
+        250 - new_robot_msg_.soundSensors[i].maxRange * climax_ + newx * climax_,
+        250 - new_robot_msg_.soundSensors[i].maxRange * climax_ - newy * climax_,
+        new_robot_msg_.soundSensors[i].maxRange * climax_ * 2,
+        new_robot_msg_.soundSensors[i].maxRange * climax_ * 2,
+        (new_robot_msg_.soundSensors[i].pose.theta - 
+          new_robot_msg_.soundSensors[i].angleSpan / 2.0+
+          new_robot_msg_.initialPose.theta) * 16,
+        (new_robot_msg_.soundSensors[i].angleSpan) * 16);
     }
     loader_.robotPreviewLabel->setPixmap(
       QPixmap().fromImage(loader_.robotPreviewImage));
@@ -2979,6 +4921,9 @@ namespace stdr_gui
     CRobotCreatorConnector::laser_number = -1;
     CRobotCreatorConnector::sonar_number = -1;
     CRobotCreatorConnector::rfid_number = -1;
+    CRobotCreatorConnector::co2_sensors_number = -1;
+    CRobotCreatorConnector::thermal_sensors_number = -1;
+    CRobotCreatorConnector::sound_sensors_number = -1;
     
     for(int i = loader_.robotInfoFootprint.childCount() - 1 ; i >=0 ; i--)
     {
