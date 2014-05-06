@@ -115,10 +115,9 @@ namespace stdr_gui
       msg_.maxRange / ocgd * 2,
       msg_.maxRange / ocgd * 2,
       
-      - (pose_theta - 2 * STDR_PI / 2.0)
-        * 180.0 / STDR_PI * 16,
+      - 0,
         
-      - 2 * STDR_PI * 180.0 / STDR_PI * 16);
+      - 2 * 180.0 * 16);
 
     lock_ = false;
   }

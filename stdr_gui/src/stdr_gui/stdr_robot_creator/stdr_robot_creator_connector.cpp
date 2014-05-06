@@ -4769,10 +4769,8 @@ namespace stdr_gui
         250 - new_robot_msg_.co2Sensors[i].maxRange * climax_ - newy * climax_,
         new_robot_msg_.co2Sensors[i].maxRange * climax_ * 2,
         new_robot_msg_.co2Sensors[i].maxRange * climax_ * 2,
-        (new_robot_msg_.co2Sensors[i].pose.theta - 
-          STDR_PI +
-          new_robot_msg_.initialPose.theta) * 16,
-        (2 * STDR_PI) * 16);
+        0,
+        (2 * 180.0) * 16);
     }
     loader_.robotPreviewLabel->setPixmap(
       QPixmap().fromImage(loader_.robotPreviewImage));

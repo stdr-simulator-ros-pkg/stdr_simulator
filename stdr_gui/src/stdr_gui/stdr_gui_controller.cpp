@@ -255,6 +255,10 @@ namespace stdr_gui
       this, SLOT(soundPlaceSet(QPoint)));
       
     QObject::connect(
+      &map_connector_,SIGNAL(co2PlaceSet(QPoint)),
+      this, SLOT(co2PlaceSet(QPoint)));
+      
+    QObject::connect(
       &info_connector_,SIGNAL(laserVisibilityClicked(QString,QString)),
       this, SLOT(laserVisibilityClicked(QString,QString)));
       
@@ -395,7 +399,7 @@ namespace stdr_gui
       CGuiCo2Source temp_source(p, msg.co2_sources[i].id, 
         map_msg_.info.resolution);
       
-      //~ temp_source.setMessage(QString(msg.rfid_tags[i].message.c_str()));
+      temp_source.setPpm(msg.co2_sources[i].ppm);
       
       co2_sources_.insert(std::pair<QString, CGuiCo2Source>(
         QString(temp_source.getName().c_str()), temp_source));
