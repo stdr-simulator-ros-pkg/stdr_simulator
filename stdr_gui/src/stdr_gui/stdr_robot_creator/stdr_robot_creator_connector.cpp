@@ -4471,28 +4471,28 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < new_robot_msg_.soundSensors.size() ; i++)
     {
       if(climax_ < (new_robot_msg_.soundSensors[i].maxRange + 
-          new_robot_msg_.thermalSensors[i].pose.x) )
+          new_robot_msg_.soundSensors[i].pose.x) )
       {
         climax_ = new_robot_msg_.soundSensors[i].maxRange + 
-          new_robot_msg_.thermalSensors[i].pose.x;
+          new_robot_msg_.soundSensors[i].pose.x;
       }
       if(climax_ < (new_robot_msg_.soundSensors[i].maxRange + 
-          new_robot_msg_.thermalSensors[i].pose.y) )
+          new_robot_msg_.soundSensors[i].pose.y) )
       {
         climax_ = new_robot_msg_.soundSensors[i].maxRange + 
-          new_robot_msg_.thermalSensors[i].pose.y;  
+          new_robot_msg_.soundSensors[i].pose.y;  
       }
       if(climax_ < (new_robot_msg_.soundSensors[i].maxRange - 
-          new_robot_msg_.thermalSensors[i].pose.x) )
+          new_robot_msg_.soundSensors[i].pose.x) )
       {
         climax_ = new_robot_msg_.soundSensors[i].maxRange - 
-          new_robot_msg_.thermalSensors[i].pose.x;
+          new_robot_msg_.soundSensors[i].pose.x;
       }
       if(climax_ < (new_robot_msg_.soundSensors[i].maxRange - 
-          new_robot_msg_.thermalSensors[i].pose.y) )
+          new_robot_msg_.soundSensors[i].pose.y) )
       {
         climax_ = new_robot_msg_.soundSensors[i].maxRange - 
-          new_robot_msg_.thermalSensors[i].pose.y;  
+          new_robot_msg_.soundSensors[i].pose.y;  
       }
     }
     

@@ -76,6 +76,7 @@ QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_robot_creator/st
 
 #----------------------------------------------------------------------------------------------------#
 
+#~ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_BUILD_TYPE Release)
 
 add_executable(stdr_gui_node

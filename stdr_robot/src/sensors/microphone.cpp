@@ -70,44 +70,52 @@ namespace stdr_robot {
     stdr_msgs::SoundSensorMeasurementMsg measuredSourcesMsg;
 
     measuredSourcesMsg.header.frame_id = _description.frame_id;
-
+    measuredSourcesMsg.sound_dbs = 0; //!< 0 db for silence
     
-    //~ float max_range = _description.maxRange;
-    //~ float sensor_th = tf::getYaw(_sensorTransform.getRotation());
-    //~ float min_angle = sensor_th - _description.angleSpan / 2.0;
-    //~ float max_angle = sensor_th + _description.angleSpan / 2.0;
-    //~ 
-    //~ //!< Must implement the functionality
-    //~ for(unsigned int i = 0 ; i < rfid_tags_.rfid_tags.size() ; i++)
-    //~ {
-      //~ //!< Check for max distance
-      //~ float sensor_x = _sensorTransform.getOrigin().x();
-      //~ float sensor_y = _sensorTransform.getOrigin().y();
-      //~ float dist = sqrt(
-        //~ pow(sensor_x - rfid_tags_.rfid_tags[i].pose.x, 2) +
-        //~ pow(sensor_y - rfid_tags_.rfid_tags[i].pose.y, 2)
-      //~ );
-      //~ if(dist > max_range)
-      //~ {
-        //~ continue;
-      //~ }
-      //~ 
-      //~ //!< Check for correct angle
-      //~ float ang = atan2(rfid_tags_.rfid_tags[i].pose.y - sensor_y,
-        //~ rfid_tags_.rfid_tags[i].pose.x - sensor_x);
-      //~ 
-      //~ if(!angCheck(ang, min_angle, max_angle))
-      //~ {
-        //~ continue;
-      //~ }
-      //~ 
-      //~ measuredTagsMsg.rfid_tags_ids.push_back(rfid_tags_.rfid_tags[i].tag_id);
-      //~ measuredTagsMsg.rfid_tags_msgs.push_back(rfid_tags_.rfid_tags[i].message);
-      //~ measuredTagsMsg.rfid_tags_dbs.push_back(1.0); //!< Needs to change into a realistic measurement
-    //~ }
+    float max_range = _description.maxRange;
+    float sensor_th = tf::getYaw(_sensorTransform.getRotation());
+    float min_angle = sensor_th - _description.angleSpan / 2.0;
+    float max_angle = sensor_th + _description.angleSpan / 2.0;
+    
+    //!< Must implement the functionality
+    for(unsigned int i = 0 ; i < sound_sources_.sound_sources.size() ; i++)
+    {
+      //!< Check for max distance
+      float sensor_x = _sensorTransform.getOrigin().x();
+      float sensor_y = _sensorTransform.getOrigin().y();
+      float dist = sqrt(
+        pow(sensor_x - sound_sources_.sound_sources[i].pose.x, 2) +
+        pow(sensor_y - sound_sources_.sound_sources[i].pose.y, 2)
+      );
+      if(dist > max_range)
+      {
+        continue;
+      }
+      
+      //!< Check for correct angle
+      float ang = atan2(
+        sound_sources_.sound_sources[i].pose.y - sensor_y,
+        sound_sources_.sound_sources[i].pose.x - sensor_x);
+      
+      if(!angCheck(ang, min_angle, max_angle))
+      {
+        continue;
+      }
+      
+      if(dist > 0.5)
+      {
+        measuredSourcesMsg.sound_dbs += sound_sources_.sound_sources[i].dbs *
+          pow(0.5, 2) / pow(dist, 2);
+      }
+      else
+      {
+        measuredSourcesMsg.sound_dbs += sound_sources_.sound_sources[i].dbs;
+      }
+    }
     
     measuredSourcesMsg.header.stamp = ros::Time::now();
-    measuredSourcesMsg.header.frame_id = _namespace + "_" + _description.frame_id;
+    measuredSourcesMsg.header.frame_id = 
+      _namespace + "_" + _description.frame_id;
     _publisher.publish( measuredSourcesMsg );
   }
   
