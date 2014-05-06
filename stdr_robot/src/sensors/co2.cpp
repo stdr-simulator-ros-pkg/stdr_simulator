@@ -71,7 +71,7 @@ namespace stdr_robot {
 
     measuredSourcesMsg.header.frame_id = _description.frame_id;
 
-    
+    float max_range = _description.maxRange;
     ///!< Must implement the functionality
     for(unsigned int i = 0 ; i < co2_sources_.co2_sources.size() ; i++)
     {
@@ -82,7 +82,10 @@ namespace stdr_robot {
         pow(sensor_x - co2_sources_.co2_sources[i].pose.x, 2) +
         pow(sensor_y - co2_sources_.co2_sources[i].pose.y, 2)
       );
-      
+      if(dist > max_range)
+      {
+        continue;
+      }
       if(dist > 0.5)
       {
         measuredSourcesMsg.co2_ppm += co2_sources_.co2_sources[i].ppm *
