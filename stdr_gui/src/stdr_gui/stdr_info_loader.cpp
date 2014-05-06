@@ -442,6 +442,130 @@ namespace stdr_gui{
         
         co2_sensors->addChild(sname);
       }
+      for(unsigned int l = 0; l < msg.robots[i].robot.thermalSensors.size() ; 
+        l++)
+      {
+        QTreeWidgetItem *sname;
+        sname = new QTreeWidgetItem();
+        sname->setText(0,
+          msg.robots[i].robot.thermalSensors[l].frame_id.c_str());
+        sname->setIcon(2,visible_icon_on_);
+        //~ sname->setIcon(3,visible_icon_);
+        
+        sname->setToolTip(2,"Visibility status");
+        //~ sname->setToolTip(3,"Visualize topic");
+
+        QTreeWidgetItem *smaxrange = new QTreeWidgetItem();
+        QTreeWidgetItem *sspan = new QTreeWidgetItem();
+        QTreeWidgetItem *sorientation = new QTreeWidgetItem();
+        QTreeWidgetItem *sfreq = new QTreeWidgetItem();
+        //~ QTreeWidgetItem *scutoff = new QTreeWidgetItem();
+        QTreeWidgetItem *sposex = new QTreeWidgetItem();
+        QTreeWidgetItem *sposey = new QTreeWidgetItem();
+        
+        smaxrange->setText(0,"Max dist");
+        smaxrange->setText(1,(QString().setNum(
+          msg.robots[i].robot.thermalSensors[l].maxRange) + QString(" m")));
+       
+        sspan->setText(0,"Angle span");
+        sspan->setText(1,(QString().setNum(
+          msg.robots[i].robot.thermalSensors[l].angleSpan) 
+            + QString(" rad")));
+          
+        sorientation->setText(0,"Orientation");
+        sorientation->setText(1,(QString().setNum(
+          msg.robots[i].robot.thermalSensors[l].pose.theta) + 
+            QString(" rad")));
+          
+        //~ scutoff->setText(0,"Signal Cutoff");
+        //~ scutoff->setText(1,(QString().setNum(
+          //~ msg.robots[i].robot.rfidSensors[l].signalCutoff) + 
+            //~ QString("")));
+
+        sfreq->setText(0,"Frequency");
+        sfreq->setText(1,(QString().setNum(
+          msg.robots[i].robot.thermalSensors[l].frequency) + QString(" Hz")));
+            
+        sposex->setText(0,"x pose");
+        sposex->setText(1,(QString().setNum(
+          msg.robots[i].robot.thermalSensors[l].pose.x) + QString(" m")));
+          
+        sposey->setText(0,"y pose");
+        sposey->setText(1,(QString().setNum(
+          msg.robots[i].robot.thermalSensors[l].pose.y) + QString(" m")));
+                  
+        sname->addChild(smaxrange);
+        sname->addChild(sspan);
+        sname->addChild(sorientation);
+        //~ sname->addChild(scutoff);
+        sname->addChild(sfreq);
+        sname->addChild(sposex);
+        sname->addChild(sposey);
+        
+        thermal_sensors->addChild(sname);
+      }
+      for(unsigned int l = 0; l < msg.robots[i].robot.soundSensors.size() ; 
+        l++)
+      {
+        QTreeWidgetItem *sname;
+        sname = new QTreeWidgetItem();
+        sname->setText(0,
+          msg.robots[i].robot.soundSensors[l].frame_id.c_str());
+        sname->setIcon(2,visible_icon_on_);
+        //~ sname->setIcon(3,visible_icon_);
+        
+        sname->setToolTip(2,"Visibility status");
+        //~ sname->setToolTip(3,"Visualize topic");
+
+        QTreeWidgetItem *smaxrange = new QTreeWidgetItem();
+        QTreeWidgetItem *sspan = new QTreeWidgetItem();
+        QTreeWidgetItem *sorientation = new QTreeWidgetItem();
+        QTreeWidgetItem *sfreq = new QTreeWidgetItem();
+        //~ QTreeWidgetItem *scutoff = new QTreeWidgetItem();
+        QTreeWidgetItem *sposex = new QTreeWidgetItem();
+        QTreeWidgetItem *sposey = new QTreeWidgetItem();
+        
+        smaxrange->setText(0,"Max dist");
+        smaxrange->setText(1,(QString().setNum(
+          msg.robots[i].robot.soundSensors[l].maxRange) + QString(" m")));
+       
+        sspan->setText(0,"Angle span");
+        sspan->setText(1,(QString().setNum(
+          msg.robots[i].robot.soundSensors[l].angleSpan) 
+            + QString(" rad")));
+          
+        sorientation->setText(0,"Orientation");
+        sorientation->setText(1,(QString().setNum(
+          msg.robots[i].robot.soundSensors[l].pose.theta) + 
+            QString(" rad")));
+          
+        //~ scutoff->setText(0,"Signal Cutoff");
+        //~ scutoff->setText(1,(QString().setNum(
+          //~ msg.robots[i].robot.rfidSensors[l].signalCutoff) + 
+            //~ QString("")));
+
+        sfreq->setText(0,"Frequency");
+        sfreq->setText(1,(QString().setNum(
+          msg.robots[i].robot.soundSensors[l].frequency) + QString(" Hz")));
+            
+        sposex->setText(0,"x pose");
+        sposex->setText(1,(QString().setNum(
+          msg.robots[i].robot.soundSensors[l].pose.x) + QString(" m")));
+          
+        sposey->setText(0,"y pose");
+        sposey->setText(1,(QString().setNum(
+          msg.robots[i].robot.soundSensors[l].pose.y) + QString(" m")));
+                  
+        sname->addChild(smaxrange);
+        sname->addChild(sspan);
+        sname->addChild(sorientation);
+        //~ sname->addChild(scutoff);
+        sname->addChild(sfreq);
+        sname->addChild(sposex);
+        sname->addChild(sposey);
+        
+        sound_sensors->addChild(sname);
+      }
       
       rnode->addChild(lasers);
       rnode->addChild(sonars);
@@ -452,6 +576,6 @@ namespace stdr_gui{
       rnode->addChild(kinematics);
       
       robotsInfo.addChild(rnode);
-    }    
+    }       
   }
 }

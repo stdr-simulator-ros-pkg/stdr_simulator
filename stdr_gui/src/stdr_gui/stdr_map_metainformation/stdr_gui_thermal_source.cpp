@@ -29,11 +29,12 @@ namespace stdr_gui{
   @param name [std::string] The "name" of the rfid tag
   @return void
   **/
-  CGuiThermalSource::CGuiThermalSource(QPoint p,std::string name, float resolution):
-    position_(p),
-    name_(name),
-    resolution_(resolution),
-    degrees_(0.0)
+  CGuiThermalSource::CGuiThermalSource(
+    QPoint p,std::string name, float resolution):
+      position_(p),
+      name_(name),
+      resolution_(resolution),
+      degrees_(0.0)
   {
   
   }
@@ -78,7 +79,7 @@ namespace stdr_gui{
   {
     QPainter painter(img);
     int step = 3;
-    painter.setPen(QColor(0,200,0,200));
+    painter.setPen(QColor(200, 0, 0, 200));
     for(unsigned int i = 0 ; i < 4 ; i++)
     {
       painter.drawEllipse(
@@ -92,7 +93,6 @@ namespace stdr_gui{
     
     int text_size = name_.size();
     
-    //~ painter.setPen(QColor(0,0,0,100 * (2 - visualization_status_)));
     painter.setPen(QColor(0,0,0,100 * (2)));
     
     painter.drawRect(
@@ -101,7 +101,6 @@ namespace stdr_gui{
       3 + text_size * 9,
       20);
     
-    //~ painter.setPen(QColor(255,255,255,100 * (2 - visualization_status_)));
     painter.setPen(QColor(255,255,255,100 * (2)));
     
     painter.fillRect(
@@ -110,7 +109,6 @@ namespace stdr_gui{
       3 + text_size * 9,
       20,
       QBrush(QColor(0,0,0,100 * (2))));
-      //~ QBrush(QColor(0,0,0,100 * (2 - visualization_status_))));
     
     painter.setFont(QFont("Courier New"));
     painter.drawText(

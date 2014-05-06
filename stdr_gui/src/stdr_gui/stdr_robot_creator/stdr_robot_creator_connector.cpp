@@ -1106,7 +1106,7 @@ namespace stdr_gui
     stdr_msgs::ThermalSensorMsg smsg;
     smsg.frame_id = thermalSensorFrameId.toStdString();
     smsg.maxRange = 3.0;
-    smsg.angleSpan = 10.0;
+    smsg.angleSpan = 20.0;
     smsg.pose.x = 0;
     smsg.pose.y = 0;
     smsg.pose.theta = 0;
@@ -1181,7 +1181,7 @@ namespace stdr_gui
     stdr_msgs::SoundSensorMsg smsg;
     smsg.frame_id = soundSensorFrameId.toStdString();
     smsg.maxRange = 3.0;
-    smsg.angleSpan = 10.0;
+    smsg.angleSpan = 180.0;
     smsg.pose.x = 0;
     smsg.pose.y = 0;
     smsg.pose.theta = 0;
@@ -4740,7 +4740,7 @@ namespace stdr_gui
   void CRobotCreatorConnector::drawCO2Sensors(void)
   {
     QPainter painter(&loader_.robotPreviewImage);
-    QBrush brush(QColor(0,0,200,20));
+    QBrush brush(QColor(100,0,200,20));
     painter.setBrush(brush);
     float robotOrientation = 
       new_robot_msg_.initialPose.theta / 180.0 * STDR_PI;
@@ -4750,11 +4750,11 @@ namespace stdr_gui
       
       if(co2_sensor_hightlight_id_ == i)
       {
-        brush = QBrush(QColor(0,0,200,30));
+        brush = QBrush(QColor(100,0,200,30));
       }
       else
       {
-        brush = QBrush(QColor(0,0,200,10));
+        brush = QBrush(QColor(100,0,200,10));
       }
       
       float x = new_robot_msg_.co2Sensors[i].pose.x;
@@ -4784,7 +4784,7 @@ namespace stdr_gui
   void CRobotCreatorConnector::drawThermalSensors(void)
   {
     QPainter painter(&loader_.robotPreviewImage);
-    QBrush brush(QColor(0,0,200,20));
+    QBrush brush(QColor(200,0,0,10));
     painter.setBrush(brush);
     float robotOrientation = 
       new_robot_msg_.initialPose.theta / 180.0 * STDR_PI;
@@ -4794,11 +4794,11 @@ namespace stdr_gui
       
       if(thermal_sensor_hightlight_id_ == i)
       {
-        brush = QBrush(QColor(0,0,200,30));
+        brush = QBrush(QColor(200,0,0,30));
       }
       else
       {
-        brush = QBrush(QColor(0,0,200,10));
+        brush = QBrush(QColor(200,0,0,10));
       }
       
       float x = new_robot_msg_.thermalSensors[i].pose.x;
@@ -4828,7 +4828,7 @@ namespace stdr_gui
   void CRobotCreatorConnector::drawSoundSensors(void)
   {
     QPainter painter(&loader_.robotPreviewImage);
-    QBrush brush(QColor(0,0,200,20));
+    QBrush brush(QColor(0,50,200,20));
     painter.setBrush(brush);
     float robotOrientation = 
       new_robot_msg_.initialPose.theta / 180.0 * STDR_PI;
@@ -4838,11 +4838,11 @@ namespace stdr_gui
       
       if(sound_sensor_hightlight_id_ == i)
       {
-        brush = QBrush(QColor(0,0,200,30));
+        brush = QBrush(QColor(0,50,200,30));
       }
       else
       {
-        brush = QBrush(QColor(0,0,200,10));
+        brush = QBrush(QColor(0,50,200,10));
       }
       
       float x = new_robot_msg_.soundSensors[i].pose.x;

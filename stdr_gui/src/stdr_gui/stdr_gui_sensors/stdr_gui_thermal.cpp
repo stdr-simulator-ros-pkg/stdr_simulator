@@ -82,27 +82,7 @@ namespace stdr_gui
     transform.getBasis().getRPY(roll,pitch,yaw);
     float pose_theta = yaw;
     
-    //!< Draw measurement stuff
-    QBrush brush(QColor(50,100,50,75 * (2 - visualization_status_)));
-    painter.setBrush(brush);
-    
-    for(unsigned int j = 0 ; j < thermal_sources_.thermal_source_ids.size() ; j++)
-    {
-      for(unsigned int i = 0 ; i < env_thermal_sources_.thermal_sources.size() ; i++)
-      {
-        if(thermal_sources_.thermal_source_ids[j] == env_thermal_sources_.thermal_sources[i].id)
-        {
-          int x1 = pose_x / ocgd;
-          int y1 = pose_y / ocgd;
-          int x2 = env_thermal_sources_.thermal_sources[i].pose.x / ocgd;
-          int y2 = env_thermal_sources_.thermal_sources[i].pose.y / ocgd;
-          painter.drawLine(x1, y1, x2, y2);
-          break;
-        }
-      }
-    }
-    
-    QBrush brush_cone(QColor(50,100,50, 20 * (2 - visualization_status_)));
+    QBrush brush_cone(QColor(100,50,50, 20 * (2 - visualization_status_)));
     painter.setBrush(brush_cone);
     QPen pen(QColor(0,0,0,0));
     painter.setPen(pen);

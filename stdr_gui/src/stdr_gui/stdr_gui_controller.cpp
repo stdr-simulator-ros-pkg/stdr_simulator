@@ -308,7 +308,7 @@ namespace stdr_gui
     
     QObject::connect(
       this, SIGNAL(setSoundSensorVisibility(QString,QString,char)),
-      &info_connector_, SLOT(setSOundSensorVisibility(QString,QString,char)));
+      &info_connector_, SLOT(setSoundSensorVisibility(QString,QString,char)));
   }
   
   /**
@@ -422,14 +422,15 @@ namespace stdr_gui
       CGuiThermalSource temp_source(p, msg.thermal_sources[i].id, 
         map_msg_.info.resolution);
       
-      //~ temp_source.setMessage(QString(msg.rfid_tags[i].message.c_str()));
+      temp_source.setDegrees(msg.thermal_sources[i].degrees);
       
       thermal_sources_.insert(std::pair<QString, CGuiThermalSource>(
         QString(temp_source.getName().c_str()), temp_source));
     }
     for(unsigned int i = 0 ; i < registered_robots_.size() ; i++)
     {
-      registered_robots_[i].setEnvironmentalThermalSources(thermal_source_pure_);
+      registered_robots_[i].setEnvironmentalThermalSources(
+        thermal_source_pure_);
     }
   }
   
