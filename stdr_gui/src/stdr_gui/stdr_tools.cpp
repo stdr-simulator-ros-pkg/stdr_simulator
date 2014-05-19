@@ -174,6 +174,27 @@ namespace stdr_gui_tools
       rmsg.rfidSensors[i].pose.theta = 
         rmsg.rfidSensors[i].pose.theta / 180.0 * STDR_PI;
     }
+    for(unsigned int i = 0 ; i < rmsg.co2Sensors.size() ; i++)
+    {
+      //~ rmsg.co2Sensors[i].angleSpan = 
+        //~ rmsg.co2Sensors[i].angleSpan / 180.0 * STDR_PI;
+      rmsg.co2Sensors[i].pose.theta = 
+        rmsg.co2Sensors[i].pose.theta / 180.0 * STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.thermalSensors.size() ; i++)
+    {
+      rmsg.thermalSensors[i].angleSpan = 
+        rmsg.thermalSensors[i].angleSpan / 180.0 * STDR_PI;
+      rmsg.thermalSensors[i].pose.theta = 
+        rmsg.thermalSensors[i].pose.theta / 180.0 * STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.soundSensors.size() ; i++)
+    {
+      rmsg.soundSensors[i].angleSpan = 
+        rmsg.soundSensors[i].angleSpan / 180.0 * STDR_PI;
+      rmsg.soundSensors[i].pose.theta = 
+        rmsg.soundSensors[i].pose.theta / 180.0 * STDR_PI;
+    }
     return rmsg;
   }
   
@@ -208,6 +229,27 @@ namespace stdr_gui_tools
         rmsg.rfidSensors[i].angleSpan * 180.0 / STDR_PI;
       rmsg.rfidSensors[i].pose.theta = 
         rmsg.rfidSensors[i].pose.theta * 180.0 / STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.co2Sensors.size() ; i++)
+    {
+      //~ rmsg.rfidSensors[i].angleSpan = 
+        //~ rmsg.rfidSensors[i].angleSpan * 180.0 / STDR_PI;
+      rmsg.co2Sensors[i].pose.theta = 
+        rmsg.co2Sensors[i].pose.theta * 180.0 / STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.thermalSensors.size() ; i++)
+    {
+      rmsg.thermalSensors[i].angleSpan = 
+        rmsg.thermalSensors[i].angleSpan * 180.0 / STDR_PI;
+      rmsg.thermalSensors[i].pose.theta = 
+        rmsg.thermalSensors[i].pose.theta * 180.0 / STDR_PI;
+    }
+    for(unsigned int i = 0 ; i < rmsg.soundSensors.size() ; i++)
+    {
+      rmsg.soundSensors[i].angleSpan = 
+        rmsg.soundSensors[i].angleSpan * 180.0 / STDR_PI;
+      rmsg.soundSensors[i].pose.theta = 
+        rmsg.soundSensors[i].pose.theta * 180.0 / STDR_PI;
     }
     return rmsg;
   }
@@ -282,6 +324,69 @@ namespace stdr_gui_tools
   **/
   stdr_msgs::RfidSensorMsg fixRfidAnglesToDegrees(
     stdr_msgs::RfidSensorMsg rmsg)
+  {
+    rmsg.angleSpan = rmsg.angleSpan * 180.0 / STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
+    return rmsg;
+  }
+  
+  /**
+  @brief Takes a stdr_msgs::CO2SensorMsg and converts its angles to rads
+  **/
+  stdr_msgs::CO2SensorMsg fixCO2AnglesToRad(stdr_msgs::CO2SensorMsg rmsg)
+  {
+    //~ rmsg.angleSpan = rmsg.angleSpan / 180.0 * STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta / 180.0 * STDR_PI;
+    return rmsg;
+  }
+  
+  /**
+  @brief Takes a stdr_msgs::CO2SensorMsg and converts its angles to degrees
+  **/
+  stdr_msgs::CO2SensorMsg fixCO2AnglesToDegrees(
+    stdr_msgs::CO2SensorMsg rmsg)
+  {
+    //~ rmsg.angleSpan = rmsg.angleSpan * 180.0 / STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
+    return rmsg;
+  }
+  
+  /**
+  @brief Takes a stdr_msgs::ThermalSensorMsg and converts its angles to rads
+  **/
+  stdr_msgs::ThermalSensorMsg fixThermalAnglesToRad(stdr_msgs::ThermalSensorMsg rmsg)
+  {
+    rmsg.angleSpan = rmsg.angleSpan / 180.0 * STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta / 180.0 * STDR_PI;
+    return rmsg;
+  }
+  
+  /**
+  @brief Takes a stdr_msgs::ThermalSensorMsg and converts its angles to degrees
+  **/
+  stdr_msgs::ThermalSensorMsg fixThermalAnglesToDegrees(
+    stdr_msgs::ThermalSensorMsg rmsg)
+  {
+    rmsg.angleSpan = rmsg.angleSpan * 180.0 / STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;
+    return rmsg;
+  }
+  
+  /**
+  @brief Takes a stdr_msgs::SoundSensorMsg and converts its angles to rads
+  **/
+  stdr_msgs::SoundSensorMsg fixSoundAnglesToRad(stdr_msgs::SoundSensorMsg rmsg)
+  {
+    rmsg.angleSpan = rmsg.angleSpan / 180.0 * STDR_PI;
+    rmsg.pose.theta = rmsg.pose.theta / 180.0 * STDR_PI;
+    return rmsg;
+  }
+  
+  /**
+  @brief Takes a stdr_msgs::SoundSensorMsg and converts its angles to degrees
+  **/
+  stdr_msgs::SoundSensorMsg fixSoundAnglesToDegrees(
+    stdr_msgs::SoundSensorMsg rmsg)
   {
     rmsg.angleSpan = rmsg.angleSpan * 180.0 / STDR_PI;
     rmsg.pose.theta = rmsg.pose.theta * 180.0 / STDR_PI;

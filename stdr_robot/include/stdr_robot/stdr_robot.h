@@ -31,6 +31,9 @@
 #include <stdr_robot/sensors/laser.h>
 #include <stdr_robot/sensors/sonar.h>
 #include <stdr_robot/sensors/rfid_reader.h>
+#include <stdr_robot/sensors/co2.h>
+#include <stdr_robot/sensors/microphone.h>
+#include <stdr_robot/sensors/thermal.h>
 #include <stdr_robot/motion/motion_controller_base.h>
 #include <stdr_robot/motion/ideal_motion_controller.h>
 #include <nav_msgs/OccupancyGrid.h>

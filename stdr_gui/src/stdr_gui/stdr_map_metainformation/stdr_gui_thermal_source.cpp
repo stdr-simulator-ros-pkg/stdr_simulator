@@ -22,18 +22,21 @@
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.h"
 
 namespace stdr_gui{
-  
+   
   /**
   @brief Default contructor
-  @param p [QPoint] The pose of the thermal source
-  @param name [std::string] The "name" of the source
+  @param p [QPoint] The pose of the rfid tag
+  @param name [std::string] The "name" of the rfid tag
   @return void
   **/
-  CGuiThermalSource::CGuiThermalSource(QPoint p,std::string name):
-    position_(p),
-    name_(name)
+  CGuiThermalSource::CGuiThermalSource(
+    QPoint p,std::string name, float resolution):
+      position_(p),
+      name_(name),
+      resolution_(resolution),
+      degrees_(0.0)
   {
-
+  
   }
   
   /**
@@ -46,7 +49,7 @@ namespace stdr_gui{
   }
   
   /**
-  @brief Returns the "name" of the thermal source
+  @brief Returns the "name" of the rfid tag
   @return std::string 
   **/
   std::string CGuiThermalSource::getName(void)
@@ -57,23 +60,26 @@ namespace stdr_gui{
   /**
   @brief Checks proximity to a point
   @param p [QPoint] The proximity point to check
-  @return bool : True if thermal source is close to p
+  @return bool : True if tag is close to p
   **/
   bool CGuiThermalSource::checkProximity(QPoint p)
   {
-    return false;  // 2b changed
+    float dx = p.x() * resolution_ - position_.x() * resolution_;
+    float dy = p.y() * resolution_ - position_.y() * resolution_;
+    float dist = sqrt( pow(dx,2) + pow(dy,2) );
+    return dist <= 0.3;
   }
   
   /**
-  @brief Draws the source in the map
+  @brief Draws the tag in the map
   @param img [QImage*] The image to draw to
   @return void
   **/
   void CGuiThermalSource::draw(QImage *img)
   {
     QPainter painter(img);
-    int step=3;
-    painter.setPen(QColor(255,0,0,200));
+    int step = 3;
+    painter.setPen(QColor(200, 0, 0, 200));
     for(unsigned int i = 0 ; i < 4 ; i++)
     {
       painter.drawEllipse(
@@ -82,6 +88,52 @@ namespace stdr_gui{
         2 * i * step, 
         2 * i * step);
     }
+    
+    //!< Draws the label
+    
+    int text_size = name_.size();
+    
+    painter.setPen(QColor(0,0,0,100 * (2)));
+    
+    painter.drawRect(
+      position_.x() + 10,
+      img->height() - position_.y() - 30,
+      3 + text_size * 9,
+      20);
+    
+    painter.setPen(QColor(255,255,255,100 * (2)));
+    
+    painter.fillRect(
+      position_.x() + 10,
+      img->height() - position_.y() - 30,
+      3 + text_size * 9,
+      20,
+      QBrush(QColor(0,0,0,100 * (2))));
+    
+    painter.setFont(QFont("Courier New"));
+    painter.drawText(
+      position_.x() + 12,
+      img->height() - position_.y() - 15,
+      QString(name_.c_str()));
+  }
+  
+  /**
+  @brief Sets the tag message
+  @param msg [QString] The message to be set
+  @return void
+  **/
+  void CGuiThermalSource::setDegrees(float degrees)
+  {
+    degrees_ = degrees;
+  }
+  
+  /**
+  @brief Returns the tag message
+  @return QString
+  **/
+  float CGuiThermalSource::getDegrees(void)
+  {
+    return degrees_;
   }
 }
 

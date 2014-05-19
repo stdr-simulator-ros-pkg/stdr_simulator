@@ -60,6 +60,10 @@ namespace stdr_gui
       unsigned int sonar_hightlight_id_;
       //!< Current rfid antenna for highlight
       unsigned int rfid_antenna_hightlight_id_;
+      //!< Current rfid antenna for highlight
+      unsigned int co2_sensor_hightlight_id_;
+      unsigned int thermal_sensor_hightlight_id_;
+      unsigned int sound_sensor_hightlight_id_;
       
       //!< Tree item of the currently clicked laser 
       QTreeWidgetItem* current_laser_;
@@ -67,6 +71,9 @@ namespace stdr_gui
       QTreeWidgetItem* current_sonar_;
       //!< Tree item of the currently clicked rfid
       QTreeWidgetItem* current_rfid_;
+      QTreeWidgetItem* current_co2_sensor_;
+      QTreeWidgetItem* current_thermal_sensor_;
+      QTreeWidgetItem* current_sound_sensor_;
       //!< Tree item of the currently clicked footprint point
       QTreeWidgetItem* current_footprint_point_;
       
@@ -86,6 +93,9 @@ namespace stdr_gui
       static int sonar_number;
       //!< Number of rfid antenna sensors
       static int rfid_number;
+      static int co2_sensors_number;
+      static int thermal_sensors_number;
+      static int sound_sensors_number;
     
       /**
       @brief Default contructor
@@ -241,6 +251,9 @@ namespace stdr_gui
       @return void
       **/
       void saveRfidAntenna(QTreeWidgetItem *item);
+      void saveCO2Sensor(QTreeWidgetItem *item);
+      void saveThermalSensor(QTreeWidgetItem *item);
+      void saveSoundSensor(QTreeWidgetItem *item);
       
       /**
       @brief Loads a specific sonar sensor from a file
@@ -255,6 +268,9 @@ namespace stdr_gui
       @return void
       **/
       void loadRfidAntenna(QTreeWidgetItem *item);
+      void loadCO2Sensor(QTreeWidgetItem *item);
+      void loadThermalSensor(QTreeWidgetItem *item);
+      void loadSoundSensor(QTreeWidgetItem *item);
       
       /**
       @brief Updates a tree item with a specific sonar sensor
@@ -271,12 +287,18 @@ namespace stdr_gui
       @return void
       **/
       void updateRfidTree(QTreeWidgetItem *item,stdr_msgs::RfidSensorMsg l);
+      void updateCO2SensorTree(QTreeWidgetItem *item,stdr_msgs::CO2SensorMsg l);
+      void updateThermalSensorTree(QTreeWidgetItem *item,stdr_msgs::ThermalSensorMsg l);
+      void updateSoundSensorTree(QTreeWidgetItem *item,stdr_msgs::SoundSensorMsg l);
       
       /**
       @brief Adds an rfid antenna sensor in the new robot 
       @return void
       **/
       void addRfidAntenna(void);
+      void addCO2Sensor(void);
+      void addThermalSensor(void);
+      void addSoundSensor(void);
       
       /**
       @brief Adds an rfid antenna sensor in the new robot 
@@ -284,6 +306,9 @@ namespace stdr_gui
       @return void
       **/
       void addRfidAntenna(stdr_msgs::RfidSensorMsg rmsg);
+      void addCO2Sensor(stdr_msgs::CO2SensorMsg rmsg);
+      void addThermalSensor(stdr_msgs::ThermalSensorMsg rmsg);
+      void addSoundSensor(stdr_msgs::SoundSensorMsg rmsg);
       
       /**
       @brief Erases a specific rfid antenna sensor based on a tree item
@@ -291,6 +316,9 @@ namespace stdr_gui
       @return void
       **/
       void eraseRfid(QTreeWidgetItem *item);
+      void eraseCO2Sensor(QTreeWidgetItem *item);
+      void eraseThermalSensor(QTreeWidgetItem *item);
+      void eraseSoundSensor(QTreeWidgetItem *item);
       
       /**
       @brief Edits a specific rfid antenna sensor based on a tree item. Initiates the rfid antenna sensor editor widget
@@ -298,6 +326,9 @@ namespace stdr_gui
       @return void
       **/
       void editRfid(QTreeWidgetItem *item);
+      void editCO2Sensor(QTreeWidgetItem *item);
+      void editThermalSensor(QTreeWidgetItem *item);
+      void editSoundSensor(QTreeWidgetItem *item);
       
       /**
       @brief Edits a specific footprint point based on a tree item. Initiates the footprint editor widget
@@ -312,6 +343,9 @@ namespace stdr_gui
       @return int
       **/
       int searchRfid(QString frameId);
+      int searchCO2Sensor(QString frameId);
+      int searchThermalSensor(QString frameId);
+      int searchSoundSensor(QString frameId);
       
       /**
       @brief Draws a robot
@@ -336,6 +370,9 @@ namespace stdr_gui
       @return void
       **/
       void drawRfidAntennas(void);
+      void drawCO2Sensors(void);
+      void drawThermalSensors(void);
+      void drawSoundSensors(void);
 
       /**
       @brief Updates the robot's preview
@@ -410,12 +447,18 @@ namespace stdr_gui
       @return void
       **/ 
       void updateRfidAntenna(void);
+      void updateCO2Sensor(void);
+      void updateThermalSensor(void);
+      void updateSoundSensor(void);
       
       /**
       @brief Called when the update button of the properties widget is clicked 
       @return void
       **/ 
       void updateRfidAntennaOpen(void);
+      void updateCO2SensorOpen(void);
+      void updateThermalSensorOpen(void);
+      void updateSoundSensorOpen(void);
       
       /**
       @brief Called when the update button of the properties widget is clicked 

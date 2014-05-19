@@ -199,6 +199,12 @@ namespace stdr_gui{
             loader_.map->setCursor(QCursor(Qt::CrossCursor));
             Q_EMIT co2PlaceSet(p);
           }
+          else if(map_state_ == SETPLACESOUND)
+          {
+            map_state_ = NORMAL;
+            loader_.map->setCursor(QCursor(Qt::CrossCursor));
+            Q_EMIT soundPlaceSet(p);
+          }
         }
       }
       else if(event->type() == QEvent::Wheel)
@@ -364,6 +370,20 @@ namespace stdr_gui{
       return;
     }
     map_state_ = SETPLACECO2;
+    loader_.map->setCursor(Qt::PointingHandCursor);
+  }
+  
+  /**
+  @brief Changes the map state. Waits for a sound source to be placed
+  @return void
+  **/
+  void CMapConnector::waitForSoundPlace(void)
+  {
+    if ( ! map_initialized_ )
+    {
+      return;
+    }
+    map_state_ = SETPLACESOUND;
     loader_.map->setCursor(Qt::PointingHandCursor);
   }
   

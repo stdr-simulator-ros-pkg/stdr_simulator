@@ -69,9 +69,22 @@
 #include <stdr_msgs/RobotIndexedMsg.h>
 #include <stdr_msgs/RobotMsg.h>
 #include <stdr_msgs/Noise.h>
+
 #include <stdr_msgs/RfidTagVector.h>
 #include <stdr_msgs/AddRfidTag.h>
 #include <stdr_msgs/DeleteRfidTag.h>
+
+#include <stdr_msgs/CO2SourceVector.h>
+#include <stdr_msgs/AddCO2Source.h>
+#include <stdr_msgs/DeleteCO2Source.h>
+
+#include <stdr_msgs/ThermalSourceVector.h>
+#include <stdr_msgs/AddThermalSource.h>
+#include <stdr_msgs/DeleteThermalSource.h>
+
+#include <stdr_msgs/SoundSourceVector.h>
+#include <stdr_msgs/AddSoundSource.h>
+#include <stdr_msgs/DeleteSoundSource.h>
 
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/Point.h>
@@ -199,6 +212,39 @@ namespace stdr_gui_tools
   **/
   stdr_msgs::RfidSensorMsg fixRfidAnglesToDegrees(
     stdr_msgs::RfidSensorMsg rmsg);
+    
+  /**
+  @brief Angle conversion
+  **/
+  stdr_msgs::CO2SensorMsg fixCO2AnglesToRad(stdr_msgs::CO2SensorMsg rmsg);
+  
+  /**
+  @brief Angle conversion
+  **/
+  stdr_msgs::CO2SensorMsg fixCO2AnglesToDegrees(
+    stdr_msgs::CO2SensorMsg rmsg);
+    
+  /**
+  @brief Angle conversion
+  **/
+  stdr_msgs::ThermalSensorMsg fixThermalAnglesToRad(stdr_msgs::ThermalSensorMsg rmsg);
+  
+  /**
+  @brief Angle conversion
+  **/
+  stdr_msgs::ThermalSensorMsg fixThermalAnglesToDegrees(
+    stdr_msgs::ThermalSensorMsg rmsg);
+    
+  /**
+  @brief Angle conversion
+  **/
+  stdr_msgs::SoundSensorMsg fixSoundAnglesToRad(stdr_msgs::SoundSensorMsg rmsg);
+  
+  /**
+  @brief Angle conversion
+  **/
+  stdr_msgs::SoundSensorMsg fixSoundAnglesToDegrees(
+    stdr_msgs::SoundSensorMsg rmsg);
 }
 
 #endif

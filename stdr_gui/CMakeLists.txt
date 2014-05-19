@@ -62,7 +62,9 @@ set(QT_FORMS
   ui/robotCreator.ui            ui/robotFootprint.ui
   ui/robotProperties.ui         ui/robotVisualization.ui
   ui/simulator.ui               ui/sonarProperties.ui
-  ui/sonarVisualization.ui )
+  ui/sonarVisualization.ui      ui/co2SensorProperties.ui
+  ui/thermalSensorProperties.ui ui/soundSensorProperties.ui
+)
 
 QT4_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
 
@@ -74,6 +76,7 @@ QT_WRAP_CPP(stdr_gui_node SAMPLE_MOC_SRCS include/stdr_gui/stdr_robot_creator/st
 
 #----------------------------------------------------------------------------------------------------#
 
+#~ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_BUILD_TYPE Release)
 
 add_executable(stdr_gui_node
@@ -93,18 +96,25 @@ add_executable(stdr_gui_node
   src/stdr_gui/stdr_robot_creator/stdr_robot_properties_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_footprint_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_rfid_antenna_properties_loader.cpp
+  src/stdr_gui/stdr_robot_creator/stdr_co2_sensor_properties_loader.cpp
+  src/stdr_gui/stdr_robot_creator/stdr_thermal_sensor_properties_loader.cpp
+  src/stdr_gui/stdr_robot_creator/stdr_sound_sensor_properties_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_creator_loader.cpp
   src/stdr_gui/stdr_robot_creator/stdr_robot_creator_connector.cpp
   src/stdr_gui/stdr_gui_sensors/stdr_gui_robot.cpp
   src/stdr_gui/stdr_gui_sensors/stdr_gui_laser.cpp
   src/stdr_gui/stdr_gui_sensors/stdr_gui_sonar.cpp
   src/stdr_gui/stdr_gui_sensors/stdr_gui_rfid.cpp
+  src/stdr_gui/stdr_gui_sensors/stdr_gui_co2.cpp
+  src/stdr_gui/stdr_gui_sensors/stdr_gui_thermal.cpp
+  src/stdr_gui/stdr_gui_sensors/stdr_gui_sound.cpp
   src/stdr_gui/stdr_visualization/stdr_laser_visualization.cpp
   src/stdr_gui/stdr_visualization/stdr_sonar_visualization.cpp
   src/stdr_gui/stdr_visualization/stdr_robot_visualization.cpp
   src/stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.cpp
   src/stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.cpp
   src/stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.cpp
+  src/stdr_gui/stdr_map_metainformation/stdr_gui_sound_source.cpp
   ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
 )
 add_dependencies(stdr_gui_node stdr_msgs_gencpp stdr_robot_gencpp)  # Wait for std messages to build

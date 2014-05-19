@@ -140,6 +140,36 @@ namespace stdr_gui
       **/
       void setRfidReaderVisibility(QString robotName,
         QString rfidReaderName, char vs);
+        
+      /**
+      @brief Changes a co2 sensor visibility icon
+      @param robotName [QString] The robot frame id
+      @param co2SensorName [QString] The co2Sensor frame id
+      @param vs [char] The visibility state
+      @return void
+      **/
+      void setCO2SensorVisibility(QString robotName,
+        QString co2SensorName, char vs);
+        
+      /**
+      @brief Changes a thermal sensor visibility icon
+      @param robotName [QString] The robot frame id
+      @param thermalSensorName [QString] The thermalSensor frame id
+      @param vs [char] The visibility state
+      @return void
+      **/
+      void setThermalSensorVisibility(QString robotName,
+        QString thermalSensorName, char vs);
+        
+      /**
+      @brief Changes a sound sensor visibility icon
+      @param robotName [QString] The robot frame id
+      @param soundSensorName [QString] The soundSensor frame id
+      @param vs [char] The visibility state
+      @return void
+      **/
+      void setSoundSensorVisibility(QString robotName,
+        QString soundSensorName, char vs);
       
       /**
       @brief Changes a robot visibility icon
@@ -199,6 +229,33 @@ namespace stdr_gui
       **/
       void rfidReaderVisibilityClicked(
         QString robotName, QString rfidReaderName);
+        
+      /**
+      @brief Emmited when a co2 sensor visibility icon is clicked
+      @param robotName [QString] The robot frame id
+      @param co2SensorName [QString] The co2 sensor frame id
+      @return void
+      **/
+      void co2SensorVisibilityClicked(
+        QString robotName, QString co2SensorName);
+        
+      /**
+      @brief Emmited when a thermal sensor visibility icon is clicked
+      @param robotName [QString] The robot frame id
+      @param thermalSensorName [QString] The thermal sensor frame id
+      @return void
+      **/
+      void thermalSensorVisibilityClicked(
+        QString robotName, QString thermalSensorName);
+        
+      /**
+      @brief Emmited when a sound sensor visibility icon is clicked
+      @param robotName [QString] The robot frame id
+      @param soundSensorName [QString] The sound sensor frame id
+      @return void
+      **/
+      void soundSensorVisibilityClicked(
+        QString robotName, QString soundSensorName);
       
       /**
       @brief Emmited when a robot visibility icon is clicked

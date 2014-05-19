@@ -1,0 +1,13 @@
+<thermal_sensor>
+    <thermal_sensor_specifications>
+        <max_range>3</max_range>
+        <angle_span>0.349066</angle_span>
+        <frequency>10</frequency>
+        <frame_id>thermal_sensor_0</frame_id>
+        <pose>
+            <x>0</x>
+            <y>0</y>
+            <theta>0</theta>
+        </pose>
+    </thermal_sensor_specifications>
+</thermal_sensor>

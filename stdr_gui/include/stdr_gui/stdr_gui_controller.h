@@ -36,6 +36,7 @@
 #include "stdr_gui/stdr_visualization/stdr_robot_visualization.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_robot.h"
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_co2_source.h"
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_sound_source.h"
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_thermal_source.h"
 #include "stdr_gui/stdr_map_metainformation/stdr_gui_rfid_tag.h"
 
@@ -68,6 +69,7 @@ namespace stdr_gui
         RobotVisIterator;
       typedef std::map<QString,CGuiRfidTag>::iterator RfidTagIterator;
       typedef std::map<QString,CGuiCo2Source>::iterator Co2SourcesIterator;
+      typedef std::map<QString,CGuiSoundSource>::iterator SoundSourcesIterator;
       typedef std::map<QString,CGuiThermalSource>::iterator 
         ThermalSourcesIterator;
       
@@ -98,9 +100,17 @@ namespace stdr_gui
       //!< The original rfid vector
       stdr_msgs::RfidTagVector rfid_tag_pure_;
       //!< Thermal sources in the environment
+      stdr_msgs::ThermalSourceVector thermal_source_pure_;
+      //!< CO2 sources in the environment
       std::map<QString,CGuiThermalSource> thermal_sources_;
+      //!< The original vector
+      stdr_msgs::CO2SourceVector co2_source_pure_;
       //!< CO2 sources in the environment
       std::map<QString,CGuiCo2Source> co2_sources_;
+      //!< Sound sources in the environment
+      stdr_msgs::SoundSourceVector sound_source_pure_;
+      //!< Sound sources in the environment
+      std::map<QString,CGuiSoundSource> sound_sources_;
       
       //!< ROS subscriber for occupancy grid map
       ros::Subscriber map_subscriber_;
@@ -108,6 +118,12 @@ namespace stdr_gui
       ros::Subscriber robot_subscriber_;
       //!< ROS subscriber for rfids
       ros::Subscriber rfids_subscriber_;
+      //!< ROS subscriber for co2 sources
+      ros::Subscriber co2_sources_subscriber_;
+      //!< ROS subscriber for thermal sources
+      ros::Subscriber thermal_sources_subscriber_;
+      //!< ROS subscriber for sound sources
+      ros::Subscriber sound_sources_subscriber_;
       //!< The ROS node handle
       ros::NodeHandle n_;
       //!< ROS tf transform listener
@@ -170,6 +186,21 @@ namespace stdr_gui
       ros::ServiceClient new_rfid_tag_client_;
       //!< Service client for deleting a rfid tag
       ros::ServiceClient delete_rfid_tag_client_;
+      
+      //!< Service client for inserting a new co2 source
+      ros::ServiceClient new_co2_source_client_;
+      //!< Service client for deleting a co2 source
+      ros::ServiceClient delete_co2_source_client_;
+      
+      //!< Service client for inserting a new thermal source
+      ros::ServiceClient new_thermal_source_client_;
+      //!< Service client for deleting a thermal source
+      ros::ServiceClient delete_thermal_source_client_;
+      
+      //!< Service client for inserting a new sound source
+      ros::ServiceClient new_sound_source_client_;
+      //!< Service client for deleting a sound source
+      ros::ServiceClient delete_sound_source_client_;
     
     //------------------------------------------------------------------------//  
     public:
@@ -213,6 +244,27 @@ namespace stdr_gui
       @return void
       **/
       void receiveRfids(const stdr_msgs::RfidTagVector& msg);
+      
+      /**
+      @brief Receives the existent co2 sources
+      @param msg [const stdr_msgs::CO2SourceVector&] The CO2 source message
+      @return void
+      **/
+      void receiveCO2Sources(const stdr_msgs::CO2SourceVector& msg);
+      
+      /**
+      @brief Receives the existent thermal sources
+      @param msg [const stdr_msgs::ThermalSourceVector&] The thermal source message
+      @return void
+      **/
+      void receiveThermalSources(const stdr_msgs::ThermalSourceVector& msg);
+      
+      /**
+      @brief Receives the existent sound sources
+      @param msg [const stdr_msgs::SoundSourceVector&] The sound source message
+      @return void
+      **/
+      void receiveSoundSources(const stdr_msgs::SoundSourceVector& msg);
       
       /**
       @brief Receives the robots from stdr_server. Connects to "stdr_server/active_robots" ROS topic
@@ -272,6 +324,12 @@ namespace stdr_gui
       void loadCo2Pressed(void);
       
       /**
+      @brief Informs CGuiController that a sound source is going to be placed in the environment. Connects to the CGuiConnector::loadSoundPressed signal
+      @return void
+      **/
+      void loadSoundPressed(void);
+      
+      /**
       @brief Informs CGuiController that a thermal source is going to be placed in the environment. Connects to the CGuiConnector::loadThermalPressed signal
       @return void
       **/
@@ -318,6 +376,13 @@ namespace stdr_gui
       @return void
       **/
       void co2PlaceSet(QPoint p);
+      
+      /**
+      @brief Gets the point at which the new sound source is placed. Connects to the CMapConnector::soundPlaceSet signal
+      @param p [QPoint] The event point in the OGM
+      @return void
+      **/
+      void soundPlaceSet(QPoint p);
       
       /**
       @brief Updates the map to be shown in GUI. Connects to the timeout signal of timer_
@@ -391,6 +456,36 @@ namespace stdr_gui
       void rfidReaderVisibilityClicked(QString robotName,QString rfidReaderName);
       
       /**
+      @brief Informs CGuiController that a CO2Sensor visibility status has \
+      been clicked. Connects to the CInfoConnector::co2SensorVisibilityClicked\
+      signal
+      @param robotName [QString] Frame id of the robot
+      @param co2SensorName [QString] Frame id of the co2 sensor
+      @return void
+      **/
+      void co2SensorVisibilityClicked(QString robotName,QString co2SensorName);
+      
+      /**
+      @brief Informs CGuiController that a Thermal Sensor visibility status has \
+      been clicked. Connects to the CInfoConnector::thermalSensorVisibilityClicked\
+      signal
+      @param robotName [QString] Frame id of the robot
+      @param thermalSensorName [QString] Frame id of the thermal sensor
+      @return void
+      **/
+      void thermalSensorVisibilityClicked(QString robotName,QString thermalSensorName);
+      
+      /**
+      @brief Informs CGuiController that a sound Sensor visibility status has \
+      been clicked. Connects to the CInfoConnector::soundSensorVisibilityClicked\
+      signal
+      @param robotName [QString] Frame id of the robot
+      @param soundSensorName [QString] Frame id of the sound sensor
+      @return void
+      **/
+      void soundSensorVisibilityClicked(QString robotName,QString soundSensorName);
+      
+      /**
       @brief Informs CGuiController that a robot visibility status has been clicked. Connects to the CInfoConnector::robotVisibilityClicked signal
       @param robotName [QString] Frame id of the robot
       @return void
@@ -417,6 +512,12 @@ namespace stdr_gui
       @return void
       **/
       void waitForCo2Pose(void);
+      
+      /**
+      @brief Is emitted when a new sound source is going to be placed. Connects to the CMapConnector::waitForSOundPose slot
+      @return void
+      **/
+      void waitForSoundPose(void);
       
       /**
       @brief Is emitted when a new rfid tag is going to be placed. Connects to the CMapConnector::waitForRfidPose slot
@@ -459,6 +560,39 @@ namespace stdr_gui
       **/
       void setRfidReaderVisibility(QString robotName, 
         QString rfidReaderName, char vs);
+        
+      /**
+      @brief Is emitted when a CO2 sensor's visibility status is going to be \
+      changed. Connects to the CInfoConnector::setCO2SensorVisibility slot
+      @param robotName [QString] The frame id of the robot containing the specific co2 reader
+      @param co2SensorName [QString] The frame id of the CO2 sensor
+      @param vs [char] The new visibility status
+      @return void
+      **/
+      void setCO2SensorVisibility(QString robotName, 
+        QString co2SensorName, char vs);
+        
+      /**
+      @brief Is emitted when a thermal sensor's visibility status is going to be \
+      changed. Connects to the CInfoConnector::setThermalSensorVisibility slot
+      @param robotName [QString] The frame id of the robot containing the specific sensor
+      @param thermalSensorName [QString] The frame id of the thermal sensor
+      @param vs [char] The new visibility status
+      @return void
+      **/
+      void setThermalSensorVisibility(QString robotName, 
+        QString thermalSensorName, char vs);
+        
+      /**
+      @brief Is emitted when a sound sensor's visibility status is going to be \
+      changed. Connects to the CInfoConnector::setSoundSensorVisibility slot
+      @param robotName [QString] The frame id of the robot containing the specific sensor
+      @param soundSensorName [QString] The frame id of the sound sensor
+      @param vs [char] The new visibility status
+      @return void
+      **/
+      void setSoundSensorVisibility(QString robotName, 
+        QString soundSensorName, char vs);
       
       /**
       @brief Is emitted when a robot's visibility status is going to be changed. Connects to the CInfoConnector::setRobotVisibility slot

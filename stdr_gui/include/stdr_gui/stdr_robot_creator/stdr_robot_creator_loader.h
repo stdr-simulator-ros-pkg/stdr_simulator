@@ -25,6 +25,9 @@
 #include "ui_robotCreator.h"
 #include "stdr_gui/stdr_robot_creator/stdr_kinematic_properties_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_rfid_antenna_properties_loader.h"
+#include "stdr_gui/stdr_robot_creator/stdr_co2_sensor_properties_loader.h"
+#include "stdr_gui/stdr_robot_creator/stdr_thermal_sensor_properties_loader.h"
+#include "stdr_gui/stdr_robot_creator/stdr_sound_sensor_properties_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_robot_properties_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_robot_footprint_loader.h"
 #include "stdr_gui/stdr_robot_creator/stdr_sonar_properties_loader.h"
@@ -57,6 +60,9 @@ namespace stdr_gui
       std::vector<QTreeWidgetItem> sonars;
       //!< Holds the tree items that contain rfid antenna sensors
       std::vector<QTreeWidgetItem> rfids;
+      std::vector<QTreeWidgetItem> co2_sensors;
+      std::vector<QTreeWidgetItem> thermal_sensors;
+      std::vector<QTreeWidgetItem> sound_sensors;
       
       //!< Tree item for the robot
       QTreeWidgetItem robotNode;
@@ -66,6 +72,9 @@ namespace stdr_gui
       QTreeWidgetItem sonarsNode;
       //!< Tree item for the rfid antennas root
       QTreeWidgetItem rfidAntennasNode;
+      QTreeWidgetItem co2SensorsNode;
+      QTreeWidgetItem thermalSensorsNode;
+      QTreeWidgetItem soundSensorsNode;
       //!< Tree item for the kinematic
       QTreeWidgetItem kinematicNode;
       //!< Tree item for the robot orientation
@@ -104,6 +113,9 @@ namespace stdr_gui
       CKinematicPropertiesLoader kinematicPropLoader;
       //!< Object of rfid antenna properties widget
       CRfidAntennaPropertiesLoader rfidAntennaPropLoader;
+      CCO2SensorPropertiesLoader co2SensorPropLoader;
+      CThermalSensorPropertiesLoader thermalSensorPropLoader;
+      CSoundSensorPropertiesLoader soundSensorPropLoader;
       
       /**
       @brief Default contructor

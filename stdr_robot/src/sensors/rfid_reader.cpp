@@ -96,7 +96,7 @@ namespace stdr_robot {
       float ang = atan2(rfid_tags_.rfid_tags[i].pose.y - sensor_y,
         rfid_tags_.rfid_tags[i].pose.x - sensor_x);
       
-      if(!angCheck(ang, min_angle, max_angle))
+      if(!stdr_robot::angCheck(ang, min_angle, max_angle))
       {
         continue;
       }
@@ -118,45 +118,5 @@ namespace stdr_robot {
   {
     rfid_tags_ = msg;
   }
-  
-  /**
-  @brief Checks if an angle is between two others. Supposes that min < max
-  @param target_ [float] The target angle
-  @param min_ [float] min angle
-  @param max_ [float] max angle
-  @return true on success
-  **/ 
-  static bool angCheck(float target_, float min_, float max_) 
-  {
-    int c = 0;
-    c = (target_ + 2 * PI) / (2 * PI);
-    float target = target_ + (1 - c) * PI * 2;
-    c = (min_ + 2 * PI) / (2 * PI);
-    float min = min_ + (1 - c) * PI * 2;
-    c = (max_ + 2 * PI) / (2 * PI);
-    float max = max_ + (1 - c) * PI * 2;
-    
-    if(min_ * max_ > 0) //!< Same sign
-    {
-      if(target > min && target < max)
-      {
-        return true;
-      }
-    }
-    else
-    {
-      max += 2 * PI;
-      if(target > min && target < max)
-      {
-        return true;
-      }
-      target += 2 * PI;
-      if(target > min && target < max)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-  
+
 }  // namespace stdr_robot

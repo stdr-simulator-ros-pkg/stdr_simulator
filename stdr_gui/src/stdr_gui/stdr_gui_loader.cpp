@@ -145,6 +145,20 @@ namespace stdr_gui
       QIcon::Off);
     actionNewCo2->setIcon(iconNewCo2);
     toolBar->addAction(actionNewCo2);
+    
+    actionNewSound = new QAction(this);
+    actionNewSound->setObjectName(QString::fromUtf8("actionNewSound"));
+    actionNewSound->setCheckable(false);
+    actionNewSound->setIconText(QString("Add sound source"));
+    QIcon iconNewSound;
+    iconNewSound.addFile(QString::fromUtf8((
+      stdr_gui_tools::getRosPackagePath("stdr_gui") + 
+        std::string("/resources/images/sound.png")).c_str()), 
+      QSize(), 
+      QIcon::Normal, 
+      QIcon::Off);
+    actionNewSound->setIcon(iconNewSound);
+    toolBar->addAction(actionNewSound);
         
     toolBar->addSeparator();
         

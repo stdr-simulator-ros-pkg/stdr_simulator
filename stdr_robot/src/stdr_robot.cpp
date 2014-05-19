@@ -109,6 +109,30 @@ namespace stdr_robot
         new RfidReader( _map,
           result->description.rfidSensors[rfidReaderIter], getName(), n ) ) );
     }
+    for ( unsigned int co2SensorIter = 0;
+      co2SensorIter < result->description.co2Sensors.size(); 
+        co2SensorIter++ )
+    {
+      _sensors.push_back( SensorPtr(
+        new CO2Sensor( _map,
+          result->description.co2Sensors[co2SensorIter], getName(), n ) ) );
+    }
+    for ( unsigned int thermalSensorIter = 0;
+      thermalSensorIter < result->description.thermalSensors.size(); 
+        thermalSensorIter++ )
+    {
+      _sensors.push_back( SensorPtr(
+        new ThermalSensor( _map,
+          result->description.thermalSensors[thermalSensorIter], getName(), n ) ) );
+    }
+    for ( unsigned int soundSensorIter = 0;
+      soundSensorIter < result->description.soundSensors.size(); 
+        soundSensorIter++ )
+    {
+      _sensors.push_back( SensorPtr(
+        new SoundSensor( _map,
+          result->description.soundSensors[soundSensorIter], getName(), n ) ) );
+    }
 
     if( result->description.footprint.points.size() == 0 ) {
       float radius = result->description.footprint.radius;

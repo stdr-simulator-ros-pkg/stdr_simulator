@@ -165,6 +165,21 @@ namespace stdr_gui
       Q_EMIT rfidReaderVisibilityClicked(
         item->parent()->parent()->text(0), item->text(0));
     }
+    else if(item->parent()->text(0) == QString("CO2 sensors") && column == 2)
+    {
+      Q_EMIT co2SensorVisibilityClicked(
+        item->parent()->parent()->text(0), item->text(0));
+    }
+    else if(item->parent()->text(0) == QString("Thermal sensors") && column == 2)
+    {
+      Q_EMIT thermalSensorVisibilityClicked(
+        item->parent()->parent()->text(0), item->text(0));
+    }
+    else if(item->parent()->text(0) == QString("Sound sensors") && column == 2)
+    {
+      Q_EMIT soundSensorVisibilityClicked(
+        item->parent()->parent()->text(0), item->text(0));
+    }
     else if(item->parent() == &loader.robotsInfo && column == 3)
     {
       Q_EMIT robotVisualizerClicked(
@@ -313,6 +328,159 @@ namespace stdr_gui
             for(int k = 0 ; k < it->child(j)->childCount() ; k++)
             {
               if(it->child(j)->child(k)->text(0) == rfidReaderName)
+              {
+                QTreeWidgetItem *inIt = it->child(j)->child(k);
+                switch(vs)
+                {
+                  case 0:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_on_);
+                    break;
+                  }
+                  case 1:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_trans_);
+                    break;
+                  }
+                  case 2:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_off_);
+                    break;
+                  }
+                }
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }  
+  /**
+  @brief Changes a co2 sensor visibility icon
+  @param robotName [QString] The robot frame id
+  @param sensorName [QString] The sensor frame id
+  @param vs [char] The visibility state
+  @return void
+  **/
+  void CInfoConnector::setCO2SensorVisibility(
+    QString robotName,QString sensorName,char vs)
+  {
+    for(int i = 0 ; i < loader.robotsInfo.childCount() ; i++)
+    {
+      QString text = loader.robotsInfo.child(i)->text(0);
+      if(text == robotName)
+      {
+        QTreeWidgetItem *it = loader.robotsInfo.child(i);
+        for(int j = 0 ; j < it->childCount() ; j++)
+        {
+          if(it->child(j)->text(0) == QString("CO2 sensors"))
+          {
+            for(int k = 0 ; k < it->child(j)->childCount() ; k++)
+            {
+              if(it->child(j)->child(k)->text(0) == sensorName)
+              {
+                QTreeWidgetItem *inIt = it->child(j)->child(k);
+                switch(vs)
+                {
+                  case 0:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_on_);
+                    break;
+                  }
+                  case 1:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_trans_);
+                    break;
+                  }
+                  case 2:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_off_);
+                    break;
+                  }
+                }
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }  
+  /**
+  @brief Changes a thermal sensor visibility icon
+  @param robotName [QString] The robot frame id
+  @param sensorName [QString] The sensor frame id
+  @param vs [char] The visibility state
+  @return void
+  **/
+  void CInfoConnector::setThermalSensorVisibility(
+    QString robotName,QString sensorName,char vs)
+  {
+    for(int i = 0 ; i < loader.robotsInfo.childCount() ; i++)
+    {
+      QString text = loader.robotsInfo.child(i)->text(0);
+      if(text == robotName)
+      {
+        QTreeWidgetItem *it = loader.robotsInfo.child(i);
+        for(int j = 0 ; j < it->childCount() ; j++)
+        {
+          if(it->child(j)->text(0) == QString("Thermal sensors"))
+          {
+            for(int k = 0 ; k < it->child(j)->childCount() ; k++)
+            {
+              if(it->child(j)->child(k)->text(0) == sensorName)
+              {
+                QTreeWidgetItem *inIt = it->child(j)->child(k);
+                switch(vs)
+                {
+                  case 0:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_on_);
+                    break;
+                  }
+                  case 1:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_trans_);
+                    break;
+                  }
+                  case 2:
+                  {
+                    inIt->setIcon(2,loader.visible_icon_off_);
+                    break;
+                  }
+                }
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }  
+  /**
+  @brief Changes a sound sensor visibility icon
+  @param robotName [QString] The robot frame id
+  @param sensorName [QString] The sensor frame id
+  @param vs [char] The visibility state
+  @return void
+  **/
+  void CInfoConnector::setSoundSensorVisibility(
+    QString robotName,QString sensorName,char vs)
+  {
+    for(int i = 0 ; i < loader.robotsInfo.childCount() ; i++)
+    {
+      QString text = loader.robotsInfo.child(i)->text(0);
+      if(text == robotName)
+      {
+        QTreeWidgetItem *it = loader.robotsInfo.child(i);
+        for(int j = 0 ; j < it->childCount() ; j++)
+        {
+          if(it->child(j)->text(0) == QString("Sound sensors"))
+          {
+            for(int k = 0 ; k < it->child(j)->childCount() ; k++)
+            {
+              if(it->child(j)->child(k)->text(0) == sensorName)
               {
                 QTreeWidgetItem *inIt = it->child(j)->child(k);
                 switch(vs)

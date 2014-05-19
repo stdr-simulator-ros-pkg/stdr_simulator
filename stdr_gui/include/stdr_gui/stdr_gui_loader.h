@@ -66,6 +66,8 @@ namespace stdr_gui
       QAction *actionNewThermal;
       //!< The action of new CO2 source button
       QAction *actionNewCo2;
+      //!< The action of new sound source button
+      QAction *actionNewSound;
       //!< The action of loading a map button
       QAction *actionLoadMap;
       //!< The action of zooming in button
