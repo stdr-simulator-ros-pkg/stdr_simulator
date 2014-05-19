@@ -23,6 +23,7 @@
 #define THERMAL_SENSOR_H
 
 #include <stdr_robot/sensors/sensor_base.h>
+#include <stdr_robot/sensors/helper.h>
 #include <stdr_msgs/ThermalSensorMsg.h>
 #include <stdr_msgs/ThermalSensorMeasurementMsg.h>
 #include <stdr_msgs/ThermalSourceVector.h>
@@ -87,7 +88,6 @@ namespace stdr_robot {
       stdr_msgs::ThermalSourceVector thermal_sources_;
   };
 
-  static bool angCheck(float target_, float min_, float max_);
 
 }
 

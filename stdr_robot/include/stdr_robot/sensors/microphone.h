@@ -23,6 +23,7 @@
 #define MICROPHONE_SENSOR_H
 
 #include <stdr_robot/sensors/sensor_base.h>
+#include <stdr_robot/sensors/helper.h>
 #include <stdr_msgs/SoundSensorMsg.h>
 #include <stdr_msgs/SoundSensorMeasurementMsg.h>
 #include <stdr_msgs/SoundSourceVector.h>
@@ -86,8 +87,6 @@ namespace stdr_robot {
       //!< The currently existent sources
       stdr_msgs::SoundSourceVector sound_sources_;
   };
-
-  static bool angCheck(float target_, float min_, float max_);
 
 }
 

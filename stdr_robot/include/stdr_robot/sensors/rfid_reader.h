@@ -23,6 +23,7 @@
 #define RFID_READER_H
 
 #include <stdr_robot/sensors/sensor_base.h>
+#include <stdr_robot/sensors/helper.h>
 #include <stdr_msgs/RfidSensorMsg.h>
 #include <stdr_msgs/RfidSensorMeasurementMsg.h>
 #include <stdr_msgs/RfidTagVector.h>
@@ -84,8 +85,6 @@ namespace stdr_robot {
       //!< The currently existent RFID tags
       stdr_msgs::RfidTagVector rfid_tags_;
   };
-
-  static bool angCheck(float target_, float min_, float max_);
 
 }
 

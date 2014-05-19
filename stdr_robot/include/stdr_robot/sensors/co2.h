@@ -23,6 +23,7 @@
 #define CO2_SENSOR_H
 
 #include <stdr_robot/sensors/sensor_base.h>
+#include <stdr_robot/sensors/helper.h>
 #include <stdr_msgs/CO2SensorMsg.h>
 #include <stdr_msgs/CO2SensorMeasurementMsg.h>
 #include <stdr_msgs/CO2SourceVector.h>
@@ -86,8 +87,6 @@ namespace stdr_robot {
       //!< The currently existent sources
       stdr_msgs::CO2SourceVector co2_sources_;
   };
-
-  static bool angCheck(float target_, float min_, float max_);
 
 }
 
