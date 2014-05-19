@@ -19,8 +19,11 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
+#include <signal.h>
 #include "stdr_gui/stdr_gui_controller.h"
 #include "stdr_gui/stdr_gui_application.h"
+
+void signalHandler(int sig);
 
 /**
 @brief The main node function
@@ -32,9 +35,23 @@ int main(int argc,char **argv)
 {
   stdr_gui::CStdrApplication app(argc, argv);
   app.setAttribute(Qt::AA_DontShowIconsInMenus, false);
-  ros::init(argc,argv,"stdr_gui_node");
-  stdr_gui::CGuiController con(argc,argv);
+  ros::init(argc, argv, "stdr_gui_node", ros::init_options::NoSigintHandler);
+  stdr_gui::CGuiController con(argc, argv);
+
+  // Add custom signal handlers
+  signal(SIGTERM, signalHandler);
+  signal(SIGINT, signalHandler);
+  signal(SIGHUP, signalHandler);
+  
   con.init();
   app.exec();
   return 0;
+}
+
+/**
+@brief Signal handler, kills QApplication
+**/
+void signalHandler(int sig)
+{
+  QApplication::quit();
 }
