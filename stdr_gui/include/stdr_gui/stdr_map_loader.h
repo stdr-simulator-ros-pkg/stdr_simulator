@@ -133,6 +133,13 @@ namespace stdr_gui
       void updateCenter(QPoint p);
       
       /**
+      @brief Updates the image center by moving directionally
+      @param key [int] The key pressed
+      @return void
+      **/
+      void moveDirectionally(int key);
+      
+      /**
       @brief Resets the zoom of the image
       @return void
       **/

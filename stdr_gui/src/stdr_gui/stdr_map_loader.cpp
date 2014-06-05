@@ -189,6 +189,46 @@ namespace stdr_gui
   }
   
   /**
+  @brief Updates the image center by moving directionally
+  @param key [int] The key pressed
+  @return void
+  **/
+  void CMapLoader::moveDirectionally(int key)
+  {
+    int xcenter = (map_max_.x() + map_min_.x()) / 2; 
+    int ycenter = (map_max_.y() + map_min_.y()) / 2; 
+    QPoint p(xcenter, ycenter);
+    ROS_ERROR("%d %d", p.x(), p.y());
+    //~ float move_by = (map_max_.x() - map_min_.x()) / 10.0;
+    float move_by = 50;
+    
+    switch(key)
+    {
+      case Qt::Key_Right:
+        ROS_ERROR("Going right");
+        p.setX(p.x() + move_by);
+        break;
+      case Qt::Key_Left:
+        ROS_ERROR("Going left");
+        p.setX(p.x() - move_by);
+        break;
+      case Qt::Key_Up:
+        ROS_ERROR("Going up");
+        p.setY(p.y() - move_by);
+        break;
+      case Qt::Key_Down:
+        ROS_ERROR("Going down");
+        p.setY(p.y() + move_by);
+        break;
+      default:
+        return;
+    }
+    ROS_ERROR("%d %d", p.x(), p.y());
+    updateCenter(p);
+  }
+  
+  
+  /**
   @brief Updates the image center
   @param p [QPoint] The new center
   @return void
