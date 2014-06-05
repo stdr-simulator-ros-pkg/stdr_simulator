@@ -25,7 +25,7 @@
 #include "ui_map.h"
 #include "stdr_gui/stdr_tools.h"
 
-#define ZOOM_RATIO 1.05
+#define ZOOM_RATIO 1.1
 
 /**
 @namespace stdr_gui

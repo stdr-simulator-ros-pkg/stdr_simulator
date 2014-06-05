@@ -36,6 +36,7 @@ namespace stdr_gui
     setupUi(this);
     internal_img_ = new QImage(100,100,QImage::Format_RGB32);
     map_min_ = QPoint(0,0);
+    map_max_ = QPoint(0,0);
     zoom_ = 0;
   }
   
@@ -150,10 +151,19 @@ namespace stdr_gui
     QPoint evOriginal = np;
     
     float xmin,xmax,ymin,ymax;
-    xmin = evOriginal.x() - newWidth / 2;
-    xmax = evOriginal.x() + newWidth / 2;
-    ymin = evOriginal.y() - newHeight / 2;
-    ymax = evOriginal.y() + newHeight / 2;
+    float prevxmin, prevymin, prevWidth, prevHeight;
+    prevxmin = map_min_.x();
+    prevymin = map_min_.y();
+    prevWidth = map_max_.x() - map_min_.x();
+    prevHeight = map_max_.y() - map_min_.y();
+    float xhit = evOriginal.x();
+    float yhit = evOriginal.y();
+
+    xmin = xhit - (xhit - prevxmin) * newWidth / prevWidth;
+    xmax = xmin + newWidth ;
+    ymin = yhit - (yhit - prevymin) * newHeight / prevHeight;
+    ymax = ymin + newHeight;
+    
     if(xmin < 0)
     {
       xmax += - xmin;
@@ -279,5 +289,7 @@ namespace stdr_gui
   void CMapLoader::setInitialImageSize(QSize s)
   {
     initial_image_size_ = s;
+    map_min_ = QPoint(0, 0);
+    map_max_ = QPoint(s.width(), s.height());
   }
 }
