@@ -198,32 +198,26 @@ namespace stdr_gui
     int xcenter = (map_max_.x() + map_min_.x()) / 2; 
     int ycenter = (map_max_.y() + map_min_.y()) / 2; 
     QPoint p(xcenter, ycenter);
-    ROS_ERROR("%d %d", p.x(), p.y());
     //~ float move_by = (map_max_.x() - map_min_.x()) / 10.0;
     float move_by = 50;
     
     switch(key)
     {
       case Qt::Key_Right:
-        ROS_ERROR("Going right");
         p.setX(p.x() + move_by);
         break;
       case Qt::Key_Left:
-        ROS_ERROR("Going left");
         p.setX(p.x() - move_by);
         break;
       case Qt::Key_Up:
-        ROS_ERROR("Going up");
         p.setY(p.y() - move_by);
         break;
       case Qt::Key_Down:
-        ROS_ERROR("Going down");
         p.setY(p.y() + move_by);
         break;
       default:
         return;
     }
-    ROS_ERROR("%d %d", p.x(), p.y());
     updateCenter(p);
   }
   
@@ -236,14 +230,12 @@ namespace stdr_gui
   void CMapLoader::updateCenter(QPoint p)
   {
     
-    //~ ROS_ERROR("Update center :%d %d",p.x(),p.y());
-
     float intW = internal_img_->width();
     float intH = internal_img_->height();
     float newWidth = internal_img_->width() / pow(ZOOM_RATIO,zoom_);
     float newHeight = internal_img_->height() / pow(ZOOM_RATIO,zoom_);
     QPoint evOriginal = p;
-    evOriginal.setY(internal_img_->height() - evOriginal.y());
+    //~ evOriginal.setY(internal_img_->height() - evOriginal.y());
     
     float xmin,xmax,ymin,ymax;
     xmin = evOriginal.x() - newWidth / 2;
@@ -272,8 +264,6 @@ namespace stdr_gui
     }
     map_min_ = QPoint(xmin,ymin);
     map_max_ = QPoint(xmax,ymax);
-    
-    //~ ROS_ERROR("Update center after:%d %d",map_min_.x(),map_min_.y());
   }
   
   /**
