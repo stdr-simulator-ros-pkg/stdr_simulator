@@ -102,4 +102,18 @@ namespace stdr_parser
       printParsedXml(n->elements[i],indent+std::string("| "));
     }
   }
+  
+  /**
+  * @brief Unalloates the memory of the node's children
+  * @return void
+  */
+  void Node::unallocateChildren(void)
+  {
+    ROS_ERROR("Im releasing! %d", this);
+    for(unsigned int i = 0 ; i < elements.size() ; i++)
+    {
+      elements[i]->unallocateChildren();
+      delete elements[i];
+    }
+  }
 }
