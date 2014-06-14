@@ -109,7 +109,6 @@ namespace stdr_parser
   */
   void Node::unallocateChildren(void)
   {
-    ROS_ERROR("Im releasing! %d", this);
     for(unsigned int i = 0 ; i < elements.size() ; i++)
     {
       elements[i]->unallocateChildren();
