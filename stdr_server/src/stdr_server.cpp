@@ -150,7 +150,7 @@ namespace stdr_server {
     { //!< A rfid tag exists with the same tag_id
       res.success = false;
       res.message = "Duplicate rfid_id";
-      return 1;
+      return false;
     }
     
     //!< Add RFID tag to the environment 
@@ -167,7 +167,7 @@ namespace stdr_server {
 
     //!< Return success
     res.success = true;
-    return 0;
+    return true;
   }
   
   /**
@@ -183,7 +183,7 @@ namespace stdr_server {
     { //!< A source exists with the same id
       res.success = false;
       res.message = "Duplicate CO2 is";
-      return 1;
+      return false;
     }
     
     //!< Add CO2 source to the environment 
@@ -201,7 +201,7 @@ namespace stdr_server {
     
     //!< Return success
     res.success = true;
-    return 0;
+    return true;
   }
   
   /**
@@ -217,7 +217,7 @@ namespace stdr_server {
     { //!< A source exists with the same id
       res.success = false;
       res.message = "Duplicate thermal source is";
-      return 1;
+      return false;
     }
     
     //!< Add source to the environment 
@@ -235,7 +235,7 @@ namespace stdr_server {
     
     //!< Return success
     res.success = true;
-    return 0;
+    return true;
   }
   
   /**
@@ -251,7 +251,7 @@ namespace stdr_server {
     { //!< A source exists with the same id
       res.success = false;
       res.message = "Duplicate sound source is";
-      return 1;
+      return false;
     }
     
     //!< Add source to the environment 
@@ -269,7 +269,7 @@ namespace stdr_server {
     
     //!< Return success
     res.success = true;
-    return 0;
+    return true;
   }
   
   /**
@@ -296,9 +296,9 @@ namespace stdr_server {
     }
     else  //!< Tag does not exist
     {
-      return 1;
+      return false;
     }
-    return 0;
+    return true;
   }
   
   /**
@@ -325,9 +325,9 @@ namespace stdr_server {
     }
     else  //!< Source does not exist
     {
-      return 1;
+      return false;
     }
-    return 0;
+    return true;
   }
   
   /**
@@ -354,9 +354,9 @@ namespace stdr_server {
     }
     else  //!< Source does not exist
     {
-      return 1;
+      return false;
     }
-    return 0;
+    return true;
   }
   
   /**
@@ -383,9 +383,9 @@ namespace stdr_server {
     }
     else  //!< Source does not exist
     {
-      return 1;
+      return false;
     }
-    return 0;
+    return true;
   }
 
   /**
