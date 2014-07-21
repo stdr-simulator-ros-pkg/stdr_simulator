@@ -21,6 +21,7 @@
 
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
+#include <actionlib/client/terminal_state.h>
 #include <stdr_msgs/RobotIndexedMsg.h>
 #include <stdr_msgs/SpawnRobotAction.h>
 #include <stdr_msgs/DeleteRobotAction.h>

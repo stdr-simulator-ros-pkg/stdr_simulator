@@ -439,8 +439,15 @@ namespace stdr_server {
   void Server::spawnRobotCallback(
     const stdr_msgs::SpawnRobotGoalConstPtr& goal) 
   {
-    
     stdr_msgs::SpawnRobotResult result;
+    
+    std::string f_id;
+    if(hasDublicateFrameIds(goal->description, f_id))
+    {
+      result.message = std::string("Double frame_id :") + f_id;
+      _spawnRobotServer.setAborted(result);
+      return;
+    }
     
     if (addNewRobot(goal->description, &result)) {
       _spawnRobotServer.setSucceeded(result);
@@ -456,7 +463,7 @@ namespace stdr_server {
       _robotsPublisher.publish(msg);
       return;
     }
-    
+
     _spawnRobotServer.setAborted();
   }
 
@@ -531,94 +538,6 @@ namespace stdr_server {
     
     namedRobot.robot = description;
     
-    //Sanity check for robot sensor frame_ids
-    {
-      std::set<std::string> f_ids;
-      for(unsigned int i = 0 ; i < namedRobot.robot.laserSensors.size() ; i++)
-      {
-        if(f_ids.find(namedRobot.robot.laserSensors[i].frame_id) == f_ids.end())
-        {
-          f_ids.insert(namedRobot.robot.laserSensors[i].frame_id);
-        }
-        else
-        {
-          //~ result->success = false;
-          //~ result->message = std::string("Duplicate frame_id : ") + 
-            //~ namedRobot.robot.laserSensors[i].frame_id;
-          return false;
-        }
-      }
-      for(unsigned int i = 0 ; i < namedRobot.robot.sonarSensors.size() ; i++)
-      {
-        if(f_ids.find(namedRobot.robot.sonarSensors[i].frame_id) == f_ids.end())
-        {
-          f_ids.insert(namedRobot.robot.sonarSensors[i].frame_id);
-        }
-        else
-        {
-          //~ result->success = false;
-          //~ result->message = std::string("Duplicate frame_id : ") + 
-            //~ namedRobot.robot.sonarSensors[i].frame_id;
-          return false;
-        }
-      }
-      for(unsigned int i = 0 ; i < namedRobot.robot.rfidSensors.size() ; i++)
-      {
-        if(f_ids.find(namedRobot.robot.rfidSensors[i].frame_id) == f_ids.end())
-        {
-          f_ids.insert(namedRobot.robot.rfidSensors[i].frame_id);
-        }
-        else
-        {
-          //~ result->success = false;
-          //~ result->message = std::string("Duplicate frame_id : ") + 
-            //~ namedRobot.robot.rfidSensors[i].frame_id;
-          return false;
-        }
-      }
-      for(unsigned int i = 0 ; i < namedRobot.robot.co2Sensors.size() ; i++)
-      {
-        if(f_ids.find(namedRobot.robot.co2Sensors[i].frame_id) == f_ids.end())
-        {
-          f_ids.insert(namedRobot.robot.co2Sensors[i].frame_id);
-        }
-        else
-        {
-          //~ result->success = false;
-          //~ result->message = std::string("Duplicate frame_id : ") + 
-            //~ namedRobot.robot.co2Sensors[i].frame_id;
-          return false;
-        }
-      }
-      for(unsigned int i = 0 ; i < namedRobot.robot.soundSensors.size() ; i++)
-      {
-        if(f_ids.find(namedRobot.robot.soundSensors[i].frame_id) == f_ids.end())
-        {
-          f_ids.insert(namedRobot.robot.soundSensors[i].frame_id);
-        }
-        else
-        {
-          //~ result->success = false;
-          //~ result->message = std::string("Duplicate frame_id : ") + 
-            //~ namedRobot.robot.soundSensors[i].frame_id;
-          return false;
-        }
-      }
-      for(unsigned int i = 0 ; i < namedRobot.robot.thermalSensors.size() ; i++)
-      {
-        if(f_ids.find(namedRobot.robot.thermalSensors[i].frame_id) == f_ids.end())
-        {
-          f_ids.insert(namedRobot.robot.thermalSensors[i].frame_id);
-        }
-        else
-        {
-          //~ result->success = false;
-          //~ result->message = std::string("Duplicate frame_id : ") + 
-            //~ namedRobot.robot.thermalSensors[i].frame_id;
-          return false;
-        }
-      }
-    }
     namedRobot.name = "/robot" + boost::lexical_cast<std::string>(_id++);
     
     _robotMap.insert( std::make_pair(namedRobot.name, namedRobot) );
@@ -679,6 +598,85 @@ namespace stdr_server {
       name.c_str());
     
     result->success = false;
+    return false;
+  }
+  
+  bool Server::hasDublicateFrameIds(const stdr_msgs::RobotMsg& robot,
+    std::string &f_id)
+  {
+    std::set<std::string> f_ids;
+    for(unsigned int i = 0 ; i < robot.laserSensors.size() ; i++)
+    {
+      if(f_ids.find(robot.laserSensors[i].frame_id) == f_ids.end())
+      {
+        f_ids.insert(robot.laserSensors[i].frame_id);
+      }
+      else
+      {
+        f_id = robot.laserSensors[i].frame_id;
+        return true;
+      }
+    }
+    for(unsigned int i = 0 ; i < robot.sonarSensors.size() ; i++)
+    {
+      if(f_ids.find(robot.sonarSensors[i].frame_id) == f_ids.end())
+      {
+        f_ids.insert(robot.sonarSensors[i].frame_id);
+      }
+      else
+      {
+        f_id = robot.sonarSensors[i].frame_id;
+        return true;
+      }
+    }
+    for(unsigned int i = 0 ; i < robot.rfidSensors.size() ; i++)
+    {
+      if(f_ids.find(robot.rfidSensors[i].frame_id) == f_ids.end())
+      {
+        f_ids.insert(robot.rfidSensors[i].frame_id);
+      }
+      else
+      {
+        f_id = robot.rfidSensors[i].frame_id;
+        return true;
+      }
+    }
+    for(unsigned int i = 0 ; i < robot.co2Sensors.size() ; i++)
+    {
+      if(f_ids.find(robot.co2Sensors[i].frame_id) == f_ids.end())
+      {
+        f_ids.insert(robot.co2Sensors[i].frame_id);
+      }
+      else
+      {
+        f_id = robot.co2Sensors[i].frame_id;
+        return true;
+      }
+    }
+    for(unsigned int i = 0 ; i < robot.soundSensors.size() ; i++)
+    {
+      if(f_ids.find(robot.soundSensors[i].frame_id) == f_ids.end())
+      {
+        f_ids.insert(robot.soundSensors[i].frame_id);
+      }
+      else
+      {
+        f_id = robot.soundSensors[i].frame_id;
+        return true;
+      }
+    }
+    for(unsigned int i = 0 ; i < robot.thermalSensors.size() ; i++)
+    {
+      if(f_ids.find(robot.thermalSensors[i].frame_id) == f_ids.end())
+      {
+        f_ids.insert(robot.thermalSensors[i].frame_id);
+      }
+      else
+      {
+        f_id = robot.thermalSensors[i].frame_id;
+        return true;
+      }
+    }
     return false;
   }
 

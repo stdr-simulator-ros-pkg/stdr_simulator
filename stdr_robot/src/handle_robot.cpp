@@ -52,9 +52,16 @@ namespace stdr_robot {
     _spawnRobotClient.sendGoal(goal);
     
     bool success = _spawnRobotClient.waitForResult(ros::Duration(10));
-    
     if (!success) {
       throw ConnectionException("Could not spawn robot...");
+    }
+    
+    actionlib::SimpleClientGoalState state = _spawnRobotClient.getState();
+    if(state.toString() == "ABORTED")
+    {
+      std::string msg = std::string("Could not spawn robot. ") + 
+        _spawnRobotClient.getResult()->message;
+      throw DoubleFrameIdException(msg);
     }
     
     ROS_INFO("New robot spawned successfully, with name %s.", 

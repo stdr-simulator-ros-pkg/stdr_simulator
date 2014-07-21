@@ -255,6 +255,9 @@ namespace stdr_server {
       bool deleteSoundSourceCallback(
         stdr_msgs::DeleteSoundSource::Request &req, 
         stdr_msgs::DeleteSoundSource::Response &res);
+        
+      bool hasDublicateFrameIds(const stdr_msgs::RobotMsg& robot, 
+        std::string &f_id);
       
     private:
     
