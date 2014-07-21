@@ -530,6 +530,95 @@ namespace stdr_server {
     stdr_msgs::RobotIndexedMsg namedRobot;
     
     namedRobot.robot = description;
+    
+    //Sanity check for robot sensor frame_ids
+    {
+      std::set<std::string> f_ids;
+      for(unsigned int i = 0 ; i < namedRobot.robot.laserSensors.size() ; i++)
+      {
+        if(f_ids.find(namedRobot.robot.laserSensors[i].frame_id) == f_ids.end())
+        {
+          f_ids.insert(namedRobot.robot.laserSensors[i].frame_id);
+        }
+        else
+        {
+          //~ result->success = false;
+          //~ result->message = std::string("Duplicate frame_id : ") + 
+            //~ namedRobot.robot.laserSensors[i].frame_id;
+          return false;
+        }
+      }
+      for(unsigned int i = 0 ; i < namedRobot.robot.sonarSensors.size() ; i++)
+      {
+        if(f_ids.find(namedRobot.robot.sonarSensors[i].frame_id) == f_ids.end())
+        {
+          f_ids.insert(namedRobot.robot.sonarSensors[i].frame_id);
+        }
+        else
+        {
+          //~ result->success = false;
+          //~ result->message = std::string("Duplicate frame_id : ") + 
+            //~ namedRobot.robot.sonarSensors[i].frame_id;
+          return false;
+        }
+      }
+      for(unsigned int i = 0 ; i < namedRobot.robot.rfidSensors.size() ; i++)
+      {
+        if(f_ids.find(namedRobot.robot.rfidSensors[i].frame_id) == f_ids.end())
+        {
+          f_ids.insert(namedRobot.robot.rfidSensors[i].frame_id);
+        }
+        else
+        {
+          //~ result->success = false;
+          //~ result->message = std::string("Duplicate frame_id : ") + 
+            //~ namedRobot.robot.rfidSensors[i].frame_id;
+          return false;
+        }
+      }
+      for(unsigned int i = 0 ; i < namedRobot.robot.co2Sensors.size() ; i++)
+      {
+        if(f_ids.find(namedRobot.robot.co2Sensors[i].frame_id) == f_ids.end())
+        {
+          f_ids.insert(namedRobot.robot.co2Sensors[i].frame_id);
+        }
+        else
+        {
+          //~ result->success = false;
+          //~ result->message = std::string("Duplicate frame_id : ") + 
+            //~ namedRobot.robot.co2Sensors[i].frame_id;
+          return false;
+        }
+      }
+      for(unsigned int i = 0 ; i < namedRobot.robot.soundSensors.size() ; i++)
+      {
+        if(f_ids.find(namedRobot.robot.soundSensors[i].frame_id) == f_ids.end())
+        {
+          f_ids.insert(namedRobot.robot.soundSensors[i].frame_id);
+        }
+        else
+        {
+          //~ result->success = false;
+          //~ result->message = std::string("Duplicate frame_id : ") + 
+            //~ namedRobot.robot.soundSensors[i].frame_id;
+          return false;
+        }
+      }
+      for(unsigned int i = 0 ; i < namedRobot.robot.thermalSensors.size() ; i++)
+      {
+        if(f_ids.find(namedRobot.robot.thermalSensors[i].frame_id) == f_ids.end())
+        {
+          f_ids.insert(namedRobot.robot.thermalSensors[i].frame_id);
+        }
+        else
+        {
+          //~ result->success = false;
+          //~ result->message = std::string("Duplicate frame_id : ") + 
+            //~ namedRobot.robot.thermalSensors[i].frame_id;
+          return false;
+        }
+      }
+    }
     namedRobot.name = "/robot" + boost::lexical_cast<std::string>(_id++);
     
     _robotMap.insert( std::make_pair(namedRobot.name, namedRobot) );

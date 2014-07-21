@@ -297,7 +297,15 @@ namespace stdr_parser
     }
     
     //!< Set up frame id based on id input
-    msg.frame_id = std::string("laser_") + SSTR(id);
+    indexes = specs->getTag("frame_id");
+    if(indexes.size() == 0)
+    {
+      msg.frame_id = std::string("laser_") + SSTR(id);
+    }
+    else
+    {
+      msg.frame_id = specs->elements[indexes[0]]->elements[0]->value;
+    }
     
     //!< Search for pose
     indexes = specs->getTag("pose");
@@ -388,7 +396,15 @@ namespace stdr_parser
     }
     
     //!< Set up frame id based on id input
-    msg.frame_id = std::string("sonar_") + SSTR(id);
+    indexes = specs->getTag("frame_id");
+    if(indexes.size() == 0)
+    {
+      msg.frame_id = std::string("sonar_") + SSTR(id);
+    }
+    else
+    {
+      msg.frame_id = specs->elements[indexes[0]]->elements[0]->value;
+    }
     
     //!< Search for pose
     indexes = specs->getTag("pose");
@@ -471,9 +487,17 @@ namespace stdr_parser
       msg.frequency = atof(specs->elements[indexes[0]]->elements[0]->
         value.c_str());
     }
-    
+
     //!< Set up frame id based on id input
-    msg.frame_id = std::string("rfid_reader_") + SSTR(id);
+    indexes = specs->getTag("frame_id");
+    if(indexes.size() == 0)
+    {
+      msg.frame_id = std::string("rfid_reader_") + SSTR(id);
+    }
+    else
+    {
+      msg.frame_id = specs->elements[indexes[0]]->elements[0]->value;
+    }
     
     //!< Search for pose
     indexes = specs->getTag("pose");
@@ -531,9 +555,17 @@ namespace stdr_parser
       msg.frequency = atof(specs->elements[indexes[0]]->elements[0]->
         value.c_str());
     }
-    
+
     //!< Set up frame id based on id input
-    msg.frame_id = std::string("co2_sensor_") + SSTR(id);
+    indexes = specs->getTag("frame_id");
+    if(indexes.size() == 0)
+    {
+      msg.frame_id = std::string("co2_sensor_") + SSTR(id);
+    }
+    else
+    {
+      msg.frame_id = specs->elements[indexes[0]]->elements[0]->value;
+    }
     
     //!< Search for pose
     indexes = specs->getTag("pose");
@@ -603,9 +635,17 @@ namespace stdr_parser
       msg.frequency = atof(specs->elements[indexes[0]]->elements[0]->
         value.c_str());
     }
-    
+
     //!< Set up frame id based on id input
-    msg.frame_id = std::string("thermal_sensor_") + SSTR(id);
+    indexes = specs->getTag("frame_id");
+    if(indexes.size() == 0)
+    {
+      msg.frame_id = std::string("thermal_sensor_") + SSTR(id);
+    }
+    else
+    {
+      msg.frame_id = specs->elements[indexes[0]]->elements[0]->value;
+    }
     
     //!< Search for pose
     indexes = specs->getTag("pose");
@@ -675,9 +715,17 @@ namespace stdr_parser
       msg.frequency = atof(specs->elements[indexes[0]]->elements[0]->
         value.c_str());
     }
-    
+
     //!< Set up frame id based on id input
-    msg.frame_id = std::string("sound_sensor_") + SSTR(id);
+    indexes = specs->getTag("frame_id");
+    if(indexes.size() == 0)
+    {
+      msg.frame_id = std::string("sound_sensor_") + SSTR(id);
+    }
+    else
+    {
+      msg.frame_id = specs->elements[indexes[0]]->elements[0]->value;
+    }
     
     //!< Search for pose
     indexes = specs->getTag("pose");
