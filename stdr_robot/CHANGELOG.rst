@@ -2,6 +2,14 @@
 Changelog for package stdr_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added CO2 sensors
+* Added sound sensors
+* Added thermal sensors, they return the larger temperature in their span
+* Refactoring on stdr_robot. Removed duplicate code from derived classes.
+* Rfid Reader robot sensor added.
+
 0.1.3 (2014-03-25)
 ------------------
 * Publish odometry

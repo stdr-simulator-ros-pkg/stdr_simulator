@@ -2,6 +2,15 @@
 Changelog for package stdr_parser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed `#148 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/148>`_
+* tinyxml frees the memory itself (http://tinyxml.cvs.sourceforge.net/viewvc/tinyxml/tinyxml/tinyxml.cpp?revision=1.98&view=markup) so nothiing more to do. Closes `#111 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/111>`_
+* Fixed partially the memory release of parser
+* Parser support for new sensors. (thermal, sound, CO2, rfid)
+* Fixed messageToFile, remains messageToXmlElement
+* More support for YAML-CPP 0.5+
+
 0.1.3 (2014-03-25)
 ------------------
 * Load and save robot in robot creator works

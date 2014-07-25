@@ -2,6 +2,12 @@
 Changelog for package stdr_resources
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added resources for new sensors. (thermal, CO2, sound, rfid)
+* Added lidar resources
+* Fixed specifications.xml for rfid reader support
+
 0.1.3 (2014-03-25)
 ------------------
 * Add more footprint files.

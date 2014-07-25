@@ -2,6 +2,26 @@
 Changelog for package stdr_gui
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feedback added in case of double frame ids
+* Fixes `#140 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/140>`_
+* Added zoom movement by keyboard arrows.
+* Fixes `#146 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/146>`_
+* GUI application now closes with SINGINT
+* CO2 sensors work
+* Sound sensors working
+* Thermal sensors are working. They return the larger temperature in their span
+* Added dummy gui functions for sound sources
+* Full RFID tag and readers support
+* RFID reader visibility status works
+* Rfid antennas visible in information tree
+* RFID reader sensor works.
+* Deletion of RFID tags supported
+* Added click event in GUI for rfid tags
+* Changed the robot label size to be equal to the frame_id size
+* Rfid tags inserted from GUI and shown with their ids
+
 0.1.3 (2014-03-25)
 ------------------
 * fixed `#143 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/143>`_

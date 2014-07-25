@@ -2,6 +2,10 @@
 Changelog for package stdr_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added messages and services for new sensors. (thermal, CO2, sound, rfid)
+
 0.1.3 (2014-03-25)
 ------------------
 
