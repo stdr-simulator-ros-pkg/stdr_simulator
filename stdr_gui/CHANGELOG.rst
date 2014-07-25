@@ -2,8 +2,8 @@
 Changelog for package stdr_gui
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2014-07-25)
+------------------
 * Feedback added in case of double frame ids
 * Fixes `#140 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/140>`_
 * Added zoom movement by keyboard arrows.

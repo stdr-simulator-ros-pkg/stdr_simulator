@@ -2,8 +2,8 @@
 Changelog for package stdr_parser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2014-07-25)
+------------------
 * Fixed `#148 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/148>`_
 * tinyxml frees the memory itself (http://tinyxml.cvs.sourceforge.net/viewvc/tinyxml/tinyxml/tinyxml.cpp?revision=1.98&view=markup) so nothiing more to do. Closes `#111 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/111>`_
 * Fixed partially the memory release of parser

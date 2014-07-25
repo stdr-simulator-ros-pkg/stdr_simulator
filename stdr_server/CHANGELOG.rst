@@ -2,8 +2,8 @@
 Changelog for package stdr_server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2014-07-25)
+------------------
 * Feedback added in case of double frame ids
 * Fixes `#148 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/148>`_
 * Fix return values for service callbacks in stdr_server

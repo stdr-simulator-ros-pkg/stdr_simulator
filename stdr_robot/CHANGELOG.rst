@@ -2,8 +2,8 @@
 Changelog for package stdr_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2014-07-25)
+------------------
 * Added CO2 sensors
 * Added sound sensors
 * Added thermal sensors, they return the larger temperature in their span
