@@ -25,7 +25,7 @@
 #include "ui_map.h"
 #include "stdr_gui/stdr_tools.h"
 
-#define ZOOM_RATIO 1.05
+#define ZOOM_RATIO 1.1
 
 /**
 @namespace stdr_gui
@@ -131,6 +131,13 @@ namespace stdr_gui
       @return void
       **/
       void updateCenter(QPoint p);
+      
+      /**
+      @brief Updates the image center by moving directionally
+      @param key [int] The key pressed
+      @return void
+      **/
+      void moveDirectionally(int key);
       
       /**
       @brief Resets the zoom of the image

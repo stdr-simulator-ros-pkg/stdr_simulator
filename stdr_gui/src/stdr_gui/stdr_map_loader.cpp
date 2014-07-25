@@ -36,6 +36,7 @@ namespace stdr_gui
     setupUi(this);
     internal_img_ = new QImage(100,100,QImage::Format_RGB32);
     map_min_ = QPoint(0,0);
+    map_max_ = QPoint(0,0);
     zoom_ = 0;
   }
   
@@ -150,10 +151,19 @@ namespace stdr_gui
     QPoint evOriginal = np;
     
     float xmin,xmax,ymin,ymax;
-    xmin = evOriginal.x() - newWidth / 2;
-    xmax = evOriginal.x() + newWidth / 2;
-    ymin = evOriginal.y() - newHeight / 2;
-    ymax = evOriginal.y() + newHeight / 2;
+    float prevxmin, prevymin, prevWidth, prevHeight;
+    prevxmin = map_min_.x();
+    prevymin = map_min_.y();
+    prevWidth = map_max_.x() - map_min_.x();
+    prevHeight = map_max_.y() - map_min_.y();
+    float xhit = evOriginal.x();
+    float yhit = evOriginal.y();
+
+    xmin = xhit - (xhit - prevxmin) * newWidth / prevWidth;
+    xmax = xmin + newWidth ;
+    ymin = yhit - (yhit - prevymin) * newHeight / prevHeight;
+    ymax = ymin + newHeight;
+    
     if(xmin < 0)
     {
       xmax += - xmin;
@@ -179,6 +189,40 @@ namespace stdr_gui
   }
   
   /**
+  @brief Updates the image center by moving directionally
+  @param key [int] The key pressed
+  @return void
+  **/
+  void CMapLoader::moveDirectionally(int key)
+  {
+    int xcenter = (map_max_.x() + map_min_.x()) / 2; 
+    int ycenter = (map_max_.y() + map_min_.y()) / 2; 
+    QPoint p(xcenter, ycenter);
+    //~ float move_by = (map_max_.x() - map_min_.x()) / 10.0;
+    float move_by = 50;
+    
+    switch(key)
+    {
+      case Qt::Key_Right:
+        p.setX(p.x() + move_by);
+        break;
+      case Qt::Key_Left:
+        p.setX(p.x() - move_by);
+        break;
+      case Qt::Key_Up:
+        p.setY(p.y() - move_by);
+        break;
+      case Qt::Key_Down:
+        p.setY(p.y() + move_by);
+        break;
+      default:
+        return;
+    }
+    updateCenter(p);
+  }
+  
+  
+  /**
   @brief Updates the image center
   @param p [QPoint] The new center
   @return void
@@ -186,14 +230,12 @@ namespace stdr_gui
   void CMapLoader::updateCenter(QPoint p)
   {
     
-    //~ ROS_ERROR("Update center :%d %d",p.x(),p.y());
-
     float intW = internal_img_->width();
     float intH = internal_img_->height();
     float newWidth = internal_img_->width() / pow(ZOOM_RATIO,zoom_);
     float newHeight = internal_img_->height() / pow(ZOOM_RATIO,zoom_);
     QPoint evOriginal = p;
-    evOriginal.setY(internal_img_->height() - evOriginal.y());
+    //~ evOriginal.setY(internal_img_->height() - evOriginal.y());
     
     float xmin,xmax,ymin,ymax;
     xmin = evOriginal.x() - newWidth / 2;
@@ -222,8 +264,6 @@ namespace stdr_gui
     }
     map_min_ = QPoint(xmin,ymin);
     map_max_ = QPoint(xmax,ymax);
-    
-    //~ ROS_ERROR("Update center after:%d %d",map_min_.x(),map_min_.y());
   }
   
   /**
@@ -279,5 +319,7 @@ namespace stdr_gui
   void CMapLoader::setInitialImageSize(QSize s)
   {
     initial_image_size_ = s;
+    map_min_ = QPoint(0, 0);
+    map_max_ = QPoint(s.width(), s.height());
   }
 }

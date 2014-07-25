@@ -783,14 +783,19 @@ namespace stdr_gui
       newRobot = robot_handler_.spawnNewRobot(
         stdr_gui_tools::fixRobotAnglesToRad(
           gui_connector_.robotCreatorConn.getNewRobot()));
-        
+          
+      my_robots_.insert(newRobot.name);  
     }
     catch (stdr_robot::ConnectionException& ex) 
     {
-      ROS_ERROR("%s", ex.what());
-      return;
+      map_lock_ = false;
+      gui_connector_.raiseMessage("STDR Robot Spawn - Error", ex.what());
     }
-    my_robots_.insert(newRobot.name);
+    catch (stdr_robot::DoubleFrameIdException& ex) 
+    {
+      map_lock_ = false;
+      gui_connector_.raiseMessage("STDR Robot Spawn - Error", ex.what());
+    }
     map_lock_ = false;
   }
   

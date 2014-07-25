@@ -89,6 +89,12 @@ namespace stdr_parser
       @return void
       **/
       void printParsedXml(Node *n,std::string indent);
+      
+      /**
+       * @brief Unalloates the memory of the node's children
+       * @return void
+       */
+      void unallocateChildren(void);
   };
   
 }
