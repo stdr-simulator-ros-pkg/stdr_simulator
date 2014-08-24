@@ -60,8 +60,9 @@ namespace stdr_robot
     _moveRobotService = n.advertiseService(
       getName() + "/replace", &Robot::moveRobotCallback, this);
 
+    //we should not start the timer, until we hame a motion controller
     _tfTimer = n.createTimer(
-      ros::Duration(0.1), &Robot::publishTransforms, this);
+      ros::Duration(0.1), &Robot::publishTransforms, this, false, false);
   }
 
   /**
@@ -153,6 +154,8 @@ namespace stdr_robot
 
     _motionControllerPtr.reset(
       new IdealMotionController(_currentPose, _tfBroadcaster, n, getName()));
+
+    _tfTimer.start();
   }
 
   /**
