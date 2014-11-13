@@ -13,13 +13,15 @@
   <url type="repository">https://github.com/stdr-simulator-ros-pkg/stdr_simulator</url>
 
   <author>Chris Zalidis</author>
-  
+
   <buildtool_depend>catkin</buildtool_depend>
-  
+
   <run_depend>stdr_server</run_depend>
   <run_depend>stdr_robot</run_depend>
   <run_depend>stdr_gui</run_depend>
   <run_depend>rviz</run_depend>
+  <run_depend>master_discovery_fkie</run_depend>
+  <run_depend>master_sync_fkie</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
