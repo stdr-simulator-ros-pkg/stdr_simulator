@@ -80,7 +80,7 @@ namespace stdr_gui
   void CGuiController::initializeCommunications(void)
   {
     map_subscriber_ = n_.subscribe(
-      "map", 
+      "stdr_map",
       1, 
       &CGuiController::receiveMap,
       this);
@@ -466,7 +466,7 @@ namespace stdr_gui
   }
 
   /**
-  @brief Receives the occupancy grid map from stdr_server. Connects to "map" \
+  @brief Receives the occupancy grid map from stdr_server. Connects to "stdr_map" \
   ROS topic
   @param msg [const nav_msgs::OccupancyGrid&] The OGM message
   @return void
