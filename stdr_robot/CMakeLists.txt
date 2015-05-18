@@ -38,6 +38,15 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
+if(CMAKE_COMPILER_IS_GNUCXX)
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
+    if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
+        add_definitions(-std=gnu++0x)
+    else(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
+        message(SEND_ERROR "You need GCC version 4.6 or greater to compile this package.")
+    endif(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
 ######################### Sensors ######################################
 add_library(stdr_sensor_base src/sensors/sensor_base.cpp)
 target_link_libraries(stdr_sensor_base ${catkin_LIBRARIES})
@@ -67,7 +76,8 @@ add_dependencies(stdr_laser stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_laser ${catkin_LIBRARIES} stdr_sensor_base)
 
 ###################### Motion Controller ###############################
-add_library(stdr_ideal_motion_controller src/motion/ideal_motion_controller.cpp)
+#add_library(stdr_ideal_motion_controller src/motion/ideal_motion_controller.cpp)
+add_library(stdr_ideal_motion_controller src/motion/omni_motion_controller.cpp)
 add_dependencies(stdr_ideal_motion_controller stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_ideal_motion_controller ${catkin_LIBRARIES})
 
