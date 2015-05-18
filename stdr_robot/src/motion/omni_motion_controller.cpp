@@ -17,6 +17,8 @@
    * Manos Tsardoulias, etsardou@gmail.com
    * Aris Thallas, aris.thallas@gmail.com
    * Chris Zalidis, zalidis@gmail.com 
+   * Oscar Lima, olima_84@yahoo.com - omnidirectional controller part (lines 88-125)
+   * Ashok Meenakshi, mashoksc@gmail.com - omnidirectional controller part (lines 88-125)
 ******************************************************************************/
 
 #include <stdr_robot/motion/ideal_motion_controller.h>
@@ -80,35 +82,10 @@ namespace stdr_robot {
   **/
   void IdealMotionController::calculateMotion(const ros::TimerEvent& event) 
   {
-		/*
-		//differential drive controller
+	  
 		//!< updates _posePtr based on _currentTwist and time passed (event.last_real)
-		
-		ros::Duration dt = ros::Time::now() - event.last_real;
-		
-		if (_currentTwist.angular.z == 0) {
-		
-		_pose.x += _currentTwist.linear.x * dt.toSec() * cosf(_pose.theta);
-		_pose.y += _currentTwist.linear.x * dt.toSec() * sinf(_pose.theta);
-		}
-		else {
-		
-		_pose.x += - _currentTwist.linear.x / _currentTwist.angular.z * 
-			sinf(_pose.theta) + 
-			_currentTwist.linear.x / _currentTwist.angular.z * 
-			sinf(_pose.theta + dt.toSec() * _currentTwist.angular.z);
-		
-		_pose.y -= - _currentTwist.linear.x / _currentTwist.angular.z * 
-			cosf(_pose.theta) + 
-			_currentTwist.linear.x / _currentTwist.angular.z * 
-			cosf(_pose.theta + dt.toSec() * _currentTwist.angular.z);
-		}
-		_pose.theta += _currentTwist.angular.z * dt.toSec();
-		*/
 		
 		//omni controller
-		
-		//!< updates _posePtr based on _currentTwist and time passed (event.last_real)
 		
 		//computing delta time
 		ros::Duration dt = ros::Time::now() - event.last_real;
@@ -116,8 +93,7 @@ namespace stdr_robot {
 		//if speed is zero then do nothing
 		if (!(_currentTwist.linear.x == 0 && _currentTwist.linear.y == 0 && _currentTwist.angular.z == 0)) 
 		{
-			//Create motion model with 0.02 and 0.01 stddev
-			//MotionModel youbot_model(0.02, 0.01);
+			//Create motion model with 0.0 mean error and 0.0 std deviation
 			MotionModel youbot_model(0.0, 0.0);
 			
 			//declaring linear and angular velocities
@@ -145,7 +121,6 @@ namespace stdr_robot {
 			_pose.y = new_pose.y;
 			_pose.theta = new_pose.theta;
 		}
-		
   }
   
   /**
