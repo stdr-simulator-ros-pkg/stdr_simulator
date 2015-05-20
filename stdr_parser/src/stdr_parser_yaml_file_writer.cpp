@@ -118,7 +118,32 @@ namespace stdr_parser
     out << YAML::EndMap;
     return out;
   }
+ 
+  //!<----------------------------------------------------------------
+  //!< Template declaration for stdr_msgs::KinematicMsg
+  template void YamlFileWriter::messageToFile
+    (stdr_msgs::KinematicMsg msg,std::string file_name);
   
+  //!< Template specialization for stdr_msgs::KinematicMsg
+  template <>
+  YAML::Emitter& operator << <stdr_msgs::KinematicMsg>
+    (YAML::Emitter& out, const stdr_msgs::KinematicMsg& msg)
+  {
+    out << YAML::BeginMap;
+      out << YAML::Key << "kinematic";
+      out << YAML::Value;
+      out << YAML::BeginMap;
+        out << YAML::Key << "kinematic_specifications";
+        out << YAML::Value;
+        out << YAML::BeginMap;
+          out << YAML::Key << "kinematic_type" << YAML::Value << msg.type;
+        out << YAML::EndMap;
+      out << YAML::EndMap;
+    out << YAML::EndMap;
+    return out;
+  }
+
+
   //!<----------------------------------------------------------------
   //!< Template declaration for stdr_msgs::LaserSensorMsg
   template void YamlFileWriter::messageToFile
@@ -400,6 +425,10 @@ namespace stdr_parser
           {
             out << msg.soundSensors[i];
           }
+
+          // Kinematic model creation
+          out << msg.kinematicModel;
+
         out << YAML::EndSeq;
       out << YAML::EndMap;
     out << YAML::EndMap;

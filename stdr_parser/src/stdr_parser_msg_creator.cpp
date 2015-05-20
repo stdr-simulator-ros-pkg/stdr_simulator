@@ -742,6 +742,39 @@ namespace stdr_parser
     }
     return msg;
   }
+
+  /**
+  @brief Creates a message from a parsed file - template specialization for \
+  stdr_msgs::KinematicMsg
+  @param n [Node*] The root node
+  @return The message
+  **/
+  template <> 
+  stdr_msgs::KinematicMsg MessageCreator::createMessage(
+    Node *n,unsigned int id)
+  {
+    stdr_msgs::KinematicMsg msg;
+    Node* specs = n->elements[0];
+    if(specs->tag == "kinematic")
+    {
+      specs = specs->elements[0];
+    }
+    std::vector<int> indexes;
+    
+    //!< Search for kinematic model
+    indexes = specs->getTag("kinematic_model");
+    if(indexes.size() == 0)
+    {
+      msg.type = Specs::specs["kinematic_model"].default_value.c_str();
+    }
+    else
+    {
+      msg.type = specs->elements[indexes[0]]->elements[0]->
+        value.c_str();
+    }
+    return msg;
+  }
+
   
   /**
   @brief Creates a message from a parsed file - template specialization for stdr_msgs::RobotMsg
@@ -856,11 +889,19 @@ namespace stdr_parser
             specs->elements[indexes[i]] , i));
       }
     }
+
+    //!< Search for kinematic model
+    indexes = specs->getTag("kinematic");
+    if(indexes.size() != 0)
+    {
+      msg.kinematicModel = createMessage<stdr_msgs::KinematicMsg>(
+        specs->elements[indexes[0]], 0);
+    }
     
     return msg;
   }
   
-  
+ 
 
 }
 

@@ -165,8 +165,9 @@ namespace stdr_robot
     }
     else
     {
-      NODELET_ERROR("Motion model unsupported");
-      return;
+      // If no motion model is specified or an invalid type declared use ideal
+      _motionControllerPtr.reset(
+        new IdealMotionController(_currentPose, _tfBroadcaster, n, getName()));
     }
 
     _tfTimer.start();

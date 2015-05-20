@@ -487,6 +487,33 @@ namespace stdr_parser
   }
   
   //!------------------------------------------------------------------
+  //!< Template declaration for stdr_msgs::KinematicMsg
+  template void XmlFileWriter::messageToFile
+    (stdr_msgs::KinematicMsg msg,std::string file_name);
+    
+  //!< Template specialization for stdr_msgs::KinematicMsg
+  template <>
+  void XmlFileWriter::messageToXmlElement<stdr_msgs::KinematicMsg>
+    (stdr_msgs::KinematicMsg msg,TiXmlNode* base){
+      
+    //!< Create kinematic
+    TiXmlElement* kinematic = new TiXmlElement("kinematic");
+    base->LinkEndChild(kinematic);
+        
+    //!< Create kinematic specifications
+    TiXmlElement* kinematic_specifications = 
+      new TiXmlElement("kinematic_specifications");
+    kinematic->LinkEndChild(kinematic_specifications);
+
+    //!< Create kinematic model
+    TiXmlElement* model;
+    model = new TiXmlElement("kinematic_model");
+    kinematic_specifications->LinkEndChild(model);
+    TiXmlText * model_text = new TiXmlText(msg.type);
+    model->LinkEndChild(model_text);
+  }
+
+  //!------------------------------------------------------------------
   //!< Template declaration for stdr_msgs::RobotMsg
   template void XmlFileWriter::messageToFile
     (stdr_msgs::RobotMsg msg,std::string file_name);
@@ -532,7 +559,10 @@ namespace stdr_parser
     theta->LinkEndChild(theta_text);
     
     //!< Create footprint
-    messageToXmlElement(msg.footprint,robot_specifications);
+    messageToXmlElement(msg.footprint, robot_specifications);
+
+    //! Create Kinematic model
+    messageToXmlElement(msg.kinematicModel, robot_specifications);
     
     //!< Create lasers
     for(unsigned int i = 0 ; i < msg.laserSensors.size() ; i++)
