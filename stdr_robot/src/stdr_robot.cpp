@@ -152,8 +152,22 @@ namespace stdr_robot
       }
     }
 
-    _motionControllerPtr.reset(
-      new OmniMotionController(_currentPose, _tfBroadcaster, n, getName()));
+    std::string motion_model = result->description.kinematicModel.type;
+    if(motion_model == "ideal")
+    {
+      _motionControllerPtr.reset(
+        new IdealMotionController(_currentPose, _tfBroadcaster, n, getName()));
+    }
+    else if(motion_model == "omni")
+    {
+      _motionControllerPtr.reset(
+        new OmniMotionController(_currentPose, _tfBroadcaster, n, getName()));
+    }
+    else
+    {
+      NODELET_ERROR("Motion model unsupported");
+      return;
+    }
 
     _tfTimer.start();
   }

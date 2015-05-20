@@ -122,6 +122,11 @@
     <required>kinematic_specifications</required>
   </kinematic>
 
+  <kinematic_specifications>
+    <allowed>kinematic_model</allowed>
+    <required>kinematic_model</required>
+  </kinematic_specifications>
+
   <rfid_tag>
     <allowed>x,y,message</allowed>
     <required>x,y</required>
@@ -188,5 +193,10 @@
   <cone_angle>
     <default>1.0</default>
   </cone_angle>
+
+  <kinematic_model>
+    <default>ideal</default>
+  </kinematic_model>
+
 </specifications>
 
