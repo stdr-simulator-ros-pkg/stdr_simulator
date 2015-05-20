@@ -119,11 +119,13 @@ namespace stdr_gui
   @param msg [std::pair<float,float>] the robot speeds
   @return void
   **/
-  void CRobotVisualisation::setCurrentSpeed(std::pair<float,float> msg)
+  void CRobotVisualisation::setCurrentSpeed(std::vector<float> msg)
   {
     robotSpeedLinear->setText(
-      QString("\tu = ") + QString().setNum(msg.first) + QString(" m/s"));
+      QString("\tu_x = ") + QString().setNum(msg[0]) + QString(" m/s"));
+    robotSpeedLinearY->setText(
+      QString("\tu_y = ") + QString().setNum(msg[1]) + QString(" m/s"));
     robotSpeedAngular->setText(
-      QString("\tw = ") + QString().setNum(msg.second) + QString(" rad/s"));
+      QString("\tw = ") + QString().setNum(msg[2]) + QString(" rad/s"));
   }
 }

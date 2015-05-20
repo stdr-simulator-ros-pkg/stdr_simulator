@@ -81,6 +81,7 @@ namespace stdr_gui
   void CGuiRobot::speedsCallback(const geometry_msgs::Twist& msg)
   {
     linear_speed_ = msg.linear.x;
+    linear_speed_y_ = msg.linear.y;
     angular_speed_ = msg.angular.z;
   }
   
@@ -673,11 +674,15 @@ namespace stdr_gui
   
   /**
   @brief Returns the current robot speed
-  @return std::pair<float,float> : The linear and angular speeds
+  @return std::vector<float> : The linear and angular speeds
   **/
-  std::pair<float,float> CGuiRobot::getSpeeds(void)
+  std::vector<float> CGuiRobot::getSpeeds(void)
   {
-    return std::pair<float,float>(linear_speed_,angular_speed_);
+    std::vector<float> speeds;
+    speeds.push_back(linear_speed_);
+    speeds.push_back(linear_speed_y_);
+    speeds.push_back(angular_speed_);
+    return speeds; 
   }
   
   /**
