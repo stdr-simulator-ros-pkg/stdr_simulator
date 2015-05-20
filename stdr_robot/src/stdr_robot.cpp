@@ -153,7 +153,7 @@ namespace stdr_robot
     }
 
     _motionControllerPtr.reset(
-      new IdealMotionController(_currentPose, _tfBroadcaster, n, getName()));
+      new OmniMotionController(_currentPose, _tfBroadcaster, n, getName()));
 
     _tfTimer.start();
   }

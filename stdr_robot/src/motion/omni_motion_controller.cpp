@@ -116,8 +116,16 @@ namespace stdr_robot {
     if (_currentTwist.angular.z != 0 || _currentTwist.linear.x != 0 ||
      _currentTwist.linear.y != 0) 
     {
-      _pose.x += _currentTwist.linear.x * dt.toSec();
-      _pose.y += _currentTwist.linear.y * dt.toSec();
+      // Dx and Dy takes under consideration both linear rotations, 
+      // independently of each other
+      _pose.x += 
+        _currentTwist.linear.x * dt.toSec() * cosf(_pose.theta) + 
+        _currentTwist.linear.y * dt.toSec() * cosf(_pose.theta + STDR_PI/2.0); 
+
+      _pose.y += 
+        _currentTwist.linear.y * dt.toSec() * sinf(_pose.theta + STDR_PI/2.0) +
+        _currentTwist.linear.x * dt.toSec() * sinf(_pose.theta);
+
       _pose.theta += _currentTwist.angular.z * dt.toSec();
     }
   }
