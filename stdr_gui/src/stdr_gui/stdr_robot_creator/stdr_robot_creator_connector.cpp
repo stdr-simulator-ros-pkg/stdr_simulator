@@ -102,6 +102,10 @@ namespace stdr_gui
     QObject::connect(
       loader_.robotFootLoader.refresh_robot,SIGNAL(clicked(bool)),
       this,SLOT(updateFootprintPointOpen()));
+
+    QObject::connect(
+      loader_.kinematicPropLoader.updateButton,SIGNAL(clicked(bool)),
+      this,SLOT(updateKinematicModel()));
     
     QObject::connect(
       loader_.loadRobotButton,SIGNAL(clicked(bool)),
@@ -568,7 +572,33 @@ namespace stdr_gui
     
     updateRobotPreview();
   }
-  
+
+  /**
+  @brief Called when the update button of the kinematic model widget is clicked 
+  @return void
+  **/ 
+  void CRobotCreatorConnector::updateKinematicModel(void)
+  {
+    QString model_lit = loader_.kinematicPropLoader.comboBox->currentText();
+    int model_ind = loader_.kinematicPropLoader.comboBox->currentIndex();
+   
+    switch(model_ind){
+      case 0:
+        new_robot_msg_.kinematicModel.type = "ideal";
+        break;
+      case 1:
+        new_robot_msg_.kinematicModel.type = "omni";
+        break;
+    }
+
+    loader_.kinematicPropLoader.hide();
+    loader_.kinematicNode.setText(0,"Kinematic model: " \
+      + QString(new_robot_msg_.kinematicModel.type.c_str()));
+
+    
+    updateRobotPreview();
+  }
+
   /**
   @brief Called when the refresh button of the properties widget is clicked 
   @return void
