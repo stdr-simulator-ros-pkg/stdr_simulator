@@ -27,12 +27,44 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose2D.h>
 
+#include <ctime>
+
 /**
 @namespace stdr_robot
 @brief The main namespace for STDR Robot
 **/ 
 namespace stdr_robot {
     
+  /**
+  @struct MotionControllerParameters
+  @brief Container for the kinematic model parameters. The parameters selected/
+  are quite general. For a more accurate motion model a per-kinematic model
+  approach should be followed.
+  Parameters are in the form a_C_D, where C is affected by D.
+  ux is the linear speed
+  uy is the lateral speed (for omni vehicles)
+  w is the angular speed
+  g is a cofficient that directly affects the angular speed
+  For more information check the MotionController::sampleVelocities function.
+  **/
+  struct MotionControllerParameters{
+    float a_ux_ux;
+    float a_ux_uy;
+    float a_ux_w;
+
+    float a_uy_ux;
+    float a_uy_uy;
+    float a_uy_w;
+
+    float a_w_ux;
+    float a_w_uy;
+    float a_w_w;
+
+    float a_g_ux;
+    float a_g_uy;
+    float a_g_w;
+  };
+
   /**
   @class MotionController
   @brief Abstract class that provides motion controller abstraction
@@ -42,17 +74,77 @@ namespace stdr_robot {
     public:
       
       /**
-      @brief Pure virtual function - Callback for velocity commands
+      @brief Virtual function - Callback for velocity commands
       @param msg [const geometry_msgs::Twist&] The velocity command
       @return void
       **/
-      virtual void velocityCallback(const geometry_msgs::Twist& msg) = 0;
-      
+      virtual void velocityCallback(const geometry_msgs::Twist& msg)
+      {
+        _currentTwist = msg;
+        sampleVelocities();
+      }
+
       /**
-      @brief Pure virtual function - Stops the robot
+      @brief Virtual function - Add noise to velocity commands
+      @param msg [geometry_msgs::Twist&] The velocity command
       @return void
       **/
-      virtual void stop(void) = 0;
+      /**     
+      The formulas used are:
+      - u_x' = u_x + Sample(a_ux_ux * u_x^2 + a_ux_uy * u_y^2 + a_ux_w * w^2)
+      - u_y' = u_y + Sample(a_uy_ux * u_x^2 + a_uy_uy * u_y^2 + a_uy_w * w^2)
+      - w' = w + Sample(a_w_ux * u_x^2 + a_w_uy * u_y^2 + a_w_w * w^2)
+      - g' = Sample(a_g_ux * u_x^2 + a_g_uy * u_y^2 + a_g_w * w^2)
+      Then w' is used as such (depending on the model):
+      theta' = theta + (w' + g') * Dt
+      Sample(b^2) produces samples from a normal distribution with variance
+      equal to b^2.
+      **/
+      virtual void sampleVelocities(void)
+      {
+        float ux = _currentTwist.linear.x;
+        float uy = _currentTwist.linear.y;
+        float w = _currentTwist.angular.z;
+
+        float sample_ux = 
+          _motion_parameters.a_ux_ux * ux * ux +
+          _motion_parameters.a_ux_uy * uy * uy +
+          _motion_parameters.a_ux_w  * w  * w;
+        _currentTwist.linear.x += sampleNormal(sqrt(sample_ux));
+
+        float sample_uy = 
+          _motion_parameters.a_uy_ux * ux * ux +
+          _motion_parameters.a_uy_uy * uy * uy +
+          _motion_parameters.a_uy_w  * w  * w;
+        _currentTwist.linear.y += sampleNormal(sqrt(sample_uy));
+ 
+        float sample_w = 
+          _motion_parameters.a_w_ux * ux * ux +
+          _motion_parameters.a_w_uy * uy * uy +
+          _motion_parameters.a_w_w  * w  * w;
+        _currentTwist.angular.z += sampleNormal(sqrt(sample_w));
+
+        float sample_g = 
+          _motion_parameters.a_g_ux * ux * ux +
+          _motion_parameters.a_g_uy * uy * uy +
+          _motion_parameters.a_g_w  * w  * w;
+        _currentTwist.angular.z += sampleNormal(sqrt(sample_g));
+      }
+
+      
+      /**
+      @brief Virtual function - Stops the robot
+      @return void
+      **/
+      virtual void stop(void)
+      {
+        _currentTwist.linear.x = 0;
+        _currentTwist.linear.y = 0;
+        _currentTwist.linear.z = 0;
+        _currentTwist.angular.x = 0;
+        _currentTwist.angular.y = 0;
+        _currentTwist.angular.z = 0;
+      }
       
       /**
       @brief Pure virtual function - Calculates the motion - updates the robot pose
@@ -97,6 +189,23 @@ namespace stdr_robot {
       virtual ~MotionController(void) 
       {
       }
+
+      /**
+      @brief Approaches a normal distribution sampling
+      @return float
+      source: Sebastian Thrun, Probabilistic Robotics
+      **/
+      float sampleNormal(float sigma)
+      {
+        float tmp = 0;
+        for (unsigned int i = 0 ; i < 12 ; i++)
+        {
+          float sample = (rand() % 100000) / 50000.0 - 1.0; // From -1.0 -> 1.0
+          tmp += sample * sigma;
+        }
+        return tmp / 2.0;
+      }
+
     
     protected:
       
@@ -110,12 +219,24 @@ namespace stdr_robot {
       MotionController(
         const geometry_msgs::Pose2D& pose, 
         tf::TransformBroadcaster& tf, 
-        const std::string& name)
+        const std::string& name,
+        ros::NodeHandle& n,
+        const MotionControllerParameters params
+        )
           : _tfBroadcaster(tf), 
             _freq(0.1), 
             _namespace(name),
-            _pose(pose) 
-        { }
+            _pose(pose),
+            _motion_parameters(params)
+        { 
+          _velocitySubscrider = n.subscribe(
+            _namespace + "/cmd_vel",
+            1,
+            &MotionController::velocityCallback,
+            this);  
+ 
+          srand(time(NULL));
+        }
 
     protected:
       
@@ -133,6 +254,8 @@ namespace stdr_robot {
       geometry_msgs::Pose2D _pose;
       //!< Current motion command
       geometry_msgs::Twist _currentTwist;
+      //!< The kinematic model parameters
+      MotionControllerParameters _motion_parameters;
   };
     
   typedef boost::shared_ptr<MotionController> MotionControllerPtr;

@@ -35,41 +35,16 @@ namespace stdr_robot {
     const geometry_msgs::Pose2D& pose, 
     tf::TransformBroadcaster& tf, 
     ros::NodeHandle& n, 
-    const std::string& name)
-      : MotionController(pose, tf, name)
+    const std::string& name,
+    const MotionControllerParameters params)
+      : MotionController(pose, tf, name, n, params)
   {
-    _velocitySubscrider = n.subscribe(
-      _namespace + "/cmd_vel", 
-      1, 
-      &IdealMotionController::velocityCallback, 
-      this);
-    
     _calcTimer = n.createTimer(
       _freq, 
       &IdealMotionController::calculateMotion, 
       this);
   }
-
-  /**
-  @brief Callback for velocity commands
-  @param msg [const geometry_msgs::Twist&] The velocity command
-  @return void
-  **/
-  void IdealMotionController::velocityCallback(const geometry_msgs::Twist& msg) 
-  {
-    _currentTwist = msg;
-  }
-    
-  /**
-  @brief Stops the robot
-  @return void
-  **/
-  void IdealMotionController::stop() 
-  {
-    _currentTwist.linear.x = 0;
-    _currentTwist.angular.z = 0;
-  }
-
+   
   /**
   @brief Calculates the motion - updates the robot pose
   @param event [const ros::TimerEvent&] A ROS timer event

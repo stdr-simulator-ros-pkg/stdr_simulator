@@ -1,1 +1,13 @@
 string type
+float32 a_ux_ux
+float32 a_ux_uy
+float32 a_ux_w
+float32 a_uy_ux
+float32 a_uy_uy
+float32 a_uy_w
+float32 a_w_ux
+float32 a_w_uy
+float32 a_w_w
+float32 a_g_ux
+float32 a_g_uy
+float32 a_g_w

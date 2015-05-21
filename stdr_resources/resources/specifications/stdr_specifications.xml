@@ -123,9 +123,14 @@
   </kinematic>
 
   <kinematic_specifications>
-    <allowed>kinematic_model</allowed>
+    <allowed>kinematic_model,kinematic_parameters</allowed>
     <required>kinematic_model</required>
   </kinematic_specifications>
+
+  <kinematic_parameters>
+    <allowed>a_ux_ux,a_ux_uy,a_ux_w,a_uy_ux,a_uy_uy,a_uy_w,a_w_ux,a_w_uy,a_w_w,a_g_ux,a_g_uy,a_g_w</allowed>
+    <required>a_ux_ux,a_ux_uy,a_ux_w,a_uy_ux,a_uy_uy,a_uy_w,a_w_ux,a_w_uy,a_w_w,a_g_ux,a_g_uy,a_g_w</required>
+  </kinematic_parameters>
 
   <rfid_tag>
     <allowed>x,y,message</allowed>
@@ -197,6 +202,46 @@
   <kinematic_model>
     <default>ideal</default>
   </kinematic_model>
+
+  <a_ux_ux>
+    <default>0</default>
+  </a_ux_ux>
+  <a_ux_uy>
+    <default>0</default>
+  </a_ux_uy>
+  <a_ux_w>
+    <default>0</default>
+  </a_ux_w>
+
+  <a_uy_ux>
+    <default>0</default>
+  </a_uy_ux>
+  <a_uy_uy>
+    <default>0</default>
+  </a_uy_uy>
+  <a_uy_w>
+    <default>0</default>
+  </a_uy_w>
+
+  <a_w_ux>
+    <default>0</default>
+  </a_w_ux>
+  <a_w_uy>
+    <default>0</default>
+  </a_w_uy>
+  <a_w_w>
+    <default>0</default>
+  </a_w_w>
+
+  <a_g_ux>
+    <default>0</default>
+  </a_g_ux>
+  <a_g_uy>
+    <default>0</default>
+  </a_g_uy>
+  <a_g_w>
+    <default>0</default>
+  </a_g_w>
 
 </specifications>
 

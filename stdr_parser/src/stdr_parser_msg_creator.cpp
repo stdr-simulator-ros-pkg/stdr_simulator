@@ -772,6 +772,59 @@ namespace stdr_parser
       msg.type = specs->elements[indexes[0]]->elements[0]->
         value.c_str();
     }
+
+    //!< Search for kinematic parameters
+    indexes = specs->getTag("kinematic_parameters");
+    if(indexes.size() == 0)
+    {
+      msg.a_ux_ux = atof(Specs::specs["a_ux_ux"].default_value.c_str());
+      msg.a_ux_uy = atof(Specs::specs["a_ux_uy"].default_value.c_str());
+      msg.a_ux_w = atof(Specs::specs["a_ux_w"].default_value.c_str());
+
+      msg.a_uy_ux = atof(Specs::specs["a_uy_ux"].default_value.c_str());
+      msg.a_uy_uy = atof(Specs::specs["a_uy_uy"].default_value.c_str());
+      msg.a_uy_w = atof(Specs::specs["a_uy_w"].default_value.c_str());
+
+      msg.a_w_ux = atof(Specs::specs["a_w_ux"].default_value.c_str());
+      msg.a_w_uy = atof(Specs::specs["a_w_uy"].default_value.c_str());
+      msg.a_w_w = atof(Specs::specs["a_w_w"].default_value.c_str());
+
+      msg.a_g_ux = atof(Specs::specs["a_g_ux"].default_value.c_str());
+      msg.a_g_uy = atof(Specs::specs["a_g_uy"].default_value.c_str());
+      msg.a_g_w = atof(Specs::specs["a_g_w"].default_value.c_str());
+    }
+    else
+    {
+      specs = specs->elements[indexes[0]];
+
+      indexes = specs->getTag("a_ux_ux");
+      msg.a_ux_ux = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+      indexes = specs->getTag("a_ux_uy");
+      msg.a_ux_uy = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+      indexes = specs->getTag("a_ux_w");
+      msg.a_ux_w = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+
+      indexes = specs->getTag("a_uy_ux");
+      msg.a_uy_ux = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+      indexes = specs->getTag("a_uy_uy");
+      msg.a_uy_uy = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+      indexes = specs->getTag("a_uy_w");
+      msg.a_uy_w = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+
+      indexes = specs->getTag("a_w_ux");
+      msg.a_w_ux = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+      indexes = specs->getTag("a_w_uy");
+      msg.a_w_uy = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+      indexes = specs->getTag("a_w_w");
+      msg.a_w_w = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+
+      indexes = specs->getTag("a_g_ux");
+      msg.a_g_ux = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+      indexes = specs->getTag("a_g_uy");
+      msg.a_g_uy = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+      indexes = specs->getTag("a_g_w");
+      msg.a_g_w = atof(specs->elements[indexes[0]]->elements[0]->value.c_str());
+    }
     return msg;
   }
 

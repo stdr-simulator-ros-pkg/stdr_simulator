@@ -67,21 +67,9 @@ namespace stdr_robot
         const geometry_msgs::Pose2D& pose, 
         tf::TransformBroadcaster& tf, 
         ros::NodeHandle& n, 
-        const std::string& name);
-      
-      /**
-      @brief Callback for velocity commands
-      @param msg [const geometry_msgs::Twist&] The velocity command
-      @return void
-      **/
-      void velocityCallback(const geometry_msgs::Twist& msg);
-      
-      /**
-      @brief Stops the robot
-      @return void
-      **/
-      void stop(void);
-      
+        const std::string& name,
+        const MotionControllerParameters params);
+           
       /**
       @brief Calculates the motion - updates the robot pose
       @param event [const ros::TimerEvent&] A ROS timer event

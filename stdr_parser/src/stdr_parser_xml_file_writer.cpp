@@ -511,6 +511,73 @@ namespace stdr_parser
     kinematic_specifications->LinkEndChild(model);
     TiXmlText * model_text = new TiXmlText(msg.type);
     model->LinkEndChild(model_text);
+
+    //!< Create kinematic parameters
+    TiXmlElement* parameters;
+    parameters = new TiXmlElement("kinematic_parameters");
+    kinematic_specifications->LinkEndChild(parameters);
+    TiXmlElement *a_ux_ux, *a_ux_uy, *a_ux_w, *a_uy_ux, *a_uy_uy, *a_uy_w;
+    TiXmlElement *a_w_ux, *a_w_uy, *a_w_w, *a_g_ux, *a_g_uy, *a_g_w;
+    
+    a_ux_ux = new TiXmlElement("a_ux_ux");
+    parameters->LinkEndChild(a_ux_ux);
+    TiXmlText *a_ux_ux_text = new TiXmlText(SSTR(msg.a_ux_ux));
+    a_ux_ux->LinkEndChild(a_ux_ux_text);
+
+    a_ux_uy = new TiXmlElement("a_ux_uy");
+    parameters->LinkEndChild(a_ux_uy);
+    TiXmlText *a_ux_uy_text = new TiXmlText(SSTR(msg.a_ux_uy));
+    a_ux_uy->LinkEndChild(a_ux_uy_text);
+
+    a_ux_w = new TiXmlElement("a_ux_w");
+    parameters->LinkEndChild(a_ux_w);
+    TiXmlText *a_ux_w_text = new TiXmlText(SSTR(msg.a_ux_w));
+    a_ux_w->LinkEndChild(a_ux_w_text);
+
+    a_uy_ux = new TiXmlElement("a_uy_ux");
+    parameters->LinkEndChild(a_uy_ux);
+    TiXmlText *a_uy_ux_text = new TiXmlText(SSTR(msg.a_uy_ux));
+    a_uy_ux->LinkEndChild(a_uy_ux_text);
+
+    a_uy_uy = new TiXmlElement("a_uy_uy");
+    parameters->LinkEndChild(a_uy_uy);
+    TiXmlText *a_uy_uy_text = new TiXmlText(SSTR(msg.a_uy_uy));
+    a_uy_uy->LinkEndChild(a_uy_uy_text);
+
+    a_uy_w = new TiXmlElement("a_uy_w");
+    parameters->LinkEndChild(a_uy_w);
+    TiXmlText *a_uy_w_text = new TiXmlText(SSTR(msg.a_uy_w));
+    a_uy_w->LinkEndChild(a_uy_w_text);
+
+    a_w_ux = new TiXmlElement("a_w_ux");
+    parameters->LinkEndChild(a_w_ux);
+    TiXmlText *a_w_ux_text = new TiXmlText(SSTR(msg.a_w_ux));
+    a_w_ux->LinkEndChild(a_w_ux_text);
+
+    a_w_uy = new TiXmlElement("a_w_uy");
+    parameters->LinkEndChild(a_w_uy);
+    TiXmlText *a_w_uy_text = new TiXmlText(SSTR(msg.a_w_uy));
+    a_w_uy->LinkEndChild(a_w_uy_text);
+
+    a_w_w = new TiXmlElement("a_w_w");
+    parameters->LinkEndChild(a_w_w);
+    TiXmlText *a_w_w_text = new TiXmlText(SSTR(msg.a_w_w));
+    a_w_w->LinkEndChild(a_w_w_text);
+
+    a_g_ux = new TiXmlElement("a_g_ux");
+    parameters->LinkEndChild(a_g_ux);
+    TiXmlText *a_g_ux_text = new TiXmlText(SSTR(msg.a_g_ux));
+    a_g_ux->LinkEndChild(a_g_ux_text);
+
+    a_g_uy = new TiXmlElement("a_g_uy");
+    parameters->LinkEndChild(a_g_uy);
+    TiXmlText *a_g_uy_text = new TiXmlText(SSTR(msg.a_g_uy));
+    a_g_uy->LinkEndChild(a_g_uy_text);
+
+    a_g_w = new TiXmlElement("a_g_w");
+    parameters->LinkEndChild(a_g_w);
+    TiXmlText *a_g_w_text = new TiXmlText(SSTR(msg.a_g_w));
+    a_g_w->LinkEndChild(a_g_w_text);
   }
 
   //!------------------------------------------------------------------
