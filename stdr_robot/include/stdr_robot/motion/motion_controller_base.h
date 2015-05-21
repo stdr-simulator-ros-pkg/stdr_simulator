@@ -27,8 +27,6 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose2D.h>
 
-#define STDR_PI 3.14159265359
-
 /**
 @namespace stdr_robot
 @brief The main namespace for STDR Robot

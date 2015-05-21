@@ -28,24 +28,9 @@ This class represents a motion model for omnidirectional robot and could be
 used to sample the possible pose given the starting pose and the commanded
 robot's motion.
 
-The two parameters of the class is standard deviations of translational and
-rotational components of the motion.
-
 The motion is decomposed into two translations alond the x axis of the
 robot (forward), and along the y axis of the robot (lateral), and one
 rotation.
-
-Usage:
-
-@code
-  Create motion model with 0.02 and 0.01 stddev
-    MotionModel motion_model(0.02, 0.01);
-  Set the commanded robot's motion
-    motion_model.setMotion(0.5, 0.1, 0.1);
-  Sample the possible pose given the starting pose
-  Note that it could be repeated multiple times for the same starting
-  pose of for different starting poses
-    Pose new_pose = motion_model.sample(pose);
 ******************************************************************************/
 
 #ifndef OMNI_MOTION_CONTROLLER_H

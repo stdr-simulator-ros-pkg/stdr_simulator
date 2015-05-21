@@ -27,25 +27,10 @@ About this code:
 This class represents a motion model for omnidirectional robot and could be
 used to sample the possible pose given the starting pose and the commanded
 robot's motion.
-
-The two parameters of the class is standard deviations of translational and
-rotational components of the motion.
-
-The motion is decomposed into two translations alond the x axis of the
+T
+he motion is decomposed into two translations alond the x axis of the
 robot (forward), and along the y axis of the robot (lateral), and one
 rotation.
-
-Usage:
-
-@code
-  Create motion model with 0.02 and 0.01 stddev
-    MotionModel motion_model(0.02, 0.01);
-  Set the commanded robot's motion
-    motion_model.setMotion(0.5, 0.1, 0.1);
-  Sample the possible pose given the starting pose
-  Note that it could be repeated multiple times for the same starting
-  pose of for different starting poses
-    Pose new_pose = motion_model.sample(pose);
 ******************************************************************************/
 
 #include <stdr_robot/motion/omni_motion_controller.h>
@@ -120,10 +105,10 @@ namespace stdr_robot {
       // independently of each other
       _pose.x += 
         _currentTwist.linear.x * dt.toSec() * cosf(_pose.theta) + 
-        _currentTwist.linear.y * dt.toSec() * cosf(_pose.theta + STDR_PI/2.0); 
+        _currentTwist.linear.y * dt.toSec() * cosf(_pose.theta + M_PI/2.0); 
 
       _pose.y += 
-        _currentTwist.linear.y * dt.toSec() * sinf(_pose.theta + STDR_PI/2.0) +
+        _currentTwist.linear.y * dt.toSec() * sinf(_pose.theta + M_PI/2.0) +
         _currentTwist.linear.x * dt.toSec() * sinf(_pose.theta);
 
       _pose.theta += _currentTwist.angular.z * dt.toSec();
