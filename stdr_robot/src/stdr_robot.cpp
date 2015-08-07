@@ -153,22 +153,7 @@ namespace stdr_robot
     }
 
     std::string motion_model = result->description.kinematicModel.type;
-    MotionControllerParameters p;
-    p.a_ux_ux = result->description.kinematicModel.a_ux_ux;
-    p.a_ux_uy = result->description.kinematicModel.a_ux_uy;
-    p.a_ux_w = result->description.kinematicModel.a_ux_w;
-
-    p.a_uy_ux = result->description.kinematicModel.a_uy_ux;
-    p.a_uy_uy = result->description.kinematicModel.a_uy_uy;
-    p.a_uy_w = result->description.kinematicModel.a_uy_w;
-
-    p.a_w_ux = result->description.kinematicModel.a_w_ux;
-    p.a_w_uy = result->description.kinematicModel.a_w_uy;
-    p.a_w_w = result->description.kinematicModel.a_w_w;
-
-    p.a_g_ux = result->description.kinematicModel.a_g_ux;
-    p.a_g_uy = result->description.kinematicModel.a_g_uy;
-    p.a_g_w = result->description.kinematicModel.a_g_w;
+    stdr_msgs::KinematicMsg p = result->description.kinematicModel;
 
     if(motion_model == "ideal")
     {

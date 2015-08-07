@@ -26,6 +26,7 @@
 #include <tf/transform_broadcaster.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose2D.h>
+#include <stdr_msgs/KinematicMsg.h>
 
 #include <ctime>
 
@@ -35,35 +36,6 @@
 **/ 
 namespace stdr_robot {
     
-  /**
-  @struct MotionControllerParameters
-  @brief Container for the kinematic model parameters. The parameters selected/
-  are quite general. For a more accurate motion model a per-kinematic model
-  approach should be followed.
-  Parameters are in the form a_C_D, where C is affected by D.
-  ux is the linear speed
-  uy is the lateral speed (for omni vehicles)
-  w is the angular speed
-  g is a cofficient that directly affects the angular speed
-  For more information check the MotionController::sampleVelocities function.
-  **/
-  struct MotionControllerParameters{
-    float a_ux_ux;
-    float a_ux_uy;
-    float a_ux_w;
-
-    float a_uy_ux;
-    float a_uy_uy;
-    float a_uy_w;
-
-    float a_w_ux;
-    float a_w_uy;
-    float a_w_w;
-
-    float a_g_ux;
-    float a_g_uy;
-    float a_g_w;
-  };
 
   /**
   @class MotionController
@@ -221,7 +193,7 @@ namespace stdr_robot {
         tf::TransformBroadcaster& tf, 
         const std::string& name,
         ros::NodeHandle& n,
-        const MotionControllerParameters params
+        const stdr_msgs::KinematicMsg params
         )
           : _tfBroadcaster(tf), 
             _freq(0.1), 
@@ -255,7 +227,7 @@ namespace stdr_robot {
       //!< Current motion command
       geometry_msgs::Twist _currentTwist;
       //!< The kinematic model parameters
-      MotionControllerParameters _motion_parameters;
+      stdr_msgs::KinematicMsg _motion_parameters;
   };
     
   typedef boost::shared_ptr<MotionController> MotionControllerPtr;

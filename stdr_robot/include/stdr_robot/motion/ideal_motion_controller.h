@@ -53,7 +53,7 @@ namespace stdr_robot
         tf::TransformBroadcaster& tf, 
         ros::NodeHandle& n, 
         const std::string& name,
-        const MotionControllerParameters params);
+        const stdr_msgs::KinematicMsg params);
           
       /**
       @brief Calculates the motion - updates the robot pose

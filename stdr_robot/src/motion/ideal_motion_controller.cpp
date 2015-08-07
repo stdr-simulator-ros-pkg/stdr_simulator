@@ -36,7 +36,7 @@ namespace stdr_robot {
     tf::TransformBroadcaster& tf, 
     ros::NodeHandle& n, 
     const std::string& name,
-    const MotionControllerParameters params)
+    const stdr_msgs::KinematicMsg params)
       : MotionController(pose, tf, name, n, params)
   {
     _calcTimer = n.createTimer(
