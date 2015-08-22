@@ -172,8 +172,15 @@ namespace stdr_parser
     Node* specs = n->elements[0];
     if(specs->tag == "footprint")
     {
+      ROS_ERROR("Footprint found");
       specs = specs->elements[0];
     }
+    else if(specs->tag == "footprint_specifications")
+    {
+      ROS_ERROR("Footprint_specifications found");
+      // specs must remain specs 
+    }
+
     std::vector<int> indexes;
     //!< Search for radius
     indexes = specs->getTag("radius");
@@ -183,9 +190,12 @@ namespace stdr_parser
     }
     else
     {
+      ROS_ERROR("The value is: %s", specs->elements[indexes[0]]->elements[0]->value.c_str());
       msg.radius = atof(specs->elements[indexes[0]]->elements[0]->
         value.c_str());
+      ROS_ERROR_STREAM(msg.radius);
     }
+    ROS_ERROR("The radius is %f", msg.radius);
     // search for points
     indexes = specs->getTag("points");
     if( indexes.size() != 0 ) {
