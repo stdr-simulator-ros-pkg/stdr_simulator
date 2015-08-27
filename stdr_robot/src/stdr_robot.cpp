@@ -134,6 +134,13 @@ namespace stdr_robot
         new SoundSensor( _map,
           result->description.soundSensors[soundSensorIter], getName(), n ) ) );
     }
+    for ( unsigned int bumperIter = 0;
+      bumperIter < result->description.bumperSensors.size(); bumperIter++ )
+    {
+      _sensors.push_back( SensorPtr(
+        new Bumper( _map,
+          result->description.bumperSensors[bumperIter], getName(), n ) ) );
+    }
 
     if( result->description.footprint.points.size() == 0 ) {
       float radius = result->description.footprint.radius;

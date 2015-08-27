@@ -24,7 +24,7 @@
   </robot>
 
   <robot_specifications>
-    <allowed>initial_pose,footprint,laser,sonar,rfid_reader,kinematic</allowed>
+    <allowed>initial_pose,footprint,laser,sonar,rfid_reader,kinematic,bumper</allowed>
   </robot_specifications>
 
   <initial_pose>
@@ -117,6 +117,15 @@
     <allowed>max_range,angle_span,frequency,frame_id,pose</allowed>
   </sound_sensor_specifications>
 
+  <bumper>
+    <allowed>filename,bumper_specifications</allowed>
+    <required>bumper_specifications</required>
+  </bumper>
+
+  <bumper_specifications>
+    <allowed>contact_angle,frequency,frame_id,pose</allowed>
+  </bumper_specifications>
+
   <kinematic>
     <allowed>filename,kinematic_specifications</allowed>
     <required>kinematic_specifications</required>
@@ -188,5 +197,10 @@
   <cone_angle>
     <default>1.0</default>
   </cone_angle>
+
+  <contact_angle>
+    <default>1.0</default>
+  </contact_angle>
+
 </specifications>
 
