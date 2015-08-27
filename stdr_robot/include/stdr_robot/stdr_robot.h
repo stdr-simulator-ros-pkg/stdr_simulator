@@ -34,6 +34,7 @@
 #include <stdr_robot/sensors/co2.h>
 #include <stdr_robot/sensors/microphone.h>
 #include <stdr_robot/sensors/thermal.h>
+#include <stdr_robot/sensors/bumper.h>
 #include <stdr_robot/motion/motion_controller_base.h>
 #include <stdr_robot/motion/ideal_motion_controller.h>
 #include <stdr_robot/motion/omni_motion_controller.h>

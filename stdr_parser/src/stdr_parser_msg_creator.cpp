@@ -913,7 +913,73 @@ namespace stdr_parser
     return msg;
   }
 
-  
+  /**
+  @brief Creates a message from a parsed file - template specialization for stdr_msgs::BumperSensorMsg
+  @param n [Node*] The root node
+  @return The message
+  **/
+  template <> stdr_msgs::BumperSensorMsg MessageCreator::createMessage(
+    Node *n,unsigned int id)
+  {
+    stdr_msgs::BumperSensorMsg msg;
+    Node* specs = n->elements[0];
+    if(specs->tag == "bumper")
+    {
+      specs = specs->elements[0];
+    }
+    std::vector<int> indexes;
+    
+    //!< Search for coneAngle
+    indexes = specs->getTag("contact_angle");
+    if(indexes.size() == 0)
+    {
+      msg.contactAngle = atof(Specs::specs["contact_angle"].default_value.c_str());
+    }
+    else
+    {
+      msg.contactAngle = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    
+    //!< Search for frequency
+    indexes = specs->getTag("frequency");
+    if(indexes.size() == 0)
+    {
+      msg.frequency = atof(Specs::specs["frequency"].default_value.c_str());
+    }
+    else
+    {
+      msg.frequency = atof(specs->elements[indexes[0]]->elements[0]->
+        value.c_str());
+    }
+    
+    //!< Set up frame id based on id input
+    indexes = specs->getTag("frame_id");
+    if(indexes.size() == 0)
+    {
+      msg.frame_id = std::string("bumper_") + SSTR(id);
+    }
+    else
+    {
+      msg.frame_id = specs->elements[indexes[0]]->elements[0]->value;
+    }
+    
+    //!< Search for pose
+    indexes = specs->getTag("pose");
+    if(indexes.size() != 0)
+    {
+      msg.pose = 
+        createMessage<geometry_msgs::Pose2D>(specs->elements[indexes[0]],0);
+    }
+    else
+    {
+      msg.pose.x = atof(Specs::specs["x"].default_value.c_str());
+      msg.pose.y = atof(Specs::specs["y"].default_value.c_str());
+      msg.pose.theta = atof(Specs::specs["theta"].default_value.c_str());
+    }
+    return msg;
+  }
+
   /**
   @brief Creates a message from a parsed file - template specialization for stdr_msgs::RobotMsg
   @param n [Node*] The root node
@@ -1039,11 +1105,20 @@ namespace stdr_parser
       msg.kinematicModel = createMessage<stdr_msgs::KinematicMsg>(
         specs->elements[indexes[0]], 0);
     }
-    
+
+    //!< Search for bumper sensors
+    indexes = specs->getTag("bumper");
+    if(indexes.size() != 0)
+    {
+      for(unsigned int i = 0 ; i < indexes.size() ; i++)
+      {
+        msg.bumperSensors.push_back(
+          createMessage<stdr_msgs::BumperSensorMsg>(
+            specs->elements[indexes[i]] , i));
+      }
+    }
+
     return msg;
   }
-  
- 
 
-}
-
+}  // namespace stdr_parser

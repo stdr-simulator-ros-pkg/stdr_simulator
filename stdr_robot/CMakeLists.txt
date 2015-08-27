@@ -66,6 +66,10 @@ add_library(stdr_laser src/sensors/laser.cpp)
 add_dependencies(stdr_laser stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_laser ${catkin_LIBRARIES} stdr_sensor_base)
 
+add_library(stdr_bumper src/sensors/bumper.cpp)
+add_dependencies(stdr_bumper stdr_msgs_gencpp) # wait for stdr_msgs to be build
+target_link_libraries(stdr_bumper ${catkin_LIBRARIES} stdr_sensor_base)
+
 ###################### Motion Controller ###############################
 add_library(stdr_ideal_motion_controller src/motion/ideal_motion_controller.cpp)
 add_dependencies(stdr_ideal_motion_controller stdr_msgs_gencpp) # wait for stdr_msgs to be build
@@ -85,6 +89,7 @@ target_link_libraries(stdr_robot_nodelet ${catkin_LIBRARIES}
     stdr_co2_sensor
     stdr_thermal_sensor
     stdr_microphone_sensor
+    stdr_bumper
     stdr_ideal_motion_controller
     stdr_omni_motion_controller
 )
