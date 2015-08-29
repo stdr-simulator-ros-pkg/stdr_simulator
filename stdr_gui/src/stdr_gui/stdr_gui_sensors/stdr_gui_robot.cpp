@@ -70,6 +70,11 @@ namespace stdr_gui
       CGuiSound *l = new CGuiSound(msg.robot.soundSensors[i], frame_id_);
       sound_sensors_.push_back(l);
     }
+    for(unsigned int i = 0 ; i < msg.robot.bumperSensors.size() ; i++)
+    {
+      CGuiBumper *l = new CGuiBumper(msg.robot.bumperSensors[i], frame_id_);
+      bumpers_.push_back(l);
+    }
     robot_initialized_ = true;
   }
   
@@ -154,6 +159,10 @@ namespace stdr_gui
     for(unsigned int i = 0 ; i < sound_sensors_.size() ; i++)
     {
       sound_sensors_[i]->paint(m,resolution_,listener);
+    }
+    for(unsigned int i = 0 ; i < bumpers_.size() ; i++)
+    {
+      bumpers_[i]->paint(m,resolution_,listener);
     }
     
     drawSelf(m);
@@ -278,6 +287,10 @@ namespace stdr_gui
     {
       delete sonars_[i];
     }
+    for(unsigned int i = 0 ; i < sonars_.size() ; i++)
+    {
+      delete bumpers_[i];
+    }
   }
 
   /**
@@ -397,6 +410,15 @@ namespace stdr_gui
   int CGuiRobot::getSonarsNumber(void)
   {
     return sonars_.size();
+  }
+
+  /**
+  @brief Returns the bumpers number
+  @return int : the bumpers number
+  **/
+  int CGuiRobot::getBumpersNumber(void)
+  {
+    return bumpers_.size();
   }
   
   /**

@@ -29,6 +29,7 @@
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_thermal.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sound.h"
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_sonar.h"
+#include "stdr_gui/stdr_gui_sensors/stdr_gui_bumper.h"
 
 /**
 @namespace stdr_gui
@@ -82,6 +83,8 @@ namespace stdr_gui
       std::vector<CGuiThermal*> thermal_sensors_;
       //!< Robot Rfid antenna sensors
       std::vector<CGuiSound*>   sound_sensors_;
+      //!< Robot bumper sensors
+      std::vector<CGuiBumper*>  bumpers_;
       
       //!< Robot frame id
       std::string frame_id_;
@@ -199,6 +202,12 @@ namespace stdr_gui
       @return int : the sonars number
       **/
       int getSonarsNumber(void);
+
+      /**
+      @brief Returns the bumpers number
+      @return int : the bumpers number
+      **/
+      int getBumpersNumber(void);
       
       /**
       @brief Returns the visibility status
@@ -290,6 +299,20 @@ namespace stdr_gui
       **/
       void toggleSonarVisualizationStatus(std::string frame_id);
       
+      /**
+      @brief Returns the bumper visibility status
+      @param frame_id [std::string] The bumper frame id
+      @return char
+      **/
+      char getBumperVisualizationStatus(std::string frame_id);
+      
+      /**
+      @brief Toggles the bumper visibility status
+      @param frame_id [std::string] The sonar frame id
+      @return void
+      **/
+      void toggleBumperVisualizationStatus(std::string frame_id);
+
       /**
       @brief Returns the visualization image of the robot
       @param ocgd [float] The map resolution
