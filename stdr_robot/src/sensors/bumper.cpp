@@ -70,20 +70,27 @@ namespace stdr_robot {
       return;
     }
 
-    // check if the bumper origin hits the occupied grid
-    distance = 5;
-    xMap = _sensorTransform.getOrigin().x() / _map.info.resolution + 
-	cos(tf::getYaw(_sensorTransform.getRotation())) * distance;
-    yMap = _sensorTransform.getOrigin().y() / _map.info.resolution + 
-	sin(tf::getYaw(_sensorTransform.getRotation())) * distance;
-
-    if (yMap * _map.info.width + xMap > _map.info.height*_map.info.width) {
-	return;
-    }
-    //!< Found obstacle
+    float angleStep = 3.14159 / 180.0;
+    float angleMin = - ( _description.contactAngle / 2.0 ); 
+    float angleMax = _description.contactAngle / 2.0 ; 
     bumperMsg.contact = false;
-    if ( _map.data[ yMap * _map.info.width + xMap ] > 70 ) {
-	bumperMsg.contact = true;
+    // check if the bumper arc hits the occupied grid
+    for ( float bumperIter = angleMin; bumperIter < angleMax; bumperIter += angleStep )
+    {
+	distance =  _description.radius / _map.info.resolution; 
+	xMap = _sensorTransform.getOrigin().x() / _map.info.resolution + 
+	    cos( bumperIter + tf::getYaw(_sensorTransform.getRotation())) * distance;
+	yMap = _sensorTransform.getOrigin().y() / _map.info.resolution + 
+	    sin( bumperIter + tf::getYaw(_sensorTransform.getRotation())) * distance;
+
+	if (yMap * _map.info.width + xMap > _map.info.height*_map.info.width) {
+	    return;
+	}
+	//!< Found obstacle
+	if ( _map.data[ yMap * _map.info.width + xMap ] > 70 ) {
+	    bumperMsg.contact = true;
+	    break;
+	}
     }
     bumperMsg.header.stamp = ros::Time::now();
     bumperMsg.header.frame_id = _namespace + "_" + _description.frame_id;

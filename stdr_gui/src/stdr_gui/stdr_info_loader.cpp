@@ -586,6 +586,10 @@ namespace stdr_gui{
         QTreeWidgetItem *sposex = new QTreeWidgetItem();
         QTreeWidgetItem *sposey = new QTreeWidgetItem();
         
+        scone->setText(0,"Radius");
+        scone->setText(1,(QString().setNum(
+          msg.robots[i].robot.bumperSensors[l].radius) + QString(" m")));
+
         scone->setText(0,"Contact Angle");
         scone->setText(1,(QString().setNum(
           msg.robots[i].robot.bumperSensors[l].contactAngle) + QString(" rad")));

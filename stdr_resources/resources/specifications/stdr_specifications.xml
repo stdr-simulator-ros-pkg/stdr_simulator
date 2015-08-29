@@ -123,7 +123,7 @@
   </bumper>
 
   <bumper_specifications>
-    <allowed>contact_angle,frequency,frame_id,pose</allowed>
+    <allowed>radius,contact_angle,frequency,frame_id,pose</allowed>
   </bumper_specifications>
 
   <kinematic>
