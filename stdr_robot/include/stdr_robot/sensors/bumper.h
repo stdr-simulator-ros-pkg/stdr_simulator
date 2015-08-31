@@ -68,6 +68,10 @@ namespace stdr_robot {
 
       //!< Bumper sensor description
       stdr_msgs::BumperSensorMsg _description;
+
+      //!< Current status
+      bool _contact;
+      
   };
 
 }

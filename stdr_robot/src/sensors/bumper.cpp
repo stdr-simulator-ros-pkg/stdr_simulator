@@ -36,12 +36,18 @@ namespace stdr_robot {
       const std::string& name,
       ros::NodeHandle& n)
   : 
-    Sensor(map, name, n, msg.pose, msg.frame_id, msg.frequency)
+      Sensor(map, name, n, msg.pose, msg.frame_id, msg.frequency), _contact(false)
   {
     _description = msg;
 
     _publisher = n.advertise<stdr_msgs::Bumper>
-	( _namespace + "/" + msg.frame_id, 1 );
+	( _namespace + "/" + msg.frame_id, 1, true );
+
+    stdr_msgs::Bumper bumperMsg;
+    bumperMsg.header.stamp = ros::Time::now();
+    bumperMsg.header.frame_id = _namespace + "_" + _description.frame_id;
+    bumperMsg.contact = false;
+    _publisher.publish(bumperMsg);
   }
   
   /**
@@ -92,8 +98,11 @@ namespace stdr_robot {
 	    break;
 	}
     }
-    bumperMsg.header.stamp = ros::Time::now();
-    bumperMsg.header.frame_id = _namespace + "_" + _description.frame_id;
-    _publisher.publish(bumperMsg );
+    if (bumperMsg.contact != this->_contact) {
+	bumperMsg.header.stamp = ros::Time::now();
+	bumperMsg.header.frame_id = _namespace + "_" + _description.frame_id;
+	_publisher.publish(bumperMsg);
+    }
+    this->_contact = bumperMsg.contact;
   }
 }  // namespace stdr_robot
