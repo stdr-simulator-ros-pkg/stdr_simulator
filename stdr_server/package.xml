@@ -32,6 +32,7 @@
   <run_depend>actionlib</run_depend>
   <run_depend>nodelet</run_depend>
   <run_depend>stdr_robot</run_depend>
+  <run_depend>map_server</run_depend>
 
 
   <export>
