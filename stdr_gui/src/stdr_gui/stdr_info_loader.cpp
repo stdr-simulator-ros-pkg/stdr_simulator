@@ -167,6 +167,7 @@ namespace stdr_gui{
                       *co2_sensors = new QTreeWidgetItem(),
                       *thermal_sensors = new QTreeWidgetItem(),
                       *sound_sensors = new QTreeWidgetItem(),
+                      *bumpers = new QTreeWidgetItem(),
                       *kinematics = new QTreeWidgetItem();
 
       lasers->setText(0,"Lasers");
@@ -175,6 +176,7 @@ namespace stdr_gui{
       co2_sensors->setText(0,"CO2 sensors");
       thermal_sensors->setText(0,"Thermal sensors");
       sound_sensors->setText(0,"Sound sensors");
+      bumpers->setText(0,"Bumpers");
       kinematics->setText(0,"Kinematic");
       
       for(unsigned int l = 0 ; l < msg.robots[i].robot.laserSensors.size() ; 
@@ -566,6 +568,49 @@ namespace stdr_gui{
         
         sound_sensors->addChild(sname);
       }
+      for(unsigned int l = 0; l < msg.robots[i].robot.bumperSensors.size() ; 
+        l++)
+      {
+        QTreeWidgetItem *sname;
+        sname = new QTreeWidgetItem();
+        sname->setText(0,
+          msg.robots[i].robot.bumperSensors[l].frame_id.c_str());
+        sname->setIcon(2,visible_icon_on_);
+        sname->setIcon(3,visible_icon_);
+        
+        sname->setToolTip(2,"Visibility status");
+        sname->setToolTip(3,"Visualize topic");
+
+        QTreeWidgetItem *scone = new QTreeWidgetItem();
+        QTreeWidgetItem *sfreq = new QTreeWidgetItem();
+        QTreeWidgetItem *sposex = new QTreeWidgetItem();
+        QTreeWidgetItem *sposey = new QTreeWidgetItem();
+        
+        scone->setText(0,"Radius");
+        scone->setText(1,(QString().setNum(
+          msg.robots[i].robot.bumperSensors[l].radius) + QString(" m")));
+
+        scone->setText(0,"Contact Angle");
+        scone->setText(1,(QString().setNum(
+          msg.robots[i].robot.bumperSensors[l].contactAngle) + QString(" rad")));
+        sfreq->setText(0,"Frequency");
+        sfreq->setText(1,(QString().setNum(
+          msg.robots[i].robot.bumperSensors[l].frequency) + QString(" Hz")));
+            
+        sposex->setText(0,"x pose");
+        sposex->setText(1,(QString().setNum(
+          msg.robots[i].robot.bumperSensors[l].pose.x) + QString(" m")));
+        sposey->setText(0,"y pose");
+        sposey->setText(1,(QString().setNum(
+          msg.robots[i].robot.bumperSensors[l].pose.y) + QString(" m")));
+                  
+        sname->addChild(scone);
+        sname->addChild(sfreq);
+        sname->addChild(sposex);
+        sname->addChild(sposey);
+        
+        bumpers->addChild(sname);
+      }
       
       rnode->addChild(lasers);
       rnode->addChild(sonars);
@@ -573,6 +618,7 @@ namespace stdr_gui{
       rnode->addChild(co2_sensors);
       rnode->addChild(thermal_sensors);
       rnode->addChild(sound_sensors);
+      rnode->addChild(bumpers);
       rnode->addChild(kinematics);
       
       robotsInfo.addChild(rnode);

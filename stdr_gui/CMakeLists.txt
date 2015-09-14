@@ -108,6 +108,7 @@ add_executable(stdr_gui_node
   src/stdr_gui/stdr_gui_sensors/stdr_gui_co2.cpp
   src/stdr_gui/stdr_gui_sensors/stdr_gui_thermal.cpp
   src/stdr_gui/stdr_gui_sensors/stdr_gui_sound.cpp
+  src/stdr_gui/stdr_gui_sensors/stdr_gui_bumper.cpp
   src/stdr_gui/stdr_visualization/stdr_laser_visualization.cpp
   src/stdr_gui/stdr_visualization/stdr_sonar_visualization.cpp
   src/stdr_gui/stdr_visualization/stdr_robot_visualization.cpp
