@@ -99,8 +99,12 @@ namespace stdr_robot {
           sin( sonarIter + tf::getYaw(_sensorTransform.getRotation()) ) 
             * distance;
         
-        if (yMap * _map.info.width + xMap > _map.info.height*_map.info.width)
-          return;
+        if (yMap * _map.info.width + xMap > _map.info.height*_map.info.width ||
+            yMap * _map.info.width + xMap < 0)
+        {
+          distance = _description.maxRange / _map.info.resolution - 1;
+          break;
+        }
         
         //!< Found obstacle
         if ( _map.data[ yMap * _map.info.width + xMap ] > 70 )
