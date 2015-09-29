@@ -23,6 +23,7 @@
 #define STDR_PARSER_MSG_CREATOR
 
 #include "stdr_parser/stdr_parser_node.h"
+#include <sstream>
 
 /**
 @namespace stdr_parser
@@ -54,6 +55,16 @@ namespace stdr_parser
       **/
       template <typename T>
       static T createMessage(Node *n,unsigned int id);
+
+      template <typename T>
+      static T stringToType(std::string s)
+      {
+        std::stringstream str;
+        str << s;
+        T temp;
+        str >> temp;
+        return temp;
+      }
   };
 }
 #endif
