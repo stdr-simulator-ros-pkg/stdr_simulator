@@ -152,8 +152,25 @@ namespace stdr_robot
       }
     }
 
-    _motionControllerPtr.reset(
-      new IdealMotionController(_currentPose, _tfBroadcaster, n, getName()));
+    std::string motion_model = result->description.kinematicModel.type;
+    stdr_msgs::KinematicMsg p = result->description.kinematicModel;
+
+    if(motion_model == "ideal")
+    {
+      _motionControllerPtr.reset(
+        new IdealMotionController(_currentPose, _tfBroadcaster, n, getName(), p));
+    }
+    else if(motion_model == "omni")
+    {
+      _motionControllerPtr.reset(
+        new OmniMotionController(_currentPose, _tfBroadcaster, n, getName(), p));
+    }
+    else
+    {
+      // If no motion model is specified or an invalid type declared use ideal
+      _motionControllerPtr.reset(
+        new IdealMotionController(_currentPose, _tfBroadcaster, n, getName(), p));
+    }
 
     _tfTimer.start();
   }

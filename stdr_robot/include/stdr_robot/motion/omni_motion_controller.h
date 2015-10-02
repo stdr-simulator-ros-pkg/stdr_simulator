@@ -12,15 +12,29 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   
-   Authors : 
-   * Manos Tsardoulias, etsardou@gmail.com
-   * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+
+Authors:
+
+Oscar Lima Carrion, olima_84@yahoo.com
+Ashok Meenakshi, mashoksc@gmail.com
+Seguey Alexandrov, sergeyalexandrov@mail.com
+
+Review / Edits:
+Manos Tsardoulias, etsardou@gmail.com
+
+About this code:
+
+This class represents a motion model for omnidirectional robot and could be
+used to sample the possible pose given the starting pose and the commanded
+robot's motion.
+
+The motion is decomposed into two translations alond the x axis of the
+robot (forward), and along the y axis of the robot (lateral), and one
+rotation.
 ******************************************************************************/
 
-#ifndef IDEAL_MOTION_CONTROLLER_H
-#define IDEAL_MOTION_CONTROLLER_H
+#ifndef OMNI_MOTION_CONTROLLER_H
+#define OMNI_MOTION_CONTROLLER_H
 
 #include <stdr_robot/motion/motion_controller_base.h>
 
@@ -32,10 +46,11 @@ namespace stdr_robot
 {
   
   /**
-  @class IdealMotionController
-  @brief A class that provides motion controller implementation. Inherits publicly MotionController
+  @class OmniMotionController
+  @brief A class that provides motion controller implementation. \
+  Inherits publicly MotionController
   **/ 
-  class IdealMotionController : public MotionController 
+  class OmniMotionController : public MotionController 
   {
     
     public:
@@ -48,13 +63,13 @@ namespace stdr_robot
       @param name [const std::string&] The robot frame id
       @return void
       **/
-      IdealMotionController(
+      OmniMotionController(
         const geometry_msgs::Pose2D& pose, 
         tf::TransformBroadcaster& tf, 
         ros::NodeHandle& n, 
         const std::string& name,
         const stdr_msgs::KinematicMsg params);
-          
+           
       /**
       @brief Calculates the motion - updates the robot pose
       @param event [const ros::TimerEvent&] A ROS timer event
@@ -66,7 +81,7 @@ namespace stdr_robot
       @brief Default destructor 
       @return void
       **/
-      ~IdealMotionController(void);
+      ~OmniMotionController(void);
   };
 }
 

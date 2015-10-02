@@ -13,13 +13,27 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
    
-   Authors : 
-   * Manos Tsardoulias, etsardou@gmail.com
-   * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+Authors:
+
+Oscar Lima Carrion, olima_84@yahoo.com
+Ashok Meenakshi, mashoksc@gmail.com
+Seguey Alexandrov, sergeyalexandrov@mail.com
+
+Review / Edits:
+Manos Tsardoulias, etsardou@gmail.com
+
+About this code:
+
+This class represents a motion model for omnidirectional robot and could be
+used to sample the possible pose given the starting pose and the commanded
+robot's motion.
+T
+he motion is decomposed into two translations alond the x axis of the
+robot (forward), and along the y axis of the robot (lateral), and one
+rotation.
 ******************************************************************************/
 
-#include <stdr_robot/motion/ideal_motion_controller.h>
+#include <stdr_robot/motion/omni_motion_controller.h>
 
 namespace stdr_robot {
     
@@ -30,8 +44,8 @@ namespace stdr_robot {
   @param n [ros::NodeHandle&] The ROS node handle
   @param name [const std::string&] The robot frame id
   @return void
-  **/
-  IdealMotionController::IdealMotionController(
+  **/  
+  OmniMotionController::OmniMotionController(
     const geometry_msgs::Pose2D& pose, 
     tf::TransformBroadcaster& tf, 
     ros::NodeHandle& n, 
@@ -41,46 +55,46 @@ namespace stdr_robot {
   {
     _calcTimer = n.createTimer(
       _freq, 
-      &IdealMotionController::calculateMotion, 
+      &OmniMotionController::calculateMotion, 
       this);
   }
-   
+
+  
   /**
   @brief Calculates the motion - updates the robot pose
   @param event [const ros::TimerEvent&] A ROS timer event
   @return void
   **/
-  void IdealMotionController::calculateMotion(const ros::TimerEvent& event) 
+  void OmniMotionController::calculateMotion(const ros::TimerEvent& event) 
   {
     //!< updates _posePtr based on _currentTwist and time passed (event.last_real)
     
     ros::Duration dt = ros::Time::now() - event.last_real;
     
-    if (_currentTwist.angular.z == 0) {
-      
-      _pose.x += _currentTwist.linear.x * dt.toSec() * cosf(_pose.theta);
-      _pose.y += _currentTwist.linear.x * dt.toSec() * sinf(_pose.theta);
+    // Simple omni model
+    // TODO: Add kinematic model uncertainties
+    if (_currentTwist.angular.z != 0 || _currentTwist.linear.x != 0 ||
+     _currentTwist.linear.y != 0) 
+    {
+      // Dx and Dy takes under consideration both linear rotations, 
+      // independently of each other
+      _pose.x += 
+        _currentTwist.linear.x * dt.toSec() * cosf(_pose.theta) + 
+        _currentTwist.linear.y * dt.toSec() * cosf(_pose.theta + M_PI/2.0); 
+
+      _pose.y += 
+        _currentTwist.linear.y * dt.toSec() * sinf(_pose.theta + M_PI/2.0) +
+        _currentTwist.linear.x * dt.toSec() * sinf(_pose.theta);
+
+      _pose.theta += _currentTwist.angular.z * dt.toSec();
     }
-    else {
-      
-      _pose.x += - _currentTwist.linear.x / _currentTwist.angular.z * 
-        sinf(_pose.theta) + 
-        _currentTwist.linear.x / _currentTwist.angular.z * 
-        sinf(_pose.theta + dt.toSec() * _currentTwist.angular.z);
-      
-      _pose.y -= - _currentTwist.linear.x / _currentTwist.angular.z * 
-        cosf(_pose.theta) + 
-        _currentTwist.linear.x / _currentTwist.angular.z * 
-        cosf(_pose.theta + dt.toSec() * _currentTwist.angular.z);
-    }
-    _pose.theta += _currentTwist.angular.z * dt.toSec();
   }
   
   /**
   @brief Default destructor 
   @return void
   **/
-  IdealMotionController::~IdealMotionController(void)
+  OmniMotionController::~OmniMotionController(void)
   {
     
   }

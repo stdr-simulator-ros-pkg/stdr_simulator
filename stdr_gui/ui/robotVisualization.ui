@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>333</width>
-    <height>470</height>
+    <height>490</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>333</width>
-    <height>470</height>
+    <height>490</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>333</width>
-    <height>470</height>
+    <height>490</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -134,10 +134,23 @@
     </rect>
    </property>
    <property name="text">
-    <string>u = </string>
+    <string>u_x = </string>
    </property>
   </widget>
   <widget class="QLabel" name="robotSpeedAngular">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>470</y>
+     <width>311</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>w = </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="robotSpeedLinearY">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -147,7 +160,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>w = </string>
+    <string>u_y = </string>
    </property>
   </widget>
  </widget>

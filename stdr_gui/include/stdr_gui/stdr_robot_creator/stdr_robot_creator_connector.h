@@ -450,6 +450,7 @@ namespace stdr_gui
       void updateCO2Sensor(void);
       void updateThermalSensor(void);
       void updateSoundSensor(void);
+      void updateKinematicModel(void);
       
       /**
       @brief Called when the update button of the properties widget is clicked 

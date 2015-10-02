@@ -36,6 +36,7 @@
 #include <stdr_robot/sensors/thermal.h>
 #include <stdr_robot/motion/motion_controller_base.h>
 #include <stdr_robot/motion/ideal_motion_controller.h>
+#include <stdr_robot/motion/omni_motion_controller.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/Odometry.h>
 #include <actionlib/client/simple_action_client.h>

@@ -71,6 +71,10 @@ add_library(stdr_ideal_motion_controller src/motion/ideal_motion_controller.cpp)
 add_dependencies(stdr_ideal_motion_controller stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_ideal_motion_controller ${catkin_LIBRARIES})
 
+add_library(stdr_omni_motion_controller src/motion/omni_motion_controller.cpp)
+add_dependencies(stdr_omni_motion_controller stdr_msgs_gencpp) # wait for stdr_msgs to be build
+target_link_libraries(stdr_omni_motion_controller ${catkin_LIBRARIES})
+
 ######################### Robot ########################################
 add_library(stdr_robot_nodelet src/stdr_robot.cpp)
 add_dependencies(stdr_robot_nodelet stdr_msgs_gencpp) # wait for stdr_msgs to be build
@@ -82,6 +86,7 @@ target_link_libraries(stdr_robot_nodelet ${catkin_LIBRARIES}
     stdr_thermal_sensor
     stdr_microphone_sensor
     stdr_ideal_motion_controller
+    stdr_omni_motion_controller
 )
 
 ######################### HandleRobot ##################################

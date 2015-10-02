@@ -45,15 +45,15 @@ namespace stdr_parser
     if (!fin.good()) {
       throw ParserException("Failed to load '"+ file_name +"', no such file!");
     }
-    
-    #ifdef HAVE_NEW_YAMLCPP
-      YAML::Node doc = YAML::Load(fin);
-    #else
-      YAML::Parser parser(fin);
-      YAML::Node doc;
-      parser.GetNextDocument(doc);
-    #endif
-    
+
+#ifdef HAVE_NEW_YAMLCPP
+    YAML::Node doc = YAML::Load(fin);
+#else
+    YAML::Parser parser(fin);
+    YAML::Node doc;
+    parser.GetNextDocument(doc);
+#endif
+
     base_node->file_origin = file_name;
 #ifndef HAVE_NEW_YAMLCPP
     base_node->file_row = doc.GetMark().line;
@@ -77,9 +77,11 @@ namespace stdr_parser
       node >> s;
       new_node->value = s;
       new_node->file_origin = n->file_origin;
+
 #ifndef HAVE_NEW_YAMLCPP
       new_node->file_row = node.GetMark().line;
 #endif
+      
       n->elements.push_back(new_node);
     }
     else if(node.Type() == YAML::NodeType::Sequence)
@@ -95,59 +97,59 @@ namespace stdr_parser
 #ifdef HAVE_NEW_YAMLCPP
       for(YAML::const_iterator it = node.begin() ; it != node.end() ; it++) 
 #else
-      for(YAML::Iterator it = node.begin() ; it != node.end() ; it++) 
+        for(YAML::Iterator it = node.begin() ; it != node.end() ; it++) 
 #endif
-      {
-        Node* new_node = new Node();
-#ifdef HAVE_NEW_YAMLCPP
-        it->first >> s;
-#else
-        it.first() >> s;
-#endif
-        new_node->tag = s;
-        new_node->file_origin = n->file_origin;
-#ifndef HAVE_NEW_YAMLCPP
-        new_node->file_row = node.GetMark().line;
-#endif
-        n->elements.push_back(new_node);
-        if(s == "filename")
         {
-          std::string file_name;
+          Node* new_node = new Node();
 #ifdef HAVE_NEW_YAMLCPP
-          it->second >> file_name;
+          it->first >> s;
 #else
-          it.second() >> file_name;
+          it.first() >> s;
 #endif
-          std::string path = ros::package::getPath("stdr_resources") + 
+          new_node->tag = s;
+          new_node->file_origin = n->file_origin;
+#ifndef HAVE_NEW_YAMLCPP
+          new_node->file_row = node.GetMark().line;
+#endif
+          n->elements.push_back(new_node);
+          if(s == "filename")
+          {
+            std::string file_name;
+#ifdef HAVE_NEW_YAMLCPP
+            it->second >> file_name;
+#else
+            it.second() >> file_name;
+#endif
+            std::string path = ros::package::getPath("stdr_resources") + 
               std::string("/resources/") + file_name;
-          std::ifstream fin(path.c_str());
-          if (!fin.good()) {
-            throw ParserException("Failed to load '"+ file_name +
-                                    "', no such file!");
-          }
-          #ifdef HAVE_NEW_YAMLCPP
+            std::ifstream fin(path.c_str());
+            if (!fin.good()) {
+              throw ParserException("Failed to load '"+ file_name +
+                "', no such file!");
+            }
+#ifdef HAVE_NEW_YAMLCPP
             YAML::Node doc = YAML::Load(fin);
-          #else
+#else
             YAML::Parser parser(fin);
             YAML::Node doc;
             parser.GetNextDocument(doc);
-          #endif
-          new_node->file_origin = file_name;
+#endif
+            new_node->file_origin = file_name;
 #ifndef HAVE_NEW_YAMLCPP
-          new_node->file_row = doc.GetMark().line;
+            new_node->file_row = doc.GetMark().line;
 #endif
-          
-          parseLow(doc,new_node);
-        }
-        else
-        {
+
+            parseLow(doc,new_node);
+          }
+          else
+          {
 #ifdef HAVE_NEW_YAMLCPP
-          parseLow(it->second,new_node);
+            parseLow(it->second,new_node);
 #else
-          parseLow(it.second(),new_node);
+            parseLow(it.second(),new_node);
 #endif
+          }
         }
-      }
     }
   }
 }

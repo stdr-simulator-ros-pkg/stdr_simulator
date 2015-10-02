@@ -536,6 +536,9 @@ namespace stdr_server {
     
     stdr_msgs::RobotIndexedMsg namedRobot;
     
+    if(description.kinematicModel.type == "")
+      description.kinematicModel.type = "ideal";
+
     namedRobot.robot = description;
     
     namedRobot.name = "robot" + boost::lexical_cast<std::string>(_id++);

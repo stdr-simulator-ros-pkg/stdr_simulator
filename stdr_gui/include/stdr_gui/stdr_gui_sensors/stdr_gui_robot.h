@@ -60,6 +60,8 @@ namespace stdr_gui
       
       //!< Robot current linear speed
       float linear_speed_;
+      //!< Robot current linear speed by Y
+      float linear_speed_y_;
       //!< Robot current angular speed
       float angular_speed_;
       
@@ -310,9 +312,9 @@ namespace stdr_gui
       
       /**
       @brief Returns the current robot speed
-      @return std::pair<float,float> : The linear and angular speeds
+      @return std::vector<float> : The linear and angular speeds
       **/
-      std::pair<float,float> getSpeeds(void);
+      std::vector<float> getSpeeds(void);
       
       /**
       @brief Sets the tags existent in the environment

@@ -176,6 +176,8 @@ namespace stdr_gui{
       thermal_sensors->setText(0,"Thermal sensors");
       sound_sensors->setText(0,"Sound sensors");
       kinematics->setText(0,"Kinematic");
+      kinematics->setText(1,
+        QString(msg.robots[i].robot.kinematicModel.type.c_str()));
       
       for(unsigned int l = 0 ; l < msg.robots[i].robot.laserSensors.size() ; 
           l++)

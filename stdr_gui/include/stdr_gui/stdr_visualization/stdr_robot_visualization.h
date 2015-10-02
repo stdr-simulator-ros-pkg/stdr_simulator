@@ -108,10 +108,10 @@ namespace stdr_gui
       
       /**
       @brief Sets the robot's current speed
-      @param msg [std::pair<float,float>] the robot speeds
+      @param msg [std::vector<float>] the robot speeds
       @return void
       **/
-      void setCurrentSpeed(std::pair<float,float> msg);
+      void setCurrentSpeed(std::vector<float> msg);
   };  
 }
 

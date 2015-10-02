@@ -27,12 +27,12 @@
       <widget class="QComboBox" name="comboBox">
        <item>
         <property name="text">
-         <string>Differential drive</string>
+         <string>Skid steer (Ideal)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Skid steer</string>
+         <string>Omnidirectional</string>
         </property>
        </item>
       </widget>
@@ -40,7 +40,7 @@
     </layout>
    </item>
    <item row="1" column="0" alignment="Qt::AlignHCenter">
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="updateButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>

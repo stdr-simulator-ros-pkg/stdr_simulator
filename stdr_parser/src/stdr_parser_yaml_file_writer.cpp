@@ -118,7 +118,48 @@ namespace stdr_parser
     out << YAML::EndMap;
     return out;
   }
+ 
+  //!<----------------------------------------------------------------
+  //!< Template declaration for stdr_msgs::KinematicMsg
+  template void YamlFileWriter::messageToFile
+    (stdr_msgs::KinematicMsg msg,std::string file_name);
   
+  //!< Template specialization for stdr_msgs::KinematicMsg
+  template <>
+  YAML::Emitter& operator << <stdr_msgs::KinematicMsg>
+    (YAML::Emitter& out, const stdr_msgs::KinematicMsg& msg)
+  {
+    out << YAML::BeginMap;
+      out << YAML::Key << "kinematic";
+      out << YAML::Value;
+      out << YAML::BeginMap;
+        out << YAML::Key << "kinematic_specifications";
+        out << YAML::Value;
+        out << YAML::BeginMap;
+          out << YAML::Key << "kinematic_type" << YAML::Value << msg.type;
+          out << YAML::Key << "kinematic_parameters";
+          out << YAML::Value;
+          out << YAML::BeginMap;
+           out << YAML::Key << "a_ux_ux" << YAML::Value << msg.a_ux_ux;
+           out << YAML::Key << "a_ux_uy" << YAML::Value << msg.a_ux_uy;
+           out << YAML::Key << "a_ux_w" << YAML::Value << msg.a_ux_w;
+           out << YAML::Key << "a_uy_ux" << YAML::Value << msg.a_uy_ux;
+           out << YAML::Key << "a_uy_uy" << YAML::Value << msg.a_uy_uy;
+           out << YAML::Key << "a_uy_w" << YAML::Value << msg.a_uy_w;
+           out << YAML::Key << "a_w_ux" << YAML::Value << msg.a_w_ux;
+           out << YAML::Key << "a_w_uy" << YAML::Value << msg.a_w_uy;
+           out << YAML::Key << "a_w_w" << YAML::Value << msg.a_w_w;
+           out << YAML::Key << "a_g_ux" << YAML::Value << msg.a_g_ux;
+           out << YAML::Key << "a_g_uy" << YAML::Value << msg.a_g_uy;
+           out << YAML::Key << "a_g_w" << YAML::Value << msg.a_g_w;
+          out << YAML::EndMap;
+        out << YAML::EndMap;
+      out << YAML::EndMap;
+    out << YAML::EndMap;
+    return out;
+  }
+
+
   //!<----------------------------------------------------------------
   //!< Template declaration for stdr_msgs::LaserSensorMsg
   template void YamlFileWriter::messageToFile
@@ -400,6 +441,10 @@ namespace stdr_parser
           {
             out << msg.soundSensors[i];
           }
+
+          // Kinematic model creation
+          out << msg.kinematicModel;
+
         out << YAML::EndSeq;
       out << YAML::EndMap;
     out << YAML::EndMap;

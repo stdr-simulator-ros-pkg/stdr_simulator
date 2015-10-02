@@ -1,0 +1,20 @@
+<kinematic>
+  <kinematic_specifications>
+    <kinematic_model>omni</kinematic_model>
+    <kinematic_parameters>
+      <a_ux_ux>0.0</a_ux_ux>
+      <a_ux_uy>0.0</a_ux_uy>
+      <a_ux_w>0.0</a_ux_w>
+      <a_uy_ux>0.1</a_uy_ux>
+      <a_uy_uy>0.1</a_uy_uy>
+      <a_uy_w>0.0</a_uy_w>
+      <a_w_ux>0.0</a_w_ux>
+      <a_w_uy>0.0</a_w_uy>
+      <a_w_w>0.0</a_w_w>
+      <a_g_ux>0.0</a_g_ux>
+      <a_g_uy>0.1</a_g_uy>
+      <a_g_w>0.0</a_g_w>
+    </kinematic_parameters>
+  </kinematic_specifications>
+</kinematic>
+
