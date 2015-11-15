@@ -2,7 +2,7 @@ robot:
   robot_specifications:
     - footprint:
         footprint_specifications:
-          radius: 0.200000002980232
+          radius: 0.100000002980232
           points:
             []
     - initial_pose:
@@ -13,7 +13,7 @@ robot:
         laser_specifications:
           max_angle: 2.09439516067505
           min_angle: -2.09439516067505
-          max_range: 4.09000015258789
+          max_range: 10.09000015258789
           min_range: 0.0599999986588955
           num_rays: 667
           frequency: 10

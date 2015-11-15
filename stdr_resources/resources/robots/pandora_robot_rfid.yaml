@@ -1,0 +1,115 @@
+robot:
+  robot_specifications:
+    - footprint:
+        footprint_specifications:
+          radius: 0.1
+          points:
+            []
+    - initial_pose:
+        x: 0
+        y: 0
+        theta: 0
+    - laser:
+        laser_specifications:
+          max_angle: 2.094395
+          min_angle: -2.094395
+          max_range: 10.09
+          min_range: 0.06
+          num_rays: 667
+          frequency: 10
+          frame_id: laser_0
+          pose:
+            x: 0
+            y: 0
+            theta: 0
+          noise:
+            noise_specifications:
+              noise_mean: 0.5
+              noise_std: 0.05
+    - sonar:
+        sonar_specifications:
+          cone_angle: 0.87
+          max_range: 3
+          min_range: 0.15
+          frequency: 10
+          frame_id: sonar_0
+          pose:
+            x: 0.1000000014901161
+            y: 0
+            theta: 0
+          noise:
+            noise_specifications:
+              noise_mean: 0.1
+              noise_std: 0.01
+    - sonar:
+        sonar_specifications:
+          cone_angle: 0.87
+          max_range: 3
+          min_range: 0.15
+          frequency: 10
+          frame_id: sonar_1
+          pose:
+            x: 0.1000000014901161
+            y: 0.1000000014901161
+            theta: 1.570795059204102
+          noise:
+            noise_specifications:
+              noise_mean: 0.1
+              noise_std: 0.01
+    - sonar:
+        sonar_specifications:
+          cone_angle: 0.87
+          max_range: 3
+          min_range: 0.15
+          frequency: 10
+          frame_id: sonar_2
+          pose:
+            x: 0.1000000014901161
+            y: -0.1000000014901161
+            theta: -1.570795059204102
+          noise:
+            noise_specifications:
+              noise_mean: 0.1
+              noise_std: 0.01
+    - sonar:
+        sonar_specifications:
+          cone_angle: 0.87
+          max_range: 3
+          min_range: 0.15
+          frequency: 10
+          frame_id: sonar_3
+          pose:
+            x: -0.1000000014901161
+            y: -0.1000000014901161
+            theta: 2.792524337768555
+          noise:
+            noise_specifications:
+              noise_mean: 0.1
+              noise_std: 0.01
+    - sonar:
+        sonar_specifications:
+          cone_angle: 0.87
+          max_range: 3
+          min_range: 0.15
+          frequency: 10
+          frame_id: sonar_4
+          pose:
+            x: -0.1000000014901161
+            y: 0.1000000014901161
+            theta: 3.490655660629272
+          noise:
+            noise_specifications:
+              noise_mean: 0.1
+              noise_std: 0.01
+    - rfid_reader:
+        rfid_reader_specifications:
+          angle_span: 6.28319
+          max_range: 3
+          signal_cutoff: 0
+          frequency: 10
+          frame_id: rfid_reader_1
+          pose:
+            x: 0
+            y: 0
+            theta: 0
+
