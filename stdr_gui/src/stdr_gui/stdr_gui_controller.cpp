@@ -473,6 +473,12 @@ namespace stdr_gui
   **/
   void CGuiController::receiveMap(const nav_msgs::OccupancyGrid& msg)
   {
+    while(map_lock_)
+    { 
+      usleep(100);
+    }
+    map_lock_ = true;
+
     map_msg_ = msg;
     initial_map_ = running_map_ =
       QImage(msg.info.width,msg.info.height,QImage::Format_RGB32);
@@ -518,11 +524,14 @@ namespace stdr_gui
     
     timer_->start(50);
     
+
     robot_subscriber_ = n_.subscribe(
       "stdr_server/active_robots", 
       1, 
       &CGuiController::receiveRobots,
       this);
+
+    map_lock_ = false;
   }
   
   /**
@@ -1062,11 +1071,12 @@ namespace stdr_gui
     
     map_connector_.updateImage(&running_map_);
     
+
     gui_connector_.setStatusBarMessage(
       QString("Time elapsed : ") + 
       stdr_gui_tools::getLiteralTime(elapsed_time_.elapsed()));
-    map_lock_ = false;
   
+    map_lock_ = false;
     //!<--------------------------- Check if all visualisers are active
     std::vector<QString> toBeErased;
     for(LaserVisIterator it = laser_visualizers_.begin() ; 
@@ -1134,6 +1144,7 @@ namespace stdr_gui
     {
       robot_visualizers_.erase(toBeErased[i]);
     }
+
     
     //!< -----------------------------------------Check for close event
     if(gui_connector_.closeTriggered())
