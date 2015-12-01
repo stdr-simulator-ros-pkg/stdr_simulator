@@ -120,6 +120,7 @@ install(TARGETS
     stdr_microphone_sensor
     stdr_thermal_sensor
     stdr_laser
+    stdr_bumper
     stdr_ideal_motion_controller
     stdr_handle_robot
     stdr_robot_nodelet
