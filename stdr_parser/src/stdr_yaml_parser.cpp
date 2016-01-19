@@ -127,7 +127,6 @@ namespace stdr_parser
               // If not found on stdr_resources/resources,
               // search on the directory containing parent file
               path = extractDirectory(new_node->file_origin) + file_name;
-              ROS_ERROR_STREAM(path);
               fin.open(path.c_str());
               if (!fin.good()) {
                 throw ParserException("Failed to load '"+ file_name +
