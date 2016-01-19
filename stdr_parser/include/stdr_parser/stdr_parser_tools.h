@@ -79,5 +79,12 @@ namespace stdr_parser
   @return std::string
   **/
   std::string extractFilename(std::string s);
+
+  /**
+  @brief Extracts the directory from an absolute path
+  @param s [std::string] The input string
+  @return std::string
+  **/
+  std::string extractDirectory(std::string s);
 }
 #endif

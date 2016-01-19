@@ -66,7 +66,7 @@ malformed xml file");
   @param n [Node*] The stdr xml tree node to update
   @return void
   **/
-  void XmlParser::parseLow(TiXmlNode* node,Node* n)
+  void XmlParser::parseLow(TiXmlNode* node, Node* n)
   {
     Node* new_node = new Node();
     TiXmlNode* pChild;
@@ -89,19 +89,27 @@ malformed xml file");
       }
       case 4 :    //!< Type = text
       {
-        
         if(std::string(node->Parent()->Value()) == "filename")
         {
           try
           {
             parse(ros::package::getPath("stdr_resources") + 
-              std::string("/resources/") + std::string(node->Value()) , n);
+              std::string("/resources/") + std::string(node->Value()), n);
           }
           catch(ParserException ex)
           {
-            throw ex;
+            try
+            {
+              // If not found on stdr_resources/resources,
+              // search on the directory containing parent file
+              parse(extractDirectory(new_node->file_origin) +
+                std::string("/") + std::string(node->Value()), n);
+            }
+            catch(ParserException ex)
+            {
+              throw ex;
+            }
           }
-          
         }
         else
         {
