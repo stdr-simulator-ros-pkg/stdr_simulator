@@ -54,4 +54,16 @@ namespace stdr_parser
     int n = s.find_last_of('/');
     return s.substr(n + 1, s.size() - n - 1);
   }
+
+  /**
+  @brief Extracts the directory from an absolute path. It does the
+  same functionality as libgen's dirname but for std::string objects
+  @param s [std::string] The input string
+  @return std::string
+  **/
+  std::string extractDirname(std::string s)
+  {
+    int n = s.find_last_of('/');
+    return s.substr(0, n); // exclude trailing '/'
+  }
 }

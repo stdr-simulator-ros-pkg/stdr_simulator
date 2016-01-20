@@ -124,8 +124,15 @@ namespace stdr_parser
               std::string("/resources/") + file_name;
             std::ifstream fin(path.c_str());
             if (!fin.good()) {
-              throw ParserException("Failed to load '"+ file_name +
-                "', no such file!");
+              // If not found on stdr_resources/resources,
+              // search on the directory containing parent file
+              path = extractDirname(new_node->file_origin) +
+                std::string("/") + file_name;
+              fin.open(path.c_str());
+              if (!fin.good()) {
+                throw ParserException("Failed to load '"+ file_name +
+                  "', no such file!");
+              }
             }
 #ifdef HAVE_NEW_YAMLCPP
             YAML::Node doc = YAML::Load(fin);
