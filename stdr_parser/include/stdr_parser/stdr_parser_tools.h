@@ -79,5 +79,13 @@ namespace stdr_parser
   @return std::string
   **/
   std::string extractFilename(std::string s);
+
+  /**
+  @brief Extracts the directory from an absolute path. It does the
+  same functionality as libgen's dirname but for std::string objects
+  @param s [std::string] The input string
+  @return std::string
+  **/
+  std::string extractDirname(std::string s);
 }
 #endif
