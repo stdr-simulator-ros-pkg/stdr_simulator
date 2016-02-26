@@ -60,7 +60,7 @@ namespace stdr_robot {
     _laserScan.range_max = _description.maxRange;
     _laserScan.range_min = _description.minRange;
     _laserScan.angle_increment = 
-      ( _description.maxAngle - _description.minAngle ) / _description.numRays;
+      ( _description.maxAngle - _description.minAngle ) / ( _description.numRays - 1 );
 
 
     if ( _map.info.height == 0 || _map.info.width == 0 ) 
@@ -75,7 +75,7 @@ namespace stdr_robot {
       angle = tf::getYaw(_sensorTransform.getRotation()) + 
         _description.minAngle + laserScanIter * 
           ( _description.maxAngle - _description.minAngle ) 
-            / _description.numRays;
+            / ( _description.numRays - 1 );
       
       distance = 1;
 
