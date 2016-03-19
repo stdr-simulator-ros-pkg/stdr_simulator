@@ -21,7 +21,7 @@
 #ifndef STDR_GUI_SOUND_SOURCE_CONTAINER
 #define STDR_GUI_SOUND_SOURCE_CONTAINER
 
-#include "stdr_gui/stdr_tools.h"
+#include "stdr_gui/stdr_map_metainformation/stdr_gui_source.h"
 
 /**
 @namespace stdr_gui
@@ -33,18 +33,12 @@ namespace stdr_gui
   @class CGuiSoundSource
   @brief Implements the functionalities of a sound source
   **/ 
-  class CGuiSoundSource
+  class CGuiSoundSource : public CGuiSource
   {
     //------------------------------------------------------------------------//
     private:
-      //!< The position of the rfid tag in the map
-      QPoint position_; 
-      //!< The "name" of the rfid tag 
-      std::string name_;  
-      //!< The message of the rfid tag
       float db_;
-      //!< The OGM resolution
-      float resolution_;
+
     //------------------------------------------------------------------------//
     public:
       /**
@@ -63,24 +57,11 @@ namespace stdr_gui
       ~CGuiSoundSource(void);
       
       /**
-      @brief Returns the "name" of the rfid tag
-      @return std::string 
-      **/
-      std::string getName(void);
-      
-      /**
-      @brief Checks proximity to a point
-      @param p [QPoint] The proximity point to check
-      @return bool : True if tag is close to p
-      **/
-      bool checkProximity(QPoint p);
-      
-      /**
       @brief Draws the tag in the map
       @param img [QImage*] The image to draw to
       @return void
       **/
-      void draw(QImage *img);
+      virtual void draw(QImage *img);
       
       /**
       @brief Sets the tag message

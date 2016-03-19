@@ -29,12 +29,9 @@ namespace stdr_gui{
   @param name [std::string] The "name" of the rfid tag
   @return void
   **/
-  CGuiThermalSource::CGuiThermalSource(
-    QPoint p,std::string name, float resolution):
-      position_(p),
-      name_(name),
-      resolution_(resolution),
-      degrees_(0.0)
+  CGuiThermalSource::CGuiThermalSource(QPoint p,std::string name, float resolution):
+	  CGuiSource(p,name,resolution),
+          degrees_(0.0)
   {
   
   }
@@ -47,29 +44,7 @@ namespace stdr_gui{
   {
 
   }
-  
-  /**
-  @brief Returns the "name" of the rfid tag
-  @return std::string 
-  **/
-  std::string CGuiThermalSource::getName(void)
-  {
-    return name_;
-  }
-  
-  /**
-  @brief Checks proximity to a point
-  @param p [QPoint] The proximity point to check
-  @return bool : True if tag is close to p
-  **/
-  bool CGuiThermalSource::checkProximity(QPoint p)
-  {
-    float dx = p.x() * resolution_ - position_.x() * resolution_;
-    float dy = p.y() * resolution_ - position_.y() * resolution_;
-    float dist = sqrt( pow(dx,2) + pow(dy,2) );
-    return dist <= 0.3;
-  }
-  
+
   /**
   @brief Draws the tag in the map
   @param img [QImage*] The image to draw to
@@ -88,7 +63,7 @@ namespace stdr_gui{
         2 * i * step, 
         2 * i * step);
     }
-    
+
     //!< Draws the label
     
     int text_size = name_.size();
