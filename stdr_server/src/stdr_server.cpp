@@ -171,7 +171,11 @@ namespace stdr_server {
       RFIDMarkerArray.markers.push_back(translateRFID(it->second)); 
     }
     _rfidTagVectorPublisher.publish(rfidTagList);
-    _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
+    if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
+    {
+      _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
+    }
+
 
     //!< Return success
     res.success = true;
@@ -209,7 +213,11 @@ namespace stdr_server {
       C02MarkerArray.markers.push_back(translateC02(it->second));    
     }
     _CO2SourceVectorPublisher.publish(CO2SourceList);
-    _sourceVectorPublisherRviz.publish(C02MarkerArray); 
+    if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
+    {
+      _sourceVectorPublisherRviz.publish(C02MarkerArray); 
+    }
+
     
     //!< Return success
     res.success = true;
@@ -247,7 +255,12 @@ namespace stdr_server {
       thermalMarkerArray.markers.push_back(translateThermal(it->second));
     }
     _thermalSourceVectorPublisher.publish(thermalSourceList);
-    _sourceVectorPublisherRviz.publish(thermalMarkerArray);
+    if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
+    {
+      _sourceVectorPublisherRviz.publish(thermalMarkerArray);
+    }
+    
+    
     
     //!< Return success
     res.success = true;
@@ -285,7 +298,11 @@ namespace stdr_server {
       soundMarkerArray.markers.push_back(translateSound(it->second));
     }
     _soundSourceVectorPublisher.publish(soundSourceList);
-    _sourceVectorPublisherRviz.publish(soundMarkerArray);
+    if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
+    {
+      _sourceVectorPublisherRviz.publish(soundMarkerArray);
+    }
+    
     
     //!< Return success
     res.success = true;
@@ -316,7 +333,11 @@ namespace stdr_server {
         RFIDMarkerArray.markers.push_back(translateRFID(it->second));
       }
       _rfidTagVectorPublisher.publish(rfidTagList);
-      _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
+      if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
+      {
+        _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
+      }      
+      
     }
     else  //!< Tag does not exist
     {
@@ -349,7 +370,12 @@ namespace stdr_server {
         C02MarkerArray.markers.push_back(translateC02(it->second));
       }
       _CO2SourceVectorPublisher.publish(CO2SourceList);
-      _sourceVectorPublisherRviz.publish(C02MarkerArray); 
+      if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
+      {
+        _sourceVectorPublisherRviz.publish(C02MarkerArray); 
+      }      
+      
+      
     }
     else  //!< Source does not exist
     {
@@ -382,7 +408,11 @@ namespace stdr_server {
         thermalMarkerArray.markers.push_back(translateThermal(it->second));
       }
       _thermalSourceVectorPublisher.publish(thermalSourceList);
-      _sourceVectorPublisherRviz.publish(thermalMarkerArray);
+      if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
+      {
+        _sourceVectorPublisherRviz.publish(thermalMarkerArray);
+      }  
+      
     }
     else  //!< Source does not exist
     {
@@ -415,7 +445,11 @@ namespace stdr_server {
         soundMarkerArray.markers.push_back(translateSound(it->second));
       }
       _soundSourceVectorPublisher.publish(soundSourceList);
-      _sourceVectorPublisherRviz.publish(soundMarkerArray);
+      if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
+      {
+        _sourceVectorPublisherRviz.publish(soundMarkerArray);
+      } 
+
     }
     else  //!< Source does not exist
     {
@@ -725,7 +759,12 @@ namespace stdr_server {
   visualization_msgs::Marker Server::translateC02(const stdr_msgs::CO2Source& msg)
   {
 	visualization_msgs::Marker marker = createMarker(msg);
+	
+	// Set the namespace and id for this marker.  This serves to create a unique ID
+    // Any marker sent with the same namespace and id will overwrite the old one
+    marker.ns = "co2";
 	marker.id = atoi(msg.id.c_str());
+	
     // Set the color specific to the source type -- be sure to set alpha to something non-zero!
     marker.color.r = 0.0f;
     marker.color.g = 1.0f;
@@ -741,7 +780,12 @@ namespace stdr_server {
   visualization_msgs::Marker Server::translateThermal(const stdr_msgs::ThermalSource& msg)
   {
 	visualization_msgs::Marker marker = createMarker(msg);
+	
+	// Set the namespace and id for this marker.  This serves to create a unique ID
+    // Any marker sent with the same namespace and id will overwrite the old one
+    marker.ns = "thermal";
 	marker.id = atoi(msg.id.c_str());
+	
     // Set the color specific to the source type -- be sure to set alpha to something non-zero!
     marker.color.r = 1.0f;
     marker.color.g = 0.0f;
@@ -757,7 +801,12 @@ namespace stdr_server {
   visualization_msgs::Marker Server::translateSound(const stdr_msgs::SoundSource& msg)
   {
 	visualization_msgs::Marker marker = createMarker(msg);
+	
+	// Set the namespace and id for this marker.  This serves to create a unique ID
+    // Any marker sent with the same namespace and id will overwrite the old one
+    marker.ns = "sound";
 	marker.id = atoi(msg.id.c_str());
+	
     // Set the color specific to the source type -- be sure to set alpha to something non-zero!
     marker.color.r = 0.0f;
     marker.color.g = 0.0f;
@@ -773,7 +822,12 @@ namespace stdr_server {
   visualization_msgs::Marker Server::translateRFID(const stdr_msgs::RfidTag& msg)
   {
 	visualization_msgs::Marker marker = createMarker(msg);
+	
+    // Set the namespace and id for this marker.  This serves to create a unique ID
+    // Any marker sent with the same namespace and id will overwrite the old one
+    marker.ns = "rfid";
 	marker.id = atoi(msg.tag_id.c_str());
+	
     // Set the color specific to the source type -- be sure to set alpha to something non-zero!
     marker.color.r = 0.0f;
     marker.color.g = 0.0f;
@@ -794,10 +848,6 @@ namespace stdr_server {
     // Set the frame ID and timestamp.  See the TF tutorials for information on these.
     marker.header.frame_id = "/world";
     marker.header.stamp = ros::Time::now();
-
-    // Set the namespace and id for this marker.  This serves to create a unique ID
-    // Any marker sent with the same namespace and id will overwrite the old one
-    marker.ns = "basic_shapes";
 
     // Set the marker type.  Initially this is CUBE, and cycles between that and SPHERE, ARROW, and CYLINDER
     uint32_t shape = visualization_msgs::Marker::SPHERE;
