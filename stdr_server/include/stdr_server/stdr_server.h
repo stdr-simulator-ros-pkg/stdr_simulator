@@ -37,6 +37,10 @@
 #include <stdr_msgs/RobotIndexedMsg.h>
 #include <stdr_msgs/RobotIndexedVectorMsg.h>
 
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
+#include <exception>
+
 #include <stdr_msgs/RfidTagVector.h>
 #include <stdr_msgs/AddRfidTag.h>
 #include <stdr_msgs/DeleteRfidTag.h>
@@ -260,8 +264,41 @@ namespace stdr_server {
         std::string &f_id);
       
     private:
-    
-      //!< THe ROS node handle
+      /**
+      @brief Translate the stdr_C02Source message into a marker message
+      @param msg [stdr_msgs::CO2Source] The GUI message to be translated
+      @return [visualization_msgs::Marker] the marker message to be published to Rviz
+	  **/
+      visualization_msgs::Marker translateC02(const stdr_msgs::CO2Source& msg);
+      
+      /**
+      @brief Translate the stdr_ThermalSource message into a marker message
+      @param msg [stdr_msgs::ThermalSource] The GUI message to be translated
+      @return [visualization_msgs::Marker] the marker message to be published to Rviz
+	  **/
+      visualization_msgs::Marker translateThermal(const stdr_msgs::ThermalSource& msg);
+      
+      /**
+      @brief Translate the stdr_SoundSource message into a marker message
+      @param msg [stdr_msgs::SoundSource] The GUI message to be translated
+      @return [visualization_msgs::Marker] the marker message to be published to Rviz
+	  **/
+      visualization_msgs::Marker translateSound(const stdr_msgs::SoundSource& msg);
+      
+      /**
+      @brief Translate the stdr_RfidTag message into a marker message
+      @param msg [stdr_msgs::RfidTag] The GUI message to be translated
+      @return [visualization_msgs::Marker] the marker message to be published to Rviz
+	  **/
+      visualization_msgs::Marker translateRFID(const stdr_msgs::RfidTag& msg);
+      
+      /**
+      @brief Creates a marker message corresponding to every element of msg that is 
+      independent of the source's specific type 
+      **/
+      template <class SourceMsg> visualization_msgs::Marker createMarker(const SourceMsg& msg);
+      
+      //!< The ROS node handle
       ros::NodeHandle _nh;
       //!< A pointer to a MapServe object
       MapServerPtr _mapServer;
@@ -306,6 +343,10 @@ namespace stdr_server {
       //!< Boost condition variable for conflicting avoidance
       boost::condition_variable cond;
       
+      
+      //!< A general Rviz publisher for all source types
+      ros::Publisher _sourceVectorPublisherRviz;
+      
       //!< The addRfidTag srv server
       ros::ServiceServer _addRfidTagServiceServer;
       //!< The deleteRfidTag srv server
@@ -313,11 +354,12 @@ namespace stdr_server {
       //!< The rfid tag list publisher
       ros::Publisher _rfidTagVectorPublisher;
       
+      
       //!< The addCO2Source srv server
       ros::ServiceServer _addCO2SourceServiceServer;
       //!< The deleteCO2Source srv server
       ros::ServiceServer _deleteCO2SourceServiceServer;
-      //!< The CO2 source list publisher
+      //!< The CO2 source list publisher towards the GUI.
       ros::Publisher _CO2SourceVectorPublisher;
       
       //!< The addThermalSource srv server

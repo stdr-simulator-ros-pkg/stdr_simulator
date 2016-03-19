@@ -37,6 +37,7 @@ include_directories( include ${catkin_INCLUDE_DIRS})
 
 add_library(stdr_map_loader src/map_loader.cpp)
 target_link_libraries(stdr_map_loader
+    image_loader
     yaml-cpp
     ${catkin_LIBRARIES}
 )
