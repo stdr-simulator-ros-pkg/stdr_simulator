@@ -168,7 +168,7 @@ namespace stdr_server {
     for(RfidTagMapIt it = _rfidTagMap.begin() ; it != _rfidTagMap.end() ; it++)
     {
       rfidTagList.rfid_tags.push_back(it->second);
-      RFIDMarkerArray.markers.push_back(translateRFID(it->second)); 
+      RFIDMarkerArray.markers.push_back(toMarker(it->second)); 
     }
     _rfidTagVectorPublisher.publish(rfidTagList);
     if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
@@ -210,7 +210,7 @@ namespace stdr_server {
       ; it != _CO2SourceMap.end() ; it++)
     {
       CO2SourceList.co2_sources.push_back(it->second);
-      C02MarkerArray.markers.push_back(translateC02(it->second));    
+      C02MarkerArray.markers.push_back(toMarker(it->second));    
     }
     _CO2SourceVectorPublisher.publish(CO2SourceList);
     if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
@@ -252,7 +252,7 @@ namespace stdr_server {
       ; it != _thermalSourceMap.end() ; it++)
     {
       thermalSourceList.thermal_sources.push_back(it->second);
-      thermalMarkerArray.markers.push_back(translateThermal(it->second));
+      thermalMarkerArray.markers.push_back(toMarker(it->second));
     }
     _thermalSourceVectorPublisher.publish(thermalSourceList);
     if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
@@ -295,7 +295,7 @@ namespace stdr_server {
       ; it != _soundSourceMap.end() ; it++)
     {
       soundSourceList.sound_sources.push_back(it->second);
-      soundMarkerArray.markers.push_back(translateSound(it->second));
+      soundMarkerArray.markers.push_back(toMarker(it->second));
     }
     _soundSourceVectorPublisher.publish(soundSourceList);
     if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
@@ -330,7 +330,7 @@ namespace stdr_server {
         it != _rfidTagMap.end() ; it++)
       {
         rfidTagList.rfid_tags.push_back(it->second);
-        RFIDMarkerArray.markers.push_back(translateRFID(it->second));
+        RFIDMarkerArray.markers.push_back(toMarker(it->second));
       }
       _rfidTagVectorPublisher.publish(rfidTagList);
       if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
@@ -367,7 +367,7 @@ namespace stdr_server {
         it != _CO2SourceMap.end() ; it++)
       {
         CO2SourceList.co2_sources.push_back(it->second);
-        C02MarkerArray.markers.push_back(translateC02(it->second));
+        C02MarkerArray.markers.push_back(toMarker(it->second));
       }
       _CO2SourceVectorPublisher.publish(CO2SourceList);
       if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
@@ -405,7 +405,7 @@ namespace stdr_server {
         it != _thermalSourceMap.end() ; it++)
       {
         thermalSourceList.thermal_sources.push_back(it->second);
-        thermalMarkerArray.markers.push_back(translateThermal(it->second));
+        thermalMarkerArray.markers.push_back(toMarker(it->second));
       }
       _thermalSourceVectorPublisher.publish(thermalSourceList);
       if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
@@ -442,7 +442,7 @@ namespace stdr_server {
         it != _soundSourceMap.end() ; it++)
       {
         soundSourceList.sound_sources.push_back(it->second);
-        soundMarkerArray.markers.push_back(translateSound(it->second));
+        soundMarkerArray.markers.push_back(toMarker(it->second));
       }
       _soundSourceVectorPublisher.publish(soundSourceList);
       if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
@@ -756,7 +756,7 @@ namespace stdr_server {
   /**
   @brief Translate the stdr_C02Source message into a marker message
   **/
-  visualization_msgs::Marker Server::translateC02(const stdr_msgs::CO2Source& msg)
+  visualization_msgs::Marker Server::toMarker(const stdr_msgs::CO2Source& msg)
   {
 	visualization_msgs::Marker marker = createMarker(msg);
 	
@@ -777,7 +777,7 @@ namespace stdr_server {
   /**
   @brief Translate the stdr_ThermalSource message into a marker message
   **/
-  visualization_msgs::Marker Server::translateThermal(const stdr_msgs::ThermalSource& msg)
+  visualization_msgs::Marker Server::toMarker(const stdr_msgs::ThermalSource& msg)
   {
 	visualization_msgs::Marker marker = createMarker(msg);
 	
@@ -798,7 +798,7 @@ namespace stdr_server {
   /**
   @brief Translate the stdr_SoundSource message into a marker message
   **/
-  visualization_msgs::Marker Server::translateSound(const stdr_msgs::SoundSource& msg)
+  visualization_msgs::Marker Server::toMarker(const stdr_msgs::SoundSource& msg)
   {
 	visualization_msgs::Marker marker = createMarker(msg);
 	
@@ -819,14 +819,14 @@ namespace stdr_server {
   /**
   @brief Translate the stdr_SoundSource message into a marker message
   **/
-  visualization_msgs::Marker Server::translateRFID(const stdr_msgs::RfidTag& msg)
+  visualization_msgs::Marker Server::toMarker(const stdr_msgs::RfidTag& msg)
   {
-	visualization_msgs::Marker marker = createMarker(msg);
+    visualization_msgs::Marker marker = createMarker(msg);
 	
     // Set the namespace and id for this marker.  This serves to create a unique ID
     // Any marker sent with the same namespace and id will overwrite the old one
     marker.ns = "rfid";
-	marker.id = atoi(msg.tag_id.c_str());
+    marker.id = atoi(msg.tag_id.c_str());
 	
     // Set the color specific to the source type -- be sure to set alpha to something non-zero!
     marker.color.r = 0.0f;
@@ -844,7 +844,7 @@ namespace stdr_server {
   **/
   template <class SourceMsg> visualization_msgs::Marker Server::createMarker(const SourceMsg& msg)
   {
-	visualization_msgs::Marker marker;
+    visualization_msgs::Marker marker;
     // Set the frame ID and timestamp.  See the TF tutorials for information on these.
     marker.header.frame_id = "/world";
     marker.header.stamp = ros::Time::now();
