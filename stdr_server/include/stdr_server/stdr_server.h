@@ -39,7 +39,6 @@
 
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
-#include <exception>
 
 #include <stdr_msgs/RfidTagVector.h>
 #include <stdr_msgs/AddRfidTag.h>
@@ -263,34 +262,33 @@ namespace stdr_server {
       bool hasDublicateFrameIds(const stdr_msgs::RobotMsg& robot, 
         std::string &f_id);
       
-    private:
       /**
       @brief Translate the stdr_C02Source message into a marker message
       @param msg [stdr_msgs::CO2Source] The GUI message to be translated
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
-      visualization_msgs::Marker translateC02(const stdr_msgs::CO2Source& msg);
+      visualization_msgs::Marker toMarker(const stdr_msgs::CO2Source& msg);
       
       /**
       @brief Translate the stdr_ThermalSource message into a marker message
       @param msg [stdr_msgs::ThermalSource] The GUI message to be translated
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
-      visualization_msgs::Marker translateThermal(const stdr_msgs::ThermalSource& msg);
+      visualization_msgs::Marker toMarker(const stdr_msgs::ThermalSource& msg);
       
       /**
       @brief Translate the stdr_SoundSource message into a marker message
       @param msg [stdr_msgs::SoundSource] The GUI message to be translated
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
-      visualization_msgs::Marker translateSound(const stdr_msgs::SoundSource& msg);
+      visualization_msgs::Marker toMarker(const stdr_msgs::SoundSource& msg);
       
       /**
       @brief Translate the stdr_RfidTag message into a marker message
       @param msg [stdr_msgs::RfidTag] The GUI message to be translated
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
-      visualization_msgs::Marker translateRFID(const stdr_msgs::RfidTag& msg);
+      visualization_msgs::Marker toMarker(const stdr_msgs::RfidTag& msg);
       
       /**
       @brief Creates a marker message corresponding to every element of msg that is 
