@@ -32,6 +32,11 @@ namespace stdr_parser
     priority = 0;
   }
   
+  Node::~Node(void)
+  {
+	this->unallocateChildren();
+  }
+
   /**
   @brief Checks a node if a specific filename exists
   @return void
@@ -104,14 +109,14 @@ namespace stdr_parser
   }
   
   /**
-  * @brief Unalloates the memory of the node's children
+  * @brief Unallocates the memory of the node's children
   * @return void
   */
   void Node::unallocateChildren(void)
   {
     for(unsigned int i = 0 ; i < elements.size() ; i++)
     {
-      elements[i]->unallocateChildren();
+
       delete elements[i];
     }
   }

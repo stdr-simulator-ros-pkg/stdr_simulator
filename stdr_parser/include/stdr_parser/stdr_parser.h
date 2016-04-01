@@ -96,12 +96,10 @@ namespace stdr_parser
         }
         catch(ParserException ex)
         {
-          base_node_->unallocateChildren();
           delete base_node_;
           throw ex;
         }
         T msg = MessageCreator::createMessage<T>(base_node_,0);
-        base_node_->unallocateChildren();
         delete base_node_;
         return msg;
       }

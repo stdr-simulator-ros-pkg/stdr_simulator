@@ -37,6 +37,12 @@ namespace stdr_parser
   class Node
   {
     private:
+      
+      /**
+       * @brief Unalloates the memory of the node's children
+       * @return void
+       */
+      void unallocateChildren(void);
 
     public:
     
@@ -45,7 +51,13 @@ namespace stdr_parser
       @return void
       **/
       Node(void);
-      
+
+      /**
+      @brief Destructor who also destroys all its children.
+      @return void
+      **/ 
+      ~Node(void);
+
       /**
       @brief Checks a node if a specific filename exists
       @return void
@@ -89,12 +101,7 @@ namespace stdr_parser
       @return void
       **/
       void printParsedXml(Node *n,std::string indent);
-      
-      /**
-       * @brief Unalloates the memory of the node's children
-       * @return void
-       */
-      void unallocateChildren(void);
+
   };
   
 }
