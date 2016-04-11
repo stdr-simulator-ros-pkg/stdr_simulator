@@ -63,7 +63,7 @@ namespace stdr_gui
       @brief Default destructor
       @return void
       **/
-      ~CGuiSource(void);
+      virtual ~CGuiSource(void);
       
       /**
       @brief Returns the "name" of the source
