@@ -86,7 +86,7 @@ namespace stdr_server {
     
     //!< Rviz publisher
     _sourceVectorPublisherRviz = _nh.advertise<visualization_msgs::MarkerArray>(
-      "/visualization_marker_array", 1, true);
+      "stdr_server/sources_visualization_markers", 1, true);
       
     //!< Rfid tags    
         
@@ -171,11 +171,8 @@ namespace stdr_server {
       RFIDMarkerArray.markers.push_back(toMarker(it->second)); 
     }
     _rfidTagVectorPublisher.publish(rfidTagList);
-    if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
-    {
-      _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
-    }
 
+    _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
 
     //!< Return success
     res.success = true;
@@ -213,10 +210,8 @@ namespace stdr_server {
       C02MarkerArray.markers.push_back(toMarker(it->second));    
     }
     _CO2SourceVectorPublisher.publish(CO2SourceList);
-    if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
-    {
-      _sourceVectorPublisherRviz.publish(C02MarkerArray); 
-    }
+    _sourceVectorPublisherRviz.publish(C02MarkerArray); 
+    
 
     
     //!< Return success
@@ -255,10 +250,8 @@ namespace stdr_server {
       thermalMarkerArray.markers.push_back(toMarker(it->second));
     }
     _thermalSourceVectorPublisher.publish(thermalSourceList);
-    if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
-    {
-      _sourceVectorPublisherRviz.publish(thermalMarkerArray);
-    }
+    _sourceVectorPublisherRviz.publish(thermalMarkerArray);
+    
     
     
     
@@ -297,11 +290,9 @@ namespace stdr_server {
       soundSourceList.sound_sources.push_back(it->second);
       soundMarkerArray.markers.push_back(toMarker(it->second));
     }
-    _soundSourceVectorPublisher.publish(soundSourceList);
-    if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
-    {
-      _sourceVectorPublisherRviz.publish(soundMarkerArray);
-    }
+    _soundSourceVectorPublisher.publish(soundSourceList); 
+    _sourceVectorPublisherRviz.publish(soundMarkerArray);
+
     
     
     //!< Return success
@@ -333,10 +324,8 @@ namespace stdr_server {
         RFIDMarkerArray.markers.push_back(toMarker(it->second));
       }
       _rfidTagVectorPublisher.publish(rfidTagList);
-      if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
-      {
-        _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
-      }      
+      _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
+            
       
     }
     else  //!< Tag does not exist
@@ -370,10 +359,7 @@ namespace stdr_server {
         C02MarkerArray.markers.push_back(toMarker(it->second));
       }
       _CO2SourceVectorPublisher.publish(CO2SourceList);
-      if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
-      {
-        _sourceVectorPublisherRviz.publish(C02MarkerArray); 
-      }      
+      _sourceVectorPublisherRviz.publish(C02MarkerArray);      
       
       
     }
@@ -408,10 +394,8 @@ namespace stdr_server {
         thermalMarkerArray.markers.push_back(toMarker(it->second));
       }
       _thermalSourceVectorPublisher.publish(thermalSourceList);
-      if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
-      {
-        _sourceVectorPublisherRviz.publish(thermalMarkerArray);
-      }  
+      _sourceVectorPublisherRviz.publish(thermalMarkerArray);
+      
       
     }
     else  //!< Source does not exist
@@ -445,10 +429,8 @@ namespace stdr_server {
         soundMarkerArray.markers.push_back(toMarker(it->second));
       }
       _soundSourceVectorPublisher.publish(soundSourceList);
-      if (_sourceVectorPublisherRviz.getNumSubscribers() >= 1)
-      {
-        _sourceVectorPublisherRviz.publish(soundMarkerArray);
-      } 
+      _sourceVectorPublisherRviz.publish(soundMarkerArray);
+
 
     }
     else  //!< Source does not exist
@@ -845,18 +827,16 @@ namespace stdr_server {
   template <class SourceMsg> visualization_msgs::Marker Server::createMarker(const SourceMsg& msg)
   {
     visualization_msgs::Marker marker;
-    // Set the frame ID and timestamp.  See the TF tutorials for information on these.
-    marker.header.frame_id = "/world";
-    marker.header.stamp = ros::Time::now();
 
-    // Set the marker type.  Initially this is CUBE, and cycles between that and SPHERE, ARROW, and CYLINDER
+    marker.header.frame_id = "/map_static";
+    marker.header.stamp = ros::Time();
+
     uint32_t shape = visualization_msgs::Marker::SPHERE;
     marker.type = shape;
 
     // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
     marker.action = visualization_msgs::Marker::ADD;
 
-    // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
     marker.pose.position.x = msg.pose.x;
     marker.pose.position.y = msg.pose.y;
     marker.pose.position.z = 0;
@@ -865,7 +845,6 @@ namespace stdr_server {
     marker.pose.orientation.z = 0.0;
     marker.pose.orientation.w = 1.0;
 
-    // Set the scale of the marker -- 1x1x1 here means 1m on a side
     marker.scale.x = 0.5;
     marker.scale.y = 0.5;
     marker.scale.z = 0.5;
