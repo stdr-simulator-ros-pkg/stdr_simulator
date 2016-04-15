@@ -265,36 +265,40 @@ namespace stdr_server {
       /**
       @brief Translate the stdr_C02Source message into a marker message
       @param msg [stdr_msgs::CO2Source] The GUI message to be translated
+      @param added [bool] True if the marker is added, false if it should be deleted
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
-      visualization_msgs::Marker toMarker(const stdr_msgs::CO2Source& msg);
+      visualization_msgs::Marker toMarker(const stdr_msgs::CO2Source& msg,bool added);
       
       /**
       @brief Translate the stdr_ThermalSource message into a marker message
       @param msg [stdr_msgs::ThermalSource] The GUI message to be translated
+      @param added [bool] True if the marker is added, false if it should be deleted
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
-      visualization_msgs::Marker toMarker(const stdr_msgs::ThermalSource& msg);
+      visualization_msgs::Marker toMarker(const stdr_msgs::ThermalSource& msg,bool added);
       
       /**
       @brief Translate the stdr_SoundSource message into a marker message
       @param msg [stdr_msgs::SoundSource] The GUI message to be translated
+      @param added [bool] True if the marker is added, false if it should be deleted
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
-      visualization_msgs::Marker toMarker(const stdr_msgs::SoundSource& msg);
+      visualization_msgs::Marker toMarker(const stdr_msgs::SoundSource& msg,bool added);
       
       /**
       @brief Translate the stdr_RfidTag message into a marker message
       @param msg [stdr_msgs::RfidTag] The GUI message to be translated
+      @param added [bool] True if the marker is added, false if it should be deleted
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
-      visualization_msgs::Marker toMarker(const stdr_msgs::RfidTag& msg);
+      visualization_msgs::Marker toMarker(const stdr_msgs::RfidTag& msg,bool added);
       
       /**
       @brief Creates a marker message corresponding to every element of msg that is 
       independent of the source's specific type 
       **/
-      template <class SourceMsg> visualization_msgs::Marker createMarker(const SourceMsg& msg);
+      template <class SourceMsg> visualization_msgs::Marker createMarker(const SourceMsg& msg,bool added);
       
       //!< The ROS node handle
       ros::NodeHandle _nh;
