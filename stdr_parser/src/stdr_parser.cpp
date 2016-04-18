@@ -80,7 +80,6 @@ namespace stdr_parser
         file_name + std::string("'") +
         std::string("\nError was '") + std::string(e.what());
       
-      base_node_->unallocateChildren();
       delete base_node_;
       
       throw ParserException(error);
