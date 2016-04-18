@@ -30,12 +30,10 @@ namespace stdr_gui{
   @return void
   **/
   CGuiCo2Source::CGuiCo2Source(QPoint p,std::string name, float resolution):
-    position_(p),
-    name_(name),
-    resolution_(resolution),
+    CGuiSource(p,name,resolution),
     ppm_(0.0)
   {
-  
+	
   }
   
   /**
@@ -45,28 +43,6 @@ namespace stdr_gui{
   CGuiCo2Source::~CGuiCo2Source(void)
   {
 
-  }
-  
-  /**
-  @brief Returns the "name" of the rfid tag
-  @return std::string 
-  **/
-  std::string CGuiCo2Source::getName(void)
-  {
-    return name_;
-  }
-  
-  /**
-  @brief Checks proximity to a point
-  @param p [QPoint] The proximity point to check
-  @return bool : True if tag is close to p
-  **/
-  bool CGuiCo2Source::checkProximity(QPoint p)
-  {
-    float dx = p.x() * resolution_ - position_.x() * resolution_;
-    float dy = p.y() * resolution_ - position_.y() * resolution_;
-    float dist = sqrt( pow(dx,2) + pow(dy,2) );
-    return dist <= 0.3;
   }
   
   /**
@@ -87,7 +63,7 @@ namespace stdr_gui{
         2 * i * step, 
         2 * i * step);
     }
-    
+
     //!< Draws the label
     
     int text_size = name_.size();
@@ -117,6 +93,7 @@ namespace stdr_gui{
       position_.x() + 12,
       img->height() - position_.y() - 15,
       QString(name_.c_str()));
+    
   }
   
   /**

@@ -20,10 +20,12 @@
 ******************************************************************************/
 
 
-#ifndef STDR_GUI_THERMAL_SOURCE_CONTAINER
-#define STDR_GUI_THERMAL_SOURCE_CONTAINER
+#ifndef STDR_GUI_SOURCE_CONTAINER
+#define STDR_GUI_SOURCE_CONTAINER
 
-#include "stdr_gui/stdr_map_metainformation/stdr_gui_source.h"
+#include "stdr_gui/stdr_tools.h"
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 
 /**
 @namespace stdr_gui
@@ -32,52 +34,58 @@
 namespace stdr_gui
 {
   /**
-  @class CGuiThermalSource
-  @brief Implements the functionalities of a thermal source
+  @class CGuiSource
+  @brief Implements the functionalities of a source, to be derived by specific source types.
   **/ 
-  class CGuiThermalSource : public CGuiSource
+  class CGuiSource
   {
     //------------------------------------------------------------------------//
-    private:
-      //!< The degrees of the thermal source
-      float degrees_;
-
+    protected:
+      //!< The position of the source in the map
+      QPoint position_; 
+      //!< The "name" of the source tag 
+      std::string name_;  
+      //!< The OGM resolution
+      float resolution_;
+  	
     //------------------------------------------------------------------------//
     public:
       /**
       @brief Default contructor
-      @param p [QPoint] The pose of the rfid tag
-      @param name [std::string] The "name" of the rfid tag
+      @param p [QPoint] The pose of the source
+      @param name [std::string] The "name" of the source
       @param resolution [float] The map's resolution
       @return void
       **/
-      CGuiThermalSource(QPoint p,std::string name, float resolution);
+      CGuiSource(QPoint p,std::string name, float resolution);
       
       /**
       @brief Default destructor
       @return void
       **/
-      ~CGuiThermalSource(void);
+      virtual ~CGuiSource(void);
       
       /**
-      @brief Draws the tag in the map
+      @brief Returns the "name" of the source
+      @return std::string 
+      **/
+      std::string getName(void);
+      
+      /**
+      @brief Checks proximity to a point
+      @param p [QPoint] The proximity point to check
+      @return bool : True if source is close to p
+      **/
+      
+      virtual bool checkProximity(QPoint p);
+      
+      /**
+      @brief Draws the source in the map
       @param img [QImage*] The image to draw to
       @return void
       **/
-      virtual void draw(QImage *img);
-      
-      /**
-      @brief Sets the tag message
-      @param msg [QString] The message to be set
-      @return void
-      **/
-      void setDegrees(float degrees);
-      
-      /**
-      @brief Returns the tag message
-      @return QString
-      **/
-      float getDegrees(void);
+      virtual void draw(QImage *img) = 0;
+
   };  
 }
 

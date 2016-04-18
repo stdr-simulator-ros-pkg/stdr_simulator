@@ -30,9 +30,7 @@ namespace stdr_gui{
   @return void
   **/
   CGuiSoundSource::CGuiSoundSource(QPoint p,std::string name, float resolution):
-    position_(p),
-    name_(name),
-    resolution_(resolution),
+    CGuiSource(p,name,resolution),
     db_(0.0)
   {
   
@@ -46,29 +44,7 @@ namespace stdr_gui{
   {
 
   }
-  
-  /**
-  @brief Returns the "name" of the rfid tag
-  @return std::string 
-  **/
-  std::string CGuiSoundSource::getName(void)
-  {
-    return name_;
-  }
-  
-  /**
-  @brief Checks proximity to a point
-  @param p [QPoint] The proximity point to check
-  @return bool : True if tag is close to p
-  **/
-  bool CGuiSoundSource::checkProximity(QPoint p)
-  {
-    float dx = p.x() * resolution_ - position_.x() * resolution_;
-    float dy = p.y() * resolution_ - position_.y() * resolution_;
-    float dist = sqrt( pow(dx,2) + pow(dy,2) );
-    return dist <= 0.3;
-  }
-  
+
   /**
   @brief Draws the tag in the map
   @param img [QImage*] The image to draw to
@@ -87,7 +63,7 @@ namespace stdr_gui{
         2 * i * step, 
         2 * i * step);
     }
-    
+
     //!< Draws the label
     
     int text_size = name_.size();

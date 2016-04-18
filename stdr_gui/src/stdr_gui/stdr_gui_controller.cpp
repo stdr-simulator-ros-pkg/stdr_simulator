@@ -79,6 +79,7 @@ namespace stdr_gui
   **/
   void CGuiController::initializeCommunications(void)
   {
+
     map_subscriber_ = n_.subscribe(
       "map", 
       1, 
