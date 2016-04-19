@@ -62,9 +62,21 @@ Visualization Manager:
         All Enabled: true
         map:
           Value: true
+        map_static:
+          Value: true
         robot0:
           Value: true
         robot0_laser_0:
+          Value: true
+        robot0_sonar_0:
+          Value: true
+        robot0_sonar_1:
+          Value: true
+        robot0_sonar_2:
+          Value: true
+        robot0_sonar_3:
+          Value: true
+        robot0_sonar_4:
           Value: true
         world:
           Value: true
@@ -76,9 +88,20 @@ Visualization Manager:
       Tree:
         world:
           map:
-            robot0:
-              robot0_laser_0:
-                {}
+            map_static:
+              robot0:
+                robot0_laser_0:
+                  {}
+                robot0_sonar_0:
+                  {}
+                robot0_sonar_1:
+                  {}
+                robot0_sonar_2:
+                  {}
+                robot0_sonar_3:
+                  {}
+                robot0_sonar_4:
+                  {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -96,9 +119,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: true
       Max Color: 255; 255; 255
-      Max Intensity: 11.4306
+      Max Intensity: 5.05758
       Min Color: 0; 0; 0
-      Min Intensity: 4.63701
+      Min Intensity: 0.470728
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -116,7 +139,16 @@ Visualization Manager:
       Color: 255; 255; 255
       Enabled: true
       Name: Range
+      Queue Size: 100
       Topic: /robot0/sonar_0
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /stdr_server/sources_visualization_markers
+      Name: SourcesMarkers
+      Namespaces:
+        co2: true
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:
@@ -143,6 +175,11 @@ Visualization Manager:
     Current:
       Angle: 1.00583e-07
       Class: rviz/TopDownOrtho
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.06
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
       Name: Current View
       Near Clip Distance: 0.01
       Scale: 53.656
@@ -168,4 +205,4 @@ Window Geometry:
     collapsed: false
   Width: 1680
   X: -7
-  Y: 34
+  Y: 436

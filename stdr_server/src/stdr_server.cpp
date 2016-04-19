@@ -174,6 +174,9 @@ namespace stdr_server {
 
     _sourceVectorPublisherRviz.publish(RFIDMarkerArray);
 
+    //!< Republish existing sources as markers
+    republishSources();
+
     //!< Return success
     res.success = true;
     return true;
@@ -213,6 +216,8 @@ namespace stdr_server {
     _sourceVectorPublisherRviz.publish(C02MarkerArray); 
     
 
+    //!< Republish existing sources as markers
+    republishSources();
     
     //!< Return success
     res.success = true;
@@ -253,7 +258,8 @@ namespace stdr_server {
     _sourceVectorPublisherRviz.publish(thermalMarkerArray);
     
     
-    
+    //!< Republish existing sources as markers
+    republishSources();
     
     //!< Return success
     res.success = true;
@@ -294,6 +300,8 @@ namespace stdr_server {
     _sourceVectorPublisherRviz.publish(soundMarkerArray);
 
     
+    //!< Republish existing sources as markers
+    republishSources();
     
     //!< Return success
     res.success = true;
