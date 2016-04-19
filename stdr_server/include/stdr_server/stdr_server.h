@@ -293,10 +293,19 @@ namespace stdr_server {
       @return [visualization_msgs::Marker] the marker message to be published to Rviz
 	  **/
       visualization_msgs::Marker toMarker(const stdr_msgs::RfidTag& msg,bool added);
+   
+      /**
+      @brief Republishes existing sources to RVIZ after a successful deletion.
+      @return [void]
+      **/
+      void republishSources();
       
       /**
       @brief Creates a marker message corresponding to every element of msg that is 
       independent of the source's specific type 
+      @param msg [SourceMsg] The source message
+      @param added [bool] True if the marker is added, false if it should be deleted
+      @return [visualization_msgs::Marker] the marker message to be published to Rviz
       **/
       template <class SourceMsg> visualization_msgs::Marker createMarker(const SourceMsg& msg,bool added);
       
