@@ -327,7 +327,8 @@ namespace stdr_server {
         rfidTagList.rfid_tags.push_back(it->second);
       }
       _rfidTagVectorPublisher.publish(rfidTagList);        
-      
+      //!< Republish existing sources to RVIZ.
+      republishSources();         
     }
     else  //!< Tag does not exist
     {
@@ -362,9 +363,11 @@ namespace stdr_server {
       {
         CO2SourceList.co2_sources.push_back(it->second);
       }
-      _CO2SourceVectorPublisher.publish(CO2SourceList);       
-      
+      _CO2SourceVectorPublisher.publish(CO2SourceList);
+      //!< Republish existing sources to RVIZ.
+      republishSources();        
     }
+
     else  //!< Source does not exist
     {
       return false;
@@ -399,7 +402,8 @@ namespace stdr_server {
         thermalSourceList.thermal_sources.push_back(it->second);
       }
       _thermalSourceVectorPublisher.publish(thermalSourceList);
-       
+      //!< Republish existing sources to RVIZ.
+      republishSources();          
     }
     else  //!< Source does not exist
     {
@@ -437,9 +441,8 @@ namespace stdr_server {
         
       }
       _soundSourceVectorPublisher.publish(soundSourceList);
-
-
-
+      //!< Republish existing sources to RVIZ.
+      republishSources();   
     }
     else  //!< Source does not exist
     {
@@ -827,7 +830,30 @@ namespace stdr_server {
     return marker;
   }
   
-    
+  void Server::republishSources()
+  {
+    visualization_msgs::MarkerArray ma;
+	for(SoundSourceMapIt it = _soundSourceMap.begin() 
+      ; it != _soundSourceMap.end() ; it++)
+    {
+        ma.markers.push_back(toMarker(it->second,true));
+    }
+    for(CO2SourceMapIt it = _CO2SourceMap.begin() 
+      ; it != _CO2SourceMap.end() ; it++)
+    {
+      ma.markers.push_back(toMarker(it->second,true));    
+    }
+    for(ThermalSourceMapIt it = _thermalSourceMap.begin() 
+      ; it != _thermalSourceMap.end() ; it++)
+    {
+      ma.markers.push_back(toMarker(it->second,true));
+    }
+    for(RfidTagMapIt it = _rfidTagMap.begin() ; it != _rfidTagMap.end() ; it++)
+    {
+      ma.markers.push_back(toMarker(it->second,true)); 
+    }
+    _sourceVectorPublisherRviz.publish(ma);  
+  }  
   /**
   @brief Creates a marker message corresponding to every element of msg that is 
   independent of the source's specific type 
