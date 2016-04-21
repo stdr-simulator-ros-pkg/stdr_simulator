@@ -41,7 +41,6 @@ add_message_files(
     CO2SourceVector.msg
 
     BumperSensorMsg.msg
-    Bumper.msg
 )
 
 add_service_files(

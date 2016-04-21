@@ -19,12 +19,12 @@
    * Chris Zalidis, zalidis@gmail.com 
 ******************************************************************************/
 
-#ifndef BUMPER_H
-#define BUMPER_H
+#ifndef BUMPER_SENSOR_H
+#define BUMPER_SENSOR_H
 
 #include <stdr_robot/sensors/sensor_base.h>
-#include <stdr_msgs/Bumper.h>
 #include <stdr_msgs/BumperSensorMsg.h>
+#include <sensor_msgs/Range.h>
 
 /**
 @namespace stdr_robot

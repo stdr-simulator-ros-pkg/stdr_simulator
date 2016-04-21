@@ -12,17 +12,17 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   
-   Authors : 
+
+   Authors :
    * Manos Tsardoulias, etsardou@gmail.com
    * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+   * Chris Zalidis, zalidis@gmail.com
 ******************************************************************************/
 
 #include "stdr_gui/stdr_gui_sensors/stdr_gui_bumper.h"
 
 namespace stdr_gui{
-  
+
   /**
   @brief Default contructor
   @param msg [stdr_msgs::BumperSensorMsg] The bumper description msg
@@ -39,7 +39,7 @@ namespace stdr_gui{
     subscriber_ = n.subscribe(topic_.c_str(), 1, &CGuiBumper::callback, this);
     visualization_status_ = 0;
   }
-  
+
   /**
   @brief Default destructor
   @return void
@@ -48,13 +48,13 @@ namespace stdr_gui{
   {
 
   }
-  
+
   /**
   @brief Callback for the ros bumper message
-  @param msg [const stdr_msgs::Bumper&] The new bumper message
+  @param msg [const sensor_msgs::Range&] The new bumper message
   @return void
   **/
-  void CGuiBumper::callback(const stdr_msgs::Bumper& msg)
+  void CGuiBumper::callback(const sensor_msgs::Range& msg)
   {
     if(lock_)
     {
@@ -62,7 +62,7 @@ namespace stdr_gui{
     }
     bumper_ = msg;
   }
-  
+
   /**
   @brief Paints the bumper in the map image
   @param m [QImage*] The image to be drawn
@@ -77,17 +77,17 @@ namespace stdr_gui{
   {
     lock_ = true;
     QPainter painter(m);
-    
+
     //!< Find transformation
     tf::StampedTransform transform;
-      
+
     try
     {
       listener->waitForTransform("map_static",
                                   tf_frame_.c_str(),
                                   ros::Time(0),
                                   ros::Duration(0.2));
-      listener->lookupTransform("map_static", 
+      listener->lookupTransform("map_static",
         tf_frame_.c_str(), ros::Time(0), transform);
     }
     catch (tf::TransformException ex)
@@ -99,32 +99,32 @@ namespace stdr_gui{
     float pose_y = transform.getOrigin().y();
     transform.getBasis().getRPY(roll,pitch,yaw);
     float pose_theta = yaw;
-    
+
     //!< Draw bumper stuff
     QBrush brush(QColor(0,0,0,255));
     painter.setBrush(brush);
-    if(bumper_.contact) {
-	QPen pen(QColor(255,0,0,255));
-	painter.setPen(pen);
+    if(bumper_.range < 0) {
+      QPen pen(QColor(255,0,0,255));
+      painter.setPen(pen);
     }else {
-	QPen pen(QColor(0,0,255,255));
-	painter.setPen(pen);
+      QPen pen(QColor(0,0,255,255));
+      painter.setPen(pen);
     }
     painter.drawArc(
-	(pose_x - msg_.radius) / ocgd,
-	(pose_y - msg_.radius) / ocgd,
-	msg_.radius / ocgd * 2,
-	msg_.radius / ocgd * 2,
-	- (pose_theta - msg_.contactAngle / 2) * 180 / STDR_PI * 16,
-	- msg_.contactAngle * 180 / STDR_PI * 16);
+      (pose_x - msg_.radius) / ocgd,
+      (pose_y - msg_.radius) / ocgd,
+      msg_.radius / ocgd * 2,
+      msg_.radius / ocgd * 2,
+      - (pose_theta - msg_.contactAngle / 2) * 180 / STDR_PI * 16,
+      - msg_.contactAngle * 180 / STDR_PI * 16);
     lock_ = false;
   }
-  
+
   /**
   @brief Paints the bumper range in it's own visualizer
   @param m [QImage*] The image to be drawn
   @param ocgd [float] The map's resolution
-  @param maxRange [float] The maximum range of all the robot sensors. Used for the visualizer proportions 
+  @param maxRange [float] The maximum range of all the robot sensors. Used for the visualizer proportions
   @return void
   **/
   void CGuiBumper::visualizerPaint(
@@ -136,24 +136,24 @@ namespace stdr_gui{
     float climax = size / maxRange * ocgd / 2.1;
     lock_ = true;
     QPainter painter(m);
-    
+
     //!< Draw bumper stuff
-    if(bumper_.contact) {
-	QBrush brush(QColor(255,0,0,255));
-	painter.setBrush(brush);
-	QPen pen(QColor(0,255,0,255));
-	painter.setPen(pen);
-	painter.drawArc(
-	    size / 2 + msg_.pose.x / ocgd * climax,
-	    size / 2 + msg_.pose.y / ocgd * climax,
-	    msg_.radius / ocgd * 2 * climax,
-	    msg_.radius / ocgd * 2 * climax,
-	    (msg_.pose.theta + msg_.contactAngle) * 180 / STDR_PI / 2 * 16,
-	    (msg_.pose.theta - msg_.contactAngle) * 180 / STDR_PI / 2 * 16);
-    }      
+    if(bumper_.range < 0) {
+      QBrush brush(QColor(255,0,0,255));
+      painter.setBrush(brush);
+      QPen pen(QColor(0,255,0,255));
+      painter.setPen(pen);
+      painter.drawArc(
+          size / 2 + msg_.pose.x / ocgd * climax,
+          size / 2 + msg_.pose.y / ocgd * climax,
+          msg_.radius / ocgd * 2 * climax,
+          msg_.radius / ocgd * 2 * climax,
+          (msg_.pose.theta + msg_.contactAngle) * 180 / STDR_PI / 2 * 16,
+          (msg_.pose.theta - msg_.contactAngle) * 180 / STDR_PI / 2 * 16);
+    }
     lock_ = false;
   }
-  
+
   /**
   @brief Returns the visibility status of the specific bumper sensor
   @return char : The visibility status
@@ -162,7 +162,7 @@ namespace stdr_gui{
   {
     return visualization_status_;
   }
-  
+
   /**
   @brief Toggles the visibility status of the specific bumper sensor
   @return void
@@ -171,7 +171,7 @@ namespace stdr_gui{
   {
     visualization_status_ = (visualization_status_ + 1) % 3;
   }
-  
+
   /**
   @brief Returns the frame id of the specific bumper sensor
   @return std::string : The bumper frame id
@@ -180,7 +180,7 @@ namespace stdr_gui{
   {
     return msg_.frame_id;
   }
-  
+
   /**
   @brief Sets the visibility status of the specific bumper sensor
   @param vs [char] The new visibility status
