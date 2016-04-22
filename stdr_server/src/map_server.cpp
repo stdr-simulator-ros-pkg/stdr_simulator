@@ -64,11 +64,11 @@ namespace stdr_server {
       &MapServer::publishTransform, this);
     
     //!< Latched publisher for metadata
-    metadata_pub= n.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
+    metadata_pub= n.advertise<nav_msgs::MapMetaData>("stdr_map_metadata", 1, true);
     metadata_pub.publish( meta_data_message_ );
     
     //!< Latched publisher for data
-    map_pub = n.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
+    map_pub = n.advertise<nav_msgs::OccupancyGrid>("stdr_map", 1, true);
     map_pub.publish( map_ );
   }
 

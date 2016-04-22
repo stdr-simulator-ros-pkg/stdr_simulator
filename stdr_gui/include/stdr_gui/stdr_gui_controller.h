@@ -232,7 +232,7 @@ namespace stdr_gui
       void initializeCommunications(void);
       
       /**
-      @brief Receives the occupancy grid map from stdr_server. Connects to "map" ROS topic
+      @brief Receives the occupancy grid map from stdr_server. Connects to "stdr_map" ROS topic
       @param msg [const nav_msgs::OccupancyGrid&] The OGM message
       @return void
       **/

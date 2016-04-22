@@ -56,7 +56,7 @@ namespace stdr_robot
     _registerClientPtr->sendGoal(goal,
       boost::bind(&Robot::initializeRobot, this, _1, _2));
 
-    _mapSubscriber = n.subscribe("map", 1, &Robot::mapCallback, this);
+    _mapSubscriber = n.subscribe("stdr_map", 1, &Robot::mapCallback, this);
     _moveRobotService = n.advertiseService(
       getName() + "/replace", &Robot::moveRobotCallback, this);
 
