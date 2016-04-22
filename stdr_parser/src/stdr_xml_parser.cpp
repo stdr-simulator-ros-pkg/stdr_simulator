@@ -12,18 +12,18 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   
-   Authors : 
+
+   Authors :
    * Manos Tsardoulias, etsardou@gmail.com
    * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+   * Chris Zalidis, zalidis@gmail.com
 ******************************************************************************/
 
 #include "stdr_parser/stdr_xml_parser.h"
 
 namespace stdr_parser
 {
-  
+
   /**
   @brief Default constructor
   @return void
@@ -32,7 +32,7 @@ namespace stdr_parser
   {
 
   }
-  
+
   /**
   @brief Parses an xml file
   @param file_name [std::string] The xml filename
@@ -47,19 +47,19 @@ namespace stdr_parser
     bool loadOkay = doc.LoadFile(path.c_str());
     if (!loadOkay)
     {
-      std::string error = 
-        std::string("Failed to load file '") + 
+      std::string error =
+        std::string("Failed to load file '") +
         path + std::string("'") +
-        std::string("\nError was '") + std::string(doc.ErrorDesc()) + 
+        std::string("\nError was '") + std::string(doc.ErrorDesc()) +
         std::string("'\nIf error was 'Error reading end tag' you have a \
 malformed xml file");
       throw ParserException(error);
     }
     base_node->file_origin = path;
     base_node->file_row = doc.Row();
-    parseLow(&doc,base_node); 
+    parseLow(&doc,base_node);
   }
- 
+
   /**
   @brief Low-level recursive function for parsing the xml robot file
   @param node [TiXmlNode*] The xml node to start from
@@ -89,12 +89,12 @@ malformed xml file");
       }
       case 4 :    //!< Type = text
       {
-        
+
         if(std::string(node->Parent()->Value()) == "filename")
         {
           try
           {
-            parse(ros::package::getPath("stdr_resources") + 
+            parse(ros::package::getPath("stdr_resources") +
               std::string("/resources/") + std::string(node->Value()), n);
           }
           catch(ParserException ex)
@@ -122,15 +122,15 @@ malformed xml file");
         break;
       }
     }
-    
-    for ( 
-      pChild = node->FirstChild(); 
-      pChild != 0; 
-      pChild = pChild->NextSibling()) 
+
+    for (
+      pChild = node->FirstChild();
+      pChild != 0;
+      pChild = pChild->NextSibling())
     {
       parseLow( pChild , new_node );
     }
   }
-  
+
 }
 

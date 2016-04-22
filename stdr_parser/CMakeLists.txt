@@ -17,6 +17,7 @@ if(NEW_YAMLCPP_FOUND)
   add_definitions(-DHAVE_NEW_YAMLCPP)
 endif(NEW_YAMLCPP_FOUND)
 
+find_package(TinyXML REQUIRED)
 
 include_directories(
   include
@@ -24,10 +25,8 @@ include_directories(
   ${TinyXML_INCLUDE_DIRS}
 )
 
-find_package(TinyXML REQUIRED)
-
 catkin_package(
-  INCLUDE_DIRS 
+  INCLUDE_DIRS
     include
   LIBRARIES
     stdr_parser
@@ -40,7 +39,7 @@ catkin_package(
 )
 
 ######################### Stdr parser ##################################
-add_library(stdr_parser 
+add_library(stdr_parser
   src/stdr_parser.cpp
   src/stdr_parser_validator.cpp
   src/stdr_parser_msg_creator.cpp
@@ -53,12 +52,18 @@ add_library(stdr_parser
   src/stdr_parser_tools.cpp
 )
 add_dependencies(stdr_parser stdr_msgs_gencpp) # wait for stdr_msgs to be build
-target_link_libraries(stdr_parser 
+target_link_libraries(stdr_parser
   ${catkin_LIBRARIES} ${TinyXML_LIBRARIES}
   yaml-cpp
 )
 
-install(TARGETS 
+
+if(CATKIN_ENABLE_TESTING)
+  add_subdirectory(test)
+endif()
+
+
+install(TARGETS
   stdr_parser
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

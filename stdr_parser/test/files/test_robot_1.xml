@@ -1,0 +1,23 @@
+<robot>
+  <filename>robots/too_simple_robot.xml</filename>
+  <robot_specifications>
+    <footprint>
+      <footprint_specifications>
+        <radius>0.05</radius>
+      </footprint_specifications>
+    </footprint>
+    <initial_pose>
+      <x>3</x>
+      <y>2</y>
+      <theta>1.57</theta>
+    </initial_pose>
+    <laser>
+      <filename>laser_sensors/hokuyo/hokuyo_URG_04LX.xml</filename>
+      <laser_specifications>
+        <pose>
+          <theta>-3.1415</theta>
+        </pose>
+      </laser_specifications>
+    </laser>
+  </robot_specifications>
+</robot>
