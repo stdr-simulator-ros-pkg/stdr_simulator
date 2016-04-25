@@ -1,4 +1,4 @@
-stdr_simulator [![Build Status](https://travis-ci.org/stdr-simulator-ros-pkg/stdr_simulator.png?branch=hydro-devel,develop)](https://travis-ci.org/stdr-simulator-ros-pkg/stdr_simulator)
+stdr_simulator [![Build Status](https://travis-ci.org/stdr-simulator-ros-pkg/stdr_simulator.png?branch=indigo-devel)](https://travis-ci.org/stdr-simulator-ros-pkg/stdr_simulator)
 ==============
 
 A simple, flexible and scalable 2D multi-robot simulator.
