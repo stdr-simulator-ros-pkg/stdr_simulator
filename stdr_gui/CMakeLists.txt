@@ -6,12 +6,11 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
   tf
   stdr_msgs
-  stdr_robot
   stdr_server
+  stdr_robot
   stdr_parser
   sensor_msgs
   nav_msgs
-  map_server
 )
 
 include_directories( include
@@ -44,14 +43,13 @@ catkin_package(
     roslib
     tf
     stdr_msgs
-    stdr_robot
     stdr_server
+    stdr_robot
     stdr_parser
     sensor_msgs
     nav_msgs
-    map_server
-  INCLUDE_DIRS include
-  LIBRARIES
+  #INCLUDE_DIRS
+  #LIBRARIES
 )
 
 #----------------------------------------------------------------------------------------------------#

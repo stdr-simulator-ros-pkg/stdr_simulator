@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(stdr_msgs)
 
 find_package(catkin REQUIRED COMPONENTS
-  message_generation 
+  message_generation
   std_msgs
   geometry_msgs
   actionlib_msgs
@@ -19,44 +19,44 @@ add_message_files(
     RobotMsg.msg
     RobotIndexedMsg.msg
     RobotIndexedVectorMsg.msg
-    
+
     RfidSensorMsg.msg
     RfidSensorMeasurementMsg.msg
     RfidTag.msg
     RfidTagVector.msg
-    
+
     SoundSensorMsg.msg
     SoundSensorMeasurementMsg.msg
     SoundSource.msg
     SoundSourceVector.msg
-    
+
     ThermalSensorMsg.msg
     ThermalSensorMeasurementMsg.msg
     ThermalSource.msg
     ThermalSourceVector.msg
-    
+
     CO2SensorMsg.msg
     CO2SensorMeasurementMsg.msg
     CO2Source.msg
     CO2SourceVector.msg
 )
 
-add_service_files( 
+add_service_files(
     FILES
     LoadMap.srv
     LoadExternalMap.srv
     RegisterGui.srv
     MoveRobot.srv
-    
+
     AddRfidTag.srv
     DeleteRfidTag.srv
-    
+
     AddThermalSource.srv
     DeleteThermalSource.srv
-    
+
     AddSoundSource.srv
     DeleteSoundSource.srv
-   
+
     AddCO2Source.srv
     DeleteCO2Source.srv
 )
@@ -71,7 +71,7 @@ add_action_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-    std_msgs 
+    std_msgs
     geometry_msgs
     nav_msgs
     actionlib_msgs # Or other packages containing msgs
@@ -81,10 +81,10 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES stdr_msgs
- CATKIN_DEPENDS 
-    message_runtime 
-    std_msgs 
-    geometry_msgs 
+ CATKIN_DEPENDS
+    message_runtime
+    std_msgs
+    geometry_msgs
     actionlib_msgs
     nav_msgs
 #  DEPENDS system_lib

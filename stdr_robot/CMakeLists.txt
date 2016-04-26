@@ -21,9 +21,9 @@ include_directories(
 )
 
 catkin_package(
-  INCLUDE_DIRS 
+  INCLUDE_DIRS
     include
-  LIBRARIES 
+  LIBRARIES
     stdr_handle_robot
   CATKIN_DEPENDS
     roscpp
@@ -97,7 +97,7 @@ target_link_libraries(stdr_handle_robot ${catkin_LIBRARIES})
 ####################### Robot Handler ##################################
 add_executable(robot_handler src/handle_robot_node.cpp)
 add_dependencies(robot_handler stdr_msgs_gencpp) # wait for stdr_msgs to be build
-target_link_libraries(robot_handler 
+target_link_libraries(robot_handler
   ${catkin_LIBRARIES}
   stdr_handle_robot
 )

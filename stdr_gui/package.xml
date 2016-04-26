@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>stdr_gui</name>
   <version>0.2.0</version>
   <description>A gui in Qt for visualizing purposes in STDR Simulator.</description>
@@ -7,38 +7,27 @@
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
 
   <license>GPLv3</license>
-  
+
   <url type="website">http://stdr-simulator-ros-pkg.github.io</url>
   <url type="bugtracker">https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues</url>
   <url type="repository">https://github.com/stdr-simulator-ros-pkg/stdr_simulator</url>
-  
+
   <author>Manos Tsardoulias</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-  
-  <build_depend>roscpp</build_depend>
-  <build_depend>roslib</build_depend>
+
+  <depend>roscpp</depend>
+  <depend>roslib</depend>
+  <depend>tf</depend>
+  <depend>stdr_msgs</depend>
+  <depend>stdr_server</depend>
+  <depend>stdr_robot</depend>
+  <depend>stdr_parser</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+
   <build_depend>libqt4-dev</build_depend>
-  <build_depend>tf</build_depend>
-  <build_depend>stdr_msgs</build_depend>
-  <build_depend>stdr_robot</build_depend>
-  <build_depend>stdr_server</build_depend>
-  <build_depend>stdr_parser</build_depend>
-  <build_depend>sensor_msgs</build_depend>
-  <build_depend>nav_msgs</build_depend>
-  <build_depend>map_server</build_depend>
-  
-  <run_depend>roscpp</run_depend>
-  <run_depend>roslib</run_depend>
-  <run_depend>libqt4</run_depend>
-  <run_depend>tf</run_depend>
-  <run_depend>stdr_msgs</run_depend>
-  <run_depend>stdr_robot</run_depend>
-  <run_depend>stdr_server</run_depend>
-  <run_depend>stdr_parser</run_depend>
-  <run_depend>sensor_msgs</run_depend>
-  <run_depend>nav_msgs</run_depend>
-  <run_depend>map_server</run_depend>
+  <exec_depend>libqt4</exec_depend>
 
   <export>
   </export>
