@@ -23,6 +23,8 @@
   <depend>stdr_msgs</depend>
   <depend>tinyxml</depend>
   <depend>yaml-cpp</depend>
+  
+  <test_depend>rosunit</test_depend>
 
   <export>
   </export>
