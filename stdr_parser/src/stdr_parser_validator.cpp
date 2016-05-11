@@ -20,7 +20,7 @@
 ******************************************************************************/
 
 #include "stdr_parser/stdr_parser_validator.h"
-
+#include <iterator> 
 namespace stdr_parser
 {
   /**
@@ -168,13 +168,12 @@ namespace stdr_parser
   @brief Parses the mergable speciications file
   @return void
   **/
-  void Validator::parseMergableSpecifications(void)
+  std::set<std::string> Validator::parseMergableSpecifications(std::string path_with_file_)
   {
-    std::string base_path_ = ros::package::getPath("stdr_resources");
-    std::string path=base_path_ + 
-      std::string("/resources/specifications/stdr_multiple_allowed.xml");
+    
     TiXmlDocument doc;
-    bool loadOkay = doc.LoadFile(path.c_str());
+    std::string path=extractDirname(path_with_file_);
+    bool loadOkay = doc.LoadFile(path_with_file_.c_str());
     if (!loadOkay)
     {
       std::string error = 
@@ -185,6 +184,8 @@ namespace stdr_parser
     }
     Specs::non_mergable_tags = explodeString(
       doc.FirstChild()->FirstChild()->Value(), ',');
+   
+    return Specs::non_mergable_tags;
   }
 
   /**
@@ -192,7 +193,7 @@ namespace stdr_parser
   @param node [TiXmlNode*] The xml node to start from
   @return void
   **/
-  void Validator::parseSpecifications(TiXmlNode* node)
+  std::map<std::string,ElSpecs> Validator::parseSpecifications(TiXmlNode* node)
   {
     TiXmlNode* pChild;
     int type = node->Type();
@@ -273,6 +274,7 @@ namespace stdr_parser
         throw ex;
       }
     }
+  return Specs::specs;
   }
   
   /**

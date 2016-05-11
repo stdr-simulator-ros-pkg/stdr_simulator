@@ -58,7 +58,9 @@ namespace stdr_parser
         YamlParser::parse(file_name,base_node_);
       }
       //~ base_node_->printParsedXml(base_node_,"");
-      Validator::parseMergableSpecifications();
+      std::string base_path_ = ros::package::getPath("stdr_resources");
+      std::string path_with_file_=base_path_ +  std::string("/resources/specifications/stdr_multiple_allowed.xml");
+      Validator::parseMergableSpecifications(path_with_file_);
       
       while(!eliminateFilenames(base_node_));
       while(!mergeNodes(base_node_));

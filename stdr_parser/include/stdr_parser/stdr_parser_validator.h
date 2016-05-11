@@ -23,6 +23,7 @@
 #define STDR_PARSER_VALIDATOR
 
 #include "stdr_parser/stdr_parser_node.h"
+#include "stdr_parser/stdr_parser_tools.h"
 
 /**
 @namespace stdr_parser
@@ -42,7 +43,7 @@ namespace stdr_parser
       @param node [TiXmlNode*] The xml node to start from
       @return void
       **/
-      static void parseSpecifications(TiXmlNode* node);
+      static std::map<std::string,ElSpecs> parseSpecifications(TiXmlNode* node);
       
       /**
       @brief Performs a allowed - validity check on the xml tree
@@ -80,7 +81,10 @@ namespace stdr_parser
       @brief Parses the mergable specifications file
       @return void
       **/
-      static void parseMergableSpecifications(void);
+      static std::set<std::string> parseMergableSpecifications(std::string path_with_file_);
+
+    private:
+      friend class ValidatorTest;
   };
 }
 #endif
