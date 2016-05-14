@@ -20,15 +20,20 @@
 ******************************************************************************/
 
 #include "stdr_parser/stdr_parser_validator.h"
-#include <iterator> 
+
 namespace stdr_parser
 {
+
+
+   Specs specs_struct;
+
   /**
   @brief Default constructor
   @return void
   **/
   Validator::Validator(void)
   {
+    
     
   }
   
@@ -41,11 +46,13 @@ namespace stdr_parser
   void Validator::validityAllowedCheck(std::string file_name, Node* n)
   {
     //!< Immediately return if we have a value node
+    
     if(n->value != "")
     {
       return;
     }
     std::string tag = n->tag;
+  
     if(Specs::specs.find(tag) == Specs::specs.end() &&
       tag != "STDR_Parser_Root_Node")
     {
@@ -115,7 +122,8 @@ namespace stdr_parser
       return;
     }
     std::string tag = n->tag;
-    if(Specs::specs.find(tag) == Specs::specs.end() &&
+    
+    if(specs_struct.specs.find(tag) == specs_struct.specs.end() &&
       tag != "STDR_Parser_Root_Node")
     {
       std::string error = 
@@ -124,8 +132,8 @@ namespace stdr_parser
         std::string("\nTrail: ");
       throw ParserException(error);
     }
-    for(std::set<std::string>::iterator it = Specs::specs[tag].required.begin() 
-      ; it != Specs::specs[tag].required.end() ; it++)
+    for(std::set<std::string>::iterator it = specs_struct.specs[tag].required.begin() 
+      ; it != specs_struct.specs[tag].required.end() ; it++)
     {
       std::vector<int> num = n->getTag(*it);
       if(num.size() == 0)
@@ -168,12 +176,12 @@ namespace stdr_parser
   @brief Parses the mergable speciications file
   @return void
   **/
-  std::set<std::string> Validator::parseMergableSpecifications(std::string path_with_file_)
+  std::set<std::string> Validator::parseMergableSpecifications(std::string file)
   {
     
     TiXmlDocument doc;
-    std::string path=extractDirname(path_with_file_);
-    bool loadOkay = doc.LoadFile(path_with_file_.c_str());
+    std::string path=extractDirname(file);
+    bool loadOkay = doc.LoadFile(file.c_str());
     if (!loadOkay)
     {
       std::string error = 
@@ -182,10 +190,10 @@ namespace stdr_parser
         std::string("\nError was \n\t") + std::string(doc.ErrorDesc());
       throw ParserException(error);
     }
-    Specs::non_mergable_tags = explodeString(
+    specs_struct.non_mergable_tags = explodeString(
       doc.FirstChild()->FirstChild()->Value(), ',');
    
-    return Specs::non_mergable_tags;
+    return specs_struct.non_mergable_tags;
   }
 
   /**
@@ -213,9 +221,9 @@ namespace stdr_parser
         else if(node_text!="allowed" && node_text!="required" 
           && node_text!="default")
         { //!< Base specifications tag
-          if(Specs::specs.find(node_text) == Specs::specs.end())
+          if(specs_struct.specs.find(node_text) == specs_struct.specs.end())
           { //!< New base specifications tag
-            Specs::specs.insert(std::pair<std::string,ElSpecs>(
+            specs_struct.specs.insert(std::pair<std::string,ElSpecs>(
               node_text,ElSpecs()));
           }
           else
@@ -238,15 +246,15 @@ namespace stdr_parser
         std::string base_type(node->Parent()->Value());
         if(base_type == "allowed")
         {
-          Specs::specs[base_tag].allowed = explodeString(node_text,',');
+          specs_struct.specs[base_tag].allowed = explodeString(node_text,',');
         }
         else if(base_type == "required")
         {
-          Specs::specs[base_tag].required = explodeString(node_text,',');
+          specs_struct.specs[base_tag].required = explodeString(node_text,',');
         }
         else if(base_type == "default")
         {
-          Specs::specs[base_tag].default_value = node_text;
+          specs_struct.specs[base_tag].default_value = node_text;
         }
         else
         {
@@ -274,7 +282,7 @@ namespace stdr_parser
         throw ex;
       }
     }
-  return Specs::specs;
+  return specs_struct.specs;
   }
   
   /**
@@ -286,8 +294,8 @@ namespace stdr_parser
   void Validator::validate(std::string file_name, Node* n)
   {
     
-    Specs::specs.clear();
-    Specs::non_mergable_tags.clear();
+    specs_struct.specs.clear();
+    specs_struct.non_mergable_tags.clear();
     
     std::string base_path_ = ros::package::getPath("stdr_resources");
     
@@ -323,5 +331,25 @@ namespace stdr_parser
       throw ex;
     }
   }
+
+
+  std::set<std::string> Validator::getNonMergableTags(void)
+  {
+    return specs_struct.non_mergable_tags;
+  }
+
+  ElSpecs Validator::getSpecs(std::string tag)
+  {
+    return specs_struct.specs[tag];    
+  }
+
+  Specs Validator::clearSpecs(void)
+  {
+    specs_struct.specs.clear();
+    specs_struct.non_mergable_tags.clear();
+    return specs_struct;
+  }
+
+  
 }
 

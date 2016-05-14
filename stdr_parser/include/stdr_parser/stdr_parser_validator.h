@@ -31,6 +31,10 @@
 **/ 
 namespace stdr_parser
 {
+
+
+  
+  
   /**
   @class Parser
   @brief Implements the main functionalities of the high-level parser
@@ -38,6 +42,9 @@ namespace stdr_parser
   class Validator
   {
     private:
+
+      //static ElSpecs elspecs_struct;
+      static Specs specs_struct;
       /**
       @brief Low-level recursive function for parsing the xml specifications file
       @param node [TiXmlNode*] The xml node to start from
@@ -79,9 +86,34 @@ namespace stdr_parser
       
       /**
       @brief Parses the mergable specifications file
-      @return void
+      @param file [std::string] The filename that contains the mergable specifications, including its path
+      @return std::set<std::string> The non mergable tags
       **/
-      static std::set<std::string> parseMergableSpecifications(std::string path_with_file_);
+      static std::set<std::string> parseMergableSpecifications(std::string file);
+
+      /**
+      @brief Returns the non mergable tags
+      @param void
+      @return std::set<std::string> The non mergable tags
+      **/
+      static std::set<std::string> getNonMergableTags(void);
+
+      /**
+      @brief Returns the specifications for a specific tag
+      @param tag [std::string] The tag 
+      @return ElSpecs The structure that defines the required tags, allowed tags and default_value for the input tag
+      **/
+      static ElSpecs getSpecs(std::string tag);
+
+      /**
+      @brief Clears the static structure Specs
+      @param void 
+      @return Specs The empty structure
+      **/
+      static Specs clearSpecs(void);
+
+   
+      
 
     private:
       friend class ValidatorTest;

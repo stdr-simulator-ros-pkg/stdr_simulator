@@ -62,6 +62,13 @@ namespace stdr_parser
     **/
     Specs(void);
     
+    /**
+    @brief Defines equality for Specs instances
+    @return bool True if equal Specs
+    **/
+    bool operator== (const Specs& rhs) const;
+
+    
     //!< std::map of valid STDR tags
     static std::map<std::string,ElSpecs> specs;
     
@@ -69,4 +76,5 @@ namespace stdr_parser
     static std::set<std::string> non_mergable_tags;
   };
 }
+
 #endif

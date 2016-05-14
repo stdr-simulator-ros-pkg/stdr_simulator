@@ -87,9 +87,9 @@ TEST_F(XmlParserTest, parseAlternateResourceLocation)
   EXPECT_THROW(XmlParser::parse(robot_file_, root_node_), ParserException);
 }
 
-TEST_F(XmlParserTest, parseLow)
+/*TEST_F(XmlParserTest, parseLow)
 {
   //TODO
-}
+}*/
 
 }  // namespace stdr_parser

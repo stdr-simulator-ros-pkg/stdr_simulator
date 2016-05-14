@@ -210,7 +210,7 @@ filename of wrong type specified\n") +
       std::string tag = n->elements[i]->tag;
       
       //!< Child is a mergable tag
-      if(Specs::non_mergable_tags.find(tag) == Specs::non_mergable_tags.end())
+      if(Validator::getNonMergableTags().find(tag) == Validator::getNonMergableTags().end())
       {
         std::vector<int> num = n->getTag(tag);
         

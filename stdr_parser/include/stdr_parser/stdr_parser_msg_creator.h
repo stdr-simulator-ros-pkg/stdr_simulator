@@ -23,6 +23,7 @@
 #define STDR_PARSER_MSG_CREATOR
 
 #include "stdr_parser/stdr_parser_node.h"
+#include "stdr_parser/stdr_parser_validator.h"
 #include <sstream>
 
 /**
