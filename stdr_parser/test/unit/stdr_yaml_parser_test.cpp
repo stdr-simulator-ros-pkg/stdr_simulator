@@ -18,19 +18,19 @@
 ******************************************************************************/
 
 #include <gtest/gtest.h>
-#include "stdr_parser/stdr_xml_parser.h"
+#include "stdr_parser/stdr_yaml_parser.h"
 
 namespace stdr_parser
 {
 
 /**
- * @class XmlParserTest
- * @brief Basic Test Fixture for testing XmlParser
+ * @class YamlaParserTest
+ * @brief Basic Test Fixture for testing YamlParser
  */
-class XmlParserTest : public ::testing::Test
+class YamlParserTest : public ::testing::Test
 {
  protected:
-  XmlParserTest()
+  YamlParserTest()
   {
   }
 
@@ -48,10 +48,10 @@ class XmlParserTest : public ::testing::Test
     root_node_->tag = "STDR_Parser_Root_Node";
   }
 
-  // Accessors for private methods of XmlParser
-  void parseLow(TiXmlNode* node, Node* n)
+  // Accessors for private methods of YamlParser
+  void parseLow(const YAML::Node& node,Node* n)
   {
-    XmlParser::parseLow(node, n);
+    YamlParser::parseLow(node, n);
   }
   
   //checks if two trees of Nodes are equal 
@@ -72,43 +72,58 @@ class XmlParserTest : public ::testing::Test
 
 };
 
-TEST_F(XmlParserTest, parseTestRobot1)
+TEST_F(YamlParserTest, parseTestRobot1)
 {
-  init(std::string("/test/files/test_robot_1.xml"));
+  init(std::string("/test/files/test_robot_1.yaml"));
 
   // parse the test file
-  EXPECT_NO_THROW(XmlParser::parse(robot_file_, root_node_));
+  EXPECT_NO_THROW(YamlParser::parse(robot_file_, root_node_));
 
   EXPECT_EQ(root_node_->elements.size(), 1);
 
-  //root_node->printParsedXml(root_node, "--");
+
 }
 
-TEST_F(XmlParserTest, parseAlternateResourceLocation)
+TEST_F(YamlParserTest, parseAlternateResourceLocation)
 {
-  init(std::string("/test/files/test_robot_2.xml"));
+  init(std::string("/test/files/test_robot_2.yaml"));
 
   // parse the correct test file
-  EXPECT_NO_THROW(XmlParser::parse(robot_file_, root_node_));
+  EXPECT_NO_THROW(YamlParser::parse(robot_file_, root_node_));
 
 
   TearDown();
-  init(std::string("/test/files/test_robot_3.xml"));
+  init(std::string("/test/files/test_robot_3.yaml"));
 
   // parse the incorrect test file
-  EXPECT_THROW(XmlParser::parse(robot_file_, root_node_), ParserException);
+  EXPECT_THROW(YamlParser::parse(robot_file_, root_node_), ParserException);
 }
 
-TEST_F(XmlParserTest, parseLow)
+TEST_F(YamlParserTest, parseLow)
 {
-    init(std::string("/test/files/test_robot_1.xml"));
-    TiXmlDocument doc;
-    doc.SetTabSize(2);
-    doc.LoadFile(robot_file_.c_str());
+    init(std::string("/test/files/test_robot_1.yaml"));
+    std::string path = robot_file_;
+    std::ifstream fin(path.c_str());
+    
+    if (!fin.good()) {
+      throw ParserException("Failed to load '"+ robot_file_ +"', no such file!");
+    }
+
+#ifdef HAVE_NEW_YAMLCPP
+    YAML::Node doc = YAML::Load(fin);
+#else
+    YAML::Parser parser(fin);
+    YAML::Node doc;
+    parser.GetNextDocument(doc);
+#endif
+
     root_node_->file_origin = robot_file_;
-    root_node_->file_row = doc.Row();
-    parseLow(&doc,root_node_);
-    //declare and fill the tree corresponding to file test_robot_1.xml
+#ifndef HAVE_NEW_YAMLCPP
+    root_node_->file_row = doc.GetMark().line;
+#endif
+    parseLow(doc,root_node_);
+
+    //declare and fill the tree corresponding to file test_robot_1.yaml
     Node* test_node_=new Node();
     std::vector<Node*> child_node(77);
     for (unsigned i=0; i<child_node.size(); i++)

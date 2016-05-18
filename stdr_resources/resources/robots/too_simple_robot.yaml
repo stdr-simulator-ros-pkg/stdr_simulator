@@ -1,0 +1,6 @@
+robot: 
+  robot_specifications: 
+    - initial_pose: 
+        x: 0
+        y: 0
+        theta: 0
