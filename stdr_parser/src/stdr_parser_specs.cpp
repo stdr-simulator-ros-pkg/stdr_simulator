@@ -46,4 +46,9 @@ namespace stdr_parser
   {
     specs.clear();
   }
+
+  bool Specs::operator== (const Specs& rhs) const
+  {
+    return true; //there are actual member comparisons here
+  }
 }

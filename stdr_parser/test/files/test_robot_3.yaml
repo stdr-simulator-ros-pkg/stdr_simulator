@@ -1,0 +1,15 @@
+robot: 
+  filename: too_simple_robot.yaml
+  robot_specifications: 
+    - footprint: 
+        footprint_specifications: 
+          radius: 0.05
+    - initial_pose: 
+       x: 3
+       y: 2
+       theta: 1.57
+    - laser: 
+       filename: laser_sensors/hokuyo/hokuyo_URG_04LX.yaml
+       laser_specifications: 
+         pose: 
+         theta: -3.1415

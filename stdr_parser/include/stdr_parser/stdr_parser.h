@@ -23,7 +23,6 @@
 #define STDR_PARSER_BASE
 
 #include "stdr_parser/stdr_parser_msg_creator.h"
-#include "stdr_parser/stdr_parser_validator.h"
 #include "stdr_parser/stdr_parser_xml_file_writer.h"
 #include "stdr_parser/stdr_parser_yaml_file_writer.h"
 #include "stdr_parser/stdr_xml_parser.h"

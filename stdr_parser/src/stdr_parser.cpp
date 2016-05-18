@@ -58,7 +58,9 @@ namespace stdr_parser
         YamlParser::parse(file_name,base_node_);
       }
       //~ base_node_->printParsedXml(base_node_,"");
-      Validator::parseMergableSpecifications();
+      std::string base_path_ = ros::package::getPath("stdr_resources");
+      std::string path_with_file_=base_path_ +  std::string("/resources/specifications/stdr_multiple_allowed.xml");
+      Validator::parseMergableSpecifications(path_with_file_);
       
       while(!eliminateFilenames(base_node_));
       while(!mergeNodes(base_node_));
@@ -208,7 +210,7 @@ filename of wrong type specified\n") +
       std::string tag = n->elements[i]->tag;
       
       //!< Child is a mergable tag
-      if(Specs::non_mergable_tags.find(tag) == Specs::non_mergable_tags.end())
+      if(Validator::getNonMergableTags().find(tag) == Validator::getNonMergableTags().end())
       {
         std::vector<int> num = n->getTag(tag);
         

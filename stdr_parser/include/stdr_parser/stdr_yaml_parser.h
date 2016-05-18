@@ -64,6 +64,9 @@ namespace stdr_parser
       @return void
       **/
       static void parse(std::string file_name,Node* n);
+
+   private:
+      friend class YamlParserTest;
   };
 }
 #endif
