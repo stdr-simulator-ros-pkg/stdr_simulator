@@ -19,6 +19,7 @@
   <exec_depend>stdr_server</exec_depend>
   <exec_depend>stdr_robot</exec_depend>
   <exec_depend>stdr_gui</exec_depend>
+  <exec_depend>stdr_resources</exec_depend>
   <exec_depend>rviz</exec_depend>
 
 
