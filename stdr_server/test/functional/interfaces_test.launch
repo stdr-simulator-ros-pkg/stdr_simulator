@@ -1,0 +1,8 @@
+<launch>
+  <node type="mock_robot.py" pkg="stdr_server" name="mock_stdr_robot"
+    output="screen"/>
+  <node type="stdr_server_node" pkg="stdr_server" name="stdr_server"
+    output="screen" args="$(find stdr_resources)/maps/sparse_obstacles.yaml"/>
+  <test test-name="InterfaceTest" type="interfaces_test.py"
+    pkg="stdr_server"/>
+</launch>
