@@ -2,6 +2,9 @@
 Changelog for package stdr_simulator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.3.0 (2016-07-18)
 ------------------
 * Migrate to package format 2

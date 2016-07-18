@@ -2,6 +2,10 @@
 Changelog for package stdr_server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add forgotten dependency on visualization_msgs
+
 0.3.0 (2016-07-18)
 ------------------
 * Add an interfaces test, as a functional test using rostest
