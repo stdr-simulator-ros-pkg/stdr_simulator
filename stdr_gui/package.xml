@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>stdr_gui</name>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
   <description>A gui in Qt for visualizing purposes in STDR Simulator.</description>
 
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>

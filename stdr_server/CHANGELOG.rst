@@ -2,8 +2,8 @@
 Changelog for package stdr_server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.1 (2016-07-18)
+------------------
 * Add forgotten dependency on visualization_msgs
 
 0.3.0 (2016-07-18)
