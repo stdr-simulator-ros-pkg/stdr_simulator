@@ -2,6 +2,13 @@
 Changelog for package stdr_resources
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Migrate to package format 2
+* Added new map
+* Added omni robot examples
+* Added kinematic_model xml specifications
+
 0.2.0 (2014-07-25)
 ------------------
 * Added resources for new sensors. (thermal, CO2, sound, rfid)

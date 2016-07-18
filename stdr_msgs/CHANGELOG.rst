@@ -2,6 +2,11 @@
 Changelog for package stdr_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Migrate to package format 2
+* Added kinematic model noise parameters support
+
 0.2.0 (2014-07-25)
 ------------------
 * Added messages and services for new sensors. (thermal, CO2, sound, rfid)

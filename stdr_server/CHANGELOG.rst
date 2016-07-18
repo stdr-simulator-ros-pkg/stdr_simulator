@@ -2,6 +2,16 @@
 Changelog for package stdr_server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add an interfaces test, as a functional test using rostest
+* Fix synchronization bug on new robot registration
+* Migrate to package format 2
+* Visualization for custom sources using Marker messages (`#184 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/pull/184>`_)
+* Remove unnecessary image_loader library in cmake
+* Add forgotten run dependency to map_server (`#172 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/172>`_)
+* Remove leading slash from frame_id
+
 0.2.0 (2014-07-25)
 ------------------
 * Feedback added in case of double frame ids

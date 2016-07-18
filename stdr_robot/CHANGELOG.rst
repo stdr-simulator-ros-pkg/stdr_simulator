@@ -2,6 +2,15 @@
 Changelog for package stdr_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Migrate to package format 2
+* Angles laser beams evenly (`#182 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/pull/182>`_)
+* Fix laser scans off map bug (`#174 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/174>`_)
+* Add support for kinematic model noise parameters
+* Add support for omni directional motion model
+* Fix segfault on robot_manager due to uninitialized pointer (`#159 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/159>`_)
+
 0.2.0 (2014-07-25)
 ------------------
 * Added CO2 sensors

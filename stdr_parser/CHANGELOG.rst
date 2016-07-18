@@ -2,6 +2,14 @@
 Changelog for package stdr_parser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Migrate to package format 2
+* Refactoring on parser node destruction (`#186 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/pull/186>`_)
+* Allow loading local/custom resource files (`#178 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/178>`_)
+* Fix bug on footprint loading (`#171 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/171>`_)
+* Added kinematic model noise parameters support
+
 0.2.0 (2014-07-25)
 ------------------
 * Fixed `#148 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/148>`_

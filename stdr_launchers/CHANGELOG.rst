@@ -2,6 +2,10 @@
 Changelog for package stdr_launchers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Migrate to package format 2, fix dependency issues
+
 0.2.0 (2014-07-25)
 ------------------
 
