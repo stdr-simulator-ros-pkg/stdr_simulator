@@ -12,11 +12,11 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   
-   Authors : 
+
+   Authors :
    * Manos Tsardoulias, etsardou@gmail.com
    * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+   * Chris Zalidis, zalidis@gmail.com
 ******************************************************************************/
 
 #include "ros/ros.h"
@@ -29,48 +29,48 @@
 /**
 @namespace stdr_server
 @brief The main namespace for STDR Server
-**/ 
+**/
 namespace stdr_server {
 
   /**
   @class MapServer
   @brief Implements the STDR map server functionalities
-  **/ 
+  **/
   class MapServer
   {
     public:
-      
+
       /**
       @brief Constructor by filename
       @param fname [const std::string&] The file name
       @return void
       **/
       explicit MapServer(const std::string& fname);
-      
+
       /**
       @brief Constructor by occupancy grid map
       @param map [const nav_msgs::OccupancyGrid&] The occupancy grid map
       @return void
       **/
       explicit MapServer(const nav_msgs::OccupancyGrid& map);
-      
+
     private:
-      
+
       /**
       @brief Publishes the map data and metadata
       @return void
       **/
       void publishData();
-      
+
       /**
       @brief Publishes the map to map_static transform
       @param ev [const ros::TimerEvent&] A ROS timer event
       @return void
       **/
       void publishTransform(const ros::TimerEvent& ev);
-    
+
     private:
-    
+
       //!< The ROS node handle
       ros::NodeHandle n;
       //!< ROS publisher for posting the map
@@ -87,4 +87,4 @@ namespace stdr_server {
       nav_msgs::OccupancyGrid map_;
 
   };
-}
+}  // namespace stdr_server

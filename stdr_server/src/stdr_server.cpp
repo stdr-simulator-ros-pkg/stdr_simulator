@@ -168,7 +168,7 @@ namespace stdr_server {
     for(RfidTagMapIt it = _rfidTagMap.begin() ; it != _rfidTagMap.end() ; it++)
     {
       rfidTagList.rfid_tags.push_back(it->second);
-      RFIDMarkerArray.markers.push_back(toMarker(it->second,true));
+      RFIDMarkerArray.markers.push_back(toMarker(it->second, true));
     }
     _rfidTagVectorPublisher.publish(rfidTagList);
 
@@ -210,7 +210,7 @@ namespace stdr_server {
       ; it != _CO2SourceMap.end() ; it++)
     {
       CO2SourceList.co2_sources.push_back(it->second);
-      C02MarkerArray.markers.push_back(toMarker(it->second,true));
+      C02MarkerArray.markers.push_back(toMarker(it->second, true));
     }
     _CO2SourceVectorPublisher.publish(CO2SourceList);
     _sourceVectorPublisherRviz.publish(C02MarkerArray);
@@ -252,7 +252,7 @@ namespace stdr_server {
       ; it != _thermalSourceMap.end() ; it++)
     {
       thermalSourceList.thermal_sources.push_back(it->second);
-      thermalMarkerArray.markers.push_back(toMarker(it->second,true));
+      thermalMarkerArray.markers.push_back(toMarker(it->second, true));
     }
     _thermalSourceVectorPublisher.publish(thermalSourceList);
     _sourceVectorPublisherRviz.publish(thermalMarkerArray);
@@ -294,7 +294,7 @@ namespace stdr_server {
       ; it != _soundSourceMap.end() ; it++)
     {
       soundSourceList.sound_sources.push_back(it->second);
-      soundMarkerArray.markers.push_back(toMarker(it->second,true));
+      soundMarkerArray.markers.push_back(toMarker(it->second, true));
     }
     _soundSourceVectorPublisher.publish(soundSourceList);
     _sourceVectorPublisherRviz.publish(soundMarkerArray);
@@ -321,7 +321,7 @@ namespace stdr_server {
     {
       // Publish deletion to RVIZ
       visualization_msgs::MarkerArray rfidMarkerArray;
-      rfidMarkerArray.markers.push_back(toMarker(_rfidTagMap[name],false));
+      rfidMarkerArray.markers.push_back(toMarker(_rfidTagMap[name], false));
       _sourceVectorPublisherRviz.publish(rfidMarkerArray);
 
       _rfidTagMap.erase(name);
@@ -352,13 +352,12 @@ namespace stdr_server {
     stdr_msgs::DeleteCO2Source::Request &req,
     stdr_msgs::DeleteCO2Source::Response &res)
   {
-
     std::string name = req.name;
     if(_CO2SourceMap.find(name) != _CO2SourceMap.end())
     {
       // Publish deletion to RVIZ
       visualization_msgs::MarkerArray CO2MarkerArray;
-      CO2MarkerArray.markers.push_back(toMarker(_CO2SourceMap[name],false));
+      CO2MarkerArray.markers.push_back(toMarker(_CO2SourceMap[name], false));
       _sourceVectorPublisherRviz.publish(CO2MarkerArray);
 
       _CO2SourceMap.erase(name);
@@ -396,7 +395,7 @@ namespace stdr_server {
     {
       // Publish deletion to RVIZ
       visualization_msgs::MarkerArray thermalMarkerArray;
-      thermalMarkerArray.markers.push_back(toMarker(_thermalSourceMap[name],false));
+      thermalMarkerArray.markers.push_back(toMarker(_thermalSourceMap[name], false));
       _sourceVectorPublisherRviz.publish(thermalMarkerArray);
 
       _thermalSourceMap.erase(name);
@@ -433,7 +432,7 @@ namespace stdr_server {
     {
       // Publish deletion to RVIZ
       visualization_msgs::MarkerArray soundMarkerArray;
-      soundMarkerArray.markers.push_back(toMarker(_soundSourceMap[name],false));
+      soundMarkerArray.markers.push_back(toMarker(_soundSourceMap[name], false));
       _sourceVectorPublisherRviz.publish(soundMarkerArray);
 
       _soundSourceMap.erase(name);
@@ -774,7 +773,7 @@ namespace stdr_server {
   **/
   visualization_msgs::Marker Server::toMarker(const stdr_msgs::CO2Source& msg, bool added)
   {
-    visualization_msgs::Marker marker = createMarker(msg,added);
+    visualization_msgs::Marker marker = createMarker(msg, added);
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
     // Any marker sent with the same namespace and id will overwrite the old one
@@ -795,7 +794,7 @@ namespace stdr_server {
   **/
   visualization_msgs::Marker Server::toMarker(const stdr_msgs::ThermalSource& msg, bool added)
   {
-    visualization_msgs::Marker marker = createMarker(msg,added);
+    visualization_msgs::Marker marker = createMarker(msg, added);
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
     // Any marker sent with the same namespace and id will overwrite the old one
@@ -816,7 +815,7 @@ namespace stdr_server {
   **/
   visualization_msgs::Marker Server::toMarker(const stdr_msgs::SoundSource& msg, bool added)
   {
-    visualization_msgs::Marker marker = createMarker(msg,added);
+    visualization_msgs::Marker marker = createMarker(msg, added);
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
     // Any marker sent with the same namespace and id will overwrite the old one
@@ -837,7 +836,7 @@ namespace stdr_server {
   **/
   visualization_msgs::Marker Server::toMarker(const stdr_msgs::RfidTag& msg, bool added)
   {
-    visualization_msgs::Marker marker = createMarker(msg,added);
+    visualization_msgs::Marker marker = createMarker(msg, added);
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
     // Any marker sent with the same namespace and id will overwrite the old one
@@ -859,29 +858,31 @@ namespace stdr_server {
     for(SoundSourceMapIt it = _soundSourceMap.begin()
       ; it != _soundSourceMap.end() ; it++)
     {
-        ma.markers.push_back(toMarker(it->second,true));
+        ma.markers.push_back(toMarker(it->second, true));
     }
     for(CO2SourceMapIt it = _CO2SourceMap.begin()
       ; it != _CO2SourceMap.end() ; it++)
     {
-      ma.markers.push_back(toMarker(it->second,true));
+      ma.markers.push_back(toMarker(it->second, true));
     }
     for(ThermalSourceMapIt it = _thermalSourceMap.begin()
       ; it != _thermalSourceMap.end() ; it++)
     {
-      ma.markers.push_back(toMarker(it->second,true));
+      ma.markers.push_back(toMarker(it->second, true));
     }
     for(RfidTagMapIt it = _rfidTagMap.begin() ; it != _rfidTagMap.end() ; it++)
     {
-      ma.markers.push_back(toMarker(it->second,true));
+      ma.markers.push_back(toMarker(it->second, true));
     }
     _sourceVectorPublisherRviz.publish(ma);
   }
+
   /**
   @brief Creates a marker message corresponding to every element of msg that is
   independent of the source's specific type
   **/
-  template <class SourceMsg> visualization_msgs::Marker Server::createMarker(const SourceMsg& msg, bool added)
+  template <class SourceMsg>
+  visualization_msgs::Marker Server::createMarker(const SourceMsg& msg, bool added)
   {
     visualization_msgs::Marker marker;
 
