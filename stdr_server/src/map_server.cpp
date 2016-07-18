@@ -12,11 +12,11 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   
-   Authors : 
+
+   Authors :
    * Manos Tsardoulias, etsardou@gmail.com
    * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+   * Chris Zalidis, zalidis@gmail.com
 ******************************************************************************/
 
 #include <stdr_server/map_server.h>
@@ -28,14 +28,14 @@ namespace stdr_server {
   @param fname [const std::string&] The file name
   @return void
   **/
-  MapServer::MapServer(const std::string& fname) 
+  MapServer::MapServer(const std::string& fname)
   {
-    
+
     map_ = map_loader::loadMap(fname);
 
     meta_data_message_ = map_.info;
-    
-    publishData();  
+
+    publishData();
   }
 
   /**
@@ -43,13 +43,13 @@ namespace stdr_server {
   @param map [const nav_msgs::OccupancyGrid&] The occupancy grid map
   @return void
   **/
-  MapServer::MapServer(const nav_msgs::OccupancyGrid& map) 
+  MapServer::MapServer(const nav_msgs::OccupancyGrid& map)
   {
-    
+
     map_ = map;
-    
+
     meta_data_message_ = map_.info;
-    
+
     publishData();
   }
 
@@ -57,16 +57,16 @@ namespace stdr_server {
   @brief Publishes the map data and metadata
   @return void
   **/
-  void MapServer::publishData(void) 
+  void MapServer::publishData(void)
   {
-    
-    tfTimer = n.createTimer(ros::Duration(0.1), 
+
+    tfTimer = n.createTimer(ros::Duration(0.1),
       &MapServer::publishTransform, this);
-    
+
     //!< Latched publisher for metadata
     metadata_pub= n.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
     metadata_pub.publish( meta_data_message_ );
-    
+
     //!< Latched publisher for data
     map_pub = n.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
     map_pub.publish( map_ );
@@ -78,21 +78,21 @@ namespace stdr_server {
   @return void
   **/
   void MapServer::publishTransform(const ros::TimerEvent&) {
-    
+
     tf::Vector3 translation(
-      map_.info.origin.position.x, 
-      map_.info.origin.position.y, 
+      map_.info.origin.position.x,
+      map_.info.origin.position.y,
       0);
-    
+
     tf::Quaternion rotation;
-    
+
     rotation.setRPY(0, 0, tf::getYaw(map_.info.origin.orientation));
 
     tf::Transform worldTomap(rotation, translation);
 
     tfBroadcaster.sendTransform(
       tf::StampedTransform(worldTomap, ros::Time::now(), "map", "map_static"));
-    
+
   }
 
 } // end of namespace stdr_server

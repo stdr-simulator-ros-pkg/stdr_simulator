@@ -12,11 +12,11 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   
-   Authors : 
+
+   Authors :
    * Manos Tsardoulias, etsardou@gmail.com
    * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+   * Chris Zalidis, zalidis@gmail.com
 ******************************************************************************/
 
 #ifndef STDR_MAP_LOADER_H
@@ -47,22 +47,22 @@ void operator >> (const YAML::Node& node, T& i)
 /**
 @namespace stdr_server
 @brief The main namespace for STDR Server
-**/ 
+**/
 namespace stdr_server {
 
   /**
   @namespace map_loader
   @brief The namespace for STDR map loader
-  **/ 
+  **/
   namespace map_loader {
-    
+
     /**
     @brief Loads a map from an image file
     @param fname [const std::string&] The file name
     @return nav_msgs::OccupancyGrid
     **/
-    nav_msgs::OccupancyGrid loadMap(const std::string& fname); 
-    
+    nav_msgs::OccupancyGrid loadMap(const std::string& fname);
+
   } // end of namespace map_loader
 
 } // end of namespace stdr_server

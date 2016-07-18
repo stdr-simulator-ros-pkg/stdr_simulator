@@ -28,8 +28,10 @@ catkin_package(
     roscpp
     tf
     nav_msgs
-    nodelet
+    stdr_msgs
     actionlib
+    nodelet
+    map_server
 )
 
 link_directories(${catkin_LIBRARY_DIRS})
@@ -50,25 +52,30 @@ target_link_libraries(stdr_map_server
 add_library(stdr_server src/stdr_server.cpp)
 add_dependencies(stdr_server stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(stdr_server
-	stdr_map_server
-	${catkin_LIBRARIES}
+  stdr_map_server
+  ${catkin_LIBRARIES}
 )
 
 add_executable(stdr_server_node src/stdr_server_node.cpp)
 target_link_libraries(stdr_server_node
-	stdr_server
-	${catkin_LIBRARIES}
+  stdr_server
+  ${catkin_LIBRARIES}
 )
 
 add_executable(load_map src/map_loader_node.cpp)
 add_dependencies(load_map stdr_msgs_gencpp) # wait for stdr_msgs to be build
 target_link_libraries(load_map
-	stdr_map_loader
-	${catkin_LIBRARIES}
+  stdr_map_loader
+  ${catkin_LIBRARIES}
 )
 
+# Testing
+if(CATKIN_ENABLE_TESTING)
+  add_subdirectory(test)
+endif()
+
 # Install libraries
-install(TARGETS 
+install(TARGETS
     stdr_map_loader
     stdr_map_server
     stdr_server

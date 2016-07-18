@@ -12,11 +12,11 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   
-   Authors : 
+
+   Authors :
    * Manos Tsardoulias, etsardou@gmail.com
    * Aris Thallas, aris.thallas@gmail.com
-   * Chris Zalidis, zalidis@gmail.com 
+   * Chris Zalidis, zalidis@gmail.com
 ******************************************************************************/
 
 #include "stdr_server/map_loader.h"
@@ -24,24 +24,24 @@
 namespace stdr_server {
 
   namespace map_loader {
-    
+
     /**
     @brief Loads a map from an image file
     @param fname [const std::string&] The file name
     @return nav_msgs::OccupancyGrid
     **/
     nav_msgs::OccupancyGrid loadMap(const std::string& fname) {
-      
+
       nav_msgs::GetMap::Response map_resp_;
-      
+
       std::string mapfname = "";
-      std::ifstream fin(fname.c_str());   
+      std::ifstream fin(fname.c_str());
       double origin[3];
       double res;
       int negate;
       double occ_th, free_th;
       std::string frame_id = "map";
-          
+
     #ifdef HAVE_NEW_YAMLCPP
       // The document loading process changed in yaml-cpp 0.5.
       YAML::Node doc = YAML::Load(fin);
@@ -50,43 +50,43 @@ namespace stdr_server {
       YAML::Node doc;
       parser.GetNextDocument(doc);
     #endif
-      try { 
-        doc["resolution"] >> res; 
-      } catch (YAML::InvalidScalar) { 
+      try {
+        doc["resolution"] >> res;
+      } catch (YAML::InvalidScalar) {
         ROS_ERROR(
           "The map does not contain a resolution tag or it is invalid.");
         exit(-1);
       }
-      try { 
-        doc["negate"] >> negate; 
-      } catch (YAML::InvalidScalar) { 
+      try {
+        doc["negate"] >> negate;
+      } catch (YAML::InvalidScalar) {
         ROS_ERROR("The map does not contain a negate tag or it is invalid.");
         exit(-1);
       }
-      try { 
-        doc["occupied_thresh"] >> occ_th; 
-      } catch (YAML::InvalidScalar) { 
+      try {
+        doc["occupied_thresh"] >> occ_th;
+      } catch (YAML::InvalidScalar) {
         ROS_ERROR(
           "The map does not contain an occupied_thresh tag or it is invalid.");
         exit(-1);
       }
-      try { 
-        doc["free_thresh"] >> free_th; 
-      } catch (YAML::InvalidScalar) { 
+      try {
+        doc["free_thresh"] >> free_th;
+      } catch (YAML::InvalidScalar) {
         ROS_ERROR(
           "The map does not contain a free_thresh tag or it is invalid.");
         exit(-1);
       }
-      try { 
-        doc["origin"][0] >> origin[0]; 
-        doc["origin"][1] >> origin[1]; 
-        doc["origin"][2] >> origin[2]; 
-      } catch (YAML::InvalidScalar) { 
+      try {
+        doc["origin"][0] >> origin[0];
+        doc["origin"][1] >> origin[1];
+        doc["origin"][2] >> origin[2];
+      } catch (YAML::InvalidScalar) {
         ROS_ERROR("The map does not contain an origin tag or it is invalid.");
         exit(-1);
       }
-      try { 
-        doc["image"] >> mapfname; 
+      try {
+        doc["image"] >> mapfname;
         // TODO: make this path-handling more robust
         if(mapfname.size() == 0)
         {
@@ -100,15 +100,15 @@ namespace stdr_server {
         mapfname = std::string(dirname(fname_copy)) + '/' + mapfname;
         free(fname_copy);
         }
-      } catch (YAML::InvalidScalar) { 
+      } catch (YAML::InvalidScalar) {
         ROS_ERROR("The map does not contain an image tag or it is invalid.");
         exit(-1);
       }
-    
+
       ROS_INFO("Loading map from image \"%s\"", mapfname.c_str());
       map_server::loadMapFromFile(&map_resp_,mapfname.c_str(),
         res,negate,occ_th,free_th, origin);
-        
+
       map_resp_.map.info.map_load_time = ros::Time::now();
       map_resp_.map.header.frame_id = frame_id;
       map_resp_.map.header.stamp = ros::Time::now();
@@ -116,10 +116,10 @@ namespace stdr_server {
            map_resp_.map.info.width,
            map_resp_.map.info.height,
            map_resp_.map.info.resolution);
-           
-      return map_resp_.map;    
-    } 
-    
+
+      return map_resp_.map;
+    }
+
   } // end of namespace map_loader
 
 } // end of namespace stdr_server
