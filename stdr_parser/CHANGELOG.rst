@@ -2,8 +2,8 @@
 Changelog for package stdr_parser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2016-07-18)
+------------------
 * Migrate to package format 2
 * Refactoring on parser node destruction (`#186 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/pull/186>`_)
 * Allow loading local/custom resource files (`#178 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/178>`_)

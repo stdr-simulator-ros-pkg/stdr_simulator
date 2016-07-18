@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>stdr_simulator</name> <!-- This is a meta package! -->
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <description>A simple, flexible and scalable 2D multi-robot simulator.</description>
 
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>

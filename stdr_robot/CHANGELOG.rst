@@ -2,8 +2,8 @@
 Changelog for package stdr_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2016-07-18)
+------------------
 * Migrate to package format 2
 * Angles laser beams evenly (`#182 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/pull/182>`_)
 * Fix laser scans off map bug (`#174 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/174>`_)

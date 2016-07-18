@@ -2,8 +2,8 @@
 Changelog for package stdr_resources
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2016-07-18)
+------------------
 * Migrate to package format 2
 * Added new map
 * Added omni robot examples
