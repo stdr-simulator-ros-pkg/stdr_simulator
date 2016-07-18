@@ -24,6 +24,7 @@
   <depend>nodelet</depend>
   <depend>map_server</depend>
   <depend>yaml-cpp</depend>
+  <depend>visualization_msgs</depend>
 
   <test_depend>rostest</test_depend>
 

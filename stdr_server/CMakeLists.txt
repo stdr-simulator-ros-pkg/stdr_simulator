@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     actionlib
     nodelet
     map_server
+    visualization_msgs
 )
 
 set(CMAKE_BUILD_TYPE Release)
@@ -32,6 +33,7 @@ catkin_package(
     actionlib
     nodelet
     map_server
+    visualization_msgs
 )
 
 link_directories(${catkin_LIBRARY_DIRS})
