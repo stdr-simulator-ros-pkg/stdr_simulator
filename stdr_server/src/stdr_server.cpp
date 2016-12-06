@@ -469,11 +469,8 @@ namespace stdr_server {
     stdr_msgs::LoadMap::Request& req,
     stdr_msgs::LoadMap::Response& res) 
   {
-    if (_mapServer) {
-      ROS_WARN("Map already loaded!");
-      return false;
-    }
     _mapServer.reset(new MapServer(req.mapFile));
+
     //!< if we don't have map, no point to start servers
     activateActionServers();
 
@@ -490,10 +487,6 @@ namespace stdr_server {
     stdr_msgs::LoadExternalMap::Request& req,
     stdr_msgs::LoadExternalMap::Response& res)
   {
-    if (_mapServer) {
-      ROS_WARN("Map already loaded!");
-      return false;
-    }
     _mapServer.reset(new MapServer(req.map));
     
     //!< if we don't have map, no point to start servers
