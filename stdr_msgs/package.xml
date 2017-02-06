@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>stdr_msgs</name>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
   <description>Provides msgs, services and actions for STDR Simulator.</description>
 
   <maintainer email="zalidis@gmail.com">Chris Zalidis</maintainer>
