@@ -17,8 +17,6 @@ include_directories( include
   ${catkin_INCLUDE_DIRS}
 )
 
-link_directories(${catkin_LIBRARY_DIRS})
-
 find_package(Qt4 REQUIRED COMPONENTS
   QtCore
   QtGui
@@ -35,9 +33,7 @@ include_directories(
 
 catkin_package(
   DEPENDS
-    QtCore
-    QtGui
-    QtUiTools
+    QT
   CATKIN_DEPENDS
     roscpp
     roslib
@@ -116,7 +112,7 @@ add_executable(stdr_gui_node
   src/stdr_gui/stdr_map_metainformation/stdr_gui_sound_source.cpp
   ${QT_FORMS_HPP} ${SAMPLE_MOC_SRCS}
 )
-add_dependencies(stdr_gui_node stdr_msgs_gencpp)  # Wait for std messages to build
+add_dependencies(stdr_gui_node ${stdr_msgs_EXPORTED_TARGETS})  # Wait for stdr_msgs to build
 target_link_libraries(stdr_gui_node
   ${catkin_LIBRARIES}
   ${QT_LIBRARIES}

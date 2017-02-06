@@ -52,7 +52,7 @@ target_link_libraries(stdr_map_server
 )
 
 add_library(stdr_server src/stdr_server.cpp)
-add_dependencies(stdr_server stdr_msgs_gencpp) # wait for stdr_msgs to be build
+add_dependencies(stdr_server ${stdr_msgs_EXPORTED_TARGETS}) # wait for stdr_msgs to be build
 target_link_libraries(stdr_server
   stdr_map_server
   ${catkin_LIBRARIES}
@@ -65,7 +65,7 @@ target_link_libraries(stdr_server_node
 )
 
 add_executable(load_map src/map_loader_node.cpp)
-add_dependencies(load_map stdr_msgs_gencpp) # wait for stdr_msgs to be build
+add_dependencies(load_map ${stdr_msgs_EXPORTED_TARGETS}) # wait for stdr_msgs to be build
 target_link_libraries(load_map
   stdr_map_loader
   ${catkin_LIBRARIES}

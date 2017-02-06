@@ -52,7 +52,7 @@ add_library(stdr_parser
   src/stdr_parser_specs.cpp
   src/stdr_parser_tools.cpp
 )
-add_dependencies(stdr_parser stdr_msgs_gencpp) # wait for stdr_msgs to be build
+add_dependencies(stdr_parser ${stdr_msgs_EXPORTED_TARGETS}) # wait for stdr_msgs to be build
 target_link_libraries(stdr_parser 
   ${catkin_LIBRARIES} ${TinyXML_LIBRARIES}
   yaml-cpp
