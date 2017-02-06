@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(stdr_samples)
 
 find_package(catkin REQUIRED COMPONENTS
+  roslib
   roscpp
   tf
   stdr_msgs
@@ -22,6 +23,7 @@ catkin_package(
     include
   LIBRARIES
   CATKIN_DEPENDS
+    roslib
     roscpp
     tf
     stdr_msgs
