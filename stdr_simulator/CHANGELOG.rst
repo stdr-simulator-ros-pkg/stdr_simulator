@@ -2,6 +2,9 @@
 Changelog for package stdr_simulator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.3.1 (2016-07-18)
 ------------------
 

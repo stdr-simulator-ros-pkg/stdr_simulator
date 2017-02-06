@@ -2,6 +2,11 @@
 Changelog for package stdr_samples
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix cmakes, no more cmake warnings
+* Include forgotten roslib dependency
+
 0.3.1 (2016-07-18)
 ------------------
 

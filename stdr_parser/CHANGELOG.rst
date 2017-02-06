@@ -2,6 +2,10 @@
 Changelog for package stdr_parser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix cmakes, no more cmake warnings
+
 0.3.1 (2016-07-18)
 ------------------
 

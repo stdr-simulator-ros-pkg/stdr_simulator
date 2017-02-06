@@ -2,6 +2,11 @@
 Changelog for package stdr_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix cmakes, no more cmake warnings
+* Add forgotten install target for omni_motion_controller (`#195 <https://github.com/stdr-simulator-ros-pkg/stdr_simulator/issues/195>`_)
+
 0.3.1 (2016-07-18)
 ------------------
 
