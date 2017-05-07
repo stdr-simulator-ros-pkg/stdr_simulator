@@ -60,6 +60,10 @@ namespace stdr_robot
     _moveRobotService = n.advertiseService(
       getName() + "/replace", &Robot::moveRobotCallback, this);
 
+
+    _obstructMoveService = n.advertiseService(
+      getName() + "/obstruct", &Robot::obstructCallback, this);
+
     //we should not start the timer, until we hame a motion controller
     _tfTimer = n.createTimer(
       ros::Duration(0.1), &Robot::publishTransforms, this, false, false);
@@ -207,6 +211,14 @@ namespace stdr_robot
     _motionControllerPtr->setPose(_previousPose);
     return true;
   }
+
+
+  bool Robot::obstructCallback(stdr_msgs::Obstruct::Request& req,
+			stdr_msgs::Obstruct::Response& res)
+  {
+    _motionControllerPtr->toggleObstructionFlag();
+  }
+
 
   /**
   @brief Checks the robot collision -2b changed-

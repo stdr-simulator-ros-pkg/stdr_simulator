@@ -47,6 +47,7 @@ add_service_files(
     LoadExternalMap.srv
     RegisterGui.srv
     MoveRobot.srv
+    Obstruct.srv
 
     AddRfidTag.srv
     DeleteRfidTag.srv

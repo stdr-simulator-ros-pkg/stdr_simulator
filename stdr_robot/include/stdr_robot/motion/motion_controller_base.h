@@ -44,6 +44,10 @@ namespace stdr_robot {
   class MotionController {
     
     public:
+      virtual void toggleObstructionFlag(void)
+      {
+	_obstructionFlag = _obstructionFlag ? false : true;
+      }
       
       /**
       @brief Virtual function - Callback for velocity commands
@@ -206,6 +210,8 @@ namespace stdr_robot {
             1,
             &MotionController::velocityCallback,
             this);  
+
+          _obstructionFlag = false;
  
           srand(time(NULL));
         }
@@ -228,6 +234,7 @@ namespace stdr_robot {
       geometry_msgs::Twist _currentTwist;
       //!< The kinematic model parameters
       stdr_msgs::KinematicMsg _motion_parameters;
+      bool _obstructionFlag;
   };
     
   typedef boost::shared_ptr<MotionController> MotionControllerPtr;

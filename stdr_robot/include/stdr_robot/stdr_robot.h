@@ -27,6 +27,7 @@
 #include <tf/transform_broadcaster.h>
 #include <stdr_msgs/RobotMsg.h>
 #include <stdr_msgs/MoveRobot.h>
+#include <stdr_msgs/Obstruct.h>
 #include <stdr_robot/sensors/sensor_base.h>
 #include <stdr_robot/sensors/laser.h>
 #include <stdr_robot/sensors/sonar.h>
@@ -87,6 +88,13 @@ namespace stdr_robot {
     @return void
     **/
     void mapCallback(const nav_msgs::OccupancyGridConstPtr& msg);
+
+
+    /**
+    @brief Callback to force robot movement obstruction emulation service
+    **/
+    bool obstructCallback(stdr_msgs::Obstruct::Request& req,
+			  stdr_msgs::Obstruct::Response& res);
     
     /**
     @brief The callback of the re-place robot service
@@ -140,6 +148,9 @@ namespace stdr_robot {
     
     //!< ROS service server to move robot
     ros::ServiceServer _moveRobotService;
+    
+    //!< ROS service server to obstruct robot movement
+    ros::ServiceServer _obstructMoveService;
   
     //!< Container for robot sensors
     SensorPtrVector _sensors;
