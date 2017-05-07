@@ -48,6 +48,7 @@ add_service_files(
     RegisterGui.srv
     MoveRobot.srv
     Obstruct.srv
+    Drift.srv
 
     AddRfidTag.srv
     DeleteRfidTag.srv

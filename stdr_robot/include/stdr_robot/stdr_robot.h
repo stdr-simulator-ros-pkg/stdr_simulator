@@ -28,6 +28,7 @@
 #include <stdr_msgs/RobotMsg.h>
 #include <stdr_msgs/MoveRobot.h>
 #include <stdr_msgs/Obstruct.h>
+#include <stdr_msgs/Drift.h>
 #include <stdr_robot/sensors/sensor_base.h>
 #include <stdr_robot/sensors/laser.h>
 #include <stdr_robot/sensors/sonar.h>
@@ -95,6 +96,11 @@ namespace stdr_robot {
     **/
     bool obstructCallback(stdr_msgs::Obstruct::Request& req,
 			  stdr_msgs::Obstruct::Response& res);
+    /**
+    @brief Callback to force robot drift service
+    **/
+    bool driftCallback(stdr_msgs::Drift::Request& req,
+			  stdr_msgs::Drift::Response& res);
     
     /**
     @brief The callback of the re-place robot service
@@ -151,6 +157,9 @@ namespace stdr_robot {
     
     //!< ROS service server to obstruct robot movement
     ros::ServiceServer _obstructMoveService;
+
+    //!< ROS service server to drift robot
+    ros::ServiceServer _driftService;
   
     //!< Container for robot sensors
     SensorPtrVector _sensors;

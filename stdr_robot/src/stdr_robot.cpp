@@ -64,6 +64,10 @@ namespace stdr_robot
     _obstructMoveService = n.advertiseService(
       getName() + "/obstruct", &Robot::obstructCallback, this);
 
+
+    _driftService = n.advertiseService(
+      getName() + "/drift", &Robot::driftCallback, this);
+
     //we should not start the timer, until we hame a motion controller
     _tfTimer = n.createTimer(
       ros::Duration(0.1), &Robot::publishTransforms, this, false, false);
@@ -217,6 +221,21 @@ namespace stdr_robot
 			stdr_msgs::Obstruct::Response& res)
   {
     _motionControllerPtr->toggleObstructionFlag();
+  }
+
+  bool Robot::driftCallback(stdr_msgs::Drift::Request& req,
+		    stdr_msgs::Drift::Response& res)
+  {
+    geometry_msgs::Pose2D pose = _motionControllerPtr->getPose();
+
+    float angle = req.driftAngle * 3.14159 / 180.0 - pose.theta;
+    pose.x += cos(angle) * req.driftCoeff;
+    pose.y += sin(angle) * req.driftCoeff;
+
+    if( ! collisionExists(pose, _previousPose) )
+    {
+      _motionControllerPtr->setPose(pose);
+    }
   }
 
 

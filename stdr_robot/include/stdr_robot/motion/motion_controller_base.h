@@ -48,7 +48,7 @@ namespace stdr_robot {
       {
 	_obstructionFlag = _obstructionFlag ? false : true;
       }
-      
+
       /**
       @brief Virtual function - Callback for velocity commands
       @param msg [const geometry_msgs::Twist&] The velocity command
