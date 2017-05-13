@@ -56,9 +56,29 @@ namespace stdr_robot {
     
     ros::Duration dt = ros::Time::now() - event.last_real;
 
+    // First apply change to odometry values
+    if (_currentTwist.angular.z == 0) {
+      _odomPose.x += _currentTwist.linear.x * dt.toSec() * cosf(_odomPose.theta);
+      _odomPose.y += _currentTwist.linear.x * dt.toSec() * sinf(_odomPose.theta);
+    }
+    else {
+      
+      _odomPose.x += - _currentTwist.linear.x / _currentTwist.angular.z * 
+        sinf(_odomPose.theta) + 
+        _currentTwist.linear.x / _currentTwist.angular.z * 
+        sinf(_odomPose.theta + dt.toSec() * _currentTwist.angular.z);
+      
+      _odomPose.y -= - _currentTwist.linear.x / _currentTwist.angular.z * 
+        cosf(_odomPose.theta) + 
+        _currentTwist.linear.x / _currentTwist.angular.z * 
+        cosf(_odomPose.theta + dt.toSec() * _currentTwist.angular.z);
+    }
+    _odomPose.theta += _currentTwist.angular.z * dt.toSec();
+
     if (_obstructionFlag)
       return;
     
+    // Next update odom
     if (_currentTwist.angular.z == 0) {
       
       _pose.x += _currentTwist.linear.x * dt.toSec() * cosf(_pose.theta);

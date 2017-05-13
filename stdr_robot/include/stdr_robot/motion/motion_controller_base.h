@@ -137,6 +137,11 @@ namespace stdr_robot {
       {
         return _pose;
       }
+
+      inline geometry_msgs::Pose2D getOdomPose(void)
+      {
+        return _odomPose;
+      }
       
       /**
       @brief Sets the initial pose of the motion controller
@@ -235,6 +240,8 @@ namespace stdr_robot {
       //!< The kinematic model parameters
       stdr_msgs::KinematicMsg _motion_parameters;
       bool _obstructionFlag;
+
+      geometry_msgs::Pose2D _odomPose;
   };
     
   typedef boost::shared_ptr<MotionController> MotionControllerPtr;

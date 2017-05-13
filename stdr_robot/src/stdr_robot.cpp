@@ -467,13 +467,20 @@ namespace stdr_robot
     odom.header.stamp = ros::Time::now();
     odom.header.frame_id = "map_static";
     odom.child_frame_id = getName();
-    odom.pose.pose.position.x = _previousPose.x;
-    odom.pose.pose.position.y = _previousPose.y;
+    // odom.pose.pose.position.x = _previousPose.x;
+    // odom.pose.pose.position.y = _previousPose.y;
+    // odom.pose.pose.orientation = tf::createQuaternionMsgFromYaw(
+        // _previousPose.theta);
+    geometry_msgs::Pose2D odomPose = _motionControllerPtr->getOdomPose();
+    odom.pose.pose.position.x = odomPose.x;
+    odom.pose.pose.position.y = odomPose.y;
     odom.pose.pose.orientation = tf::createQuaternionMsgFromYaw(
-        _previousPose.theta);
+        odomPose.theta);
     odom.twist.twist = _motionControllerPtr->getVelocity();
 
     _odomPublisher.publish(odom);
+
+
 
     //!< Sensors tf
     for (int i = 0; i < _sensors.size(); i++) {
