@@ -26,6 +26,8 @@
 #include <tf/transform_listener.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/Pose2D.h>
+#include <stdr_msgs/ReadSensorPose.h>
+//#include <stdr_msgs/WriteSensorPose.h>
 
 /**
 @namespace stdr_robot
@@ -116,6 +118,15 @@ namespace stdr_robot {
       @return void
       **/ 
       void updateTransform(const ros::TimerEvent& ev);
+
+      /**
+      @brief The callback of the read robot sensor service
+      @param req [stdr_msgs::ReadSensorPose::Request&] The service request
+      @param res [stdr_msgs::ReadSensorPose::Response&] The service result
+      @return bool
+      **/
+      bool readSensorPoseCallback(stdr_msgs::ReadSensorPose::Request& req,
+				  stdr_msgs::ReadSensorPose::Response& res);
       
     protected:
     
@@ -145,6 +156,11 @@ namespace stdr_robot {
       
       //!< True if sensor got the _sensorTransform
       bool _gotTransform;
+
+      //!< ROS service servers to read & write sensor pose:
+      ros::ServiceServer _readSensorPoseService;
+      //ros::ServiceServer _writeSensorPoseService;
+
   };
 
   typedef boost::shared_ptr<Sensor> SensorPtr;
