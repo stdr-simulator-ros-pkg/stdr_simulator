@@ -59,6 +59,9 @@ add_service_files(
 
     AddCO2Source.srv
     DeleteCO2Source.srv
+
+    ReadSensorPose.srv
+    WriteSensorPose.srv
 )
 
 add_action_files(

@@ -53,8 +53,7 @@ namespace stdr_robot {
     _tfTimer = n.createTimer(
       ros::Duration(1/(2*updateFrequency)), &Sensor::updateTransform, this);
 
-    _readSensorPoseService = n.advertiseService(_namespace + "/" + msg.frame_id,
-						/* getName() + "/replace", */
+    _readSensorPoseService = n.advertiseService(_namespace + "/" + _sensorFrameId,
 						&Sensor::readSensorPoseCallback, this);
   }
 
