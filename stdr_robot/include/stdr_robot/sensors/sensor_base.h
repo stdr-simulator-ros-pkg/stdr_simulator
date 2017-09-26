@@ -52,9 +52,18 @@ namespace stdr_robot {
       @brief Getter function for returning the sensor pose relatively to robot
       @return geometry_msgs::Pose2D
       **/ 
-      inline geometry_msgs::Pose2D getSensorPose(void) const
+      inline geometry_msgs::Pose2D getSensorPose(void)
       {
         return _sensorPose;
+      }
+      
+      /**
+      @brief Setter function for changing the sensor pose relatively to robot
+      @return void
+      **/ 
+      inline void setSensorPose(geometry_msgs::Pose2D& pose)
+      {
+        _sensorPose = pose;
       }
       
       /**
@@ -116,7 +125,7 @@ namespace stdr_robot {
       const nav_msgs::OccupancyGrid& _map;
       
       //!< Sensor pose relative to robot
-      const geometry_msgs::Pose2D _sensorPose;
+      geometry_msgs::Pose2D _sensorPose;
       //!< Update frequency of _timer
       const float _updateFrequency;
       //!< Sensor frame id
