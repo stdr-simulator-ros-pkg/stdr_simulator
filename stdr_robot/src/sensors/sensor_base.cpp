@@ -53,8 +53,12 @@ namespace stdr_robot {
     _tfTimer = n.createTimer(
       ros::Duration(1/(2*updateFrequency)), &Sensor::updateTransform, this);
 
-    _readSensorPoseService = n.advertiseService(_namespace + "/" + _sensorFrameId,
+    _readSensorPoseService = n.advertiseService(_namespace + "/" + _sensorFrameId + "/" + "readpose",
 						&Sensor::readSensorPoseCallback, this);
+    
+    _writeSensorPoseService = n.advertiseService(_namespace + "/" + _sensorFrameId + "/" + "writepose",
+						&Sensor::writeSensorPoseCallback, this);
+
   }
 
   
@@ -93,8 +97,8 @@ namespace stdr_robot {
     }
   }
 
-    /**
-  @brief The callback of the  read robot sensor service
+  /**
+  @brief The callback of the read robot sensor pose service
   @param req [stdr_msgs::ReadSensorPose::Request&] The service request
   @param res [stdr_msgs::ReadSensorPose::Response&] The service result
   @return bool
@@ -106,5 +110,17 @@ namespace stdr_robot {
     return true;
   }
 
+  /**
+  @brief The callback of the write robot sensor pose service
+  @param req [stdr_msgs::WriteSensorPose::Request&] The service request
+  @param res [stdr_msgs::WriteSensorPose::Response&] The service result
+  @return bool
+  **/
+  bool Sensor::writeSensorPoseCallback(stdr_msgs::WriteSensorPose::Request& req,
+                stdr_msgs::WriteSensorPose::Response& res)
+  {
+    setSensorPose(req.pose);
+    return true;
+  }
   
 }  // namespace stdr_robot

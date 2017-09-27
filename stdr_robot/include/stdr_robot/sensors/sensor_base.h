@@ -27,7 +27,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/Pose2D.h>
 #include <stdr_msgs/ReadSensorPose.h>
-//#include <stdr_msgs/WriteSensorPose.h>
+#include <stdr_msgs/WriteSensorPose.h>
 
 /**
 @namespace stdr_robot
@@ -120,13 +120,22 @@ namespace stdr_robot {
       void updateTransform(const ros::TimerEvent& ev);
 
       /**
-      @brief The callback of the read robot sensor service
+      @brief The callback of the read robot sensor pose service
       @param req [stdr_msgs::ReadSensorPose::Request&] The service request
       @param res [stdr_msgs::ReadSensorPose::Response&] The service result
       @return bool
       **/
       bool readSensorPoseCallback(stdr_msgs::ReadSensorPose::Request& req,
 				  stdr_msgs::ReadSensorPose::Response& res);
+
+      /**
+      @brief The callback of the write robot sensor pose service
+      @param req [stdr_msgs::WriteSensorPose::Request&] The service request
+      @param res [stdr_msgs::WriteSensorPose::Response&] The service result
+      @return bool
+      **/
+      bool writeSensorPoseCallback(stdr_msgs::WriteSensorPose::Request& req,
+				  stdr_msgs::WriteSensorPose::Response& res);
       
     protected:
     
@@ -159,7 +168,7 @@ namespace stdr_robot {
 
       //!< ROS service servers to read & write sensor pose:
       ros::ServiceServer _readSensorPoseService;
-      //ros::ServiceServer _writeSensorPoseService;
+      ros::ServiceServer _writeSensorPoseService;
 
   };
 
