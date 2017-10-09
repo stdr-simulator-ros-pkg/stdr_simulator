@@ -26,6 +26,8 @@
 #include <tf/transform_listener.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/Pose2D.h>
+#include <stdr_msgs/ReadSensorPose.h>
+#include <stdr_msgs/WriteSensorPose.h>
 
 /**
 @namespace stdr_robot
@@ -52,9 +54,18 @@ namespace stdr_robot {
       @brief Getter function for returning the sensor pose relatively to robot
       @return geometry_msgs::Pose2D
       **/ 
-      inline geometry_msgs::Pose2D getSensorPose(void) const
+      inline geometry_msgs::Pose2D getSensorPose(void)
       {
         return _sensorPose;
+      }
+      
+      /**
+      @brief Setter function for changing the sensor pose relatively to robot
+      @return void
+      **/ 
+      inline void setSensorPose(geometry_msgs::Pose2D& pose)
+      {
+        _sensorPose = pose;
       }
       
       /**
@@ -107,6 +118,24 @@ namespace stdr_robot {
       @return void
       **/ 
       void updateTransform(const ros::TimerEvent& ev);
+
+      /**
+      @brief The callback of the read robot sensor pose service
+      @param req [stdr_msgs::ReadSensorPose::Request&] The service request
+      @param res [stdr_msgs::ReadSensorPose::Response&] The service result
+      @return bool
+      **/
+      bool readSensorPoseCallback(stdr_msgs::ReadSensorPose::Request& req,
+				  stdr_msgs::ReadSensorPose::Response& res);
+
+      /**
+      @brief The callback of the write robot sensor pose service
+      @param req [stdr_msgs::WriteSensorPose::Request&] The service request
+      @param res [stdr_msgs::WriteSensorPose::Response&] The service result
+      @return bool
+      **/
+      bool writeSensorPoseCallback(stdr_msgs::WriteSensorPose::Request& req,
+				  stdr_msgs::WriteSensorPose::Response& res);
       
     protected:
     
@@ -116,7 +145,7 @@ namespace stdr_robot {
       const nav_msgs::OccupancyGrid& _map;
       
       //!< Sensor pose relative to robot
-      const geometry_msgs::Pose2D _sensorPose;
+      geometry_msgs::Pose2D _sensorPose;
       //!< Update frequency of _timer
       const float _updateFrequency;
       //!< Sensor frame id
@@ -136,6 +165,11 @@ namespace stdr_robot {
       
       //!< True if sensor got the _sensorTransform
       bool _gotTransform;
+
+      //!< ROS service servers to read & write sensor pose:
+      ros::ServiceServer _readSensorPoseService;
+      ros::ServiceServer _writeSensorPoseService;
+
   };
 
   typedef boost::shared_ptr<Sensor> SensorPtr;
