@@ -60,9 +60,13 @@ namespace stdr_robot
     _moveRobotService = n.advertiseService(
       getName() + "/replace", &Robot::moveRobotCallback, this);
 
-    //we should not start the timer, until we hame a motion controller
+    //allow changing odometry rate, as the default 10Hz can be too slow in some cases
+    double odometry_rate;
+    n.param(getName() + "/odometry_rate", odometry_rate, 10.0);
+
+    //we should not start the timer, until we have a motion controller
     _tfTimer = n.createTimer(
-      ros::Duration(0.1), &Robot::publishTransforms, this, false, false);
+      ros::Duration(1.0/odometry_rate), &Robot::publishTransforms, this, false, false);
   }
 
   /**
@@ -170,6 +174,27 @@ namespace stdr_robot
       // If no motion model is specified or an invalid type declared use ideal
       _motionControllerPtr.reset(
         new IdealMotionController(_currentPose, _tfBroadcaster, n, getName(), p));
+    }
+
+    //!< Sensors static tfs
+    for (int i = 0; i < _sensors.size(); i++) {
+      geometry_msgs::Pose2D sensorPose = _sensors[i]->getSensorPose();
+
+      geometry_msgs::TransformStamped static_transformStamped;
+
+      static_transformStamped.header.stamp = ros::Time::now();
+      static_transformStamped.header.frame_id = getName();
+      static_transformStamped.child_frame_id = _sensors[i]->getFrameId();
+      static_transformStamped.transform.translation.x = sensorPose.x;
+      static_transformStamped.transform.translation.y = sensorPose.y;
+      static_transformStamped.transform.translation.z = 0.0;
+      tf2::Quaternion quat;
+      quat.setRPY(0.0, 0.0, sensorPose.theta);
+      static_transformStamped.transform.rotation.x = quat.x();
+      static_transformStamped.transform.rotation.y = quat.y();
+      static_transformStamped.transform.rotation.z = quat.z();
+      static_transformStamped.transform.rotation.w = quat.w();
+      static_broadcaster.sendTransform(static_transformStamped);
     }
 
     _tfTimer.start();
@@ -407,7 +432,7 @@ namespace stdr_robot
   }
 
   /**
-  @brief Publishes the tf transforms every with 10Hz
+  @brief Publishes the tf transforms every with 10Hz (default)
   @return void
   **/
   void Robot::publishTransforms(const ros::TimerEvent&)
@@ -442,25 +467,7 @@ namespace stdr_robot
         _previousPose.theta);
     odom.twist.twist = _motionControllerPtr->getVelocity();
 
-    _odomPublisher.publish(odom);
-
-    //!< Sensors tf
-    for (int i = 0; i < _sensors.size(); i++) {
-      geometry_msgs::Pose2D sensorPose = _sensors[i]->getSensorPose();
-
-      tf::Vector3 trans(sensorPose.x, sensorPose.y, 0);
-      tf::Quaternion rot;
-      rot.setRPY(0, 0, sensorPose.theta);
-
-      tf::Transform robotToSensor(rot, trans);
-
-      _tfBroadcaster.sendTransform(
-        tf::StampedTransform(
-          robotToSensor,
-          ros::Time::now(),
-          getName(),
-          _sensors[i]->getFrameId()));
-    }
+   _odomPublisher.publish(odom);
   }
 
   /**

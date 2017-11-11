@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   nodelet
   actionlib
   tf
+  tf2_ros
   stdr_msgs
   stdr_parser
   geometry_msgs
@@ -30,6 +31,7 @@ catkin_package(
     nodelet
     actionlib
     tf
+    tf2_ros
     stdr_msgs
     stdr_parser
     geometry_msgs
