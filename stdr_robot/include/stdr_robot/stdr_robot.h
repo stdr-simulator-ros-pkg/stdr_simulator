@@ -152,7 +152,7 @@ namespace stdr_robot {
     tf::TransformBroadcaster _tfBroadcaster;
 
     //!< ROS tf2 static transform broadcaster
-    tf2_ros::StaticTransformBroadcaster static_broadcaster;
+    tf2_ros::StaticTransformBroadcaster _tfStaticBroadcaster;
 
     //!< Odometry Publisher
     ros::Publisher _odomPublisher;

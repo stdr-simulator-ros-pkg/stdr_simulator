@@ -60,13 +60,9 @@ namespace stdr_robot
     _moveRobotService = n.advertiseService(
       getName() + "/replace", &Robot::moveRobotCallback, this);
 
-    //allow changing odometry rate, as the default 10Hz can be too slow in some cases
-    double odometry_rate;
-    n.param(getName() + "/odometry_rate", odometry_rate, 10.0);
-
     //we should not start the timer, until we have a motion controller
     _tfTimer = n.createTimer(
-      ros::Duration(1.0/odometry_rate), &Robot::publishTransforms, this, false, false);
+      ros::Duration(0.01), &Robot::publishTransforms, this, false, false);
   }
 
   /**
@@ -180,21 +176,21 @@ namespace stdr_robot
     for (int i = 0; i < _sensors.size(); i++) {
       geometry_msgs::Pose2D sensorPose = _sensors[i]->getSensorPose();
 
-      geometry_msgs::TransformStamped static_transformStamped;
+      geometry_msgs::TransformStamped transformStamped;
 
-      static_transformStamped.header.stamp = ros::Time::now();
-      static_transformStamped.header.frame_id = getName();
-      static_transformStamped.child_frame_id = _sensors[i]->getFrameId();
-      static_transformStamped.transform.translation.x = sensorPose.x;
-      static_transformStamped.transform.translation.y = sensorPose.y;
-      static_transformStamped.transform.translation.z = 0.0;
+      transformStamped.header.stamp = ros::Time::now();
+      transformStamped.header.frame_id = getName();
+      transformStamped.child_frame_id = _sensors[i]->getFrameId();
+      transformStamped.transform.translation.x = sensorPose.x;
+      transformStamped.transform.translation.y = sensorPose.y;
+      transformStamped.transform.translation.z = 0.0;
       tf2::Quaternion quat;
       quat.setRPY(0.0, 0.0, sensorPose.theta);
-      static_transformStamped.transform.rotation.x = quat.x();
-      static_transformStamped.transform.rotation.y = quat.y();
-      static_transformStamped.transform.rotation.z = quat.z();
-      static_transformStamped.transform.rotation.w = quat.w();
-      static_broadcaster.sendTransform(static_transformStamped);
+      transformStamped.transform.rotation.x = quat.x();
+      transformStamped.transform.rotation.y = quat.y();
+      transformStamped.transform.rotation.z = quat.z();
+      transformStamped.transform.rotation.w = quat.w();
+      _tfStaticBroadcaster.sendTransform(transformStamped);
     }
 
     _tfTimer.start();
@@ -432,7 +428,7 @@ namespace stdr_robot
   }
 
   /**
-  @brief Publishes the tf transforms every with 10Hz (default)
+  @brief Publishes the tf transforms every with 100Hz
   @return void
   **/
   void Robot::publishTransforms(const ros::TimerEvent&)
@@ -447,6 +443,7 @@ namespace stdr_robot
       _motionControllerPtr->setPose(_previousPose);
     }
     //!< Robot tf
+    ros::Time timeNow = ros::Time::now();
     tf::Vector3 translation(_previousPose.x, _previousPose.y, 0);
     tf::Quaternion rotation;
     rotation.setRPY(0, 0, _previousPose.theta);
@@ -454,11 +451,11 @@ namespace stdr_robot
     tf::Transform mapToRobot(rotation, translation);
 
     _tfBroadcaster.sendTransform(tf::StampedTransform(
-      mapToRobot, ros::Time::now(), "map_static", getName()));
+      mapToRobot, timeNow, "map_static", getName()));
 
     //!< Odometry
     nav_msgs::Odometry odom;
-    odom.header.stamp = ros::Time::now();
+    odom.header.stamp = timeNow;
     odom.header.frame_id = "map_static";
     odom.child_frame_id = getName();
     odom.pose.pose.position.x = _previousPose.x;
