@@ -24,7 +24,7 @@
   </robot>
 
   <robot_specifications>
-    <allowed>initial_pose,footprint,laser,sonar,rfid_reader,kinematic</allowed>
+    <allowed>initial_pose,footprint,laser,sonar,rfid_reader,kinematic,co2_sensor</allowed>
   </robot_specifications>
 
   <initial_pose>
