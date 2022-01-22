@@ -223,9 +223,12 @@ namespace stdr_gui
       this, SLOT(robotReplaceSet(QPoint,std::string)));
     
     timer_ = new QTimer(this);
+
     connect(
       timer_, SIGNAL(timeout()), 
       this, SLOT(updateMapInternal()));
+
+    timer_->start(50);
       
     QObject::connect(
       this,SIGNAL(waitForRfidPose()),
@@ -315,6 +318,7 @@ namespace stdr_gui
       this, SIGNAL(setSoundSensorVisibility(QString,QString,char)),
       &info_connector_, SLOT(setSoundSensorVisibility(QString,QString,char)));
   }
+
   
   /**
   @brief Sets up the main window widgets
@@ -517,7 +521,7 @@ namespace stdr_gui
     map_connector_.setMapInitialized(true);
     gui_connector_.setMapInitialized(true);
     
-    timer_->start(50);
+    // timer_->start(50);
     
     robot_subscriber_ = n_.subscribe(
       "stdr_server/active_robots", 
@@ -1005,6 +1009,10 @@ namespace stdr_gui
   **/
   void CGuiController::updateMapInternal(void)
   {
+    if ( ! map_initialized_ )
+    {
+      return;
+    } 
     while(map_lock_)
     {
       usleep(100);
