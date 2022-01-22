@@ -517,7 +517,7 @@ namespace stdr_gui
     
     elapsed_time_.start();
     
-    map_initialized_ = true;
+    // map_initialized_ = true;
     map_connector_.setMapInitialized(true);
     gui_connector_.setMapInitialized(true);
     
@@ -528,6 +528,7 @@ namespace stdr_gui
       1, 
       &CGuiController::receiveRobots,
       this);
+    map_initialized_ = true;
   }
   
   /**
