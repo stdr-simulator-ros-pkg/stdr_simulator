@@ -48,7 +48,7 @@ catkin_package(
     stdr_parser
     sensor_msgs
     nav_msgs
-    qt_gui_cpp
+    qt_gui
   #INCLUDE_DIRS
   #LIBRARIES
 )
