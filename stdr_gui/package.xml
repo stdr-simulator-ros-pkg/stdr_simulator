@@ -28,6 +28,7 @@
 
   <build_depend>libqt4-dev</build_depend>
   <exec_depend>libqt4</exec_depend>
+  <exec_depend>map_server</exec_depend>
 
   <export>
   </export>
