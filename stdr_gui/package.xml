@@ -26,8 +26,15 @@
   <depend>sensor_msgs</depend>
   <depend>nav_msgs</depend>
 
-  <build_depend>libqt4-dev</build_depend>
-  <exec_depend>libqt4</exec_depend>
+  <build_depend>libqt5-core</build_depend>
+  <build_depend>libqt5-gui</build_depend>
+  <build_depend>libqt5-widgets</build_depend>
+  <build_depend>qt_gui</build_depend>
+  <exec_depend>libqt5-core</exec_depend>
+  <exec_depend>libqt5-gui</exec_depend>
+  <exec_depend>libqt5-widgets</exec_depend>
+  <exec_depend>qt_gui</exec_depend>
+  <exec_depend>map_server</exec_depend>
 
   <export>
   </export>

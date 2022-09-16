@@ -1662,8 +1662,7 @@ namespace stdr_gui
       QApplication::translate(
         "Footprint point", 
         item->text(0).toStdString().c_str(), 
-        0, 
-        QApplication::UnicodeUTF8));
+        0));
     
     current_footprint_point_ = item;
     
@@ -1720,8 +1719,7 @@ namespace stdr_gui
       QApplication::translate(
         "LaserProperties", 
         item->text(0).toStdString().c_str(), 
-        0, 
-        QApplication::UnicodeUTF8));
+        0));
     
     current_laser_ = item;
     
@@ -2242,8 +2240,7 @@ namespace stdr_gui
       QApplication::translate(
         "SonarProperties", 
         item->text(0).toStdString().c_str(), 
-        0, 
-        QApplication::UnicodeUTF8));
+        0));
     
     current_sonar_ = item;
     
@@ -2287,8 +2284,7 @@ namespace stdr_gui
       QApplication::translate(
         "RfidAntennaProperties", 
         item->text(0).toStdString().c_str(), 
-        0, 
-        QApplication::UnicodeUTF8));
+        0));
     
     current_rfid_ = item;
     
@@ -2330,8 +2326,7 @@ namespace stdr_gui
       QApplication::translate(
         "CO2SensorProperties", 
         item->text(0).toStdString().c_str(), 
-        0, 
-        QApplication::UnicodeUTF8));
+        0));
     
     current_co2_sensor_ = item;
     
@@ -2370,8 +2365,7 @@ namespace stdr_gui
       QApplication::translate(
         "ThermalSensorProperties", 
         item->text(0).toStdString().c_str(), 
-        0, 
-        QApplication::UnicodeUTF8));
+        0));
     
     current_thermal_sensor_ = item;
     
@@ -2410,8 +2404,7 @@ namespace stdr_gui
       QApplication::translate(
         "SoundSensorProperties", 
         item->text(0).toStdString().c_str(), 
-        0, 
-        QApplication::UnicodeUTF8));
+        0));
     
     current_sound_sensor_ = item;
     
